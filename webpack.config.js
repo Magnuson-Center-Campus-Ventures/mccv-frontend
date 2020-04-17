@@ -5,6 +5,9 @@ const autoprefixer = require('autoprefixer');
 const env = process.env.NODE_ENV || 'development';
 // set to 'production' or 'development' in your env
 
+// EC
+const ImageminPlugin = require('imagemin-webpack');
+
 const finalCSSLoader = (env === 'production') ? MiniCssExtractPlugin.loader : { loader: 'style-loader' };
 
 module.exports = {
@@ -68,6 +71,31 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: './index.html',
+    }),
+    // Make sure that the plugin is after any plugins that add images, example `CopyWebpackPlugin`
+    new ImageminPlugin({
+      bail: false, // Ignore errors on corrupted images
+      cache: true,
+      imageminOptions: { // From: https://www.npmjs.com/package/imagemin-webpack
+        // Before using imagemin plugins make sure you have added them in `package.json` (`devDependencies`) and installed them
+        // Lossless optimization with custom option
+        // Feel free to experiment with options for better result for you
+        plugins: [
+          ['gifsicle', { interlaced: true }],
+          ['jpegtran', { progressive: true }],
+          ['optipng', { optimizationLevel: 5 }],
+          [
+            'svgo',
+            {
+              plugins: [
+                {
+                  removeViewBox: false,
+                },
+              ],
+            },
+          ],
+        ],
+      },
     }),
   ],
 };
