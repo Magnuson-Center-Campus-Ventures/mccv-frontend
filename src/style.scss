@@ -27,4 +27,23 @@ a:link {
 }
 #nav-bar .active {
     color: white;
-  }
+}
+
+.postList{
+    display: flex; 
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-bottom: 3%;
+}
+
+.postListItem{
+    background-color: grey;
+    margin-top: 3%;
+    box-shadow: 4px 4px 15px ;
+    height: 100%;
+}
+
+.postListItem:hover{
+    box-shadow: 9px 9px 20px ;
+}
