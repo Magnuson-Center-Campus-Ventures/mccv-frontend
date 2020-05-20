@@ -1,14 +1,16 @@
 import { ActionTypes } from '../actions';
 
-const JobsReducer = (state = {
+const initialState = {
   all: [],
   current: {},
-}, action) => {
+};
+
+const JobsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ActionTypes.FETCH_JOB:
-      return { all: state.all, current: action.payload };
     case ActionTypes.FETCH_JOBS:
-      return { all: action.payload, current: state.current };
+      return { ...state, current: action.payload };
+    case ActionTypes.FETCH_JOB:
+      return { ...state, current: state.current };
     case ActionTypes.ERROR_SET:
       return state;
     default:
