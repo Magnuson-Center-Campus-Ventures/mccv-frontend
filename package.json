@@ -10,7 +10,7 @@
     "test": "eslint src/**.js",
     "build": "yarn clean; NODE_ENV=production webpack --colors",
     "clean": "rimraf dist",
-    "deploy": "yarn build; surge -p dist -d sarahhong-cs52-starter.surge.sh; yarn clean"
+    "deploy": "yarn build; surge -p dist -d cs52-mcv.surge.sh; yarn clean"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -21,7 +21,7 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.2",
-    "eslint": "^6.8.0",
+    "eslint": "^7.0.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-loader": "^4.0.0",
     "eslint-plugin-import": "^2.20.2",

@@ -1,52 +1,22 @@
 import React from 'react';
 import {
-  BrowserRouter as Router, Route, NavLink, Switch,
+  BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
-import Counter from './counter';
-import Controls from './controls';
-
-// Nav
-const About = (props) => {
-  return <div> All there is to know about me </div>;
-};
-const Welcome = (props) => {
-  return (
-    <div>
-      <Counter />
-      <Controls />
-    </div>
-  );
-};
-const Test = (props) => {
-  return <div> ID: {props.match.params.id} </div>;
-};
-const FallBack = (props) => {
-  return <div>URL Not Found</div>;
-};
-
-const Nav = (props) => {
-  return (
-    <nav>
-      <ul>
-        <li><NavLink to="/">Home</NavLink></li>
-        <li><NavLink to="/about">About</NavLink></li>
-        <li><NavLink to="/test/id1">test id1</NavLink></li>
-        <li><NavLink to="/test/id2">test id2</NavLink></li>
-      </ul>
-    </nav>
-  );
-};
+import Home from './home';
+import JobPostings from './job-postings';
+import Startups from './startups';
+import Nav from './nav';
 
 const App = (props) => {
   return (
     <Router>
-      <div>
+      <div id="main-div">
         <Nav />
         <Switch>
-          <Route exact path="/" component={Welcome} />
-          <Route path="/about" component={About} />
-          <Route exact path="/test/:id" component={Test} />
-          <Route component={FallBack} />
+          <Route exact path="/" component={Home} />
+          <Route path="/jobposts" component={JobPostings} />
+          <Route path="/startups" component={Startups} />
+          <Route render={() => (<div>post not found </div>)} />
         </Switch>
       </div>
     </Router>
