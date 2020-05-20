@@ -10,7 +10,7 @@ class JobPosts extends Component {
   }
 
   render() {
-    console.log('here: ', this.props.jobs);
+    // console.log('here: ', this.props.jobs);
     const mapping = this.props.jobs.map((job) => {
       return (
         <PostListItem job={job} key={job.id} />

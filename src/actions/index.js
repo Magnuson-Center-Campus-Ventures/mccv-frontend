@@ -14,7 +14,7 @@ export function fetchJobs() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/jobposts`)
       .then((response) => {
-        console.log('index: ', response.data);
+        // console.log('index: ', response.data);
         dispatch({ type: ActionTypes.FETCH_JOBS, payload: response.data });
       })
       .catch((error) => {
