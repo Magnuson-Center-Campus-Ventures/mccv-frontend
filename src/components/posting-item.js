@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 
 
 const PostListItem = (props) => {
-  const route = `/jobposts/${props.job._id}`;
+  const route = `/posts/${props.post._id}`;
   return (
-    <div className="postListItem" key={props.job.id}>
-      <Link to={route} key={props.job.id} className="link">
-        <h1>{props.job.title}</h1>
+    <div className="postListItem" key={props.post.id}>
+      <Link to={route} key={props.post.id} className="link">
+        <h1>{props.post.title}</h1>
       </Link>
     </div>
   );

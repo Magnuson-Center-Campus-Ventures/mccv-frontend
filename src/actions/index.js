@@ -4,8 +4,8 @@ const ROOT_URL = 'http://localhost:9090/api';
 
 // keys for actiontypes
 export const ActionTypes = {
-  FETCH_JOB: 'FETCH_JOB',
-  FETCH_JOBS: 'FETCH_JOBS',
+  FETCH_POST: 'FETCH_POST',
+  FETCH_POSTS: 'FETCH_POSTS',
   FETCH_STARTUP: 'FETCH_STARTUP',
   FETCH_STARTUPS: 'FETCH_STARTUPS',
   FETCH_STUDENT: 'FETCH_STUDENT',
@@ -13,12 +13,12 @@ export const ActionTypes = {
   ERROR_SET: 'ERROR_SET',
 };
 
-export function fetchJobs() {
+export function fetchPosts() {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/jobposts`)
+    axios.get(`${ROOT_URL}/posts`)
       .then((response) => {
         // console.log('index: ', response.data);
-        dispatch({ type: ActionTypes.FETCH_JOBS, payload: response.data });
+        dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
       })
       .catch((error) => {
         console.log('broken');
@@ -27,9 +27,9 @@ export function fetchJobs() {
   };
 }
 
-export function fetchJob() {
+export function fetchPost() {
   return {
-    type: ActionTypes.FETCH_JOB,
+    type: ActionTypes.FETCH_POST,
     payload: null,
   };
 }
@@ -59,7 +59,6 @@ export function fetchStudents() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/students`)
       .then((response) => {
-        // console.log('index: ', response.data);
         dispatch({ type: ActionTypes.FETCH_STUDENTS, payload: response.data });
       })
       .catch((error) => {
