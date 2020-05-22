@@ -2,12 +2,12 @@
 // this defines what your store state will look like
 import { combineReducers } from 'redux';
 
-import JobsReducer from './jobs-reducer';
+import PostsReducer from './posts-reducer';
 import StartupsReducer from './startups-reducer';
 import StudentsReducer from './students-reducer';
 
 const rootReducer = combineReducers({
-  jobs: JobsReducer,
+  posts: PostsReducer,
   startups: StartupsReducer,
   students: StudentsReducer,
 });

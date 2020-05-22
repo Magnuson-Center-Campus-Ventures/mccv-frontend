@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
 import Home from './home';
-import JobPostings from './job-postings';
+import Postings from './postings';
 import Startups from './startups';
 import Nav from './nav';
 
@@ -14,7 +14,7 @@ const App = (props) => {
         <Nav />
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/jobposts" component={JobPostings} />
+          <Route path="/posts" component={Postings} />
           <Route path="/startups" component={Startups} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>
