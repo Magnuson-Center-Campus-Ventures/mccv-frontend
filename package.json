@@ -1,9 +1,9 @@
 {
-  "name": "starterpack-sh531",
+  "name": "MCV",
   "version": "1.0.0",
   "main": "src/index.js",
-  "repository": "https://github.com/dartmouth-cs52-20S/starterpack-sh531.git",
-  "author": "Sarah Hong <shong88tx@gmail.com>",
+  "repository": "https://github.com/dartmouth-cs52-20S/project-mcv",
+  "author": "doniatung <donia.tung@dali.dartmouth.edu>",
   "license": "MIT",
   "scripts": {
     "start": "NODE_ENV=development webpack-dev-server",
@@ -41,6 +41,7 @@
     "sass-loader": "^8.0.2",
     "style-loader": "^1.1.4",
     "surg": "^0.1.0",
+    "surge": "^0.21.3",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
