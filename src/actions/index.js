@@ -28,10 +28,15 @@ export function fetchPosts() {
   };
 }
 
-export function fetchPost() {
-  return {
-    type: ActionTypes.FETCH_POST,
-    payload: null,
+export function fetchPost(id) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/posts/${id}`)
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      })
+      .catch((error) => {
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
   };
 }
 
