@@ -7,9 +7,11 @@ const Nav = (props) => {
   return (
     <nav>
       <ul id="nav-bar">
-        <li><NavLink to="/" exact>Home</NavLink></li>
-        <li><NavLink to="/posts">Position Postings</NavLink></li>
+        <li><NavLink exact to="/">Magnuson Campus Ventures</NavLink></li>
+        <li><NavLink to="/posts">Positions</NavLink></li>
         <li><NavLink to="/startups">Startups</NavLink></li>
+        <li><NavLink to="/applications">Applications</NavLink></li>
+        <li><NavLink to="/profile">Profile</NavLink></li>
       </ul>
     </nav>
   );
