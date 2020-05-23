@@ -38,13 +38,13 @@ class StudentProfile extends Component {
     }
   }
 
-  changeFirstName = (event) => {
+  changeStateField = (field, event) => {
     // eslint-disable-next-line prefer-destructuring
     const value = event.target.value;
 
     this.setState((prevState) => {
       const student = { ...prevState.student };
-      student.first_name = value;
+      student[field] = value;
       return {
         ...prevState,
         student,
@@ -78,7 +78,7 @@ class StudentProfile extends Component {
       return (
         <div className="profile-edit">
           <div className="input-title">First Name</div>
-          <input className="short-input" defaultValue={this.props.student.first_name} onBlur={this.changeFirstName} />
+          <input className="short-input" defaultValue={this.props.student.first_name} onBlur={(event) => this.changeStateField('first_name', event)} />
         </div>
       );
     } else {
