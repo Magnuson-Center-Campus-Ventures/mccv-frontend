@@ -15,8 +15,11 @@ const App = (props) => {
         <Nav />
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route path="/posts/:postID" />
           <Route path="/posts" component={Postings} />
+          <Route path="/startups/:startupID" />
           <Route path="/startups" component={Startups} />
+          <Route path="/applications" />
           <Route path="/profile" component={StudentProfile} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>

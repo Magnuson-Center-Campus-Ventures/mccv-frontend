@@ -4,14 +4,15 @@ import { withRouter } from 'react-router-dom';
 import PostListItem from './posting-item';
 import { fetchPosts } from '../actions';
 
+import '../styles/postings.scss';
+
 class Posts extends Component {
   componentDidMount() {
     this.props.fetchPosts();
   }
 
   render() {
-    // console.log('here: ', this.props.posts);
-    const mapping = this.props.posts.map((post) => {
+    const mappingPostings = this.props.posts.map((post) => {
       return (
         <PostListItem post={post} key={post.id} />
       );
@@ -20,7 +21,7 @@ class Posts extends Component {
       this.props.posts !== undefined
         ? (
           <div className="postList">
-            {mapping}
+            {mappingPostings}
           </div>
         ) : (<div />)
     );
