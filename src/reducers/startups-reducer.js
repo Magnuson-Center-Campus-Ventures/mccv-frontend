@@ -1,14 +1,16 @@
 import { ActionTypes } from '../actions';
 
-const StartupsReducer = (state = {
+const initialState = {
   all: [],
   current: {},
-}, action) => {
+};
+
+const StartupsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ActionTypes.FETCH_STARTUP:
-      return { all: state.all, current: action.payload };
     case ActionTypes.FETCH_STARTUPS:
-      return { all: action.payload, current: state.current };
+      return { ...state, all: action.payload };
+    case ActionTypes.FETCH_STARTUP:
+      return { ...state, current: action.payload };
     case ActionTypes.ERROR_SET:
       return state;
     default:
