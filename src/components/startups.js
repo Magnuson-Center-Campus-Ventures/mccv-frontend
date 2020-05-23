@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import PostListItem from './posting-item';
+import StartupListItem from './startup-item';
 import { fetchStartups } from '../actions';
 
 class Startups extends Component {
@@ -10,18 +10,27 @@ class Startups extends Component {
   }
 
   render() {
-    const mappingStartups = this.props.startups.map((startup) => {
-      return (
-        <PostListItem startup={startup} key={startup.id} />
+    const mappingStartups = this.props.startups !== undefined && this.props.startups !== null
+      ? this.props.startups.map((startup) => {
+        console.log('here');
+        return (
+          <StartupListItem startup={startup} key={startup.id} />
+        );
+      })
+      : (
+        <div>
+          Sorry, no startups currently
+        </div>
       );
-    });
     return (
       this.props.startups !== undefined
         ? (
-          <div className="startupList">
+          <div className="postList">
             {mappingStartups}
           </div>
-        ) : (<div />)
+        ) : (
+          <div />
+        )
     );
   }
 }
