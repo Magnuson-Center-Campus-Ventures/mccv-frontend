@@ -10,8 +10,7 @@ class Posts extends Component {
   }
 
   render() {
-    // console.log('here: ', this.props.posts);
-    const mapping = this.props.posts.map((post) => {
+    const mappingPostings = this.props.posts.map((post) => {
       return (
         <PostListItem post={post} key={post.id} />
       );
@@ -20,7 +19,7 @@ class Posts extends Component {
       this.props.posts !== undefined
         ? (
           <div className="postList">
-            {mapping}
+            {mappingPostings}
           </div>
         ) : (<div />)
     );
