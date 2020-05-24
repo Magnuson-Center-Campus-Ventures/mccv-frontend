@@ -143,8 +143,6 @@ class StudentProfile extends Component {
   }
 
   render() {
-    console.log(this.state.student);
-    console.log(this.state.workExps);
     return (
       <div className="student-profile">
         {this.renderBody()}

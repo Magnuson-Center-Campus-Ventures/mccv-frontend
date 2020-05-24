@@ -12,6 +12,9 @@ export const ActionTypes = {
   FETCH_STUDENT: 'FETCH_STUDENT',
   FETCH_STUDENTS: 'FETCH_STUDENTS',
   FETCH_WORK_EXPS: 'FETCH_WORK_EXPS',
+  FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
+  FETCH_APPLICATION: 'FETCH_APPLICATION',
+  SUBMIT_APPLICATION: 'SUBMIT_APPLICATION',
   UPDATE_WORK_EXP: 'UPDATE_WORK_EXP',
   DELETE_WORK_EXP: 'DELETE_WORK_EXP',
   ERROR_SET: 'ERROR_SET',
@@ -30,10 +33,15 @@ export function fetchPosts() {
   };
 }
 
-export function fetchPost() {
-  return {
-    type: ActionTypes.FETCH_POST,
-    payload: null,
+export function fetchPost(id) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/posts/${id}`)
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      })
+      .catch((error) => {
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
   };
 }
 
@@ -129,5 +137,42 @@ export function deleteWorkExperience(id) {
       console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
+  };
+}
+export function fetchApplications() {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/applications`)
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_APPLICATIONS, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+export function fetchApplication(id) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/applications/${id}`)
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_APPLICATION, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+export function submitApplication(newApplication) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/submittedapplications`, newApplication)
+      .then((response) => {
+        console.log(response);
+        dispatch({ type: ActionTypes.SUBMIT_APPLICATION, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
   };
 }

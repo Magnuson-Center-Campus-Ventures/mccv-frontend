@@ -1,0 +1,90 @@
+ul {
+    padding: 0;
+    list-style-type: none;
+}
+h2 {
+    font-family: Avenir Next;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1.5vw;
+    padding-left: 0;
+}
+h3 {
+    font-family: Avenir Next;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.5vw;
+}
+#title {
+    padding: 1rem;
+    font-family: Avenir Next;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 3vw;
+}
+#project, #skills-section{
+    margin: 2vw;
+}
+#project {
+    width: 70%;
+}
+#skills-section {
+    background: #EDEBEB;
+    border-radius: 20px;
+    width: 30%;
+    padding-right: 1vw;
+    padding-left:1vw;
+}
+#skills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+#skill {
+    width: fit-content;
+    padding-right: 1vw;
+    padding-left: 1vw;
+    flex-grow: 1;
+    padding-bottom: 0.5vw;
+    padding-top: 0.5vw;
+    margin-bottom: 2%;
+    height: fit-content;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    box-sizing: border-box;
+    /* pill shadow */
+
+    box-shadow: 0px 0px 8px rgba(37, 40, 43, 0.12);
+    border-radius: 10px;
+}
+#skill + #skill {
+    margin-left: 2%;
+}
+.top {
+    display: flex;
+    flex-direction: row;
+}
+#submit-app {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 2vw;
+    width: 15vw;
+    height: 5vw;
+    background: #45B990;
+    border: 1px solid #000000;
+    box-sizing: border-box;
+    border-radius: 5px;
+    color: white;
+    position: fixed;
+    right: 2vw;
+    bottom: 2vw;
+}
+#submit-app:hover{
+    background-color: #2D7D61;
+}
+
+
+  
+  
+  
