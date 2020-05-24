@@ -15,6 +15,8 @@ export const ActionTypes = {
   FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
   FETCH_APPLICATION: 'FETCH_APPLICATION',
   SUBMIT_APPLICATION: 'SUBMIT_APPLICATION',
+  UPDATE_WORK_EXP: 'UPDATE_WORK_EXP',
+  DELETE_WORK_EXP: 'DELETE_WORK_EXP',
   ERROR_SET: 'ERROR_SET',
 };
 
@@ -119,7 +121,7 @@ export function fetchWorkExperiences(idArray) {
 export function updateWorkExperience(id, workExp) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/workexperiences/${id}`, workExp).then((response) => {
-      dispatch({ type: 'FETCH_WORK_EXPS', payload: response.data });
+      dispatch({ type: 'UPDATE_WORK_EXP', payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
@@ -127,10 +129,10 @@ export function updateWorkExperience(id, workExp) {
   };
 }
 
-export function deleteWorkExperience(id, workExp) {
+export function deleteWorkExperience(id) {
   return (dispatch) => {
-    axios.delete(`${ROOT_URL}/workexperiences/${id}`, workExp).then((response) => {
-      dispatch({ type: 'FETCH_WORK_EXPS', payload: response.data });
+    axios.delete(`${ROOT_URL}/workexperiences/${id}`).then((response) => {
+      dispatch({ type: 'DELETE_WORK_EXP', payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });

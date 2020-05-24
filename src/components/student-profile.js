@@ -3,7 +3,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchStudentByUserID, fetchWorkExperiences, updateStudent } from '../actions';
+import {
+  fetchStudentByUserID, fetchWorkExperiences, updateStudent, updateWorkExperience, deleteWorkExperience,
+} from '../actions';
 
 import '../styles/student-profile.scss';
 
@@ -17,9 +19,8 @@ class StudentProfile extends Component {
 
     this.state = {
       isEditing: false,
-      student: {
-        first_name: '',
-      },
+      student: {},
+      workExps: [],
     };
   }
 
@@ -36,9 +37,13 @@ class StudentProfile extends Component {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
     }
+    if (this.props.workExps !== {} && prevProps.workExps !== this.props.workExps) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ workExps: this.props.workExps });
+    }
   }
 
-  changeStateField = (field, event) => {
+  changeStudentField = (field, event) => {
     // eslint-disable-next-line prefer-destructuring
     const value = event.target.value;
 
@@ -52,10 +57,25 @@ class StudentProfile extends Component {
     });
   }
 
+  changeWorkExpField = (index, field, event) => {
+    // eslint-disable-next-line prefer-destructuring
+    const value = event.target.value;
+
+    this.setState((prevState) => {
+      const workExps = [...prevState.workExps];
+      workExps[index][field] = value;
+      return {
+        ...prevState,
+        workExps,
+      };
+    });
+  }
+
   submit = () => {
     if (this.state.isEditing) {
-      this.props.updateStudent(this.props.student.id, {
-        first_name: this.state.student.first_name,
+      this.props.updateStudent(this.state.student.id, this.state.student);
+      this.state.workExps.forEach((workExp) => {
+        this.props.updateWorkExperience(workExp._id, workExp);
       });
       this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
     } else {
@@ -78,7 +98,7 @@ class StudentProfile extends Component {
       return (
         <div className="profile-edit">
           <div className="input-title">First Name</div>
-          <input className="short-input" defaultValue={this.props.student.first_name} onBlur={(event) => this.changeStateField('first_name', event)} />
+          <input className="short-input" defaultValue={this.props.student.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
         </div>
       );
     } else {
@@ -99,10 +119,36 @@ class StudentProfile extends Component {
     }
   }
 
+  renderWorkExperiences = () => {
+    if (this.state.workExps !== []) {
+      if (this.state.isEditing) {
+        return this.state.workExps.map((workExp, index) => {
+          return (
+            <div key={index}>
+              <div className="input-title">Role</div>
+              <input className="short-input" defaultValue={workExp.role} onBlur={(event) => this.changeWorkExpField(index, 'role', event)} />
+              <div>A BUNCH OF OTHER INPUTS HERE</div>
+              <button onClick={() => this.props.deleteWorkExperience(workExp._id)}>Delete Work Experience</button>
+            </div>
+          );
+        });
+      } else {
+        return this.state.workExps.map((workExp, index) => {
+          return (
+            <div key={index}>{workExp.role}</div>
+          );
+        });
+      }
+    } else return null;
+  }
+
   render() {
     return (
       <div className="student-profile">
         {this.renderBody()}
+        <div id="work-exps">
+          {this.renderWorkExperiences()}
+        </div>
         <button className="edit-button"
           onClick={this.submit}
         >{this.state.isEditing ? 'Finish' : 'Edit Profile'}
@@ -117,4 +163,6 @@ const mapStateToProps = (reduxState) => ({
   workExps: reduxState.students.current_work_exps,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStudentByUserID, fetchWorkExperiences, updateStudent })(StudentProfile));
+export default withRouter(connect(mapStateToProps, {
+  fetchStudentByUserID, fetchWorkExperiences, updateStudent, updateWorkExperience, deleteWorkExperience,
+})(StudentProfile));
