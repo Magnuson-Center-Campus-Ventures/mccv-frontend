@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchPost } from '../actions';
+import { fetchPost, fetchApplication } from '../actions';
 import Application from './modals/application';
 import '../styles/post.scss';
 
@@ -22,6 +22,7 @@ class Post extends Component {
   }
 
   showModal = (e) => {
+    this.props.fetchApplication(this.props.current.application_id);
     this.setState({
       show: true,
     });
@@ -79,4 +80,4 @@ const mapStateToProps = (reduxState) => ({
   current: reduxState.posts.current,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchPost })(Post));
+export default withRouter(connect(mapStateToProps, { fetchPost, fetchApplication })(Post));

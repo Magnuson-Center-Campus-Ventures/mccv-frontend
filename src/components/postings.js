@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import PostListItem from './posting-item';
 import { fetchPosts } from '../actions';
 
-import '../styles/application.scss';
+import '../styles/postings.scss';
 
 class Posts extends Component {
   componentDidMount() {
