@@ -25,14 +25,14 @@ class Application extends React.Component {
       responses: this.state.questionToAnswer,
       status: 'pending',
     };
-    console.log(newApplication);
     this.props.submitApplication(newApplication);
     this.props.onClose && this.props.onClose(e);
   };
 
   onAnswerChange(event) {
     const { target: { name, value } } = event;
-    const newQuestionToAnswer = { ...this.state.questionToAnswer, [name]: value };
+    const newName = name.replace(/ /g, '_').replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, '');
+    const newQuestionToAnswer = { ...this.state.questionToAnswer, [newName]: value };
     this.setState({ questionToAnswer: newQuestionToAnswer });
   }
 

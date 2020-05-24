@@ -12,7 +12,6 @@ class Startups extends Component {
   render() {
     const mappingStartups = this.props.startups !== undefined && this.props.startups !== null
       ? this.props.startups.map((startup) => {
-        console.log('here');
         return (
           <StartupListItem startup={startup} key={startup.id} />
         );
