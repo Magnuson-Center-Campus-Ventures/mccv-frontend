@@ -5,6 +5,7 @@
     justify-content: center;
 }
 .application {
+    z-index: 100;
     border: 3px solid #B5B5B5;
     box-sizing: border-box;
     border-radius: 35px;
@@ -31,12 +32,18 @@ h3 {
     font-weight: normal;
     font-size: 1.5vw;
 }
-#title {
+.title {
+    display: flex;
+    justify-content: space-between;
     padding: 1rem;
     font-family: Avenir Next;
     font-style: normal;
     font-weight: 600;
     font-size: 3vw;
+}
+#close-app {
+    width: 3vw;
+    align-self: end;
 }
 .submit-btn {
     font-family: Roboto;

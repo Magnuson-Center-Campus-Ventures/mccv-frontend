@@ -7,6 +7,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { submitApplication } from '../../actions';
+import close from '../../../static/img/close.png';
 import '../../styles/application.scss';
 
 class Application extends React.Component {
@@ -18,7 +19,7 @@ class Application extends React.Component {
     this.onAnswerChange = this.onAnswerChange.bind(this);
   }
 
-  onClose = (e) => {
+  onSubmit = (e) => {
     const newApplication = {
       student_id: '5ec989b5b73b4100389ff681',
       post_id: this.props.current.id,
@@ -28,6 +29,10 @@ class Application extends React.Component {
     this.props.submitApplication(newApplication);
     this.props.onClose && this.props.onClose(e);
   };
+
+  onClose = (e) => {
+    this.props.onClose && this.props.onClose(e);
+  }
 
   onAnswerChange(event) {
     const { target: { name, value } } = event;
@@ -41,7 +46,6 @@ class Application extends React.Component {
     if (this.props.application.questions) {
       for (const [index, value] of this.props.application.questions.entries()) {
         items.push(
-          // eslint-disable-next-line no-loop-func
           <div>
             <h3 id="question" key={index}>{value}</h3>
             <input name={value} onChange={this.onAnswerChange} value={this.state.questionToAnswer[value]} />
@@ -61,15 +65,24 @@ class Application extends React.Component {
     return (
       <div className="application-container">
         <div id="application" className="application">
-          <div className="title">{this.props.current.title}</div>
+          <div className="title">{this.props.current.title}<img id="close-app"
+            src={close}
+            alt="close"
+            style={{ cursor: 'pointer' }}
+            onClick={(e) => {
+              this.onClose(e);
+            }}
+          />
+          </div>
           <div className="questions">
             {this.renderHelper()}
           </div>
           <div className="actions">
             <button type="submit"
               className="submit-btn"
+              style={{ cursor: 'pointer' }}
               onClick={(e) => {
-                this.onClose(e);
+                this.onSubmit(e);
               }}
             >
               Submit
