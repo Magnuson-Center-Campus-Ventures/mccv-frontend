@@ -1,23 +1,30 @@
 # Magnuson Campus Ventures 
 
-![Team Photo](Insert a Team Photo URL here)
-[*how?*](https://help.github.com/articles/about-readmes/#relative-links-and-image-paths-in-readme-files)
+![](https://i.imgur.com/36UE3Tk.jpg)
 
 Magnuson Campus Ventures is an online platform for matching Dartmouth student volunteers with local startups. A student can create a profile showcasing their interests, skills, and experiences. A startup can create a profile explaining their company's mission, and can post job opportunities explaining what skills they are looking for in student volunteers. Students and startups receive recommendations for job pairings, students can apply directly to job postings, and both parties can contact each other to talk further about opportunities.
 
-TODO: update project description, some sample screenshots or mockups
+currently live at [http://cs52-mcv.surge.sh/](http://cs52-mcv.surge.sh/)
+
+TODO: some sample screenshots or mockups
 
 ## Architecture
 
 TODO:  descriptions of code organization and tools and libraries used
 
 ## Setup
-
-TODO: how to get the project dev environment up and running, npm install etc
+To set up this repo on your local environment, clone the repo using the git url
+install dependencies using yarn and run
+```
+git clone REPOURL
+yarn install
+yarn start 
+```
 
 ## Deployment
 
-TODO: how to deploy the project
+Currently setup to auto-deploy from master with travis ci and surge integration.
+Live project can be found [here](http://cs52-mcv.surge.sh/)
 
 ## Authors
 
