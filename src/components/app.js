@@ -5,6 +5,7 @@ import {
 import Home from './home';
 import Postings from './postings';
 import Startups from './startups';
+import StartupProfile from './startup-profile';
 import StudentProfile from './student-profile';
 import Post from './post';
 import Nav from './nav';
@@ -18,7 +19,7 @@ const App = (props) => {
           <Route exact path="/" component={Home} />
           <Route path="/posts/:postID" component={Post} />
           <Route path="/posts" component={Postings} />
-          <Route path="/startups/:startupID" />
+          <Route path="/startups/:startupID" component={StartupProfile} />
           <Route path="/startups" component={Startups} />
           <Route path="/applications" />
           <Route path="/profile" component={StudentProfile} />

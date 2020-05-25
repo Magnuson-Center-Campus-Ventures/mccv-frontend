@@ -45,10 +45,14 @@ export function fetchPost(id) {
   };
 }
 
-export function fetchStartup() {
-  return {
-    type: ActionTypes.FETCH_STARTUP,
-    payload: null,
+export function fetchStartup(id) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/startups/${id}`).then((response) => {
+      dispatch({ type: 'FETCH_STARTUP', payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
   };
 }
 
