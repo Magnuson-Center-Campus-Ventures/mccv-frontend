@@ -6,12 +6,14 @@ import PostsReducer from './posts-reducer';
 import StartupsReducer from './startups-reducer';
 import StudentsReducer from './students-reducer';
 import ApplicationReducer from './application-reducer';
+import AuthReducer from './auth-reducer';
 
 const rootReducer = combineReducers({
   posts: PostsReducer,
   startups: StartupsReducer,
   students: StudentsReducer,
   application: ApplicationReducer,
+  auth: AuthReducer,
 });
 
 export default rootReducer;

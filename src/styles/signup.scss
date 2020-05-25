@@ -1,0 +1,70 @@
+.signupBoard {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup {
+  width: 70%;
+  padding: 2em;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.signup h1 {
+  margin: 0px;
+}
+.signup h2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  font-size: 1.5em;
+  margin: 0px;
+}
+
+.signupEmail, .signupPassword {
+  width: 100%;
+  margin-top: 1em;
+}
+
+.signup input{
+  width: 100%;
+  margin-top: .5em;
+  margin-bottom: .5em;
+  padding: .5em;
+  font-size: 1em;
+  border-radius: 5px;
+  border: rgb(138, 138, 138) solid 1px;
+}
+
+.signupBtn {
+  background-color: #45B990;
+  color: white;
+  border: 0;
+  text-decoration: none;
+  font-size: 1.5em;
+  border-radius: 2em;
+  width: 7em;
+  height: 2.5em;
+  transition: width .25s, height .25s, font-size .25s;
+  transition-timing-function: linear;
+  margin-top: .5em;
+  font-family: Avenir Next;
+}
+
+.signupBtn:hover {
+  background-color: #2D7D61;
+}
+
+.signupError {
+  color: #EB2828;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  font-size: 1.5em;
+  margin-top: .5em;
+}
