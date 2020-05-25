@@ -1,4 +1,4 @@
-.postList{
+.list{
     display: flex; 
     flex-direction: row;
     flex-wrap: wrap;
@@ -6,23 +6,70 @@
     margin-bottom: 3%;
 }
 
-.postListItem{
+.listItem{
     background-color: #EFEFF0;
     margin-top: 3%;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    height: 100%;
-}
-
-.postListItem:hover{
-    box-shadow: 1px 8px 8px  rgba(0, 0, 0, 0.25);
-}
-
-.postListItem > a{
+    // height: 40vh;
+    // width: 30vw;
+    height: 275px;
+    width: 275px;
+    display: flex;
+    flex-direction: column;
     color: #000000
 }
 
-.postTitle{ 
-    font-weight: normal;
-    width: 20vw;
-    height: 30vh;
+.companyInfo{
+    display: flex;
+    justify-content: space-between;
+    height: 40%;
 }
+
+.companyText{
+    width: 55%;
+}
+
+.companyText > h1{
+    font-weight: normal;
+    margin-block-end: 0;
+    margin-block-start: .5em;
+}
+
+.companyText > h2{
+    font-weight: normal;
+    border-bottom: 0;
+    display: flex;
+    font-size: 80%;
+}
+
+.locationIcon{
+    background: url('../static/imgs/location.png');
+    background-size: 15px 15px;
+    height: 15px;
+    width: 15px;
+    display: block;
+}
+
+#startupName{ 
+    font-size: 150%;
+}
+
+.postInfo{
+    height: 60%;
+}
+
+.listItem:hover{
+    box-shadow: 1px 8px 8px  rgba(0, 0, 0, 0.25);
+}
+
+// going to have to fix font sizing, esp for long names, etc. need to get font-size to match window size & div size
+#postTitle{ 
+    font-weight: normal;
+    font-size: 120%;
+}
+
+#matched{
+    font-weight: normal;
+    border-bottom: 0;
+}
+
