@@ -99,19 +99,32 @@ class StudentProfile extends Component {
         <div className="profile-edit">
           <div className="input-title">First Name</div>
           <input className="short-input" defaultValue={this.props.student.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
+          <div className="input-title">Last Name</div>
+          <input className="short-input" defaultValue={this.props.student.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
         </div>
       );
     } else {
       return (
         <div className="profile-fixed">
           <div id="profile-header">
-            <div>{`${this.state.student.first_name} ${this.props.student.last_name}`}</div>
+            <h1>{`${this.state.student.first_name} ${this.props.student.last_name}`}</h1>
             <div>{`Class of ${this.props.student.grad_year}`}</div>
             <div id="major-row">
               {this.renderArray(this.props.student.majors)}
             </div>
             <div id="minor-row">
               {this.renderArray(this.props.student.minors)}
+            </div>
+            <div id="lists-row">
+              <div className="list-section">
+                <h2>Industries</h2>
+              </div>
+              <div className="list-section">
+                <h2>Skills</h2>
+              </div>
+              <div className="list-section">
+                <h2>Classes</h2>
+              </div>
             </div>
           </div>
         </div>
@@ -143,6 +156,7 @@ class StudentProfile extends Component {
   }
 
   render() {
+    console.log(this.props.workExps);
     return (
       <div className="student-profile">
         {this.renderBody()}
