@@ -4,7 +4,7 @@
 
 Magnuson Campus Ventures is an online platform for matching Dartmouth student volunteers with local startups. A student can create a profile showcasing their interests, skills, and experiences. A startup can create a profile explaining their company's mission, and can post job opportunities explaining what skills they are looking for in student volunteers. Students and startups receive recommendations for job pairings, students can apply directly to job postings, and both parties can contact each other to talk further about opportunities.
 
-currently live at [](http://cs52-mcv.surge.sh/)
+currently live at [http://cs52-mcv.surge.sh/](http://cs52-mcv.surge.sh/)
 
 TODO: some sample screenshots or mockups
 
