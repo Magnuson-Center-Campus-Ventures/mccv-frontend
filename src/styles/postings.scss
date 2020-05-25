@@ -23,10 +23,13 @@
     display: flex;
     justify-content: space-between;
     height: 40%;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
 .companyText{
     width: 55%;
+    text-align: center;
 }
 
 .companyText > h1{
@@ -35,11 +38,19 @@
     margin-block-start: .5em;
 }
 
-.companyText > h2{
+.location{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px
+}
+
+.location > h2{
     font-weight: normal;
     border-bottom: 0;
     display: flex;
     font-size: 80%;
+    text-align: center;
+    padding: 0;
 }
 
 .locationIcon{
@@ -56,15 +67,18 @@
 
 .postInfo{
     height: 60%;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
 .listItem:hover{
     box-shadow: 1px 8px 8px  rgba(0, 0, 0, 0.25);
 }
 
-// going to have to fix font sizing, esp for long names, etc. need to get font-size to match window size & div size
+// going to have to fix font sizing, esp for long names, edge cases, etc. need to get font-size to match window size & div size
 #postTitle{ 
     font-weight: normal;
+    text-align: center;
     font-size: 120%;
 }
 
