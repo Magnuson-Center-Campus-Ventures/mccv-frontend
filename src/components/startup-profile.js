@@ -65,7 +65,6 @@ class Startup extends Component {
   }
 
   renderIndustries() {
-    console.log(this.props.startup.industry);
     return (
       this.props.startup.industry.map((industry) => {
         return (
