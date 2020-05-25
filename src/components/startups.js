@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import StartupListItem from './startup-item';
 import { fetchStartups } from '../actions';
+import '../styles/postings.scss';
+
 
 class Startups extends Component {
   componentDidMount() {
@@ -24,7 +26,7 @@ class Startups extends Component {
     return (
       this.props.startups !== undefined
         ? (
-          <div className="postList">
+          <div className="list">
             {mappingStartups}
           </div>
         ) : (

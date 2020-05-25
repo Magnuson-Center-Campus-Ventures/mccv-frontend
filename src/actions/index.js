@@ -50,19 +50,26 @@ export function fetchPost(id) {
 
 export function fetchStartup(id) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/startups/${id}`).then((response) => {
-      dispatch({ type: 'FETCH_STARTUP', payload: response.data });
-    }).catch((error) => {
-      console.log(error);
-      dispatch({ type: ActionTypes.ERROR_SET, error });
-    });
+    axios.get(`${ROOT_URL}/startups/${id}`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+      })
+      .catch((error) => {
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
   };
 }
 
 export function fetchStartups() {
-  return {
-    type: ActionTypes.FETCH_STARTUPS,
-    payload: null,
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/startups`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
   };
 }
 
