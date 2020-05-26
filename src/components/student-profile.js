@@ -4,14 +4,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  fetchStudentByUserID, fetchWorkExperiences, updateStudent, updateWorkExperience, deleteWorkExperience,
+  fetchStudentByUserID, fetchWorkExperiences, updateStudent, fetchUser,
+  updateWorkExperience, deleteWorkExperience, fetchCertainIndustries,
+  fetchCertainSkills, fetchCertainClasses,
 } from '../actions';
 
 import '../styles/student-profile.scss';
-
-// Filler until we have an actual userID from doing auth
-// (A student document in the students collection also has this filler userID)
-const userID = 'id123';
 
 class StudentProfile extends Component {
   constructor(props) {
@@ -21,11 +19,15 @@ class StudentProfile extends Component {
       isEditing: false,
       student: {},
       workExps: [],
+      industries: [],
+      skills: [],
+      classes: [],
     };
   }
 
   componentDidMount() {
-    this.props.fetchStudentByUserID(userID);
+    this.props.fetchStudentByUserID(this.props.userID);
+    this.props.fetchUser(this.props.userID);
   }
 
   // Get student fields into state (for editing),
@@ -34,12 +36,27 @@ class StudentProfile extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       this.props.fetchWorkExperiences(this.props.student.work_exp);
+      this.props.fetchCertainIndustries(this.props.student.interested_industries);
+      this.props.fetchCertainSkills(Object.keys(this.props.student.skills));
+      this.props.fetchCertainClasses(this.props.student.relevant_classes);
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
     }
     if (this.props.workExps !== {} && prevProps.workExps !== this.props.workExps) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ workExps: this.props.workExps });
+    }
+    if (this.props.industries !== {} && prevProps.industries !== this.props.industries) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ industries: this.props.industries });
+    }
+    if (this.props.skills !== {} && prevProps.skills !== this.props.skills) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ skills: this.props.skills });
+    }
+    if (this.props.classes !== {} && prevProps.classes !== this.props.classes) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ classes: this.props.classes });
     }
   }
 
@@ -83,12 +100,26 @@ class StudentProfile extends Component {
     }
   }
 
-  renderArray = (array) => {
+  renderMajMin = (array) => {
     if (array) {
       return array.map((elem, index) => {
-        return (
-          <div key={index}>{elem}</div>
-        );
+        if (index < array.length - 1) {
+          return (
+            <div key={index} className="majors">{`${elem},`}</div>
+          );
+        } else {
+          return (
+            <div key={index} className="minors">{elem}</div>
+          );
+        }
+      });
+    } else return null;
+  }
+
+  renderPills = (pillsArray) => {
+    if (pillsArray) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="profile-pill">{elem.name}</div>;
       });
     } else return null;
   }
@@ -101,6 +132,10 @@ class StudentProfile extends Component {
           <input className="short-input" defaultValue={this.props.student.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
           <div className="input-title">Last Name</div>
           <input className="short-input" defaultValue={this.props.student.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
+          <div className="input-title">Email Address</div>
+          <input className="short-input" defaultValue={this.props.email} onBlur={(event) => console.log(event.target.value)} />
+          <div className="input-title">Phone Number</div>
+          <input className="short-input" defaultValue={this.props.student.phone_number} onBlur={(event) => this.changeStudentField('phone_number', event)} />
         </div>
       );
     } else {
@@ -110,20 +145,25 @@ class StudentProfile extends Component {
             <h1>{`${this.state.student.first_name} ${this.props.student.last_name}`}</h1>
             <div>{`Class of ${this.props.student.grad_year}`}</div>
             <div id="major-row">
-              {this.renderArray(this.props.student.majors)}
+              {this.renderMajMin(this.props.student.majors)}
             </div>
             <div id="minor-row">
-              {this.renderArray(this.props.student.minors)}
+              {this.renderMajMin(this.props.student.minors)}
             </div>
+            <div>{this.props.email}</div>
+            <div>{this.state.student.phone_number}</div>
             <div id="lists-row">
               <div className="list-section">
                 <h2>Industries</h2>
+                {this.renderPills(this.state.industries)}
               </div>
               <div className="list-section">
                 <h2>Skills</h2>
+                {this.renderPills(this.state.skills)}
               </div>
               <div className="list-section">
                 <h2>Classes</h2>
+                {this.renderPills(this.state.classes)}
               </div>
             </div>
           </div>
@@ -137,10 +177,13 @@ class StudentProfile extends Component {
       if (this.state.isEditing) {
         return this.state.workExps.map((workExp, index) => {
           return (
-            <div key={index}>
+            <div key={index} className="work-exp">
               <div className="input-title">Role</div>
               <input className="short-input" defaultValue={workExp.role} onBlur={(event) => this.changeWorkExpField(index, 'role', event)} />
-              <div>A BUNCH OF OTHER INPUTS HERE</div>
+              <div className="input-title">Employer</div>
+              <input className="short-input" defaultValue={workExp.employer} onBlur={(event) => this.changeWorkExpField(index, 'employer', event)} />
+              <div className="input-title">Location</div>
+              <input className="short-input" defaultValue={workExp.location} onBlur={(event) => this.changeWorkExpField(index, 'location', event)} />
               <button onClick={() => this.props.deleteWorkExperience(workExp._id)}>Delete Work Experience</button>
             </div>
           );
@@ -148,7 +191,16 @@ class StudentProfile extends Component {
       } else {
         return this.state.workExps.map((workExp, index) => {
           return (
-            <div key={index}>{workExp.role}</div>
+            <div key={index} className="work-exp">
+              <div>{workExp.role}</div>
+              <div>{workExp.employer}</div>
+              <div>{workExp.location}</div>
+              <div className="date-row">
+                {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getDate()}/${new Date(workExp.start_date).getFullYear()} - `}
+                {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getDate()}/${new Date(workExp.end_date).getFullYear()}`}
+              </div>
+              <div>{workExp.description}</div>
+            </div>
           );
         });
       }
@@ -156,11 +208,11 @@ class StudentProfile extends Component {
   }
 
   render() {
-    console.log(this.props.workExps);
     return (
       <div className="student-profile">
         {this.renderBody()}
         <div id="work-exps">
+          <h2>Work Experience</h2>
           {this.renderWorkExperiences()}
         </div>
         <button className="edit-button"
@@ -173,10 +225,23 @@ class StudentProfile extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
+  userID: reduxState.auth.userID,
   student: reduxState.students.current,
+  email: reduxState.user.email,
   workExps: reduxState.students.current_work_exps,
+  industries: reduxState.industries.current,
+  skills: reduxState.skills.current,
+  classes: reduxState.classes.current,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStudentByUserID, fetchWorkExperiences, updateStudent, updateWorkExperience, deleteWorkExperience,
+  fetchStudentByUserID,
+  fetchWorkExperiences,
+  updateStudent,
+  fetchUser,
+  updateWorkExperience,
+  deleteWorkExperience,
+  fetchCertainIndustries,
+  fetchCertainSkills,
+  fetchCertainClasses,
 })(StudentProfile));
