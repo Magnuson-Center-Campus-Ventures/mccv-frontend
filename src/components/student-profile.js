@@ -184,13 +184,13 @@ class StudentProfile extends Component {
               <input className="short-input" defaultValue={workExp.employer} onBlur={(event) => this.changeWorkExpField(index, 'employer', event)} />
               <div className="input-title">Location</div>
               <input className="short-input" defaultValue={workExp.location} onBlur={(event) => this.changeWorkExpField(index, 'location', event)} />
-              <div className="input-title">Start Date</div>
+              <div className="input-title">Start Date (YYYY-MM-DD)</div>
               <input className="short-input"
                 placeholder="YYYY-MM-DD"
                 defaultValue={`${new Date(workExp.start_date).getFullYear()}-${new Date(workExp.start_date).getMonth() + 1}-${new Date(workExp.start_date).getDate()}`}
                 onBlur={(event) => this.changeWorkExpField(index, 'start_date', event)}
               />
-              <div className="input-title">End Date</div>
+              <div className="input-title">End Date (YYYY-MM-DD)</div>
               <input className="short-input"
                 placeholder="YYYY-MM-DD"
                 defaultValue={`${new Date(workExp.end_date).getFullYear()}-${new Date(workExp.end_date).getMonth() + 1}-${new Date(workExp.end_date).getDate()}`}
