@@ -15,8 +15,9 @@ const store = createStore(reducers, {}, compose(
 ));
 
 const token = localStorage.getItem('token');
-if (token) {
-  store.dispatch({ type: 'AUTH_USER' });
+const userID = localStorage.getItem('userID');
+if (token && userID) {
+  store.dispatch({ type: 'AUTH_USER', id: userID });
 }
 
 // we now wrap App in a Provider
