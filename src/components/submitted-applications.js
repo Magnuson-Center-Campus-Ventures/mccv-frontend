@@ -29,7 +29,7 @@ class SubmittedApplications extends Component {
           <div className="Status">
             <div>{post.title}</div>
             <div>{post.location}</div>
-            <div>{application.status}</div>
+            <div>status: {application.status}</div>
           </div>
         </Link>
       );
