@@ -7,6 +7,7 @@ const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 export const ActionTypes = {
   FETCH_POST: 'FETCH_POST',
   FETCH_POSTS: 'FETCH_POSTS',
+  // SET_SEARCH_RESULTS: 'SET_SEARCH_RESULTS',
   FETCH_STARTUP: 'FETCH_STARTUP',
   FETCH_STARTUPS: 'FETCH_STARTUPS',
   FETCH_STUDENT: 'FETCH_STUDENT',
@@ -24,6 +25,19 @@ export const ActionTypes = {
 };
 
 export function fetchPosts() {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/posts`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
+export function fetchPostSearch(search) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/posts`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
@@ -72,6 +86,19 @@ export function fetchStartups() {
       });
   };
 }
+
+export function fetchSearchResults(searchterm) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/startups/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+      })
+      .catch((error) => {
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
 
 export function fetchStudents() {
   return (dispatch) => {
