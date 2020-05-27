@@ -17,9 +17,10 @@ class PostListItem extends Component {
     };
   }
 
-  // componentDidMount() {
-  //   this.setState({ startup: findStartup(this.props.post.startup_id) });
-  // }
+  componentDidMount() {
+    // findStartup(this.props.post.startup_id);
+    // this.setState({ startup: findStartup(this.props.post.startup_id) });
+  }
 
 
   render() {
@@ -27,14 +28,14 @@ class PostListItem extends Component {
     return (
       <Link to={route} key={this.props.post.id} className="listItem link">
         <div className="companyInfo">
-          {/* <img src={startup.logo} alt="no logo" />
+          <img src={this.props.startup.logo} alt="no logo" />
           <div className="companyText">
-            <h1 id="startupName"> {startup.name} </h1>
+            <h1 id="startupName"> {this.props.startup.name} </h1>
             <div className="location">
               <span className="locationIcon" />
-              <h2> {startup.location} </h2>
+              <h2> {this.props.startup.location} </h2>
             </div>
-          </div> */}
+          </div>
         </div>
         <div className="postInfo">
           <h1 id="postTitle">{this.props.post.title}</h1>

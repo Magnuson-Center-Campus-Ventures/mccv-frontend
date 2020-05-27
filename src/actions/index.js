@@ -46,14 +46,13 @@ export function fetchPosts() {
   };
 }
 
-export function fetchPostSearch(search) {
+export function fetchPostSearch(searchterm) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts`, { headers: { authorization: localStorage.getItem('token') } })
+    axios.get(`${ROOT_URL}/posts/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
       })
       .catch((error) => {
-        console.log('broken');
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
