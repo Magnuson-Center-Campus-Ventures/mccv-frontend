@@ -59,11 +59,6 @@ class StudentProfile extends Component {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ classes: this.props.classes });
     }
-    // // Update student when a work experience is added
-    // if (this.props.student !== {} && prevProps.student.work_exp !== [] && prevProps.student.work_exp !== this.props.student.work_exp) {
-    //   console.log('here');
-    //   this.props.updateStudent(this.state.student.id, this.props.student);
-    // }
   }
 
   changeStudentField = (field, event) => {

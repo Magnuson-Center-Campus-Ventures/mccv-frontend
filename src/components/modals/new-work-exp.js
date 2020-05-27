@@ -1,7 +1,6 @@
 /* eslint-disable react/button-has-type */
 import React from 'react';
 import { connect } from 'react-redux';
-// import { withRouter } from 'react-router-dom';
 import { createWorkExperience } from '../../actions';
 import close from '../../../static/img/close.png';
 import '../../styles/student-profile.scss';
@@ -19,17 +18,6 @@ class NewWorkExp extends React.Component {
       currently_working: false,
     };
   }
-
-  onSubmit = (e) => {
-    const newApplication = {
-      student_id: '5ec989b5b73b4100389ff681',
-      post_id: this.props.current.id,
-      responses: this.state.questionToAnswer,
-      status: 'pending',
-    };
-    this.props.submitApplication(newApplication);
-    // this.props.onClose && this.props.onClose(e);
-  };
 
   render() {
     if (!this.props.show) {
@@ -77,9 +65,5 @@ class NewWorkExp extends React.Component {
     );
   }
 }
-
-// const mapStateToProps = (reduxState) => ({
-
-// });
 
 export default connect(null, { createWorkExperience })(NewWorkExp);
