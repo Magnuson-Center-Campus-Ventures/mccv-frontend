@@ -70,21 +70,3 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, { fetchPosts, fetchStartups, fetchPostSearch })(Posts));
-
-// render() {
-//   const mappingPostings = this.props.posts.map((post) => {
-//     this.props.fetchStartup(post.startup_id);
-//     // console.log('mapping error?');
-//     return (
-//       <PostListItem post={post} startup={this.props.startup} key={post.id} />
-//     );
-//   });
-//   return (
-//     this.props.posts !== undefined
-//       ? (
-//         <div className="list">
-//           {mappingPostings}
-//         </div>
-//       ) : (<div />)
-//   );
-// }
