@@ -12,6 +12,7 @@ import Nav from './nav';
 import Signin from './signin';
 import Signup from './signup';
 import StudentSignUpBio from './studentSignUp/student-signup-bio';
+import StudentSignUpTiming from './studentSignUp/student-signup-timing';
 
 const App = (props) => {
   return (
@@ -29,6 +30,7 @@ const App = (props) => {
           <Route path="/signin" component={Signin} />
           <Route path="/signup" component={Signup} />
           <Route path="/student-signup-bio" component={StudentSignUpBio} />
+          <Route path="/student-signup-timing" component={StudentSignUpTiming} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>
       </div>
