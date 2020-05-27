@@ -65,7 +65,7 @@ class Application extends React.Component {
     return (
       <div className="application-container">
         <div id="application" className="application">
-          <div className="title">{this.props.current.title}<img id="close-app"
+          <div className="application-title">{this.props.current.title}<img id="close-app"
             src={close}
             alt="close"
             style={{ cursor: 'pointer' }}

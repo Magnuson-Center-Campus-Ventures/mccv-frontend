@@ -8,7 +8,7 @@ import {
   updateWorkExperience, deleteWorkExperience, fetchCertainIndustries,
   fetchCertainSkills, fetchCertainClasses,
 } from '../actions';
-
+import NewWorkExp from './modals/new-work-exp';
 import '../styles/student-profile.scss';
 
 class StudentProfile extends Component {
@@ -17,6 +17,7 @@ class StudentProfile extends Component {
 
     this.state = {
       isEditing: false,
+      showWorkExpModal: false,
       student: {},
       workExps: [],
       industries: [],
@@ -58,6 +59,11 @@ class StudentProfile extends Component {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ classes: this.props.classes });
     }
+    // // Update student when a work experience is added
+    // if (this.props.student !== {} && prevProps.student.work_exp !== [] && prevProps.student.work_exp !== this.props.student.work_exp) {
+    //   console.log('here');
+    //   this.props.updateStudent(this.state.student.id, this.props.student);
+    // }
   }
 
   changeStudentField = (field, event) => {
@@ -87,6 +93,14 @@ class StudentProfile extends Component {
       };
     });
   }
+
+  showWorkExpModal = () => {
+    this.setState({ showWorkExpModal: true });
+  };
+
+  hideWorkExpModal = () => {
+    this.setState({ showWorkExpModal: false });
+  };
 
   submit = () => {
     if (this.state.isEditing) {
@@ -224,10 +238,15 @@ class StudentProfile extends Component {
   render() {
     return (
       <div className="student-profile">
+        <NewWorkExp
+          onClose={this.hideWorkExpModal}
+          show={this.state.showWorkExpModal}
+        />
         {this.renderBody()}
         <div id="work-exps">
           <h2>Work Experience</h2>
           {this.renderWorkExperiences()}
+          {this.state.isEditing ? <button onClick={() => this.setState({ showWorkExpModal: true })}>Add Work Experience</button> : null}
         </div>
         <button className="edit-button"
           onClick={this.submit}
@@ -240,7 +259,7 @@ class StudentProfile extends Component {
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
-  student: reduxState.students.current,
+  student: reduxState.students.current_student,
   email: reduxState.user.email,
   workExps: reduxState.students.current_work_exps,
   industries: reduxState.industries.current,

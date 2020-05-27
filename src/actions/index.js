@@ -13,6 +13,9 @@ export const ActionTypes = {
   FETCH_STUDENT: 'FETCH_STUDENT',
   FETCH_STUDENTS: 'FETCH_STUDENTS',
   FETCH_WORK_EXPS: 'FETCH_WORK_EXPS',
+  ADD_WORK_EXP: 'ADD_WORK_EXP',
+  UPDATE_WORK_EXP: 'UPDATE_WORK_EXP',
+  DELETE_WORK_EXP: 'DELETE_WORK_EXP',
   FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
   FETCH_APPLICATION: 'FETCH_APPLICATION',
   FETCH_ALL_INDUSTRIES: 'FETCH_ALL_INDUSTRIES',
@@ -22,8 +25,6 @@ export const ActionTypes = {
   FETCH_ALL_CLASSES: 'FETCH_ALL_CLASSES',
   FETCH_SOME_CLASSES: 'FETCH_SOME_CLASSES',
   SUBMIT_APPLICATION: 'SUBMIT_APPLICATION',
-  UPDATE_WORK_EXP: 'UPDATE_WORK_EXP',
-  DELETE_WORK_EXP: 'DELETE_WORK_EXP',
   ERROR_SET: 'ERROR_SET',
   AUTH_USER: 'AUTH_USER',
   DEAUTH_USER: 'DEAUTH_USER',
@@ -135,6 +136,17 @@ export function fetchWorkExperiences(idArray) {
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
+export function createWorkExperience(workExp) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/workexperiences`, workExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_WORK_EXP, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
   };
 }
