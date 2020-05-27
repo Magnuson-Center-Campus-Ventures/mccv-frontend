@@ -18,6 +18,8 @@ export const ActionTypes = {
   DELETE_WORK_EXP: 'DELETE_WORK_EXP',
   FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
   FETCH_APPLICATION: 'FETCH_APPLICATION',
+  FETCH_SUBMITTED_APPLICATIONS: 'FETCH_SUBMITTED_APPLICATIONS',
+  FETCH_SUBMITTED_APPLICATION: 'FETCH_SUBMITTED_APPLICATION',
   FETCH_ALL_INDUSTRIES: 'FETCH_ALL_INDUSTRIES',
   FETCH_SOME_INDUSTRIES: 'FETCH_SOME_INDUSTRIES',
   FETCH_ALL_SKILLS: 'FETCH_ALL_SKILLS',
@@ -284,6 +286,33 @@ export function submitApplication(newApplication) {
       });
   };
 }
+
+export function fetchSubmittedApplications() {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/submittedapplications`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_SUBMITTED_APPLICATIONS, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
+export function fetchSubmittedApplication(id) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/submittedapplications/${id}`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_SUBMITTED_APPLICATION, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
 
 // from lab5 auth
 // trigger to deauth if there is error
