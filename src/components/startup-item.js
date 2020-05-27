@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/postings.scss';
@@ -6,7 +7,7 @@ const StartupListItem = (props) => {
   const route = `/startups/${props.startup._id}`;
   const industries = props.startup.industry.map((industry, index) => {
     return (
-      <div className="industryPill" id={index}>
+      <div className="industryPill" key={index}>
         {industry}
       </div>
     );

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import StartupListItem from './startup-item';
 import SearchBar from './search-bar';
-import { fetchStartups, setResults } from '../actions';
-import startupSearch from '../../services/datastore';
+import { fetchStartups, fetchSearchResults } from '../actions';
+// import startupSearch from '../../services/datastore';
 import '../styles/postings.scss';
 
 
@@ -13,10 +13,14 @@ class Startups extends Component {
     this.props.fetchStartups();
   }
 
+  // search = (text) => {
+  //   startupSearch(text).then((searchResults) => {
+  //     this.props.setResults(searchResults);
+  //   });
+  // }
+
   search = (text) => {
-    startupSearch(text).then((searchResults) => {
-      this.props.setResults(searchResults);
-    });
+    this.props.fetchSearchResults(text);
   }
 
   render() {
@@ -52,4 +56,4 @@ const mapStateToProps = (reduxState) => ({
   startups: reduxState.startups.all,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStartups, setResults })(Startups));
+export default withRouter(connect(mapStateToProps, { fetchStartups, fetchSearchResults })(Startups));

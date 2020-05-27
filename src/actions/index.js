@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -98,7 +98,8 @@ export function fetchSearchResults(searchterm) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startups/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+        console.log('here');
+        dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
       })
       .catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });

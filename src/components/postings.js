@@ -15,22 +15,20 @@ class Posts extends Component {
     this.props.fetchStartups();
   }
 
-  // findStartup(id) {
-  //   // console.log('here');
-  //   console.log(id);
-  //   this.props.startups.map((startup) => {
-  //     console.log(id === startup.id);
-  //     if (id === startup.id) {
-  //       console.log(startup);
-  //       return startup;
-  //     }
-  //   });
-  // }
+  findStartup(id) {
+    this.props.startups.map((startup) => {
+      if (id === startup.id) {
+        return startup;
+      }
+    });
+  }
 
 
   render() {
     const mappingPostings = this.props.posts !== undefined && this.props.posts !== null
       ? this.props.posts.map((post) => {
+        const startup = this.findStartup(post.startup_id);
+        console.log(startup);
         return (
           <PostListItem post={post} key={post.id} />
         );
