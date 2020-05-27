@@ -8,7 +8,6 @@ export const ActionTypes = {
   FETCH_USER: 'FETCH_USER',
   FETCH_POST: 'FETCH_POST',
   FETCH_POSTS: 'FETCH_POSTS',
-  // SET_SEARCH_RESULTS: 'SET_SEARCH_RESULTS',
   FETCH_STARTUP: 'FETCH_STARTUP',
   FETCH_STARTUPS: 'FETCH_STARTUPS',
   FETCH_STUDENT: 'FETCH_STUDENT',
@@ -46,14 +45,13 @@ export function fetchPosts() {
   };
 }
 
-export function fetchPostSearch(search) {
+export function fetchPostSearch(searchterm) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts`, { headers: { authorization: localStorage.getItem('token') } })
+    axios.get(`${ROOT_URL}/posts/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
       })
       .catch((error) => {
-        console.log('broken');
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
