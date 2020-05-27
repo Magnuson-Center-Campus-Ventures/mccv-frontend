@@ -11,6 +11,7 @@ export const ActionTypes = {
   FETCH_STARTUP: 'FETCH_STARTUP',
   FETCH_STARTUPS: 'FETCH_STARTUPS',
   FETCH_STUDENT: 'FETCH_STUDENT',
+  CREATE_STUDENT: 'CREATE_STUDENT',
   FETCH_STUDENTS: 'FETCH_STUDENTS',
   FETCH_WORK_EXPS: 'FETCH_WORK_EXPS',
   FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
@@ -75,6 +76,25 @@ export function fetchStartups() {
       })
       .catch((error) => {
         console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
+// create a student, save the studentID in local history and pass to redux state
+export function createStudent(newStudent) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/students`, newStudent, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        // localStorage.setItem('studentID', response.data.id);
+        // console.log(`studentID ${response.data.id}`);
+        // dispatch({ type: ActionTypes.CREATE_STUDENT, payload: response.data, studentID: response.data.id });
+        console.log(response.data);
+        dispatch({ type: ActionTypes.CREATE_STUDENT, payload: response.data });
+        console.log('student profile created');
+      })
+      .catch((error) => {
+        console.log(error.response.data);
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -273,10 +293,10 @@ export function submitApplication(newApplication) {
   };
 }
 
-// from lab5 auth
-// trigger to deauth if there is error
-// can also use in your error reducer if you have one to display an error message
 export function authError(error) {
+  // lab5
+  // trigger to deauth if there is error
+  // can also use in your error reducer if you have one to display an error message
   return {
     type: ActionTypes.AUTH_ERROR,
     message: error,
@@ -293,9 +313,10 @@ export function signinUser({ email, password }, history) {
   // on error should dispatch(authError(`Sign In Failed: ${error.response.data}`));
   return (dispatch) => {
     axios.post(`${ROOT_URL}/signin`, { email, password }).then((response) => {
-      dispatch({ type: ActionTypes.AUTH_USER, id: response.data.id });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userID', response.data.id);
+      console.log('signed in successfully');
+      dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       history.push('/');
     }).catch((error) => {
       console.log(error.response.data);
@@ -315,9 +336,11 @@ export function signupUser({ email, password }, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/signup`, { email, password }).then((response) => {
       localStorage.setItem('token', response.data.token);
+      console.log(response.data.token);
+      console.log(response.data.id);
       localStorage.setItem('userID', response.data.id);
       console.log('signed up succesfully');
-      dispatch({ type: ActionTypes.AUTH_USER, id: response.data.id });
+      dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       history.push('/');
     }).catch((error) => {
       // eslint-disable-next-line no-alert

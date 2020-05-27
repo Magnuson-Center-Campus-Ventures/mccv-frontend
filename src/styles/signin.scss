@@ -1,24 +1,39 @@
+.signinPage {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .signinBoard {
+  height: 50%;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
-.signin {
-  width: 70%;
-  padding: 2em;
-  background: white;
+.signinLeft {
+  width: 50%;
+  margin: 2em;
+  padding-left: 2em;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
 
-.signin h1 {
-  margin: 0px;
+.signinRight {
+  width: 50%;
+  margin: 2em;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
 }
-.signin h2 {
+
+.signinRight h2 {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -28,11 +43,11 @@
 
 .signinEmail, .signinPassword {
   width: 100%;
-  margin-top: 1em;
+  margin-top: 3em;
 }
 
-.signin input{
-  width: 100%;
+.signinRight input{
+  width: 90%;
   margin-top: .5em;
   margin-bottom: .5em;
   padding: .5em;
@@ -41,30 +56,55 @@
   border: rgb(138, 138, 138) solid 1px;
 }
 
-.signinBtn {
+.signinButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.signinLoginBtn {
   background-color:  #45B990;
   color: white;
   border: 0;
   text-decoration: none;
   font-size: 1.5em;
-  border-radius: 2em;
+  border-radius: 1em;
   width: 7em;
   height: 2.5em;
   transition: width .25s, height .25s, font-size .25s;
   transition-timing-function: linear;
-  margin-top: .5em;
+  margin: 1.5em;
   font-family: Avenir Next;
 }
 
-.signinBtn:hover {
-  background-color: rgb(33, 85, 134)
+.signinLoginBtn:hover {
+  background-color: #2D7D61;
 }
 
+.signinSignupBtn {
+  background-color: #EFEFF0;
+  color: black;
+  border: 3px solid #C2C8CB;
+  text-decoration: none;
+  font-size: 1.5em;
+  border-radius: 1em;
+  width: 7em;
+  height: 2.5em;
+  transition: width .25s, height .25s, font-size .25s;
+  transition-timing-function: linear;
+  margin: 1.5em;
+  font-family: Avenir Next;
+}
+
+.signinSignupBtn:hover {
+  background-color: #C2C8CB;
+}
 .signinError {
   color: #EB2828;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: center;
   font-size: 1.5em;
   margin-top: .5em;
 }

@@ -16,6 +16,16 @@ class Nav extends Component {
     this.props.signoutUser(this.props.history);
   }
 
+  /*
+  authRender() {
+    if (!this.state.authenticated) { // if not signed in
+      return (
+
+      );
+    }
+  }
+  */
+
   render() {
     return (
       <nav>

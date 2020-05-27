@@ -4,10 +4,15 @@ const initialState = {
   all: [],
   current: {},
   current_work_exps: [],
+  studentID: '',
 };
 
 const StudentsReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ActionTypes.CREATE_STUDENT:
+      // return { ...state, current: action.payload, studentID: action.id };
+      // return { ...state, current: action.payload, studentID: action.payload.id };
+      return { ...state, current: action.payload };
     case ActionTypes.FETCH_STUDENTS:
       return { ...state, all: action.payload };
     case ActionTypes.FETCH_STUDENT:
