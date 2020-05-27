@@ -13,12 +13,6 @@ class Startups extends Component {
     this.props.fetchStartups();
   }
 
-  // search = (text) => {
-  //   startupSearch(text).then((searchResults) => {
-  //     this.props.setResults(searchResults);
-  //   });
-  // }
-
   search = (text) => {
     this.props.fetchSearchResults(text);
   }
@@ -39,7 +33,7 @@ class Startups extends Component {
       this.props.startups !== undefined
         ? (
           <div>
-            <SearchBar onSearchChange={this.search} />
+            <SearchBar onSearchChange={this.search} onNoSearch={this.props.fetchStartups} />
             <div className="list">
               {mappingStartups}
             </div>

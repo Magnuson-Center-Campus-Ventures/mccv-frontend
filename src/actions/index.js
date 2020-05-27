@@ -100,7 +100,7 @@ export function fetchSearchResults(searchterm) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startups/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        console.log('here');
+        // console.log('here');
         dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
       })
       .catch((error) => {
