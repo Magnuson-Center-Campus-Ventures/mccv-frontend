@@ -1,6 +1,7 @@
 /* eslint-disable react/button-has-type */
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { createWorkExperience } from '../../actions';
 import close from '../../../static/img/close.png';
 import '../../styles/student-profile.scss';
@@ -66,4 +67,4 @@ class NewWorkExp extends React.Component {
   }
 }
 
-export default connect(null, { createWorkExperience })(NewWorkExp);
+export default withRouter(connect(null, { createWorkExperience })(NewWorkExp));

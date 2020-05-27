@@ -1,12 +1,14 @@
+/* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import Select from 'react-select';
 import {
   fetchStudentByUserID, fetchWorkExperiences, updateStudent, fetchUser,
   updateWorkExperience, deleteWorkExperience, fetchCertainIndustries,
-  fetchCertainSkills, fetchCertainClasses,
+  fetchCertainSkills, fetchCertainClasses, fetchAllIndustries,
 } from '../actions';
 import NewWorkExp from './modals/new-work-exp';
 import '../styles/student-profile.scss';
@@ -20,15 +22,18 @@ class StudentProfile extends Component {
       showWorkExpModal: false,
       student: {},
       workExps: [],
-      industries: [],
-      skills: [],
-      classes: [],
+      ownIndustries: [],
+      ownSkills: [],
+      ownClasses: [],
+      allIndustryOptions: [],
+      defaultIndustryOptions: [],
     };
   }
 
   componentDidMount() {
     this.props.fetchStudentByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
+    this.props.fetchAllIndustries();
   }
 
   // Get student fields into state (for editing),
@@ -40,24 +45,30 @@ class StudentProfile extends Component {
       this.props.fetchCertainIndustries(this.props.student.interested_industries);
       this.props.fetchCertainSkills(Object.keys(this.props.student.skills));
       this.props.fetchCertainClasses(this.props.student.relevant_classes);
-      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
     }
-    if (this.props.workExps !== {} && prevProps.workExps !== this.props.workExps) {
-      // eslint-disable-next-line react/no-did-update-set-state
+    if (prevProps.workExps !== this.props.workExps) {
       this.setState({ workExps: this.props.workExps });
     }
-    if (this.props.industries !== {} && prevProps.industries !== this.props.industries) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ industries: this.props.industries });
+    if (prevProps.ownIndustries !== this.props.ownIndustries) {
+      this.setState({ ownIndustries: this.props.ownIndustries });
+
+      // Set up options for dropdown
+      const allIndustryOptions = this.props.allIndustries.map((industry) => {
+        return { value: industry.name, label: industry.name, industry };
+      });
+      // Set initial dropdown options to be the indutries the student already has
+      const industryIDs = this.props.ownIndustries.map((industry) => { return industry._id; });
+      const defaultIndustryOptions = allIndustryOptions.filter((option) => {
+        return industryIDs.includes(option.industry._id);
+      });
+      this.setState({ allIndustryOptions, defaultIndustryOptions });
     }
-    if (this.props.skills !== {} && prevProps.skills !== this.props.skills) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ skills: this.props.skills });
+    if (prevProps.ownSkills !== this.props.ownSkills) {
+      this.setState({ ownSkills: this.props.ownSkills });
     }
-    if (this.props.classes !== {} && prevProps.classes !== this.props.classes) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ classes: this.props.classes });
+    if (prevProps.ownClasses !== this.props.ownClasses) {
+      this.setState({ ownClasses: this.props.ownClasses });
     }
   }
 
@@ -145,6 +156,39 @@ class StudentProfile extends Component {
           <input className="short-input" defaultValue={this.props.email} onBlur={(event) => console.log(event.target.value)} />
           <div className="input-title">Phone Number</div>
           <input className="short-input" defaultValue={this.props.student.phone_number} onBlur={(event) => this.changeStudentField('phone_number', event)} />
+          <div id="lists-row">
+            <div className="list-section">
+              <h2>Industries</h2>
+              {this.renderPills(this.state.ownIndustries)}
+              <Select
+                isMulti
+                name="industries"
+                defaultValue={this.state.defaultIndustryOptions}
+                options={this.state.allIndustryOptions}
+                onChange={(selectedOptions) => {
+                  const tempIndustries = selectedOptions.map((option) => option.industry);
+                  const industryIDs = selectedOptions.map((option) => option.industry._id);
+                  this.setState((prevState) => {
+                    const student = { ...prevState.student };
+                    student.interested_industries = industryIDs;
+                    return {
+                      ...prevState,
+                      ownIndustries: tempIndustries,
+                      student,
+                    };
+                  });
+                }}
+              />
+            </div>
+            <div className="list-section">
+              <h2>Classes</h2>
+              {this.renderPills(this.state.ownClasses)}
+            </div>
+            <div className="list-section">
+              <h2>Skills</h2>
+              {this.renderPills(this.state.ownSkills)}
+            </div>
+          </div>
         </div>
       );
     } else {
@@ -164,15 +208,15 @@ class StudentProfile extends Component {
             <div id="lists-row">
               <div className="list-section">
                 <h2>Industries</h2>
-                {this.renderPills(this.state.industries)}
-              </div>
-              <div className="list-section">
-                <h2>Skills</h2>
-                {this.renderPills(this.state.skills)}
+                {this.renderPills(this.state.ownIndustries)}
               </div>
               <div className="list-section">
                 <h2>Classes</h2>
-                {this.renderPills(this.state.classes)}
+                {this.renderPills(this.state.ownClasses)}
+              </div>
+              <div className="list-section">
+                <h2>Skills</h2>
+                {this.renderPills(this.state.ownSkills)}
               </div>
             </div>
           </div>
@@ -245,7 +289,7 @@ class StudentProfile extends Component {
         </div>
         <button className="edit-button"
           onClick={this.submit}
-        >{this.state.isEditing ? 'Finish' : 'Edit Profile'}
+        >{this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
         </button>
       </div>
     );
@@ -257,9 +301,10 @@ const mapStateToProps = (reduxState) => ({
   student: reduxState.students.current_student,
   email: reduxState.user.email,
   workExps: reduxState.students.current_work_exps,
-  industries: reduxState.industries.current,
-  skills: reduxState.skills.current,
-  classes: reduxState.classes.current,
+  ownIndustries: reduxState.industries.current,
+  ownSkills: reduxState.skills.current,
+  ownClasses: reduxState.classes.current,
+  allIndustries: reduxState.industries.all,
 });
 
 export default withRouter(connect(mapStateToProps, {
@@ -272,4 +317,5 @@ export default withRouter(connect(mapStateToProps, {
   fetchCertainIndustries,
   fetchCertainSkills,
   fetchCertainClasses,
+  fetchAllIndustries,
 })(StudentProfile));
