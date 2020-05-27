@@ -13,6 +13,7 @@ import Signin from './signin';
 import Signup from './signup';
 import StudentSignUpBio from './studentSignUp/student-signup-bio';
 import StudentSignUpTiming from './studentSignUp/student-signup-timing';
+import SubmittedApplications from './submitted-applications';
 
 const App = (props) => {
   return (
@@ -25,7 +26,7 @@ const App = (props) => {
           <Route path="/posts" component={Postings} />
           <Route path="/startups/:startupID" component={StartupProfile} />
           <Route path="/startups" component={Startups} />
-          <Route path="/applications" />
+          <Route path="/applications" component={SubmittedApplications} />
           <Route path="/profile" component={StudentProfile} />
           <Route path="/signin" component={Signin} />
           <Route path="/signup" component={Signup} />
