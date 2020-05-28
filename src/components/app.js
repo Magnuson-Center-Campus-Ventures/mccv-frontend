@@ -11,6 +11,8 @@ import Post from './post';
 import Nav from './nav';
 import Signin from './signin';
 import Signup from './signup';
+import StudentsFAQ from './students-faq';
+import StartupsFAQ from './startups-faq';
 import SubmittedApplications from './submitted-applications';
 
 const App = (props) => {
@@ -28,6 +30,8 @@ const App = (props) => {
           <Route path="/profile" component={StudentProfile} />
           <Route path="/signin" component={Signin} />
           <Route path="/signup" component={Signup} />
+          <Route path="/studentsfaq" component={StudentsFAQ} />
+          <Route path="/startupsfaq" component={StartupsFAQ} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>
       </div>

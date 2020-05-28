@@ -22,6 +22,23 @@ class Nav extends Component {
       return (
 
       );
+    } else {
+      return (
+        <ul id="nav-bar">
+          <li><NavLink exact to="/">Magnuson Campus Ventures</NavLink></li>
+          <li><NavLink to="/posts">Positions</NavLink></li>
+          <li><NavLink to="/startups">Startups</NavLink></li>
+          <li><NavLink to="/applications">Applications</NavLink></li>
+          <li><NavLink to="/profile">Profile</NavLink></li>
+          <li><NavLink to="/signin">Signin</NavLink></li>
+          <li><NavLink to="/signup">Signup</NavLink></li>
+          <li>
+            <button type="button" className="signoutBtn" onClick={this.signout}>
+              <span className="signoutCta">Sign Out</span>
+            </button>
+          </li>
+        </ul>
+      );
     }
   }
   */
