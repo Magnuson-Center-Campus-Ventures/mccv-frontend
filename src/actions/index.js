@@ -49,6 +49,18 @@ export function fetchPosts() {
   };
 }
 
+export function fetchPostSearch(searchterm) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/posts/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
+      })
+      .catch((error) => {
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
 export function fetchPost(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/posts/${id}`, { headers: { authorization: localStorage.getItem('token') } })
@@ -85,6 +97,20 @@ export function fetchStartups() {
       });
   };
 }
+
+export function fetchSearchResults(searchterm) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/startups/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        // console.log('here');
+        dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
+      })
+      .catch((error) => {
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
 
 export function fetchStudents() {
   return (dispatch) => {
