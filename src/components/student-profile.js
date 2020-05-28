@@ -247,6 +247,9 @@ class StudentProfile extends Component {
                 onChange={(selectedOptions) => {
                   const tempIndustries = selectedOptions.map((option) => option.industry);
                   const industryIDs = selectedOptions.map((option) => option.industry._id);
+                  // Update current industries in redux state based on selected options
+                  this.props.fetchCertainIndustries(industryIDs);
+                  // Update the student and their current industries in local state
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
                     student.interested_industries = industryIDs;
@@ -274,10 +277,13 @@ class StudentProfile extends Component {
                 options={this.state.allClassOptions}
                 onChange={(selectedOptions) => {
                   const tempClasses = selectedOptions.map((option) => option._class);
-                  const industryIDs = selectedOptions.map((option) => option._class._id);
+                  const classIDs = selectedOptions.map((option) => option._class._id);
+                  // Update current classes in redux state based on selected options
+                  this.props.fetchCertainClasses(classIDs);
+                  // Update the student and their current classes in local state
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
-                    student.relevant_classes = industryIDs;
+                    student.relevant_classes = classIDs;
                     return {
                       ...prevState,
                       selectedClassOptions: selectedOptions,
@@ -307,6 +313,9 @@ class StudentProfile extends Component {
                     // Temporarily assigning all skills to a level of 1 until we add skill levels
                     skillMap[skill._id] = 1;
                   });
+                  // Update current skills in redux state based on selected options
+                  this.props.fetchCertainSkills(Object.keys(skillMap));
+                  // Update the student and current skills in local state
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
                     student.skills = skillMap;
@@ -446,6 +455,7 @@ const mapStateToProps = (reduxState) => ({
   allIndustries: reduxState.industries.all,
   allSkills: reduxState.skills.all,
   allClasses: reduxState.classes.all,
+  addedIndustry: reduxState.industries.new,
 });
 
 export default withRouter(connect(mapStateToProps, {
