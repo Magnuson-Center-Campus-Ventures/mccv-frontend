@@ -11,6 +11,8 @@ const ClassesReducer = (state = initialState, action) => {
       return { ...state, all: action.payload };
     case ActionTypes.FETCH_SOME_CLASSES:
       return { ...state, current: action.payload };
+    case ActionTypes.ADD_CLASS:
+      return { ...state, current: [...state.current, action.payload], all: [...state.all, action.payload] };
     case ActionTypes.ERROR_SET:
       return state;
     default:

@@ -27,7 +27,7 @@ class NewWorkExp extends React.Component {
     return (
       <div className="new-work-exp-container">
         <div className="new-work-exp">
-          <div className="new-work-exp-title">New Work Experience<img id="close-new-work-exp"
+          <div className="new-title-modal">New Work Experience<img className="close-modal"
             src={close}
             alt="close"
             style={{ cursor: 'pointer' }}
@@ -53,7 +53,7 @@ class NewWorkExp extends React.Component {
             />
             <div className="input-title">Description</div>
             <textarea className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
-            <button className="add-new-work-exp-btn"
+            <button className="modal-add-button"
               onClick={() => {
                 this.props.createWorkExperience(this.state);
                 this.props.onClose();
