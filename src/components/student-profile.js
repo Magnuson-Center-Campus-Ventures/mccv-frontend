@@ -13,7 +13,6 @@ import {
   createIndustry, createSkill, createClass,
 } from '../actions';
 import NewWorkExp from './modals/new-work-exp';
-// import NewIndustry from './modals/new-industry';
 import '../styles/student-profile.scss';
 
 class StudentProfile extends Component {
@@ -23,7 +22,6 @@ class StudentProfile extends Component {
     this.state = {
       isEditing: false,
       showWorkExpModal: false,
-      // showIndustryModal: false,
       student: {},
       workExps: [],
       ownIndustries: [],
@@ -53,7 +51,7 @@ class StudentProfile extends Component {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       this.props.fetchWorkExperiences(this.props.student.work_exp);
       this.props.fetchCertainIndustries(this.props.student.interested_industries);
-      this.props.fetchCertainSkills(Object.keys(this.props.student.skills));
+      this.props.fetchCertainSkills(this.props.student.skills);
       this.props.fetchCertainClasses(this.props.student.relevant_classes);
       this.setState({ student: this.props.student });
     }
@@ -86,17 +84,9 @@ class StudentProfile extends Component {
     if (prevProps.ownSkills !== this.props.ownSkills) {
       // When skills are initially loaded from redux state, or redux state changes,
       // updated local state for skills and the student's skills ids
-      const skillMap = {};
-      this.props.ownSkills.forEach((skill) => {
-        // Temporarily assigning all skills to a level of 1 until we add skill levels
-        if (this.state.student.skills[skill._id]) {
-          skillMap[skill._id] = this.state.student.skills[skill._id];
-        } else {
-          skillMap[skill._id] = 1;
-        }
-      });
+      const skillIDs = this.props.ownSkills.map((skill) => { return skill._id; });
       const student = { ...prevState.student };
-      student.skills = skillMap;
+      student.skills = skillIDs;
       this.setState({
         ownSkills: this.props.ownSkills,
         student,
@@ -107,7 +97,7 @@ class StudentProfile extends Component {
       });
       // Set initial dropdown options to be the skills the student already has
       const selectedSkillOptions = allSkillOptions.filter((option) => {
-        return Object.keys(skillMap).includes(option.skill._id);
+        return skillIDs.includes(option.skill._id);
       });
       this.setState({ allSkillOptions, selectedSkillOptions });
     }
@@ -148,10 +138,8 @@ class StudentProfile extends Component {
     });
   }
 
-  changeWorkExpField = (index, field, event) => {
+  changeWorkExpField = (index, field, value) => {
     // eslint-disable-next-line prefer-destructuring
-    const value = event.target.value;
-
     this.setState((prevState) => {
       const workExps = [...prevState.workExps];
       workExps[index][field] = value;
@@ -170,17 +158,8 @@ class StudentProfile extends Component {
     this.setState({ showWorkExpModal: false });
   };
 
-  // showIndustryModal = () => {
-  //   this.setState({ showIndustryModal: true });
-  // };
-
-  // hideIndustryModal = () => {
-  //   this.setState({ showIndustryModal: false });
-  // };
-
   submit = () => {
     if (this.state.isEditing) {
-      // console.log(this.state.student);
       this.props.updateStudent(this.state.student.id, this.state.student);
       this.state.workExps.forEach((workExp) => {
         this.props.updateWorkExperience(workExp._id, workExp);
@@ -236,7 +215,6 @@ class StudentProfile extends Component {
           <div id="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
-              {/* <button onClick={() => this.setState({ showIndustryModal: true })}>Add New Industry</button> */}
               <CreateableSelect
                 className="select-dropdown"
                 isMulti
@@ -308,17 +286,13 @@ class StudentProfile extends Component {
                 options={this.state.allSkillOptions}
                 onChange={(selectedOptions) => {
                   const tempSkills = selectedOptions.map((option) => option.skill);
-                  const skillMap = {};
-                  tempSkills.forEach((skill) => {
-                    // Temporarily assigning all skills to a level of 1 until we add skill levels
-                    skillMap[skill._id] = 1;
-                  });
+                  const skillIDs = selectedOptions.map((option) => option.skill._id);
                   // Update current skills in redux state based on selected options
-                  this.props.fetchCertainSkills(Object.keys(skillMap));
+                  this.props.fetchCertainSkills(skillIDs);
                   // Update the student and current skills in local state
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
-                    student.skills = skillMap;
+                    student.skills = skillIDs;
                     return {
                       ...prevState,
                       selectedSkillOptions: selectedOptions,
@@ -376,25 +350,44 @@ class StudentProfile extends Component {
           return (
             <div key={index} className="work-exp">
               <div className="input-title">Role</div>
-              <input className="short-input" defaultValue={workExp.role} onBlur={(event) => this.changeWorkExpField(index, 'role', event)} />
+              <input className="short-input" defaultValue={workExp.role} onBlur={(event) => this.changeWorkExpField(index, 'role', event.target.value)} />
               <div className="input-title">Employer</div>
-              <input className="short-input" defaultValue={workExp.employer} onBlur={(event) => this.changeWorkExpField(index, 'employer', event)} />
+              <input className="short-input" defaultValue={workExp.employer} onBlur={(event) => this.changeWorkExpField(index, 'employer', event.target.value)} />
               <div className="input-title">Location</div>
-              <input className="short-input" defaultValue={workExp.location} onBlur={(event) => this.changeWorkExpField(index, 'location', event)} />
+              <input className="short-input" defaultValue={workExp.location} onBlur={(event) => this.changeWorkExpField(index, 'location', event.target.value)} />
               <div className="input-title">Start Date (YYYY-MM-DD)</div>
               <input className="short-input"
                 placeholder="YYYY-MM-DD"
-                defaultValue={`${new Date(workExp.start_date).getFullYear()}-${new Date(workExp.start_date).getMonth() + 1}-${new Date(workExp.start_date).getDate()}`}
-                onBlur={(event) => this.changeWorkExpField(index, 'start_date', event)}
+                defaultValue={`${new Date(workExp.start_date).getFullYear()}-${new Date(workExp.start_date).getMonth() + 1}`}
+                // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
+                onBlur={(event) => this.changeWorkExpField(index, 'start_date', `${event.target.value}-15`)}
               />
-              <div className="input-title">End Date (YYYY-MM-DD)</div>
-              <input className="short-input"
-                placeholder="YYYY-MM-DD"
-                defaultValue={`${new Date(workExp.end_date).getFullYear()}-${new Date(workExp.end_date).getMonth() + 1}-${new Date(workExp.end_date).getDate()}`}
-                onBlur={(event) => this.changeWorkExpField(index, 'end_date', event)}
-              />
+              {!workExp.currently_working
+                ? (
+                  <div>
+                    <div className="input-title">End Date (YYYY-MM-DD)</div>
+                    <input className="short-input"
+                      placeholder="YYYY-MM-DD"
+                      defaultValue={`${new Date(workExp.end_date).getFullYear()}-${new Date(workExp.end_date).getMonth() + 1}`}
+                      // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
+                      onBlur={(event) => this.changeWorkExpField(index, 'end_date', `${event.target.value}-15`)}
+                    />
+                  </div>
+                )
+                : null}
+              <form>
+                <label htmlFor={`currentlyWorking-${workExp._id}`}>I currently work here
+                  <input
+                    name="currentlyWorking"
+                    id={`currentlyWorking-${workExp._id}`}
+                    type="checkbox"
+                    checked={workExp.currently_working}
+                    onChange={(event) => this.changeWorkExpField(index, 'currently_working', event.target.checked)}
+                  />
+                </label>
+              </form>
               <div className="input-title">Description</div>
-              <textarea className="tall-input" defaultValue={workExp.description} onBlur={(event) => this.changeWorkExpField(index, 'description', event)} />
+              <textarea className="tall-input" defaultValue={workExp.description} onBlur={(event) => this.changeWorkExpField(index, 'description', event.target.value)} />
               <button onClick={() => this.props.deleteWorkExperience(workExp._id)}>Delete Work Experience</button>
             </div>
           );
@@ -407,8 +400,8 @@ class StudentProfile extends Component {
               <div>{workExp.employer}</div>
               <div>{workExp.location}</div>
               <div className="date-row">
-                {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getDate()}/${new Date(workExp.start_date).getFullYear()} - `}
-                {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getDate()}/${new Date(workExp.end_date).getFullYear()}`}
+                {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
+                {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}
               </div>
               <div>{workExp.description}</div>
             </div>
@@ -425,10 +418,6 @@ class StudentProfile extends Component {
           onClose={this.hideWorkExpModal}
           show={this.state.showWorkExpModal}
         />
-        {/* <NewIndustry
-          onClose={this.hideIndustryModal}
-          show={this.state.showIndustryModal}
-        /> */}
         {this.renderBody()}
         <div id="work-exps">
           <h2>Work Experience</h2>
