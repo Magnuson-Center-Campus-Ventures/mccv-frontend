@@ -21,7 +21,7 @@ class StudentProfile extends Component {
     super(props);
 
     this.state = {
-      isEditing: true,
+      isEditing: false,
       showWorkExpModal: false,
       // showIndustryModal: false,
       student: {},
@@ -86,9 +86,17 @@ class StudentProfile extends Component {
     if (prevProps.ownSkills !== this.props.ownSkills) {
       // When skills are initially loaded from redux state, or redux state changes,
       // updated local state for skills and the student's skills ids
-      const skillIDs = this.props.ownSkills.map((skill) => { return skill._id; });
+      const skillMap = {};
+      this.props.ownSkills.forEach((skill) => {
+        // Temporarily assigning all skills to a level of 1 until we add skill levels
+        if (this.state.student.skills[skill._id]) {
+          skillMap[skill._id] = this.state.student.skills[skill._id];
+        } else {
+          skillMap[skill._id] = 1;
+        }
+      });
       const student = { ...prevState.student };
-      student.skills = skillIDs;
+      student.skills = skillMap;
       this.setState({
         ownSkills: this.props.ownSkills,
         student,
@@ -99,7 +107,7 @@ class StudentProfile extends Component {
       });
       // Set initial dropdown options to be the skills the student already has
       const selectedSkillOptions = allSkillOptions.filter((option) => {
-        return skillIDs.includes(option.skill._id);
+        return Object.keys(skillMap).includes(option.skill._id);
       });
       this.setState({ allSkillOptions, selectedSkillOptions });
     }
@@ -294,10 +302,14 @@ class StudentProfile extends Component {
                 options={this.state.allSkillOptions}
                 onChange={(selectedOptions) => {
                   const tempSkills = selectedOptions.map((option) => option.skill);
-                  const skillIDs = selectedOptions.map((option) => option.skill._id);
+                  const skillMap = {};
+                  tempSkills.forEach((skill) => {
+                    // Temporarily assigning all skills to a level of 1 until we add skill levels
+                    skillMap[skill._id] = 1;
+                  });
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
-                    student.interested_industries = skillIDs;
+                    student.skills = skillMap;
                     return {
                       ...prevState,
                       selectedSkillOptions: selectedOptions,
