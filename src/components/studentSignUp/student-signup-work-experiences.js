@@ -7,7 +7,7 @@ import '../../styles/studentSignUp/student-signup-workexperiences.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent, updateWorkExperience, fetchWorkExperiences,
 } from '../../actions';
-import WorkExperience from '../modals/work-experience';
+import WorkExperience from '../modals/new-work-exp';
 
 class StudentWorkExperiences extends Component {
   constructor(props) {
@@ -23,10 +23,13 @@ class StudentWorkExperiences extends Component {
   componentDidMount() {
     this.props.fetchStudentByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
+    console.log(this.state.student);
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
+      console.log('here');
+      console.log(this.state.student);
       this.props.fetchWorkExperiences(this.props.student.work_exp);
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
@@ -43,10 +46,20 @@ class StudentWorkExperiences extends Component {
     });
   };
 
+  onSubmit = () => {
+    // console.log(this.state.student);
+    this.props.updateStudent(this.state.student.id, this.state.student);
+    this.state.workExps.forEach((workExp) => {
+      this.props.updateWorkExperience(workExp._id, workExp);
+    });
+    this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
+  }
+
   hideModal = (e) => {
     this.setState({
       show: false,
     });
+    console.log(this.state.student);
   }
 
     // update student field
@@ -65,9 +78,9 @@ class StudentWorkExperiences extends Component {
     }
 
     // Send update to database
-    onSubmit = (e) => {
-      this.props.updateStudent(this.props.student.id, this.state.student);
-    };
+    // onSubmit = (e) => {
+    //   this.props.updateStudent(this.props.student.id, this.state.student);
+    // };
 
     // Removes time from date
     convertDate=(date) => {
@@ -144,7 +157,7 @@ class StudentWorkExperiences extends Component {
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
-  student: reduxState.students.current,
+  student: reduxState.students.current_student,
   workExps: reduxState.students.current_work_exps,
 });
 

@@ -101,7 +101,7 @@ class StudentBio extends Component {
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
-  student: reduxState.students.current,
+  student: reduxState.students.current_student,
 });
 
 export default withRouter(connect(mapStateToProps, { fetchStudentByUserID, fetchUser, updateStudent })(StudentBio));
