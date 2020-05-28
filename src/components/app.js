@@ -11,10 +11,6 @@ import Post from './post';
 import Nav from './nav';
 import Signin from './signin';
 import Signup from './signup';
-import StudentSignUpBio from './studentSignUp/student-signup-bio';
-import StudentSignUpTiming from './studentSignUp/student-signup-timing';
-import StudentSignUpWorkExperiences from './studentSignUp/student-signup-work-experiences';
-import StudentSignUpOtherExperiences from './studentSignUp/student-sign-up-other-experiences';
 import SubmittedApplications from './submitted-applications';
 
 const App = (props) => {
@@ -32,10 +28,6 @@ const App = (props) => {
           <Route path="/profile" component={StudentProfile} />
           <Route path="/signin" component={Signin} />
           <Route path="/signup" component={Signup} />
-          <Route path="/student-signup-bio" component={StudentSignUpBio} />
-          <Route path="/student-signup-timing" component={StudentSignUpTiming} />
-          <Route path="/student-signup-workexperiences" component={StudentSignUpWorkExperiences} />
-          <Route path="/student-signup-otherexperiences" component={StudentSignUpOtherExperiences} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>
       </div>

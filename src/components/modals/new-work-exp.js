@@ -1,9 +1,7 @@
-/* eslint-disable camelcase */
 /* eslint-disable react/button-has-type */
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import TextareaAutosize from 'react-textarea-autosize';
 import { createWorkExperience } from '../../actions';
 import close from '../../../static/img/close.png';
 import '../../styles/student-profile.scss';
@@ -38,23 +36,23 @@ class NewWorkExp extends React.Component {
           </div>
           <div className="new-work-exp-body">
             <div className="input-title">Role</div>
-            <TextareaAutosize className="short-input" onBlur={(event) => this.setState({ role: event.target.value })} />
+            <input className="short-input" onBlur={(event) => this.setState({ role: event.target.value })} />
             <div className="input-title">Employer</div>
-            <TextareaAutosize className="short-input" onBlur={(event) => this.setState({ employer: event.target.value })} />
+            <input className="short-input" onBlur={(event) => this.setState({ employer: event.target.value })} />
             <div className="input-title">Location</div>
-            <TextareaAutosize className="short-input" onBlur={(event) => this.setState({ location: event.target.value })} />
+            <input className="short-input" onBlur={(event) => this.setState({ location: event.target.value })} />
             <div className="input-title">Start Date (YYYY-MM-DD)</div>
-            <TextareaAutosize className="short-input"
+            <input className="short-input"
               placeholder="YYYY-MM-DD"
               onBlur={(event) => this.setState({ start_date: event.target.value })}
             />
             <div className="input-title">End Date (YYYY-MM-DD)</div>
-            <TextareaAutosize className="short-input"
+            <input className="short-input"
               placeholder="YYYY-MM-DD"
               onBlur={(event) => this.setState({ end_date: event.target.value })}
             />
             <div className="input-title">Description</div>
-            <TextareaAutosize className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
+            <textarea className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
             <button className="modal-add-button"
               onClick={() => {
                 this.props.createWorkExperience(this.state);
