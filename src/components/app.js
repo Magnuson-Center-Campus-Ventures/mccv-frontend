@@ -13,6 +13,7 @@ import Signin from './signin';
 import Signup from './signup';
 import StudentSignUpBio from './studentSignUp/student-signup-bio';
 import StudentSignUpTiming from './studentSignUp/student-signup-timing';
+import StudentSignUpWorkExperiences from './studentSignUp/student-signup-work-experiences';
 import SubmittedApplications from './submitted-applications';
 
 const App = (props) => {
@@ -32,6 +33,7 @@ const App = (props) => {
           <Route path="/signup" component={Signup} />
           <Route path="/student-signup-bio" component={StudentSignUpBio} />
           <Route path="/student-signup-timing" component={StudentSignUpTiming} />
+          <Route path="/student-signup-workexperiences" component={StudentSignUpWorkExperiences} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>
       </div>

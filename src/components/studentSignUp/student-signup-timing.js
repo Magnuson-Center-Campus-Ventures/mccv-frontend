@@ -52,7 +52,7 @@ class StudentTiming extends Component {
     }
 
 
-    renderBioQuestions() {
+    renderTimingQuestions() {
       return (
         <div className="StudentTimingContainer">
           <div className="StudentTimingHeaderContainer">
@@ -96,7 +96,7 @@ class StudentTiming extends Component {
     }
 
     render() {
-      return this.renderBioQuestions();
+      return this.renderTimingQuestions();
     }
 }
 

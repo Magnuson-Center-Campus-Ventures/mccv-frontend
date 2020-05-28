@@ -1,9 +1,18 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/postings.scss';
 
 const StartupListItem = (props) => {
   const route = `/startups/${props.startup._id}`;
+  const industries = props.startup.industry.map((industry, index) => {
+    return (
+      <div className="industryPill" key={index}>
+        {industry}
+      </div>
+    );
+  });
+
   return (
     <Link to={route} key={props.startup.id} className="listItem link">
       <div className="companyInfo">
@@ -17,7 +26,7 @@ const StartupListItem = (props) => {
         </div>
       </div>
       <div className="extraInfo">
-        <h1> Industries: {props.startup.industry} </h1>
+        <h1> Industries: {industries} </h1>
         <h2> Good fit for: </h2>
       </div>
     </Link>
