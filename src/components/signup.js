@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  authError, signupUser, createStudent,
+  authError, signupUser, createStudent, fetchUserByEmail,
 } from '../actions/index';
 import '../styles/signup.scss';
 
@@ -37,26 +37,39 @@ class Signup extends Component {
     const newUser = { ...this.state };
     newUser.role = this.usertype;
     this.props.signupUser(newUser, this.props.history);
-
-    // also create profile
-    if (this.usertype === 'student') {
-      console.log('in if student');
-      try { // try to create a student
-        const newStudent = {
-          user_id: this.state.userID,
-        };
-        this.props.createStudent(newStudent);
-      } catch {
-        console.log('createStudent failed');
-      } finally {
-        /*
-        newUser.student_profile_id = this.state.studentID;
-        this.props.updateUser();
-        console.log('updated userid');
-        this.props.history.push('/'); // replace later with first page of create profile sequence
-        */
-      }
+    if (this.state.usertype === 'student') {
+      console.log('in student');
+      const newStudent = {
+        user_id: this.state.userID,
+      };
+      this.props.createStudent(newStudent);
     }
+
+    // this.props.signupUser(newUser, this.props.history).then((result) => {
+    //   console.log(result);
+    //   // also create profile
+    //   if (this.state.usertype === 'student') {
+    //     console.log('in if student');
+    //     try { // try to create a student
+    //       this.props.fetchUserByEmail(this.state.email);
+    //       /*
+    //       const newStudent = {
+    //         user_id: this.state.userID,
+    //       };
+    //       this.props.createStudent(newStudent);
+    //       */
+    //     } catch {
+    //       console.log('createStudent failed');
+    //     } finally {
+    //       /*
+    //       newUser.student_profile_id = this.state.studentID;
+    //       this.props.updateUser();
+    //       console.log('updated userid');
+    //       this.props.history.push('/'); // replace later with first page of create profile sequence
+    //       */
+    //     }
+    //   }
+    // });
   }
 
   // return button className if student is selected
@@ -147,5 +160,5 @@ function mapStateToProps(reduxState) {
 }
 
 export default connect(mapStateToProps, {
-  authError, signupUser, createStudent,
+  authError, signupUser, createStudent, fetchUserByEmail,
 })(Signup);

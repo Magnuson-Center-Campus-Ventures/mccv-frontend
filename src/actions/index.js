@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -364,12 +364,12 @@ export function signupUser({ email, password }, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/signup`, { email, password }).then((response) => {
       localStorage.setItem('token', response.data.token);
-      console.log(response.data.token);
-      console.log(response.data.id);
       localStorage.setItem('userID', response.data.id);
-      console.log('signed up succesfully');
+      // console.log(response.data.id);
       dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
+      // dispatch({ type: ActionTypes.AUTH_USER });
       history.push('/');
+      console.log('signed up succesfully');
     }).catch((error) => {
       // eslint-disable-next-line no-alert
       console.log(error.response.data);
@@ -391,6 +391,20 @@ export function signoutUser(history) {
 export function fetchUser(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/users/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
+// for signup, fetch user by email to get userid
+export function fetchUserByEmail(email) {
+  const encodedEmail = encodeURIComponent(email);
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/users/${encodedEmail}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      console.log(response.data);
       dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
     }).catch((error) => {
       console.log(error);
