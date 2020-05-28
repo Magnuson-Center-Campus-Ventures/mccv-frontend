@@ -17,7 +17,7 @@ class SubmittedApplications extends Component {
     const mappingApplications = this.props.submittedApplications.map((application) => {
       console.log(application);
       const route = `/applications/${application._id}`;
-      let post = null;
+      let post = '';
       for (const i in this.props.posts) {
         if (this.props.posts[i].id === application.post_id) {
           post = this.props.posts[i];
