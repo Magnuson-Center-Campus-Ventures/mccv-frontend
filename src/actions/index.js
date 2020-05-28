@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -375,6 +375,49 @@ export function fetchSubmittedApplication(id) {
   };
 }
 
+export function createOtherExperience(otherExp) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/otherexperiences`, otherExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_WORK_EXP, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+    });
+  };
+}
+
+export function updateOtherExperience(id, otherExp) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/otherexperiences/${id}`, otherExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.UPDATE_WORK_EXP, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+    });
+  };
+}
+
+export function deleteOtherExperience(id) {
+  return (dispatch) => {
+    axios.delete(`${ROOT_URL}/otherexperiences/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.DELETE_WORK_EXP, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+    });
+  };
+}
+
+export function fetchOtherExperiences(idArray) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/otherexperiences/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_WORK_EXPS, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
 
 // from lab5 auth
 // trigger to deauth if there is error
