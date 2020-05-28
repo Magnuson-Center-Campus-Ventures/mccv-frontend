@@ -1,14 +1,19 @@
+/* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import CreateableSelect from 'react-select/creatable';
 import {
   fetchStudentByUserID, fetchWorkExperiences, updateStudent, fetchUser,
   updateWorkExperience, deleteWorkExperience, fetchCertainIndustries,
-  fetchCertainSkills, fetchCertainClasses,
+  fetchCertainSkills, fetchCertainClasses, fetchAllIndustries,
+  fetchAllClasses, fetchAllSkills,
+  createIndustry, createSkill, createClass,
 } from '../actions';
-
+import NewWorkExp from './modals/new-work-exp';
+// import NewIndustry from './modals/new-industry';
 import '../styles/student-profile.scss';
 
 class StudentProfile extends Component {
@@ -17,17 +22,28 @@ class StudentProfile extends Component {
 
     this.state = {
       isEditing: false,
+      showWorkExpModal: false,
+      // showIndustryModal: false,
       student: {},
       workExps: [],
-      industries: [],
-      skills: [],
-      classes: [],
+      ownIndustries: [],
+      ownSkills: [],
+      ownClasses: [],
+      allIndustryOptions: [],
+      selectedIndustryOptions: [],
+      allSkillOptions: [],
+      selectedSkillOptions: [],
+      allClassOptions: [],
+      selectedClassOptions: [],
     };
   }
 
   componentDidMount() {
     this.props.fetchStudentByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
+    this.props.fetchAllIndustries();
+    this.props.fetchAllSkills();
+    this.props.fetchAllClasses();
   }
 
   // Get student fields into state (for editing),
@@ -39,24 +55,82 @@ class StudentProfile extends Component {
       this.props.fetchCertainIndustries(this.props.student.interested_industries);
       this.props.fetchCertainSkills(Object.keys(this.props.student.skills));
       this.props.fetchCertainClasses(this.props.student.relevant_classes);
-      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
     }
-    if (this.props.workExps !== {} && prevProps.workExps !== this.props.workExps) {
-      // eslint-disable-next-line react/no-did-update-set-state
+
+    if (prevProps.workExps !== this.props.workExps) {
       this.setState({ workExps: this.props.workExps });
     }
-    if (this.props.industries !== {} && prevProps.industries !== this.props.industries) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ industries: this.props.industries });
+
+    if (prevProps.ownIndustries !== this.props.ownIndustries) {
+      // When industries are initially loaded from redux state, or redux state changes,
+      // updated local state for industries and the student's industries ids
+      const industryIDs = this.props.ownIndustries.map((industry) => { return industry._id; });
+      const student = { ...prevState.student };
+      student.interested_industries = industryIDs;
+      this.setState({
+        ownIndustries: this.props.ownIndustries,
+        student,
+      });
+      // Set up options for dropdown
+      const allIndustryOptions = this.props.allIndustries.map((industry) => {
+        return { value: industry.name, label: industry.name, industry };
+      });
+      // Set initial dropdown options to be the indutries the student already has
+      const selectedIndustryOptions = allIndustryOptions.filter((option) => {
+        return industryIDs.includes(option.industry._id);
+      });
+      this.setState({ allIndustryOptions, selectedIndustryOptions });
     }
-    if (this.props.skills !== {} && prevProps.skills !== this.props.skills) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ skills: this.props.skills });
+
+    if (prevProps.ownSkills !== this.props.ownSkills) {
+      // When skills are initially loaded from redux state, or redux state changes,
+      // updated local state for skills and the student's skills ids
+      const skillMap = {};
+      this.props.ownSkills.forEach((skill) => {
+        // Temporarily assigning all skills to a level of 1 until we add skill levels
+        if (this.state.student.skills[skill._id]) {
+          skillMap[skill._id] = this.state.student.skills[skill._id];
+        } else {
+          skillMap[skill._id] = 1;
+        }
+      });
+      const student = { ...prevState.student };
+      student.skills = skillMap;
+      this.setState({
+        ownSkills: this.props.ownSkills,
+        student,
+      });
+      // Set up options for dropdown
+      const allSkillOptions = this.props.allSkills.map((skill) => {
+        return { value: skill.name, label: skill.name, skill };
+      });
+      // Set initial dropdown options to be the skills the student already has
+      const selectedSkillOptions = allSkillOptions.filter((option) => {
+        return Object.keys(skillMap).includes(option.skill._id);
+      });
+      this.setState({ allSkillOptions, selectedSkillOptions });
     }
-    if (this.props.classes !== {} && prevProps.classes !== this.props.classes) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ classes: this.props.classes });
+
+    if (prevProps.ownClasses !== this.props.ownClasses) {
+      // When classes are initially loaded from redux state, or redux state changes,
+      // updated local state for classes and the student's classes ids
+      const classIDs = this.props.ownClasses.map((_class) => { return _class._id; });
+      const student = { ...prevState.student };
+      student.relevant_classes = classIDs;
+      this.setState({
+        ownClasses: this.props.ownClasses,
+        student,
+      });
+      // Set up options for dropdown
+      const allClassOptions = this.props.allClasses.map((_class) => {
+        return { value: _class.name, label: _class.name, _class };
+      });
+      // Set initial dropdown options to be the classes the student already has
+      const selectedClassOptions = allClassOptions.filter((option) => {
+        return classIDs.includes(option._class._id);
+      });
+      this.setState({ allClassOptions, selectedClassOptions });
     }
   }
 
@@ -88,8 +162,25 @@ class StudentProfile extends Component {
     });
   }
 
+  showWorkExpModal = () => {
+    this.setState({ showWorkExpModal: true });
+  };
+
+  hideWorkExpModal = () => {
+    this.setState({ showWorkExpModal: false });
+  };
+
+  // showIndustryModal = () => {
+  //   this.setState({ showIndustryModal: true });
+  // };
+
+  // hideIndustryModal = () => {
+  //   this.setState({ showIndustryModal: false });
+  // };
+
   submit = () => {
     if (this.state.isEditing) {
+      // console.log(this.state.student);
       this.props.updateStudent(this.state.student.id, this.state.student);
       this.state.workExps.forEach((workExp) => {
         this.props.updateWorkExperience(workExp._id, workExp);
@@ -126,6 +217,12 @@ class StudentProfile extends Component {
 
   renderBody = () => {
     if (this.state.isEditing) {
+      const customStyles = {
+        control: (base) => ({
+          ...base,
+          width: 200,
+        }),
+      };
       return (
         <div className="profile-edit">
           <div className="input-title">First Name</div>
@@ -136,6 +233,97 @@ class StudentProfile extends Component {
           <input className="short-input" defaultValue={this.props.email} onBlur={(event) => console.log(event.target.value)} />
           <div className="input-title">Phone Number</div>
           <input className="short-input" defaultValue={this.props.student.phone_number} onBlur={(event) => this.changeStudentField('phone_number', event)} />
+          <div id="lists-row">
+            <div className="list-section">
+              <h2>Industries</h2>
+              {/* <button onClick={() => this.setState({ showIndustryModal: true })}>Add New Industry</button> */}
+              <CreateableSelect
+                className="select-dropdown"
+                isMulti
+                styles={customStyles}
+                name="industries"
+                value={this.state.selectedIndustryOptions}
+                options={this.state.allIndustryOptions}
+                onChange={(selectedOptions) => {
+                  const tempIndustries = selectedOptions.map((option) => option.industry);
+                  const industryIDs = selectedOptions.map((option) => option.industry._id);
+                  this.setState((prevState) => {
+                    const student = { ...prevState.student };
+                    student.interested_industries = industryIDs;
+                    return {
+                      ...prevState,
+                      selectedIndustryOptions: selectedOptions,
+                      ownIndustries: tempIndustries,
+                      student,
+                    };
+                  });
+                }}
+                onCreateOption={(newOption) => {
+                  this.props.createIndustry({ name: newOption });
+                }}
+              />
+            </div>
+            <div className="list-section">
+              <h2>Classes</h2>
+              <CreateableSelect
+                className="select-dropdown"
+                isMulti
+                styles={customStyles}
+                name="classes"
+                value={this.state.selectedClassOptions}
+                options={this.state.allClassOptions}
+                onChange={(selectedOptions) => {
+                  const tempClasses = selectedOptions.map((option) => option._class);
+                  const industryIDs = selectedOptions.map((option) => option._class._id);
+                  this.setState((prevState) => {
+                    const student = { ...prevState.student };
+                    student.relevant_classes = industryIDs;
+                    return {
+                      ...prevState,
+                      selectedClassOptions: selectedOptions,
+                      ownClasses: tempClasses,
+                      student,
+                    };
+                  });
+                }}
+                onCreateOption={(newOption) => {
+                  this.props.createClass({ name: newOption });
+                }}
+              />
+            </div>
+            <div className="list-section">
+              <h2>Skills</h2>
+              <CreateableSelect
+                className="select-dropdown"
+                isMulti
+                styles={customStyles}
+                name="skills"
+                value={this.state.selectedSkillOptions}
+                options={this.state.allSkillOptions}
+                onChange={(selectedOptions) => {
+                  const tempSkills = selectedOptions.map((option) => option.skill);
+                  const skillMap = {};
+                  tempSkills.forEach((skill) => {
+                    // Temporarily assigning all skills to a level of 1 until we add skill levels
+                    skillMap[skill._id] = 1;
+                  });
+                  this.setState((prevState) => {
+                    const student = { ...prevState.student };
+                    student.skills = skillMap;
+                    return {
+                      ...prevState,
+                      selectedSkillOptions: selectedOptions,
+                      ownSkills: tempSkills,
+                      student,
+                    };
+                  });
+                }}
+                onCreateOption={(newOption) => {
+                  this.props.createSkill({ name: newOption });
+                }}
+              />
+            </div>
+          </div>
         </div>
       );
     } else {
@@ -155,15 +343,15 @@ class StudentProfile extends Component {
             <div id="lists-row">
               <div className="list-section">
                 <h2>Industries</h2>
-                {this.renderPills(this.state.industries)}
-              </div>
-              <div className="list-section">
-                <h2>Skills</h2>
-                {this.renderPills(this.state.skills)}
+                {this.renderPills(this.state.ownIndustries)}
               </div>
               <div className="list-section">
                 <h2>Classes</h2>
-                {this.renderPills(this.state.classes)}
+                {this.renderPills(this.state.ownClasses)}
+              </div>
+              <div className="list-section">
+                <h2>Skills</h2>
+                {this.renderPills(this.state.ownSkills)}
               </div>
             </div>
           </div>
@@ -224,14 +412,23 @@ class StudentProfile extends Component {
   render() {
     return (
       <div className="student-profile">
+        <NewWorkExp
+          onClose={this.hideWorkExpModal}
+          show={this.state.showWorkExpModal}
+        />
+        {/* <NewIndustry
+          onClose={this.hideIndustryModal}
+          show={this.state.showIndustryModal}
+        /> */}
         {this.renderBody()}
         <div id="work-exps">
           <h2>Work Experience</h2>
           {this.renderWorkExperiences()}
+          {this.state.isEditing ? <button onClick={() => this.setState({ showWorkExpModal: true })}>Add Work Experience</button> : null}
         </div>
         <button className="edit-button"
           onClick={this.submit}
-        >{this.state.isEditing ? 'Finish' : 'Edit Profile'}
+        >{this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
         </button>
       </div>
     );
@@ -240,12 +437,15 @@ class StudentProfile extends Component {
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
-  student: reduxState.students.current,
+  student: reduxState.students.current_student,
   email: reduxState.user.email,
   workExps: reduxState.students.current_work_exps,
-  industries: reduxState.industries.current,
-  skills: reduxState.skills.current,
-  classes: reduxState.classes.current,
+  ownIndustries: reduxState.industries.current,
+  ownSkills: reduxState.skills.current,
+  ownClasses: reduxState.classes.current,
+  allIndustries: reduxState.industries.all,
+  allSkills: reduxState.skills.all,
+  allClasses: reduxState.classes.all,
 });
 
 export default withRouter(connect(mapStateToProps, {
@@ -258,4 +458,10 @@ export default withRouter(connect(mapStateToProps, {
   fetchCertainIndustries,
   fetchCertainSkills,
   fetchCertainClasses,
+  fetchAllIndustries,
+  fetchAllClasses,
+  fetchAllSkills,
+  createIndustry,
+  createSkill,
+  createClass,
 })(StudentProfile));

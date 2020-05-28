@@ -14,19 +14,23 @@ export const ActionTypes = {
   CREATE_STUDENT: 'CREATE_STUDENT',
   FETCH_STUDENTS: 'FETCH_STUDENTS',
   FETCH_WORK_EXPS: 'FETCH_WORK_EXPS',
+  ADD_WORK_EXP: 'ADD_WORK_EXP',
+  UPDATE_WORK_EXP: 'UPDATE_WORK_EXP',
+  DELETE_WORK_EXP: 'DELETE_WORK_EXP',
   FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
   FETCH_APPLICATION: 'FETCH_APPLICATION',
   FETCH_SUBMITTED_APPLICATIONS: 'FETCH_SUBMITTED_APPLICATIONS',
   FETCH_SUBMITTED_APPLICATION: 'FETCH_SUBMITTED_APPLICATION',
   FETCH_ALL_INDUSTRIES: 'FETCH_ALL_INDUSTRIES',
   FETCH_SOME_INDUSTRIES: 'FETCH_SOME_INDUSTRIES',
+  ADD_INDUSTRY: 'ADD_INDUSTRY',
   FETCH_ALL_SKILLS: 'FETCH_ALL_SKILLS',
   FETCH_SOME_SKILLS: 'FETCH_SOME_SKILLS',
+  ADD_SKILL: 'ADD_SKILL',
   FETCH_ALL_CLASSES: 'FETCH_ALL_CLASSES',
   FETCH_SOME_CLASSES: 'FETCH_SOME_CLASSES',
+  ADD_CLASS: 'ADD_CLASS',
   SUBMIT_APPLICATION: 'SUBMIT_APPLICATION',
-  UPDATE_WORK_EXP: 'UPDATE_WORK_EXP',
-  DELETE_WORK_EXP: 'DELETE_WORK_EXP',
   ERROR_SET: 'ERROR_SET',
   AUTH_USER: 'AUTH_USER',
   DEAUTH_USER: 'DEAUTH_USER',
@@ -41,6 +45,18 @@ export function fetchPosts() {
       })
       .catch((error) => {
         console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
+export function fetchPostSearch(searchterm) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/posts/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
+      })
+      .catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -97,6 +113,19 @@ export function createStudent(newStudent) {
       })
       .catch((error) => {
         console.log(error.response.data);
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
+export function fetchSearchResults(searchterm) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/startups/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        // console.log('here');
+        dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
+      })
+      .catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -161,6 +190,17 @@ export function fetchWorkExperiences(idArray) {
   };
 }
 
+export function createWorkExperience(workExp) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/workexperiences`, workExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_WORK_EXP, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+    });
+  };
+}
+
 export function updateWorkExperience(id, workExp) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/workexperiences/${id}`, workExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
@@ -207,6 +247,17 @@ export function fetchCertainIndustries(idArray) {
   };
 }
 
+export function createIndustry(industry) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/industries`, industry, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+    });
+  };
+}
+
 export function fetchAllSkills() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/skills`, { headers: { authorization: localStorage.getItem('token') } })
@@ -231,6 +282,17 @@ export function fetchCertainSkills(idArray) {
   };
 }
 
+export function createSkill(skill) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+    });
+  };
+}
+
 export function fetchAllClasses() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/classes`, { headers: { authorization: localStorage.getItem('token') } })
@@ -251,6 +313,17 @@ export function fetchCertainClasses(idArray) {
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
+export function createClass(newClass) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/classes`, newClass, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_CLASS, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
   };
 }

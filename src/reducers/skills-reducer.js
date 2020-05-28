@@ -11,6 +11,8 @@ const SkillsReducer = (state = initialState, action) => {
       return { ...state, all: action.payload };
     case ActionTypes.FETCH_SOME_SKILLS:
       return { ...state, current: action.payload };
+    case ActionTypes.ADD_SKILL:
+      return { ...state, current: [...state.current, action.payload], all: [...state.all, action.payload] };
     case ActionTypes.ERROR_SET:
       return state;
     default:
