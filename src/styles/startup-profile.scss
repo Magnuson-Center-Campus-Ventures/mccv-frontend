@@ -1,27 +1,27 @@
-.startup {
+.startup-profile {
   display: flex;
   flex-direction: row;
 }
 
-.startup-postings {
+.startup-profile-postings {
   width: 30vw;
   justify-content: center;
   background-color: #EDEDED;
   height: 100vh;
 }
 
-.startup-postings > h1{
+.startup-profile-postings > h1{
   margin-top: 30px;
   font-size: medium;
   text-align: center;
 }
 
-.startup-postings-list {
+.startup-profile-postings-list {
   display: flex;
   flex-direction: column;
 }
 
-.startup-posting {
+.startup-profile-posting {
   border-radius: 5vh;
   background-color: white;
   padding: 20px;
@@ -29,41 +29,41 @@
   font-size: smaller;
 }
 
-.startup-posting-title {
+.startup-profile-posting-title {
   font-weight: bolder;
 }
 
-.startup-posting-description {
+.startup-profile-posting-description {
   font-weight: lighter;
 }
 
-.startup-posting-time{
+.startup-profile-posting-time{
   font-weight: normal;
 }
 
-.startup-body{
+.startup-profile-body{
   padding-left: 10vw;
   padding-right: 10vw;
   width: 70vw;
   text-align: center;
 }
 
-.startup-name{
+.startup-profile-name{
   margin-bottom: 3vh;
 }
 
-.startup-location{
+.startup-profile-location{
   font-style: italic;
   margin-bottom: 3vh;
 }
 
-.startup-industries{
+.startup-profile-industries{
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-.industry{
+.startup-profile-industry{
   font-size: small;
   color: white;
   width: fit-content;
@@ -78,25 +78,25 @@
   margin-bottom: 10vh;
 }
 
-.startup-description{
+.startup-profile-description{
   text-align: left;
 }
 
-br{
+.startup-profile-break{
   height: 10vh;
 }
 
 // @media screen and (max-width: 700px) {
-//   .startup {
+//   .startup-profile {
 //     display: flex;
 //     flex-direction: column-reverse;
 //   }
 
-//   .startup-postings {
+//   .startup-profile-postings {
 //     width: 100%;
 //   }
   
-//   .startup-body{
+//   .startup-profile-body{
 //     width: 100vw;
 //   }
 // }
