@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { NavLink } from 'react-router-dom';
 import React, { Component } from 'react';
+import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { signoutUser } from '../actions';
 
@@ -12,7 +12,7 @@ class Nav extends Component {
     };
   }
 
-  signout = () => {
+  signout = (event) => {
     this.props.signoutUser(this.props.history);
   }
 
@@ -74,4 +74,4 @@ function mapStateToProps(reduxState) {
   };
 }
 
-export default connect(mapStateToProps, { signoutUser })(Nav);
+export default withRouter(connect(mapStateToProps, { signoutUser })(Nav));

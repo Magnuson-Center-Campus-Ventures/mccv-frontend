@@ -462,7 +462,7 @@ export function signoutUser(history) {
   return (dispatch) => {
     localStorage.removeItem('token');
     dispatch({ type: ActionTypes.DEAUTH_USER });
-    history.push('/');
+    history.push('/signin');
   };
 }
 
