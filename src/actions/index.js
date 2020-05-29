@@ -16,6 +16,10 @@ export const ActionTypes = {
   ADD_WORK_EXP: 'ADD_WORK_EXP',
   UPDATE_WORK_EXP: 'UPDATE_WORK_EXP',
   DELETE_WORK_EXP: 'DELETE_WORK_EXP',
+  FETCH_OTHER_EXPS: 'FETCH_OTHER_EXPS',
+  ADD_OTHER_EXP: 'ADD_OTHER_EXP',
+  UPDATE_OTHER_EXP: 'UPDATE_OTHER_EXP',
+  DELETE_OTHER_EXP: 'DELETE_OTHER_EXP',
   FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
   FETCH_APPLICATION: 'FETCH_APPLICATION',
   FETCH_SUBMITTED_APPLICATIONS: 'FETCH_SUBMITTED_APPLICATIONS',
@@ -378,7 +382,7 @@ export function fetchSubmittedApplication(id) {
 export function createOtherExperience(otherExp) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/otherexperiences`, otherExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.ADD_WORK_EXP, payload: response.data });
+      dispatch({ type: ActionTypes.ADD_OTHER_EXP, payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
@@ -389,7 +393,7 @@ export function createOtherExperience(otherExp) {
 export function updateOtherExperience(id, otherExp) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/otherexperiences/${id}`, otherExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.UPDATE_WORK_EXP, payload: response.data });
+      dispatch({ type: ActionTypes.UPDATE_OTHER_EXP, payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
@@ -400,7 +404,7 @@ export function updateOtherExperience(id, otherExp) {
 export function deleteOtherExperience(id) {
   return (dispatch) => {
     axios.delete(`${ROOT_URL}/otherexperiences/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.DELETE_WORK_EXP, payload: response.data });
+      dispatch({ type: ActionTypes.DELETE_OTHER_EXP, payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
@@ -411,7 +415,7 @@ export function deleteOtherExperience(id) {
 export function fetchOtherExperiences(idArray) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/otherexperiences/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_WORK_EXPS, payload: response.data });
+      dispatch({ type: ActionTypes.FETCH_OTHER_EXPS, payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
