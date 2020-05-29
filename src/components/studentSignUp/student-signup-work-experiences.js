@@ -101,8 +101,8 @@ class StudentWorkExperiences extends Component {
                <div>{workExp.employer}</div>
                <div>{workExp.location}</div>
                <div className="date-row">
-                 {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getDate()}/${new Date(workExp.start_date).getFullYear()} - `}
-                 {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getDate()}/${new Date(workExp.end_date).getFullYear()}`}
+                 {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
+                 {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}
                </div>
                <div>{workExp.description}</div>
              </div>
