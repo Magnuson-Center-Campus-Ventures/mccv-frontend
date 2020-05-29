@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
-import { fetchPosts, fetchStartups, fetchPostSearch } from '../actions';
+import {
+  fetchPosts, fetchStartups, fetchPostSearch, fetchStartupSearch,
+} from '../actions';
 
 import '../styles/postings.scss';
 
@@ -17,6 +19,15 @@ class Posts extends Component {
 
   search = (text) => {
     this.props.fetchPostSearch(text);
+    // this.props.fetchStartupSearch(text);
+    console.log('search term: ', text);
+    console.log('posts: ', this.props.posts);
+    console.log('startups: ', this.props.startups);
+  }
+
+  refresh = () => {
+    // this.props.fetchStartups();
+    this.props.fetchPosts();
   }
 
   findStartup(id) {
@@ -30,7 +41,7 @@ class Posts extends Component {
   }
 
   render() {
-    const mappingPostings = this.props.posts !== undefined && this.props.posts !== null
+    const mappingPostings = this.props.posts.length !== undefined && this.props.posts !== null
       ? this.props.posts.map((post) => {
         const startup = this.props.startups !== undefined && this.props.startups !== null ? (
           this.findStartup(post.startup_id)
@@ -52,7 +63,7 @@ class Posts extends Component {
       this.props.posts !== undefined
         ? (
           <div>
-            <SearchBar onSearchChange={this.search} onNoSearch={this.props.fetchPosts} />
+            <SearchBar onSearchChange={this.search} onNoSearch={this.refresh} />
             <div className="list">
               {mappingPostings}
             </div>
@@ -69,4 +80,6 @@ const mapStateToProps = (reduxState) => ({
   startups: reduxState.startups.all,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchPosts, fetchStartups, fetchPostSearch })(Posts));
+export default withRouter(connect(mapStateToProps, {
+  fetchPosts, fetchStartups, fetchPostSearch, fetchStartupSearch,
+})(Posts));

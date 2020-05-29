@@ -98,7 +98,7 @@ export function fetchStartups() {
   };
 }
 
-export function fetchSearchResults(searchterm) {
+export function fetchStartupSearch(searchterm) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startups/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
