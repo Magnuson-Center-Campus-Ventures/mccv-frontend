@@ -15,6 +15,10 @@ import StudentsFAQ from './students-faq';
 import StartupsFAQ from './startups-faq';
 import StartupsLanding from './startups-landing';
 import SubmittedApplications from './submitted-applications';
+import StudentSignUpBio from './studentSignUp/student-signup-bio';
+import StudentSignUpTiming from './studentSignUp/student-signup-timing';
+import StudentSignUpWorkExperiences from './studentSignUp/student-signup-work-experiences';
+import StudentSignUpOtherExperiences from './studentSignUp/student-signup-other-experiences';
 
 const App = (props) => {
   return (
@@ -34,6 +38,10 @@ const App = (props) => {
           <Route path="/studentsfaq" component={StudentsFAQ} />
           <Route path="/startupsfaq" component={StartupsFAQ} />
           <Route path="/startupslanding" component={StartupsLanding} />
+          <Route path="/student-signup-bio" component={StudentSignUpBio} />
+          <Route path="/student-signup-timing" component={StudentSignUpTiming} />
+          <Route path="/student-signup-workexperiences" component={StudentSignUpWorkExperiences} />
+          <Route path="/student-signup-otherexperiences" component={StudentSignUpOtherExperiences} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>
       </div>

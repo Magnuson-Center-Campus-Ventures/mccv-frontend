@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   authError, signupUser, createStudent, updateUser,
-} from '../actions/index';
+} from '../actions';
 import '../styles/signup.scss';
 
 class Signup extends Component {

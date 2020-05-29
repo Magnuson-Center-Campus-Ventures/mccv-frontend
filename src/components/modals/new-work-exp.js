@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable react/button-has-type */
 import React from 'react';
 import { connect } from 'react-redux';
@@ -14,7 +15,7 @@ class NewWorkExp extends React.Component {
       employer: '',
       location: '',
       start_date: '',
-      end_date: '',
+      end_date: undefined,
       description: '',
       currently_working: false,
     };
@@ -41,21 +42,42 @@ class NewWorkExp extends React.Component {
             <input className="short-input" onBlur={(event) => this.setState({ employer: event.target.value })} />
             <div className="input-title">Location</div>
             <input className="short-input" onBlur={(event) => this.setState({ location: event.target.value })} />
-            <div className="input-title">Start Date (YYYY-MM-DD)</div>
+            <div className="input-title">Start Date (YYYY-MM)</div>
             <input className="short-input"
-              placeholder="YYYY-MM-DD"
+              placeholder="YYYY-MM"
               onBlur={(event) => this.setState({ start_date: event.target.value })}
             />
-            <div className="input-title">End Date (YYYY-MM-DD)</div>
-            <input className="short-input"
-              placeholder="YYYY-MM-DD"
-              onBlur={(event) => this.setState({ end_date: event.target.value })}
-            />
+            {!this.state.currently_working
+              ? (
+                <div>
+                  <div className="input-title">End Date (YYYY-MM)</div>
+                  <input className="short-input"
+                    placeholder="YYYY-MM"
+                    onBlur={(event) => this.setState({ end_date: event.target.value })}
+                  />
+                </div>
+              )
+              : null}
+            <form>
+              <label htmlFor="currentlyWorking">I currently work here
+                <input
+                  name="currentlyWorking"
+                  id="currentlyWorking"
+                  type="checkbox"
+                  checked={this.state.currently_working}
+                  onChange={(event) => this.setState({ currently_working: event.target.checked })}
+                />
+              </label>
+            </form>
             <div className="input-title">Description</div>
             <textarea className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
             <button className="modal-add-button"
               onClick={() => {
-                this.props.createWorkExperience(this.state);
+                // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
+                const workExperience = this.state;
+                workExperience.start_date += '-15';
+                workExperience.end_date += '-15';
+                this.props.createWorkExperience(workExperience);
                 this.props.onClose();
               }}
             >Add Work Experience

@@ -1,0 +1,102 @@
+#profile-header {
+    text-align: center;
+    align-items: center;
+  }
+
+  #major-row, #minor-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .majors, .minors {
+    padding-left: 5px,
+  }
+
+  #lists-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .profile-pill {
+    background-color: lightgrey;
+    padding: 5px;
+    border-radius: 20px;
+    margin: 5px;
+  }
+
+  #work-exps {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  .work-exp {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    background-color: lightgrey;
+    padding: 10px;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+  }
+
+  .date-row {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .StudentWorkExperienceQuestionsContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.nameContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+.StudentWorkExperienceHeaderContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+}
+
+.StudentWorkExperienceDescContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+#icon{
+    font-size: 5em;
+}
+
+.buttonContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.WorkExperienceSubtitle{
+    display: flex;
+    flex-direction: row;
+}
+
+#addicon{
+    font-size: 1em;
+} 

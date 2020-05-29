@@ -4,16 +4,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import TextareaAutosize from 'react-textarea-autosize';
 import CreateableSelect from 'react-select/creatable';
 import {
   fetchStudentByUserID, fetchWorkExperiences, updateStudent, fetchUser,
-  updateWorkExperience, deleteWorkExperience, fetchCertainIndustries,
+  updateWorkExperience, deleteWorkExperience, updateOtherExperience,
+  deleteOtherExperience, fetchOtherExperiences, fetchCertainIndustries,
   fetchCertainSkills, fetchCertainClasses, fetchAllIndustries,
   fetchAllClasses, fetchAllSkills,
   createIndustry, createSkill, createClass,
 } from '../actions';
 import NewWorkExp from './modals/new-work-exp';
-// import NewIndustry from './modals/new-industry';
+import NewOtherExp from './modals/new-other-exp';
 import '../styles/student-profile.scss';
 
 class StudentProfile extends Component {
@@ -23,9 +25,10 @@ class StudentProfile extends Component {
     this.state = {
       isEditing: false,
       showWorkExpModal: false,
-      // showIndustryModal: false,
+      showOtherExpModal: false,
       student: {},
       workExps: [],
+      otherExps: [],
       ownIndustries: [],
       ownSkills: [],
       ownClasses: [],
@@ -52,14 +55,19 @@ class StudentProfile extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       this.props.fetchWorkExperiences(this.props.student.work_exp);
+      this.props.fetchOtherExperiences(this.props.student.other_exp);
       this.props.fetchCertainIndustries(this.props.student.interested_industries);
-      this.props.fetchCertainSkills(Object.keys(this.props.student.skills));
+      this.props.fetchCertainSkills(this.props.student.skills);
       this.props.fetchCertainClasses(this.props.student.relevant_classes);
       this.setState({ student: this.props.student });
     }
 
     if (prevProps.workExps !== this.props.workExps) {
       this.setState({ workExps: this.props.workExps });
+    }
+
+    if (prevProps.otherExps !== this.props.otherExps) {
+      this.setState({ otherExps: this.props.otherExps });
     }
 
     if (prevProps.ownIndustries !== this.props.ownIndustries) {
@@ -86,17 +94,9 @@ class StudentProfile extends Component {
     if (prevProps.ownSkills !== this.props.ownSkills) {
       // When skills are initially loaded from redux state, or redux state changes,
       // updated local state for skills and the student's skills ids
-      const skillMap = {};
-      this.props.ownSkills.forEach((skill) => {
-        // Temporarily assigning all skills to a level of 1 until we add skill levels
-        if (this.state.student.skills[skill._id]) {
-          skillMap[skill._id] = this.state.student.skills[skill._id];
-        } else {
-          skillMap[skill._id] = 1;
-        }
-      });
+      const skillIDs = this.props.ownSkills.map((skill) => { return skill._id; });
       const student = { ...prevState.student };
-      student.skills = skillMap;
+      student.skills = skillIDs;
       this.setState({
         ownSkills: this.props.ownSkills,
         student,
@@ -107,7 +107,7 @@ class StudentProfile extends Component {
       });
       // Set initial dropdown options to be the skills the student already has
       const selectedSkillOptions = allSkillOptions.filter((option) => {
-        return Object.keys(skillMap).includes(option.skill._id);
+        return skillIDs.includes(option.skill._id);
       });
       this.setState({ allSkillOptions, selectedSkillOptions });
     }
@@ -148,16 +148,26 @@ class StudentProfile extends Component {
     });
   }
 
-  changeWorkExpField = (index, field, event) => {
+  changeWorkExpField = (index, field, value) => {
     // eslint-disable-next-line prefer-destructuring
-    const value = event.target.value;
-
     this.setState((prevState) => {
       const workExps = [...prevState.workExps];
       workExps[index][field] = value;
       return {
         ...prevState,
         workExps,
+      };
+    });
+  }
+
+  changeOtherExpField = (index, field, value) => {
+    // eslint-disable-next-line prefer-destructuring
+    this.setState((prevState) => {
+      const otherExps = [...prevState.otherExps];
+      otherExps[index][field] = value;
+      return {
+        ...prevState,
+        otherExps,
       };
     });
   }
@@ -170,20 +180,22 @@ class StudentProfile extends Component {
     this.setState({ showWorkExpModal: false });
   };
 
-  // showIndustryModal = () => {
-  //   this.setState({ showIndustryModal: true });
-  // };
+  showOtherExpModal = () => {
+    this.setState({ showOtherExpModal: true });
+  };
 
-  // hideIndustryModal = () => {
-  //   this.setState({ showIndustryModal: false });
-  // };
+  hideOtherExpModal = () => {
+    this.setState({ showOtherExpModal: false });
+  };
 
   submit = () => {
     if (this.state.isEditing) {
-      // console.log(this.state.student);
       this.props.updateStudent(this.state.student.id, this.state.student);
       this.state.workExps.forEach((workExp) => {
         this.props.updateWorkExperience(workExp._id, workExp);
+      });
+      this.state.otherExps.forEach((otherExp) => {
+        this.props.updateOtherExperience(otherExp._id, otherExp);
       });
       this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
     } else {
@@ -236,7 +248,6 @@ class StudentProfile extends Component {
           <div id="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
-              {/* <button onClick={() => this.setState({ showIndustryModal: true })}>Add New Industry</button> */}
               <CreateableSelect
                 className="select-dropdown"
                 isMulti
@@ -247,6 +258,9 @@ class StudentProfile extends Component {
                 onChange={(selectedOptions) => {
                   const tempIndustries = selectedOptions.map((option) => option.industry);
                   const industryIDs = selectedOptions.map((option) => option.industry._id);
+                  // Update current industries in redux state based on selected options
+                  this.props.fetchCertainIndustries(industryIDs);
+                  // Update the student and their current industries in local state
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
                     student.interested_industries = industryIDs;
@@ -274,10 +288,13 @@ class StudentProfile extends Component {
                 options={this.state.allClassOptions}
                 onChange={(selectedOptions) => {
                   const tempClasses = selectedOptions.map((option) => option._class);
-                  const industryIDs = selectedOptions.map((option) => option._class._id);
+                  const classIDs = selectedOptions.map((option) => option._class._id);
+                  // Update current classes in redux state based on selected options
+                  this.props.fetchCertainClasses(classIDs);
+                  // Update the student and their current classes in local state
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
-                    student.relevant_classes = industryIDs;
+                    student.relevant_classes = classIDs;
                     return {
                       ...prevState,
                       selectedClassOptions: selectedOptions,
@@ -302,14 +319,13 @@ class StudentProfile extends Component {
                 options={this.state.allSkillOptions}
                 onChange={(selectedOptions) => {
                   const tempSkills = selectedOptions.map((option) => option.skill);
-                  const skillMap = {};
-                  tempSkills.forEach((skill) => {
-                    // Temporarily assigning all skills to a level of 1 until we add skill levels
-                    skillMap[skill._id] = 1;
-                  });
+                  const skillIDs = selectedOptions.map((option) => option.skill._id);
+                  // Update current skills in redux state based on selected options
+                  this.props.fetchCertainSkills(skillIDs);
+                  // Update the student and current skills in local state
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
-                    student.skills = skillMap;
+                    student.skills = skillIDs;
                     return {
                       ...prevState,
                       selectedSkillOptions: selectedOptions,
@@ -367,25 +383,44 @@ class StudentProfile extends Component {
           return (
             <div key={index} className="work-exp">
               <div className="input-title">Role</div>
-              <input className="short-input" defaultValue={workExp.role} onBlur={(event) => this.changeWorkExpField(index, 'role', event)} />
+              <input className="short-input" defaultValue={workExp.role} onBlur={(event) => this.changeWorkExpField(index, 'role', event.target.value)} />
               <div className="input-title">Employer</div>
-              <input className="short-input" defaultValue={workExp.employer} onBlur={(event) => this.changeWorkExpField(index, 'employer', event)} />
+              <input className="short-input" defaultValue={workExp.employer} onBlur={(event) => this.changeWorkExpField(index, 'employer', event.target.value)} />
               <div className="input-title">Location</div>
-              <input className="short-input" defaultValue={workExp.location} onBlur={(event) => this.changeWorkExpField(index, 'location', event)} />
+              <input className="short-input" defaultValue={workExp.location} onBlur={(event) => this.changeWorkExpField(index, 'location', event.target.value)} />
               <div className="input-title">Start Date (YYYY-MM-DD)</div>
               <input className="short-input"
                 placeholder="YYYY-MM-DD"
-                defaultValue={`${new Date(workExp.start_date).getFullYear()}-${new Date(workExp.start_date).getMonth() + 1}-${new Date(workExp.start_date).getDate()}`}
-                onBlur={(event) => this.changeWorkExpField(index, 'start_date', event)}
+                defaultValue={`${new Date(workExp.start_date).getFullYear()}-${new Date(workExp.start_date).getMonth() + 1}`}
+                // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
+                onBlur={(event) => this.changeWorkExpField(index, 'start_date', `${event.target.value}-15`)}
               />
-              <div className="input-title">End Date (YYYY-MM-DD)</div>
-              <input className="short-input"
-                placeholder="YYYY-MM-DD"
-                defaultValue={`${new Date(workExp.end_date).getFullYear()}-${new Date(workExp.end_date).getMonth() + 1}-${new Date(workExp.end_date).getDate()}`}
-                onBlur={(event) => this.changeWorkExpField(index, 'end_date', event)}
-              />
+              {!workExp.currently_working
+                ? (
+                  <div>
+                    <div className="input-title">End Date (YYYY-MM-DD)</div>
+                    <input className="short-input"
+                      placeholder="YYYY-MM-DD"
+                      defaultValue={`${new Date(workExp.end_date).getFullYear()}-${new Date(workExp.end_date).getMonth() + 1}`}
+                      // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
+                      onBlur={(event) => this.changeWorkExpField(index, 'end_date', `${event.target.value}-15`)}
+                    />
+                  </div>
+                )
+                : null}
+              <form>
+                <label htmlFor={`currentlyWorking-${workExp._id}`}>I currently work here
+                  <input
+                    name="currentlyWorking"
+                    id={`currentlyWorking-${workExp._id}`}
+                    type="checkbox"
+                    checked={workExp.currently_working}
+                    onChange={(event) => this.changeWorkExpField(index, 'currently_working', event.target.checked)}
+                  />
+                </label>
+              </form>
               <div className="input-title">Description</div>
-              <textarea className="tall-input" defaultValue={workExp.description} onBlur={(event) => this.changeWorkExpField(index, 'description', event)} />
+              <TextareaAutosize className="tall-input" defaultValue={workExp.description} onBlur={(event) => this.changeWorkExpField(index, 'description', event.target.value)} />
               <button onClick={() => this.props.deleteWorkExperience(workExp._id)}>Delete Work Experience</button>
             </div>
           );
@@ -398,10 +433,37 @@ class StudentProfile extends Component {
               <div>{workExp.employer}</div>
               <div>{workExp.location}</div>
               <div className="date-row">
-                {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getDate()}/${new Date(workExp.start_date).getFullYear()} - `}
-                {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getDate()}/${new Date(workExp.end_date).getFullYear()}`}
+                {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
+                {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}
               </div>
               <div>{workExp.description}</div>
+            </div>
+          );
+        });
+      }
+    } else return null;
+  }
+
+  renderOtherExperiences = () => {
+    if (this.state.otherExps !== []) {
+      if (this.state.isEditing) {
+        return this.state.otherExps.map((otherExp, index) => {
+          return (
+            <div key={index} className="work-exp">
+              <div className="input-title">Name</div>
+              <input className="short-input" defaultValue={otherExp.name} onBlur={(event) => this.changeOtherExpField(index, 'name', event.target.value)} />
+              <div className="input-title">Description</div>
+              <TextareaAutosize className="tall-input" defaultValue={otherExp.description} onBlur={(event) => this.changeOtherExpField(index, 'description', event.target.value)} />
+              <button onClick={() => this.props.deleteOtherExperience(otherExp._id)}>Delete Experience</button>
+            </div>
+          );
+        });
+      } else {
+        return this.state.otherExps.map((otherExp, index) => {
+          return (
+            <div key={index} className="work-exp">
+              <div>{otherExp.name}</div>
+              <div>{otherExp.description}</div>
             </div>
           );
         });
@@ -416,15 +478,18 @@ class StudentProfile extends Component {
           onClose={this.hideWorkExpModal}
           show={this.state.showWorkExpModal}
         />
-        {/* <NewIndustry
-          onClose={this.hideIndustryModal}
-          show={this.state.showIndustryModal}
-        /> */}
+        <NewOtherExp
+          onClose={this.hideOtherExpModal}
+          show={this.state.showOtherExpModal}
+        />
         {this.renderBody()}
         <div id="work-exps">
           <h2>Work Experience</h2>
           {this.renderWorkExperiences()}
           {this.state.isEditing ? <button onClick={() => this.setState({ showWorkExpModal: true })}>Add Work Experience</button> : null}
+          <h2>Other Experience</h2>
+          {this.renderOtherExperiences()}
+          {this.state.isEditing ? <button onClick={() => this.setState({ showOtherExpModal: true })}>Add Other Experience</button> : null}
         </div>
         <button className="edit-button"
           onClick={this.submit}
@@ -440,12 +505,14 @@ const mapStateToProps = (reduxState) => ({
   student: reduxState.students.current_student,
   email: reduxState.user.email,
   workExps: reduxState.students.current_work_exps,
+  otherExps: reduxState.students.current_other_exps,
   ownIndustries: reduxState.industries.current,
   ownSkills: reduxState.skills.current,
   ownClasses: reduxState.classes.current,
   allIndustries: reduxState.industries.all,
   allSkills: reduxState.skills.all,
   allClasses: reduxState.classes.all,
+  addedIndustry: reduxState.industries.new,
 });
 
 export default withRouter(connect(mapStateToProps, {
@@ -455,6 +522,9 @@ export default withRouter(connect(mapStateToProps, {
   fetchUser,
   updateWorkExperience,
   deleteWorkExperience,
+  fetchOtherExperiences,
+  updateOtherExperience,
+  deleteOtherExperience,
   fetchCertainIndustries,
   fetchCertainSkills,
   fetchCertainClasses,
