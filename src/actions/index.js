@@ -420,10 +420,10 @@ export function signinUser({ email, password }, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/signin`, { email, password }).then((response) => {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userID', response.data.id);
+      localStorage.setItem('userID', response.data.id); // can maybe take out
       console.log('signed in successfully');
       dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
-      history.push('/');
+      history.push('/posts');
     }).catch((error) => {
       console.log(error.response.data);
       dispatch(authError(`Sign In Failed: ${error.response.data}`));
@@ -442,11 +442,11 @@ export function signupUser({ email, password }, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/signup`, { email, password }).then((response) => {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userID', response.data.id);
-      // console.log(response.data.id);
+      localStorage.setItem('userID', response.data.id); // can maybe take out
+      console.log(response.data);
       dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       // dispatch({ type: ActionTypes.AUTH_USER });
-      history.push('/');
+      history.push('/posts');
       console.log('signed up succesfully');
     }).catch((error) => {
       // eslint-disable-next-line no-alert
@@ -462,7 +462,7 @@ export function signoutUser(history) {
   return (dispatch) => {
     localStorage.removeItem('token');
     dispatch({ type: ActionTypes.DEAUTH_USER });
-    // history.push('/');
+    history.push('/');
   };
 }
 
