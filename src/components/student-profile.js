@@ -4,15 +4,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import TextareaAutosize from 'react-textarea-autosize';
 import CreateableSelect from 'react-select/creatable';
 import {
   fetchStudentByUserID, fetchWorkExperiences, updateStudent, fetchUser,
-  updateWorkExperience, deleteWorkExperience, fetchCertainIndustries,
+  updateWorkExperience, deleteWorkExperience, updateOtherExperience,
+  deleteOtherExperience, fetchOtherExperiences, fetchCertainIndustries,
   fetchCertainSkills, fetchCertainClasses, fetchAllIndustries,
   fetchAllClasses, fetchAllSkills,
   createIndustry, createSkill, createClass,
 } from '../actions';
 import NewWorkExp from './modals/new-work-exp';
+import NewOtherExp from './modals/new-other-exp';
 import '../styles/student-profile.scss';
 
 class StudentProfile extends Component {
@@ -22,8 +25,10 @@ class StudentProfile extends Component {
     this.state = {
       isEditing: false,
       showWorkExpModal: false,
+      showOtherExpModal: false,
       student: {},
       workExps: [],
+      // otherExps: [],
       ownIndustries: [],
       ownSkills: [],
       ownClasses: [],
@@ -50,6 +55,7 @@ class StudentProfile extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       this.props.fetchWorkExperiences(this.props.student.work_exp);
+      // this.props.fetchOtherExperiences(this.props.student.other_exp);
       this.props.fetchCertainIndustries(this.props.student.interested_industries);
       this.props.fetchCertainSkills(this.props.student.skills);
       this.props.fetchCertainClasses(this.props.student.relevant_classes);
@@ -59,6 +65,10 @@ class StudentProfile extends Component {
     if (prevProps.workExps !== this.props.workExps) {
       this.setState({ workExps: this.props.workExps });
     }
+
+    // if (prevProps.otherExps !== this.props.otherExps) {
+    //   this.setState({ otherExps: this.props.otherExps });
+    // }
 
     if (prevProps.ownIndustries !== this.props.ownIndustries) {
       // When industries are initially loaded from redux state, or redux state changes,
@@ -150,6 +160,18 @@ class StudentProfile extends Component {
     });
   }
 
+  changeOtherExpField = (index, field, value) => {
+    // eslint-disable-next-line prefer-destructuring
+    this.setState((prevState) => {
+      const otherExps = [...prevState.otherExps];
+      otherExps[index][field] = value;
+      return {
+        ...prevState,
+        otherExps,
+      };
+    });
+  }
+
   showWorkExpModal = () => {
     this.setState({ showWorkExpModal: true });
   };
@@ -158,12 +180,23 @@ class StudentProfile extends Component {
     this.setState({ showWorkExpModal: false });
   };
 
+  showOtherExpModal = () => {
+    this.setState({ showOtherExpModal: true });
+  };
+
+  hideOtherExpModal = () => {
+    this.setState({ showOtherExpModal: false });
+  };
+
   submit = () => {
     if (this.state.isEditing) {
       this.props.updateStudent(this.state.student.id, this.state.student);
       this.state.workExps.forEach((workExp) => {
         this.props.updateWorkExperience(workExp._id, workExp);
       });
+      // this.state.otherExps.forEach((otherExp) => {
+      //   this.props.updateOtherExperience(otherExp._id, otherExp);
+      // });
       this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
     } else {
       this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
@@ -387,7 +420,7 @@ class StudentProfile extends Component {
                 </label>
               </form>
               <div className="input-title">Description</div>
-              <textarea className="tall-input" defaultValue={workExp.description} onBlur={(event) => this.changeWorkExpField(index, 'description', event.target.value)} />
+              <TextareaAutosize className="tall-input" defaultValue={workExp.description} onBlur={(event) => this.changeWorkExpField(index, 'description', event.target.value)} />
               <button onClick={() => this.props.deleteWorkExperience(workExp._id)}>Delete Work Experience</button>
             </div>
           );
@@ -411,6 +444,33 @@ class StudentProfile extends Component {
     } else return null;
   }
 
+  renderOtherExperiences = () => {
+    if (this.state.otherExps !== []) {
+      if (this.state.isEditing) {
+        return this.state.otherExps.map((otherExp, index) => {
+          return (
+            <div key={index} className="work-exp">
+              <div className="input-title">Name</div>
+              <input className="short-input" defaultValue={otherExp.name} onBlur={(event) => this.changeOtherExpField(index, 'name', event.target.value)} />
+              <div className="input-title">Description</div>
+              <TextareaAutosize className="tall-input" defaultValue={otherExp.description} onBlur={(event) => this.changeOtherExpField(index, 'other', event.target.value)} />
+              <button onClick={() => this.props.deleteOtherExperience(otherExp._id)}>Delete Experience</button>
+            </div>
+          );
+        });
+      } else {
+        return this.state.otherExps.map((otherExp, index) => {
+          return (
+            <div key={index} className="work-exp">
+              <div>{otherExp.name}</div>
+              <div>{otherExp.description}</div>
+            </div>
+          );
+        });
+      }
+    } else return null;
+  }
+
   render() {
     return (
       <div className="student-profile">
@@ -418,11 +478,18 @@ class StudentProfile extends Component {
           onClose={this.hideWorkExpModal}
           show={this.state.showWorkExpModal}
         />
+        <NewOtherExp
+          onClose={this.hideOtherExpModal}
+          show={this.state.showOtherExpModal}
+        />
         {this.renderBody()}
         <div id="work-exps">
           <h2>Work Experience</h2>
           {this.renderWorkExperiences()}
           {this.state.isEditing ? <button onClick={() => this.setState({ showWorkExpModal: true })}>Add Work Experience</button> : null}
+          <h2>Other Experience</h2>
+          {/* {this.renderOtherExperiences()} */}
+          {this.state.isEditing ? <button onClick={() => this.setState({ showOtherExpModal: true })}>Add Other Experience</button> : null}
         </div>
         <button className="edit-button"
           onClick={this.submit}
@@ -454,6 +521,9 @@ export default withRouter(connect(mapStateToProps, {
   fetchUser,
   updateWorkExperience,
   deleteWorkExperience,
+  fetchOtherExperiences,
+  updateOtherExperience,
+  deleteOtherExperience,
   fetchCertainIndustries,
   fetchCertainSkills,
   fetchCertainClasses,
