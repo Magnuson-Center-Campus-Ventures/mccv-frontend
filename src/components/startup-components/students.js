@@ -8,8 +8,8 @@ import {
   fetchStudents, fetchAllClasses, fetchAllIndustries, fetchAllSkills,
 } from '../../actions';
 import '../../styles/postings.scss';
-// import StudentListItem from './student-item';
-import StudentListItem from './item';
+// import StudentListItem from './item';
+import StudentListItem from './student-item';
 
 
 class Students extends Component {

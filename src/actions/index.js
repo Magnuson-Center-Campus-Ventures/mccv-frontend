@@ -55,7 +55,7 @@ export function fetchPosts() {
 
 export function fetchPostSearch(searchterm) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+    axios.get(`${ROOT_URL}/posts-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
       })
@@ -104,7 +104,7 @@ export function fetchStartups() {
 
 export function fetchStartupSearch(searchterm) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/startups/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+    axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         // console.log('here');
         dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });

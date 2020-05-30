@@ -8,6 +8,7 @@ import SearchBar from './search-bar';
 import {
   fetchPosts, fetchStartups, fetchPostSearch, fetchStartupSearch,
 } from '../../actions';
+import { startupSearch } from '../../services/datastore';
 
 import '../../styles/postings.scss';
 
@@ -19,6 +20,7 @@ class Posts extends Component {
 
   search = (text) => {
     this.props.fetchPostSearch(text);
+    console.log('from search', startupSearch(text));
     // this.props.fetchStartupSearch(text);
     // console.log('search term: ', text);
     // console.log('posts: ', this.props.posts);

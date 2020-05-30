@@ -1,14 +1,8 @@
-/* eslint-disable array-callback-return */
-/* eslint-disable react/no-did-update-set-state */
-/* eslint-disable react/no-unused-state */
-
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import {
-  fetchCertainClasses, fetchCertainIndustries, fetchCertainSkills,
-} from '../../actions';
+import { Link } from 'react-router-dom';
+import { intIndustriesByID, classesByID, skillsByID } from '../../services/datastore';
+
 import '../../styles/postings.scss';
 
 class StudentListItem extends Component {
@@ -17,28 +11,27 @@ class StudentListItem extends Component {
     this.state = {
       classes: [],
       skills: [],
-      industries: this.props.industries,
+      industries: [],
     };
   }
 
   componentDidMount() {
-    this.props.fetchCertainClasses(this.props.student.relevant_classes);
-    this.props.fetchCertainIndustries(this.props.student.interested_industries);
-    this.props.fetchCertainSkills(this.props.student.skills);
+    intIndustriesByID(this.props.student.interested_industries, (industry) => {
+      this.setState((prevState) => ({
+        industries: [...prevState.industries, industry.name],
+      }));
+    });
+    classesByID(this.props.student.relevant_classes, (singleClass) => {
+      this.setState((prevState) => ({
+        classes: [...prevState.classes, singleClass.name],
+      }));
+    });
+    skillsByID(this.props.student.skills, (skill) => {
+      this.setState((prevState) => ({
+        skills: [...prevState.skills, skill.name],
+      }));
+    });
   }
-
-  //   componentDidUpdate(prevProps, prevState) {
-  //     if (prevProps !== undefined) {
-  //       if (prevProps.skills !== this.props.skills) {
-  //         this.props.skills.map((skill) => {
-  //           this.setState(() => ({
-  //             skills: [...prevState.skills, skill.name],
-  //           }));
-  //         });
-  //       }
-  //     }
-  //   }
-
 
   renderMajors() {
     return this.props.student.majors.length > 1
@@ -58,46 +51,38 @@ class StudentListItem extends Component {
   }
 
   renderIndustries() {
-    return this.props.interested_industries.map((relClass, index) => {
+    return this.state.industries.map((industry, index) => {
       return (
         <div key={index} className="pill">
-          industry will go here
+          {industry}
         </div>
       );
     });
   }
 
   renderClasses() {
-    return this.props.relevant_classes.map((relClass, index) => {
+    return this.state.classes.map((singleClass, index) => {
       return (
         <div key={index} className="pill">
-          class will go here
+          {singleClass}
         </div>
       );
     });
   }
 
   renderSkills() {
-    console.log(this.state.skills);
-    if (this.state.skills.length > 0) {
-      return this.state.skills.map((skill, index) => {
-        // console.log(skill);
-        return (
-          <div key={index} className="pill">
-            {skill}
-          </div>
-        );
-      });
-    } else {
-      return (<div />);
-    }
+    return this.state.skills.map((skill, index) => {
+      return (
+        <div key={index} className="pill">
+          {skill}
+        </div>
+      );
+    });
   }
-
 
   render() {
     const route = `/students/${this.props.student._id}`;
-    // console.log(this.props.student);
-    // console.log('rerendering');
+
     return (
       <Link to={route} key={this.props.student.id} className="listItem link">
         <div className="basicInfo">
@@ -106,8 +91,8 @@ class StudentListItem extends Component {
           <h2 className="major"> {this.renderMajors()} </h2>
         </div>
         <div className="extraInfo">
-          {/* <h3> Interests: {this.renderIndustries()} </h3>
-          <h3>Classes: {this.renderClasses() } </h3> */}
+          <h3> Interests: {this.renderIndustries()} </h3>
+          <h3>Classes: {this.renderClasses() } </h3>
           <h3> Skills: {this.renderSkills()} </h3>
         </div>
       </Link>
@@ -115,12 +100,17 @@ class StudentListItem extends Component {
   }
 }
 
-const mapStateToProps = (reduxState) => ({
-  classes: reduxState.classes.current,
-  industries: reduxState.industries.current,
-  skills: reduxState.skills.current,
-});
+// const mapStateToProps = (reduxState) => ({
+//   classes: reduxState.classes.current,
+//   industries: reduxState.industries.current,
+//   skills: reduxState.skills.current,
+//   allClasses: reduxState.classes.all,
+//   allInd: reduxState.industries.all,
+//   allSkills: reduxState.skills.all,
+// });
 
-export default withRouter(connect(mapStateToProps, {
-  fetchCertainClasses, fetchCertainIndustries, fetchCertainSkills,
-})(StudentListItem));
+// export default withRouter(connect(mapStateToProps, {
+//   fetchCertainClasses, fetchCertainIndustries, fetchCertainSkills, fetchAllClasses, fetchAllIndustries, fetchAllSkills,
+// })(StudentListItem));
+
+export default StudentListItem;
