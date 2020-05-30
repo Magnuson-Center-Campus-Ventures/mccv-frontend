@@ -100,17 +100,4 @@ class StudentListItem extends Component {
   }
 }
 
-// const mapStateToProps = (reduxState) => ({
-//   classes: reduxState.classes.current,
-//   industries: reduxState.industries.current,
-//   skills: reduxState.skills.current,
-//   allClasses: reduxState.classes.all,
-//   allInd: reduxState.industries.all,
-//   allSkills: reduxState.skills.all,
-// });
-
-// export default withRouter(connect(mapStateToProps, {
-//   fetchCertainClasses, fetchCertainIndustries, fetchCertainSkills, fetchAllClasses, fetchAllIndustries, fetchAllSkills,
-// })(StudentListItem));
-
 export default StudentListItem;

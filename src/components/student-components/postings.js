@@ -15,12 +15,12 @@ import '../../styles/postings.scss';
 class Posts extends Component {
   componentDidMount() {
     this.props.fetchPosts();
-    this.props.fetchStartups();
+    // this.props.fetchStartups();
   }
 
   search = (text) => {
     this.props.fetchPostSearch(text);
-    console.log('from search', startupSearch(text));
+    startupSearch(text);
     // this.props.fetchStartupSearch(text);
     // console.log('search term: ', text);
     // console.log('posts: ', this.props.posts);
@@ -28,46 +28,26 @@ class Posts extends Component {
   }
 
   refresh = () => {
-    this.props.fetchStartups();
+    // this.props.fetchStartups();
     this.props.fetchPosts();
   }
 
-  findStartup(id) {
-    let startupInfo = null;
-    this.props.startups.map((startup) => {
-      if (id === startup.id) {
-        startupInfo = startup;
-      }
+  renderPosts() {
+    return this.props.posts.map((post) => {
+      return (
+        <PostListItem post={post} key={post.id} />
+      );
     });
-    return startupInfo;
   }
 
   render() {
-    const mappingPostings = this.props.posts.length !== undefined && this.props.posts !== null
-      ? this.props.posts.map((post) => {
-        const startup = this.props.startups !== undefined && this.props.startups !== null ? (
-          this.findStartup(post.startup_id)
-        )
-          : (null);
-        return (
-          startup !== null
-            ? (
-              <PostListItem post={post} startup={startup} key={post.id} />
-            ) : (<div />)
-        );
-      })
-      : (
-        <div>
-          Sorry, no posts currently
-        </div>
-      );
     return (
-      this.props.posts !== undefined
+      this.props.posts !== undefined && this.props.posts !== null
         ? (
           <div>
             <SearchBar onSearchChange={this.search} onNoSearch={this.refresh} />
             <div className="list">
-              {mappingPostings}
+              {this.renderPosts()}
             </div>
           </div>
         ) : (
