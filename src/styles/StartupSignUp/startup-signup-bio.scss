@@ -1,0 +1,50 @@
+// .StartupBioQuestionsContainer{
+ //     display: flex;
+ //     flex-direction: row;
+ //     align-items: flex-start;
+ //     flex-wrap: nowrap;
+ //     justify-content: space-around;
+ // }
+
+ .StartupBioQuestionsContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.nameContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+}
+
+.StartupBioHeaderContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+
+}
+
+.StartupBioDescContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+#icon{
+    font-size: 5em;
+}
+
+.buttonContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}

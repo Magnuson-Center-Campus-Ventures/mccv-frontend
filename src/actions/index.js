@@ -89,6 +89,19 @@ export function fetchStartup(id) {
   };
 }
 
+
+// For getting the current startup user's profile
+export function fetchStartupByUserID(userID) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/profile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
 export function fetchStartups() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startups`, { headers: { authorization: localStorage.getItem('token') } })
@@ -99,6 +112,17 @@ export function fetchStartups() {
         console.log('broken');
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
+  };
+}
+
+export function updateStartup(id, startup) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/startups/${id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+    });
   };
 }
 
@@ -156,7 +180,7 @@ export function fetchStudentByUserID(userID) {
 export function updateStudent(id, student) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/students/${id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
+      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });

@@ -20,6 +20,10 @@ import StudentSignUpMajorMinor from './studentSignUp/student-signup-major-minor'
 import StudentSignUpIndustries from './studentSignUp/student-signup-industries';
 import StudentSignUpSkills from './studentSignUp/student-signup-skills';
 import StudentSignUpClasses from './studentSignUp/student-signup-classes';
+import StartupSignUpBio from './startupSignUp/startup-signup-bio';
+import StartupSignUpDesc from './startupSignUp/startup-signup-desc';
+import StartupSignUpVideo from './startupSignUp/startup-signup-video';
+import StartupSignUpIndustries from './startupSignUp/startup-signup-industries';
 
 const App = (props) => {
   return (
@@ -44,6 +48,10 @@ const App = (props) => {
           <Route path="/student-signup-industries" component={StudentSignUpIndustries} />
           <Route path="/student-signup-classes" component={StudentSignUpClasses} />
           <Route path="/student-signup-skills" component={StudentSignUpSkills} />
+          <Route path="/startup-signup-bio" component={StartupSignUpBio} />
+          <Route path="/startup-signup-desc" component={StartupSignUpDesc} />
+          <Route path="/startup-signup-industries" component={StartupSignUpIndustries} />
+          <Route path="/startup-signup-video" component={StartupSignUpVideo} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>
       </div>
