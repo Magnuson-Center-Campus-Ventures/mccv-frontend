@@ -2,7 +2,7 @@ import React from 'react';
 import {
   BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
-import StudentsLanding from './students-landing';
+import StudentsLanding from './student-components/students-landing';
 import Postings from './student-components/postings';
 import Startups from './student-components/startups';
 import StartupProfile from './student-components/startup-profile';
@@ -11,9 +11,9 @@ import Post from './student-components/post';
 import Nav from './nav';
 import Signin from './signin';
 import Signup from './signup';
-import StudentsFAQ from './students-faq';
-import StartupsFAQ from './startups-faq';
-import StartupsLanding from './startups-landing';
+import StudentsFAQ from './student-components/students-faq';
+import StartupsFAQ from './startup-components/startups-faq';
+import StartupsLanding from './startup-components/startups-landing';
 import SubmittedApplications from './student-components/submitted-applications';
 import StudentSignUpBio from './student-components/student-sign-up/student-signup-bio';
 import StudentSignUpTiming from './student-components/student-sign-up/student-signup-timing';
