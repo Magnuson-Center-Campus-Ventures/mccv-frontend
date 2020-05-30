@@ -8,9 +8,9 @@ import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
   fetchPosts, fetchStartups, fetchPostSearch, getFilteredPostsIndustries, getFilteredPostsSkills,
-} from '../actions';
+} from '../../actions';
 
-import '../styles/postings.scss';
+import '../../styles/postings.scss';
 
 class Posts extends Component {
   constructor(props) {

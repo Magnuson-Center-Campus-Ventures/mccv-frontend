@@ -3,10 +3,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import '../../styles/studentSignUp/student-signup-major-minor.scss';
+import '../../../styles/student-sign-up/student-signup-major-minor.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent,
-} from '../../actions';
+} from '../../../actions';
 
 class StudentMajorMinors extends Component {
   constructor(props) {

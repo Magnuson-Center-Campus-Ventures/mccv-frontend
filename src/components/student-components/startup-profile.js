@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchStartup, fetchPosts, fetchPost } from '../actions/index';
-import '../styles/startup-profile.scss';
+import { fetchStartup, fetchPosts, fetchPost } from '../../actions/index';
+import '../../styles/startup-profile.scss';
 
 class Startup extends Component {
   constructor(props) {

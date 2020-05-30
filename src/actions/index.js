@@ -11,6 +11,7 @@ export const ActionTypes = {
   FETCH_STARTUP: 'FETCH_STARTUP',
   FETCH_STARTUPS: 'FETCH_STARTUPS',
   FETCH_STUDENT: 'FETCH_STUDENT',
+  CREATE_STUDENT: 'CREATE_STUDENT',
   FETCH_STUDENTS: 'FETCH_STUDENTS',
   FETCH_WORK_EXPS: 'FETCH_WORK_EXPS',
   ADD_WORK_EXP: 'ADD_WORK_EXP',
@@ -101,6 +102,7 @@ export function fetchPost(id) {
   };
 }
 
+// startup functions
 export function fetchStartup(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startups/${id}`, { headers: { authorization: localStorage.getItem('token') } })
@@ -126,6 +128,22 @@ export function fetchStartups() {
   };
 }
 
+// student functions
+export function createStudent(newStudent) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/students`, newStudent, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        console.log(response.data);
+        dispatch({ type: ActionTypes.CREATE_STUDENT, payload: response.data });
+        console.log('student profile created');
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
 export function fetchSearchResults(searchterm) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
@@ -138,7 +156,6 @@ export function fetchSearchResults(searchterm) {
       });
   };
 }
-
 
 export function fetchStudents() {
   return (dispatch) => {
@@ -183,11 +200,12 @@ export function updateStudent(id, student) {
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
     }).catch((error) => {
       console.log(error);
-      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
 }
 
+// work experience functions
 export function fetchWorkExperiences(idArray) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/workexperiences/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
@@ -205,7 +223,7 @@ export function createWorkExperience(workExp) {
       dispatch({ type: ActionTypes.ADD_WORK_EXP, payload: response.data });
     }).catch((error) => {
       console.log(error);
-      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
 }
@@ -216,7 +234,7 @@ export function updateWorkExperience(id, workExp) {
       dispatch({ type: ActionTypes.UPDATE_WORK_EXP, payload: response.data });
     }).catch((error) => {
       console.log(error);
-      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
 }
@@ -227,11 +245,12 @@ export function deleteWorkExperience(id) {
       dispatch({ type: ActionTypes.DELETE_WORK_EXP, payload: response.data });
     }).catch((error) => {
       console.log(error);
-      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
 }
 
+// industries functions
 export function fetchAllIndustries() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/industries`, { headers: { authorization: localStorage.getItem('token') } })
@@ -262,11 +281,12 @@ export function createIndustry(industry) {
       dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
     }).catch((error) => {
       console.log(error);
-      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
 }
 
+// skills functions
 export function fetchAllSkills() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/skills`, { headers: { authorization: localStorage.getItem('token') } })
@@ -297,11 +317,12 @@ export function createSkill(skill) {
       dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
     }).catch((error) => {
       console.log(error);
-      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
 }
 
+// classes functions
 export function fetchAllClasses() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/classes`, { headers: { authorization: localStorage.getItem('token') } })
@@ -332,11 +353,12 @@ export function createClass(newClass) {
       dispatch({ type: ActionTypes.ADD_CLASS, payload: response.data });
     }).catch((error) => {
       console.log(error);
-      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
 }
 
+// applications functions
 export function fetchApplications() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/applications`, { headers: { authorization: localStorage.getItem('token') } })
@@ -377,6 +399,7 @@ export function submitApplication(newApplication) {
   };
 }
 
+// submitted application functions
 export function fetchSubmittedApplications() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/submittedapplications`, { headers: { authorization: localStorage.getItem('token') } })
@@ -403,6 +426,7 @@ export function fetchSubmittedApplication(id) {
   };
 }
 
+// otherExperience functions
 export function createOtherExperience(otherExp) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/otherexperiences`, otherExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
@@ -451,6 +475,9 @@ export function fetchOtherExperiences(idArray) {
 // trigger to deauth if there is error
 // can also use in your error reducer if you have one to display an error message
 export function authError(error) {
+  // lab5
+  // trigger to deauth if there is error
+  // can also use in your error reducer if you have one to display an error message
   return {
     type: ActionTypes.AUTH_ERROR,
     message: error,
@@ -467,10 +494,11 @@ export function signinUser({ email, password }, history) {
   // on error should dispatch(authError(`Sign In Failed: ${error.response.data}`));
   return (dispatch) => {
     axios.post(`${ROOT_URL}/signin`, { email, password }).then((response) => {
-      dispatch({ type: ActionTypes.AUTH_USER, id: response.data.id });
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userID', response.data.id);
-      history.push('/');
+      localStorage.setItem('userID', response.data.id); // can maybe take out
+      console.log('signed in successfully');
+      dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
+      history.push('/posts');
     }).catch((error) => {
       console.log(error.response.data);
       dispatch(authError(`Sign In Failed: ${error.response.data}`));
@@ -478,7 +506,10 @@ export function signinUser({ email, password }, history) {
   };
 }
 
-export function signupUser({ email, password }, history) {
+export function signupUser({
+  // eslint-disable-next-line camelcase
+  email, password, role, student_profile_id, startup_id,
+}, history) {
   // takes in an object with email and password (minimal user object)
   // returns a thunk method that takes dispatch as an argument (just like our create post method really)
   // does an axios.post on the /signup endpoint (only difference from above)
@@ -487,12 +518,15 @@ export function signupUser({ email, password }, history) {
   //  localStorage.setItem('token', response.data.token);
   // on error should dispatch(authError(`Sign Up Failed: ${error.response.data}`));
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/signup`, { email, password }).then((response) => {
+    axios.post(`${ROOT_URL}/signup`, {
+      email, password, role, student_profile_id, startup_id,
+    }).then((response) => {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userID', response.data.id);
+      localStorage.setItem('userID', response.data.id); // can maybe take out
+      dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
+      // dispatch({ type: ActionTypes.AUTH_USER });
+      history.push('/posts');
       console.log('signed up succesfully');
-      dispatch({ type: ActionTypes.AUTH_USER, id: response.data.id });
-      history.push('/');
     }).catch((error) => {
       // eslint-disable-next-line no-alert
       console.log(error.response.data);
@@ -507,7 +541,7 @@ export function signoutUser(history) {
   return (dispatch) => {
     localStorage.removeItem('token');
     dispatch({ type: ActionTypes.DEAUTH_USER });
-    // history.push('/');
+    history.push('/signin');
   };
 }
 
@@ -518,6 +552,17 @@ export function fetchUser(id) {
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
+export function updateUser(id, user) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/users/${id}`, user, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
 }

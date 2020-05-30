@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/postings.scss';
+import '../../styles/postings.scss';
 
 const StartupListItem = (props) => {
   const route = `/startups/${props.startup._id}`;

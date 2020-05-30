@@ -1,16 +1,20 @@
+/* eslint-disable react/no-did-update-set-state */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  authError, signupUser,
-} from '../actions/index';
+  authError, signupUser, createStudent, updateUser,
+} from '../actions';
 import '../styles/signup.scss';
 
 class Signup extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      role: 'student',
       email: '',
       password: '',
+      student_profile_id: '',
+      startup_id: '',
     };
   }
 
@@ -22,9 +26,43 @@ class Signup extends Component {
     this.setState({ password: event.target.value });
   }
 
+  // setState when student button selected
+  roleStudent = (event) => {
+    this.setState({ role: 'student' });
+  }
+
+  // setState when startup button selected
+  roleStartup = (event) => {
+    this.setState({ role: 'startup' });
+  }
+
   signupNow = (event) => {
-    const fields = { ...this.state };
-    this.props.signupUser(fields, this.props.history);
+    // create new user
+    const newUser = { ...this.state };
+    newUser.email = this.state.email;
+    newUser.password = this.state.password;
+    newUser.role = this.state.role;
+    newUser.student_profile_id = this.state.student_profile_id;
+    newUser.startup_id = this.state.startup_id;
+    this.props.signupUser(newUser, this.props.history);
+  }
+
+  // return button className if student is selected
+  studentClassname() {
+    if (this.state.role === 'student') {
+      return 'roleSelectedBtn';
+    } else {
+      return 'roleBtn';
+    }
+  }
+
+  // return button className if startup is selected
+  startupClassname() {
+    if (this.state.role === 'startup') {
+      return 'roleSelectedBtn';
+    } else {
+      return 'roleBtn';
+    }
   }
 
   renderError() {
@@ -34,27 +72,54 @@ class Signup extends Component {
     return null;
   }
 
+  renderTypeEmail() {
+    if (this.state.role === 'student') {
+      return 'Dartmouth Email';
+    } else {
+      return 'Email';
+    }
+  }
+
   render() {
     return (
-      <div className="signupBoard">
-        <div className="signup">
-          <h1>Sign Up</h1>
+      <div className="signupPage">
+        <div className="signupBoard">
+          <div className="signupLeft">
+            <h1>Are you a</h1>
+            <div className="roleButtons">
+              <button type="button" className={this.studentClassname()} onClick={this.roleStudent}>
+                <span className="roleStudentCta">Student</span>
+              </button>
 
-          <div className="signupEmail">
-            <h2>Email</h2>
-            <input type="text" onChange={this.onEmailChange} value={this.state.email} />
+              <button type="button" className={this.startupClassname()} onClick={this.roleStartup}>
+                <span className="roleStartupCta">Startup</span>
+              </button>
+            </div>
           </div>
 
-          <div className="signupPassword">
-            <h2>Password</h2>
-            <input type="password" onChange={this.onPasswordChange} value={this.state.password} />
-          </div>
+          <div className="signupRight">
+            <div className="signupEmail">
+              <h2>{this.renderTypeEmail()}</h2>
+              <input type="text" onChange={this.onEmailChange} value={this.state.email} />
+            </div>
 
-          <button type="button" className="signupBtn" onClick={this.signupNow}>
-            <span className="signupCta">Sign Up</span>
-          </button>
-          {this.renderError()}
+            <div className="signupPassword">
+              <h2>Password</h2>
+              <input type="password" onChange={this.onPasswordChange} value={this.state.password} />
+            </div>
+          </div>
         </div>
+
+        <div className="signupButtons">
+          <button type="button" className="signupLoginBtn" onClick={() => this.props.history.push('/signin')}>
+            <span className="signupSignupCta">Login</span>
+          </button>
+
+          <button type="button" className="signupSignupBtn" onClick={this.signupNow}>
+            <span className="signupLoginCta">Sign Up</span>
+          </button>
+        </div>
+        {this.renderError()}
       </div>
     );
   }
@@ -63,11 +128,12 @@ class Signup extends Component {
 function mapStateToProps(reduxState) {
   return {
     authenticated: reduxState.auth.authenticated,
+    userID: reduxState.auth.userID,
     error: reduxState.auth.error,
+    studentID: reduxState.students.studentID,
   };
 }
 
-// enables this.props.currentPost, this.props.fetchPost, this.props.deletePost, and this.props.updatePost
 export default connect(mapStateToProps, {
-  authError, signupUser,
+  authError, signupUser, createStudent, updateUser,
 })(Signup);

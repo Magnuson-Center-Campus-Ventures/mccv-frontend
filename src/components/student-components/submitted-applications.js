@@ -3,9 +3,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import { fetchSubmittedApplication, fetchSubmittedApplications, fetchPosts } from '../actions';
+import { fetchSubmittedApplication, fetchSubmittedApplications, fetchPosts } from '../../actions';
 
-import '../styles/postings.scss';
+import '../../styles/postings.scss';
 
 class SubmittedApplications extends Component {
   componentDidMount() {
