@@ -2,7 +2,6 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { intIndustriesByID, classesByID, skillsByID } from '../../services/datastore';
 
 import '../../styles/postings.scss';
 

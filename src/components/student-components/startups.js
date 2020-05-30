@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import StartupListItem from './startup-item';
 import SearchBar from './search-bar';
-import { fetchStartups, fetchStartupSearch } from '../../actions';
+import { fetchStartups, fetchSearchResults } from '../../actions';
+// import startupSearch from '../../services/datastore';
 import '../../styles/postings.scss';
 
 
@@ -49,4 +51,4 @@ const mapStateToProps = (reduxState) => ({
   startups: reduxState.startups.all,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStartups, fetchStartupSearch })(Startups));
+export default withRouter(connect(mapStateToProps, { fetchStartups, fetchSearchResults })(Startups));

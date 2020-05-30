@@ -14,8 +14,8 @@ import {
   fetchAllClasses, fetchAllSkills,
   createIndustry, createSkill, createClass,
 } from '../../actions';
-import NewWorkExp from './modals/new-work-exp';
-import NewOtherExp from './modals/new-other-exp';
+import NewWorkExp from './student-modals/new-work-exp';
+import NewOtherExp from './student-modals/new-other-exp';
 import '../../styles/student-profile.scss';
 
 class StudentProfile extends Component {
