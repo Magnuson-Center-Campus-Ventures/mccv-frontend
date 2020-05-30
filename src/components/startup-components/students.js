@@ -19,6 +19,7 @@ class Students extends Component {
   //   }
 
   renderStudents() {
+    console.log(this.props.students);
     if (this.props.students !== undefined && this.props.students !== null) {
       return this.props.students.map((student) => {
         return (
