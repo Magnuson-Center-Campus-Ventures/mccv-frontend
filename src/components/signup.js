@@ -58,42 +58,7 @@ class Signup extends Component {
     newUser.role = this.state.role;
     newUser.student_profile_id = this.state.student_profile_id;
     newUser.startup_id = this.state.startup_id;
-    console.log('newUser');
-    console.log(newUser);
     this.props.signupUser(newUser, this.props.history);
-    /* if (this.state.role === 'student') {
-      console.log('in student');
-      // creating new student
-      const newStudent = {
-        user_id: this.props.userID,
-      };
-      console.log('newStudent');
-      console.log(newStudent);
-      this.props.createStudent(newStudent);
-      this.props.history.push('/'); // replace later with first page of create profile sequence
-      // updating user with studentprofile id
-
-      newUser.student_profile_id = this.state.studentID;
-      this.props.updateUser(this.state.userID, newUser);
-      console.log('updated userid');
-      this.props.history.push('/'); // replace later with first page of create profile sequence
-
-      this.props.createStudent(newStudent).then((result) => {
-        newUser.student_profile_id = this.state.studentID;
-        this.props.updateUser(this.state.userID, newUser);
-        console.log('updated userid');
-        this.props.history.push('/'); // replace later with first page of create profile sequence
-      }).catch((error) => {
-        console.log('error creating Student');
-      });
-    } else if (this.state.role === 'startup') {
-      console.log('in startup');
-      // create new startup
-    } else if (this.state.role === 'admin') {
-      console.log('in admin');
-      // create new admin
-    }
-    */
   }
 
   // return button className if student is selected

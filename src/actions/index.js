@@ -499,7 +499,6 @@ export function signupUser({
     }).then((response) => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userID', response.data.id); // can maybe take out
-      console.log(response.data);
       dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       // dispatch({ type: ActionTypes.AUTH_USER });
       history.push('/posts');
