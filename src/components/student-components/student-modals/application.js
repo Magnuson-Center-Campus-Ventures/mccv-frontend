@@ -6,9 +6,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { submitApplication } from '../../actions';
-import close from '../../../static/img/close.png';
-import '../../styles/application.scss';
+import { submitApplication } from '../../../actions';
+import close from '../../../../static/img/close.png';
+import '../../../styles/application.scss';
 
 class Application extends React.Component {
   constructor(props) {
