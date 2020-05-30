@@ -4,11 +4,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
-import '../../styles/studentSignUp/student-signup-industries.scss';
+import '../../../styles/studentSignUp/student-signup-industries.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent,
   fetchAllSkills, fetchCertainSkills, createSkill,
-} from '../../actions';
+} from '../../../actions';
 
 class StudentSkills extends Component {
   constructor(props) {

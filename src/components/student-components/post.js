@@ -3,9 +3,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchPost, fetchApplication } from '../actions';
+import { fetchPost, fetchApplication } from '../../actions';
 import Application from './modals/application';
-import '../styles/post.scss';
+import '../../styles/post.scss';
 
 class Post extends Component {
   constructor(props) {

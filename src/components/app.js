@@ -3,23 +3,24 @@ import {
   BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
 import Home from './home';
-import Postings from './postings';
-import Startups from './startups';
-import StartupProfile from './startup-profile';
-import StudentProfile from './student-profile';
-import Post from './post';
+import Postings from './student-components/postings';
+import Startups from './student-components/startups';
+import StartupProfile from './student-components/startup-profile';
+import StudentProfile from './student-components/student-profile';
+import Post from './student-components/post';
+import Students from './startup-components/students';
 import Nav from './nav';
 import Signin from './signin';
 import Signup from './signup';
-import SubmittedApplications from './submitted-applications';
-import StudentSignUpBio from './studentSignUp/student-signup-bio';
-import StudentSignUpTiming from './studentSignUp/student-signup-timing';
-import StudentSignUpWorkExperiences from './studentSignUp/student-signup-work-experiences';
-import StudentSignUpOtherExperiences from './studentSignUp/student-signup-other-experiences';
-import StudentSignUpMajorMinor from './studentSignUp/student-signup-major-minor';
-import StudentSignUpIndustries from './studentSignUp/student-signup-industries';
-import StudentSignUpSkills from './studentSignUp/student-signup-skills';
-import StudentSignUpClasses from './studentSignUp/student-signup-classes';
+import SubmittedApplications from './student-components/submitted-applications';
+import StudentSignUpBio from './student-components/studentSignUp/student-signup-bio';
+import StudentSignUpTiming from './student-components/studentSignUp/student-signup-timing';
+import StudentSignUpWorkExperiences from './student-components/studentSignUp/student-signup-work-experiences';
+import StudentSignUpOtherExperiences from './student-components/studentSignUp/student-signup-other-experiences';
+import StudentSignUpMajorMinor from './student-components/studentSignUp/student-signup-major-minor';
+import StudentSignUpIndustries from './student-components/studentSignUp/student-signup-industries';
+import StudentSignUpSkills from './student-components/studentSignUp/student-signup-skills';
+import StudentSignUpClasses from './student-components/studentSignUp/student-signup-classes';
 
 const App = (props) => {
   return (
@@ -32,6 +33,7 @@ const App = (props) => {
           <Route path="/posts" component={Postings} />
           <Route path="/startups/:startupID" component={StartupProfile} />
           <Route path="/startups" component={Startups} />
+          <Route path="/students" component={Students} />
           <Route path="/applications" component={SubmittedApplications} />
           <Route path="/profile" component={StudentProfile} />
           <Route path="/signin" component={Signin} />

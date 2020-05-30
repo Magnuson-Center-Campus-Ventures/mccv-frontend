@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../styles/studentSignUp/student-signup-bio.scss';
+import '../../../styles/studentSignUp/student-signup-bio.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent,
-} from '../../actions';
+} from '../../../actions';
 
 class StudentBio extends Component {
   constructor(props) {

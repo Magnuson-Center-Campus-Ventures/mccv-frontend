@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import StartupListItem from './startup-item';
 import SearchBar from './search-bar';
-import { fetchStartups, fetchStartupSearch } from '../actions';
-import '../styles/postings.scss';
+import { fetchStartups, fetchStartupSearch } from '../../actions';
+import '../../styles/postings.scss';
 
 
 class Startups extends Component {

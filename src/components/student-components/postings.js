@@ -7,9 +7,9 @@ import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
   fetchPosts, fetchStartups, fetchPostSearch, fetchStartupSearch,
-} from '../actions';
+} from '../../actions';
 
-import '../styles/postings.scss';
+import '../../styles/postings.scss';
 
 class Posts extends Component {
   componentDidMount() {
@@ -20,13 +20,13 @@ class Posts extends Component {
   search = (text) => {
     this.props.fetchPostSearch(text);
     // this.props.fetchStartupSearch(text);
-    console.log('search term: ', text);
-    console.log('posts: ', this.props.posts);
-    console.log('startups: ', this.props.startups);
+    // console.log('search term: ', text);
+    // console.log('posts: ', this.props.posts);
+    // console.log('startups: ', this.props.startups);
   }
 
   refresh = () => {
-    // this.props.fetchStartups();
+    this.props.fetchStartups();
     this.props.fetchPosts();
   }
 
@@ -69,7 +69,7 @@ class Posts extends Component {
             </div>
           </div>
         ) : (
-          <div />
+          <div> </div>
         )
     );
   }

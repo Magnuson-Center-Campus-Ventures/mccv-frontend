@@ -13,10 +13,10 @@ import {
   fetchCertainSkills, fetchCertainClasses, fetchAllIndustries,
   fetchAllClasses, fetchAllSkills,
   createIndustry, createSkill, createClass,
-} from '../actions';
+} from '../../actions';
 import NewWorkExp from './modals/new-work-exp';
 import NewOtherExp from './modals/new-other-exp';
-import '../styles/student-profile.scss';
+import '../../styles/student-profile.scss';
 
 class StudentProfile extends Component {
   constructor(props) {

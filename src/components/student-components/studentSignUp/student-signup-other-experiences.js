@@ -3,18 +3,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import '../../styles/studentSignUp/student-signup-workexperiences.scss';
+import '../../../styles/studentSignUp/student-signup-workexperiences.scss';
 import {
-  fetchStudentByUserID, fetchUser, updateStudent, updateWorkExperience, fetchWorkExperiences,
-} from '../../actions';
-import WorkExperience from '../modals/new-work-exp';
+  fetchStudentByUserID, fetchUser, updateStudent, updateOtherExperience, fetchOtherExperiences,
+} from '../../../actions';
+import OtherExperience from '../modals/new-other-exp';
 
-class StudentWorkExperiences extends Component {
+class StudentOtherExperiences extends Component {
   constructor(props) {
     super(props);
     this.state = {
       student: {},
-      workExps: [],
+      otherExps: [],
       show: false,
     };
   }
@@ -30,13 +30,13 @@ class StudentWorkExperiences extends Component {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       console.log('here');
       console.log(this.state.student);
-      this.props.fetchWorkExperiences(this.props.student.work_exp);
+      this.props.fetchOtherExperiences(this.props.student.other_exp);
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
     }
-    if (this.props.workExps !== {} && prevProps.workExps !== this.props.workExps) {
+    if (this.props.otherExps !== {} && prevProps.otherExps !== this.props.otherExps) {
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ workExps: this.props.workExps });
+      this.setState({ otherExps: this.props.otherExps });
     }
   }
 
@@ -49,8 +49,8 @@ class StudentWorkExperiences extends Component {
    onSubmit = () => {
      // console.log(this.state.student);
      this.props.updateStudent(this.state.student.id, this.state.student);
-     this.state.workExps.forEach((workExp) => {
-       this.props.updateWorkExperience(workExp._id, workExp);
+     this.state.otherExps.forEach((otherExp) => {
+       this.props.updateWorkExperience(otherExp._id, otherExp);
      });
      this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
    }
@@ -92,19 +92,13 @@ class StudentWorkExperiences extends Component {
        return '';
      }
 
-     renderWorkExperiences = () => {
-       if (this.state.workExps !== []) {
-         return this.state.workExps.map((workExp, index) => {
+     renderOtherExperiences = () => {
+       if (this.state.otherExps !== []) {
+         return this.state.otherExps.map((otherExp, index) => {
            return (
              <div key={index} className="work-exp">
-               <div>{workExp.role}</div>
-               <div>{workExp.employer}</div>
-               <div>{workExp.location}</div>
-               <div className="date-row">
-                 {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
-                 {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}
-               </div>
-               <div>{workExp.description}</div>
+               <div>{otherExp.name}</div>
+               <div>{otherExp.description}</div>
              </div>
            );
          });
@@ -115,21 +109,21 @@ class StudentWorkExperiences extends Component {
      renderHelper() {
        return (
          <div className="StudentWorkExperienceContainer">
-           <WorkExperience onClose={this.hideModal} show={this.state.show} />
+           <OtherExperience onClose={this.hideModal} show={this.state.show} />
            <div className="StudentWorkExperienceHeaderContainer">
              <h1 className="StudentWorkExperienceHeader">
-               Work Experience
+               Personal Projects And Other Experiencs
              </h1>
            </div>
            <div className="StudentWorkExperienceDescContainer">
              <p className="StudentWorkExperienceDesc">
-               Add your relevant work experience!
+               Add personal projects and other experiences that have been meaningful to you!
              </p>
              <i className="fas fa-briefcase" id="icon" />
            </div>
            <div className="WorkExperienceSubtitle">
              <u>
-               Work Experiences
+               Personal Projects And Other Experiencs
              </u>
              <i className="fas fa-plus-circle"
                id="addicon"
@@ -139,7 +133,7 @@ class StudentWorkExperiences extends Component {
              />
            </div>
            <div id="work-exps">
-             {this.renderWorkExperiences()};
+             {this.renderOtherExperiences()};
            </div>
            <div className="buttonContainer">
              <button type="submit" className="submit-btn-student-timing" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
@@ -158,9 +152,9 @@ class StudentWorkExperiences extends Component {
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
   student: reduxState.students.current_student,
-  workExps: reduxState.students.current_work_exps,
+  otherExps: reduxState.students.current_other_exps,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStudentByUserID, fetchUser, updateStudent, updateWorkExperience, fetchWorkExperiences,
-})(StudentWorkExperiences));
+  fetchStudentByUserID, fetchUser, updateStudent, updateOtherExperience, fetchOtherExperiences,
+})(StudentOtherExperiences));
