@@ -482,7 +482,10 @@ export function signinUser({ email, password }, history) {
   };
 }
 
-export function signupUser({ email, password }, history) {
+export function signupUser({
+  // eslint-disable-next-line camelcase
+  email, password, role, student_profile_id, startup_id,
+}, history) {
   // takes in an object with email and password (minimal user object)
   // returns a thunk method that takes dispatch as an argument (just like our create post method really)
   // does an axios.post on the /signup endpoint (only difference from above)
@@ -491,7 +494,9 @@ export function signupUser({ email, password }, history) {
   //  localStorage.setItem('token', response.data.token);
   // on error should dispatch(authError(`Sign Up Failed: ${error.response.data}`));
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/signup`, { email, password }).then((response) => {
+    axios.post(`${ROOT_URL}/signup`, {
+      email, password, role, student_profile_id, startup_id,
+    }).then((response) => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userID', response.data.id); // can maybe take out
       console.log(response.data);

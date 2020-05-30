@@ -14,7 +14,7 @@ class Signup extends Component {
       email: '',
       password: '',
       student_profile_id: '',
-      startup_profile_id: '',
+      startup_id: '',
     };
   }
 
@@ -57,7 +57,7 @@ class Signup extends Component {
     newUser.password = this.state.password;
     newUser.role = this.state.role;
     newUser.student_profile_id = this.state.student_profile_id;
-    newUser.startup_profile_id = this.state.startup_profile_id;
+    newUser.startup_id = this.state.startup_id;
     console.log('newUser');
     console.log(newUser);
     this.props.signupUser(newUser, this.props.history);
