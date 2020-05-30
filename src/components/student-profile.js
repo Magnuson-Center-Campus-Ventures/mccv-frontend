@@ -229,7 +229,7 @@ class StudentProfile extends Component {
 
   renderBody = () => {
     if (this.state.isEditing) {
-      const customStyles = {
+      const dropdownStyles = {
         control: (base) => ({
           ...base,
           width: 200,
@@ -251,7 +251,7 @@ class StudentProfile extends Component {
               <CreateableSelect
                 className="select-dropdown"
                 isMulti
-                styles={customStyles}
+                styles={dropdownStyles}
                 name="industries"
                 value={this.state.selectedIndustryOptions}
                 options={this.state.allIndustryOptions}
@@ -282,7 +282,7 @@ class StudentProfile extends Component {
               <CreateableSelect
                 className="select-dropdown"
                 isMulti
-                styles={customStyles}
+                styles={dropdownStyles}
                 name="classes"
                 value={this.state.selectedClassOptions}
                 options={this.state.allClassOptions}
@@ -313,7 +313,7 @@ class StudentProfile extends Component {
               <CreateableSelect
                 className="select-dropdown"
                 isMulti
-                styles={customStyles}
+                styles={dropdownStyles}
                 name="skills"
                 value={this.state.selectedSkillOptions}
                 options={this.state.allSkillOptions}

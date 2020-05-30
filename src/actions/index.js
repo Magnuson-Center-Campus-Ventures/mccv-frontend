@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -55,7 +55,7 @@ export function fetchPosts() {
 
 export function fetchPostSearch(searchterm) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+    axios.get(`${ROOT_URL}/posts-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
       })
@@ -64,6 +64,30 @@ export function fetchPostSearch(searchterm) {
       });
   };
 }
+
+export const getFilteredPostsIndustries = (industryNames) => {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/posts-filter-industries/${industryNames}`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+      });
+  };
+};
+
+export const getFilteredPostsSkills = (skillNames) => {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/posts-filter-skills/${skillNames}`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+      });
+  };
+};
 
 export function fetchPost(id) {
   return (dispatch) => {
@@ -104,7 +128,7 @@ export function fetchStartups() {
 
 export function fetchSearchResults(searchterm) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/startups/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+    axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         // console.log('here');
         dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
