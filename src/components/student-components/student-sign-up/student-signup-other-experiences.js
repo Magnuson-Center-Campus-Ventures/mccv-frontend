@@ -3,11 +3,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import '../../styles/studentSignUp/student-signup-workexperiences.scss';
+import '../../../styles/student-sign-up/student-signup-workexperiences.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent, updateOtherExperience, fetchOtherExperiences,
-} from '../../actions';
-import OtherExperience from '../modals/new-other-exp';
+} from '../../../actions';
+import OtherExperience from '../student-modals/new-other-exp';
 
 class StudentOtherExperiences extends Component {
   constructor(props) {

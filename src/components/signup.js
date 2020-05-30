@@ -18,20 +18,6 @@ class Signup extends Component {
     };
   }
 
-  /*
-  componentDidUpdate(prevProps) {
-    console.log('in didUpdate');
-    console.log(prevProps);
-    if (this.props.userID !== '' && prevProps.userID !== this.props.userID) {
-      this.setState({ userID: this.props.userID });
-      console.log(this.state.userID);
-    }
-    if (this.props.studentID !== '' && prevProps.studentID !== this.props.studentID) {
-      this.setState({ studentID: this.props.studentID });
-    }
-  }
-  */
-
   onEmailChange = (event) => {
     this.setState({ email: event.target.value });
   }

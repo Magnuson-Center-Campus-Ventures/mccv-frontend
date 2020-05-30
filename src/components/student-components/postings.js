@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
-import { fetchPosts, fetchStartups, fetchPostSearch } from '../actions';
+import { fetchPosts, fetchStartups, fetchPostSearch } from '../../actions';
 
-import '../styles/postings.scss';
+import '../../styles/postings.scss';
 
 class Posts extends Component {
   componentDidMount() {

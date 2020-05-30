@@ -2,27 +2,27 @@ import React from 'react';
 import {
   BrowserRouter as Router, Route, Switch,
 } from 'react-router-dom';
-import Home from './home';
-import Postings from './postings';
-import Startups from './startups';
-import StartupProfile from './startup-profile';
-import StudentProfile from './student-profile';
-import Post from './post';
+import StudentsLanding from './students-landing';
+import Postings from './student-components/postings';
+import Startups from './student-components/startups';
+import StartupProfile from './student-components/startup-profile';
+import StudentProfile from './student-components/student-profile';
+import Post from './student-components/post';
 import Nav from './nav';
 import Signin from './signin';
 import Signup from './signup';
 import StudentsFAQ from './students-faq';
 import StartupsFAQ from './startups-faq';
 import StartupsLanding from './startups-landing';
-import SubmittedApplications from './submitted-applications';
-import StudentSignUpBio from './studentSignUp/student-signup-bio';
-import StudentSignUpTiming from './studentSignUp/student-signup-timing';
-import StudentSignUpWorkExperiences from './studentSignUp/student-signup-work-experiences';
-import StudentSignUpOtherExperiences from './studentSignUp/student-signup-other-experiences';
-import StudentSignUpMajorMinor from './studentSignUp/student-signup-major-minor';
-import StudentSignUpIndustries from './studentSignUp/student-signup-industries';
-import StudentSignUpSkills from './studentSignUp/student-signup-skills';
-import StudentSignUpClasses from './studentSignUp/student-signup-classes';
+import SubmittedApplications from './student-components/submitted-applications';
+import StudentSignUpBio from './student-components/student-sign-up/student-signup-bio';
+import StudentSignUpTiming from './student-components/student-sign-up/student-signup-timing';
+import StudentSignUpWorkExperiences from './student-components/student-sign-up/student-signup-work-experiences';
+import StudentSignUpOtherExperiences from './student-components/student-sign-up/student-signup-other-experiences';
+import StudentSignUpMajorMinor from './student-components/student-sign-up/student-signup-major-minor';
+import StudentSignUpIndustries from './student-components/student-sign-up/student-signup-industries';
+import StudentSignUpSkills from './student-components/student-sign-up/student-signup-skills';
+import StudentSignUpClasses from './student-components/student-sign-up/student-signup-classes';
 
 const App = (props) => {
   return (
@@ -30,7 +30,7 @@ const App = (props) => {
       <div id="main-div">
         <Nav />
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={StudentsLanding} />
           <Route path="/posts/:postID" component={Post} />
           <Route path="/posts" component={Postings} />
           <Route path="/startups/:startupID" component={StartupProfile} />

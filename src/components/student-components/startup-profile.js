@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchStartup, fetchPosts, fetchPost } from '../actions/index';
-import '../styles/startup-profile.scss';
+import { fetchStartup, fetchPosts, fetchPost } from '../../actions/index';
+import '../../styles/startup-profile.scss';
 
 const ID = '5ec9848db73b4100389ff67f';
 
