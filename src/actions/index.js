@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const ROOT_URL = 'http://localhost:9090/api';
-// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+// const ROOT_URL = 'http://localhost:9090/api';
+const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -45,7 +45,6 @@ export function fetchPosts() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/posts`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        console.log(response.data);
         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
       })
       .catch((error) => {
