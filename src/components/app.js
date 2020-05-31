@@ -7,6 +7,7 @@ import Postings from './student-components/postings';
 import Startups from './student-components/startups';
 import StartupProfile from './student-components/startup-profile';
 import StudentProfile from './student-components/student-profile';
+import Students from './startup-components/students';
 import Post from './student-components/post';
 import Nav from './nav';
 import Signin from './signin';
@@ -36,6 +37,7 @@ const App = (props) => {
           <Route path="/posts" component={Postings} />
           <Route path="/startups/:startupID" component={StartupProfile} />
           <Route path="/startups" component={Startups} />
+          <Route path="/students" component={Students} />
           <Route path="/applications" component={SubmittedApplications} />
           <Route path="/profile" component={StudentProfile} />
           <Route path="/signin" component={Signin} />
