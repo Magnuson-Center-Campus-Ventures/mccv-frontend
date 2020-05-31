@@ -1,5 +1,4 @@
 /* eslint-disable array-callback-return */
-/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -7,7 +6,6 @@ import SearchBar from '../student-components/search-bar';
 import { fetchStudents } from '../../actions';
 import '../../styles/postings.scss';
 import StudentListItem from './student-item';
-
 
 class Students extends Component {
   constructor(props) {
