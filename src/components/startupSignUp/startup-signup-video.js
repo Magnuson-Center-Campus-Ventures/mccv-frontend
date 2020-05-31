@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../styles/startupSignUp/startup-signup-video.scss';
+import '../../styles/startup-sign-up/startup-signup-video.scss';
 import {
   fetchStartupByUserID, fetchUser, updateStartup,
 } from '../../actions';

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../styles/startup-sign-up/startup-signup-bio.scss';
+import '../../../styles/startup-sign-up/startup-signup-bio.scss';
 import {
   fetchStartupByUserID, fetchUser, updateStartup,
-} from '../../actions';
+} from '../../../actions';
 
 class StartupBio extends Component {
   constructor(props) {
@@ -17,8 +17,8 @@ class StartupBio extends Component {
 
   // Get profile info
   componentDidMount() {
-    this.props.fetchStartupByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
+    this.props.fetchStartupByUserID(localStorage.userID);
+    this.props.fetchUser(localStorage.userID);
   }
 
      // update startup field
@@ -94,8 +94,8 @@ class StartupBio extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
-  startup: reduxState.startups.current_startup,
+  // userID: reduxState.auth.userID,
+  startup: reduxState.startups.current,
 });
 
 export default withRouter(connect(mapStateToProps, { fetchStartupByUserID, fetchUser, updateStartup })(StartupBio));

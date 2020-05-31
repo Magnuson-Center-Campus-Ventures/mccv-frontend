@@ -4,17 +4,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
-import '../../styles/startup-sign-up/startup-signup-industries.scss';
+import '../../../styles/student-sign-up/student-signup-industries.scss';
 import {
-  fetchStartupByUserID, fetchUser, updateStartup,
+  fetchStudentByUserID, fetchUser, updateStudent,
   fetchAllIndustries, fetchCertainIndustries, createIndustry,
-} from '../../actions';
+} from '../../../actions';
 
-class StartupIndustries extends Component {
+class StudentIndustries extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startup: {},
+      student: {},
       industry: '',
       nameIndustries: [],
       allIndustryOptions: [],
@@ -28,24 +28,24 @@ class StartupIndustries extends Component {
   // Get profile info
   componentDidMount() {
     this.props.fetchAllIndustries();
-    this.props.fetchStartupByUserID(this.props.userID);
+    this.props.fetchStudentByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.startup !== {} && prevProps.startup !== this.props.startup) {
+    if (this.props.student !== {} && prevProps.student !== this.props.student) {
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ startup: this.props.startup });
+      this.setState({ student: this.props.student });
     }
-    if (prevProps.startup.industries !== this.props.startup.industries) {
-      this.props.startup.industries.forEach((industryID) => {
+    if (prevProps.student.interested_industries !== this.props.student.interested_industries) {
+      this.props.student.interested_industries.forEach((industryID) => {
         const name = this.getIndustryName(industryID);
         if (!this.state.nameIndustries.includes(name)) {
           this.state.nameIndustries.push(name);
         }
       });
     }
-    if (prevProps.startup.industries !== this.props.startup.industries) {
+    if (prevProps.student.interested_industries !== this.props.student.interested_industries) {
       // Set up options for dropdown
       const allIndustryOptions = this.props.industries.all.map((industry) => {
         return { value: industry.name, label: industry.name, industry };
@@ -57,7 +57,7 @@ class StartupIndustries extends Component {
 
   // not done
   //  onSubmit = () => {
-  //    this.props.updateStartup(this.state.startup.id, this.state.startup);
+  //    this.props.updateStudent(this.state.student.id, this.state.student);
   //    this.state.newIndustries.forEach((industry) => this.props.createIndustry(industry));
   //    this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
   //  }
@@ -126,7 +126,7 @@ class StartupIndustries extends Component {
               <div className="text">
                 {industry}
               </div>
-              <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
+              <button type="submit" className="delete-btn-student-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>
@@ -137,27 +137,27 @@ class StartupIndustries extends Component {
 
     render() {
       // still have occasioanl rendering issue for industries.all
-      if (this.state.startup.industries !== undefined && this.props.industries.all !== []) {
+      if (this.state.student.interested_industries !== undefined && this.props.industries.all !== []) {
         return (
-          <div className="StartupIndustryContainer">
-            <div className="StartupIndustryHeaderContainer">
-              <h1 className="StartupIndustryHeader">
-                Industries
+          <div className="StudentIndustryContainer">
+            <div className="StudentIndustryHeaderContainer">
+              <h1 className="StudentIndustryHeader">
+                Interested Industries
               </h1>
             </div>
-            <div className="StartupIndustryDescContainer">
-              <p className="StartupIndustryDesc">
-                What industries characterize your startup?
+            <div className="StudentIndustryDescContainer">
+              <p className="StudentIndustryDesc">
+                Add the industries you are interested in!
               </p>
               <i className="fas fa-building" id="icon" />
             </div>
             <div id="industries">
-              <div className="StartupIndustryListHeader">Industries</div>
+              <div className="StudentIndustryListHeader">Industries</div>
               {this.renderAddIndustry()}
               {this.renderIndustries()}
             </div>
             <div className="buttonContainer">
-              <button type="submit" className="submit-btn-startup-timing" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
+              <button type="submit" className="submit-btn-student-timing" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
                 Submit!
               </button>
             </div>
@@ -173,10 +173,10 @@ class StartupIndustries extends Component {
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
-  startup: reduxState.startups.current_startup,
+  student: reduxState.students.current_student,
   industries: reduxState.industries,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStartupByUserID, fetchUser, updateStartup, fetchAllIndustries, fetchCertainIndustries, createIndustry,
-})(StartupIndustries));
+  fetchStudentByUserID, fetchUser, updateStudent, fetchAllIndustries, fetchCertainIndustries, createIndustry,
+})(StudentIndustries));

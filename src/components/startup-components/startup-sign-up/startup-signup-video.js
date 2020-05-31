@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../styles/startup-sign-up/startup-signup-desc.scss';
+import '../../../styles/startup-sign-up/startup-signup-video.scss';
 import {
   fetchStartupByUserID, fetchUser, updateStartup,
-} from '../../actions';
+} from '../../../actions';
 
-class StartupDesc extends Component {
+class StartupVideo extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,27 +42,27 @@ class StartupDesc extends Component {
      };
 
 
-     renderDescQuestions() {
+     renderVideoQuestions() {
        return (
 
-         <div className="StartupDescContainer">
-           <div className="StartupDescHeaderContainer">
-             <h1 className="StartupDescHeader">
-               Desc
+         <div className="StartupVideoContainer">
+           <div className="StartupVideoHeaderContainer">
+             <h1 className="StartupVideoHeader">
+               Video Pitch
              </h1>
            </div>
-           <div className="StartupDescDescContainer">
-             <p className="StartupDescDesc">
-               Add your startup’s name and location!
+           <div className="StartupVideoDescContainer">
+             <p className="StartupVideoDesc">
+               Add a link of a short informal video pitching your startup!
              </p>
              <i className="far fa-id-badge" id="icon" />
            </div>
-           <div className="StartupDescQuestionsContainer">
-             <div className="StartupDescQuestionLabelContainer">
-               <p className="StartupDescLabel">
-                 Description
+           <div className="StartupVideoQuestionsContainer">
+             <div className="StartupVideoQuestionLabelContainer">
+               <p className="StartupVideoLabel">
+                 Video Link
                </p>
-               <TextareaAutosize onBlur={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
+               <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
              </div>
            </div>
            <div className="buttonContainer">
@@ -75,7 +75,7 @@ class StartupDesc extends Component {
      }
 
      render() {
-       return this.renderDescQuestions();
+       return this.renderVideoQuestions();
      }
 }
 
@@ -84,4 +84,4 @@ const mapStateToProps = (reduxState) => ({
   startup: reduxState.startups.current_startup,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStartupByUserID, fetchUser, updateStartup })(StartupDesc));
+export default withRouter(connect(mapStateToProps, { fetchStartupByUserID, fetchUser, updateStartup })(StartupVideo));

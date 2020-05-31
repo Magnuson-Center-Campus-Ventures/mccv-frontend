@@ -36,24 +36,36 @@ class Signin extends Component {
 
   render() {
     return (
-      <div className="signinBoard">
-        <div className="signin">
-          <h1>Sign In</h1>
-          <div className="signinEmail">
-            <h2>Email</h2>
-            <input type="text" onChange={this.onEmailChange} value={this.state.email} />
+      <div className="signinPage">
+        <div className="signinBoard">
+          <div className="signinLeft">
+            <h1>Login to access Magnuson Campus Ventures</h1>
           </div>
 
-          <div className="signinPassword">
-            <h2>Password</h2>
-            <input type="password" onChange={this.onPasswordChange} value={this.state.password} />
-          </div>
+          <div className="signinRight">
+            <div className="signinEmail">
+              <h2>Email</h2>
+              <input type="text" onChange={this.onEmailChange} value={this.state.email} />
+            </div>
 
-          <button type="button" className="signinBtn" onClick={this.signinNow}>
-            <span className="signinCta">Sign In</span>
-          </button>
-          {this.renderError()}
+            <div className="signinPassword">
+              <h2>Password</h2>
+              <input type="password" onChange={this.onPasswordChange} value={this.state.password} />
+            </div>
+          </div>
         </div>
+
+        <div className="signinButtons">
+          <button type="button" className="signinSignupBtn" onClick={() => this.props.history.push('/signup')}>
+            <span className="signinSignupCta">Sign Up</span>
+          </button>
+
+          <button type="button" className="signinLoginBtn" onClick={this.signinNow}>
+            <span className="signinLoginCta">Login</span>
+          </button>
+        </div>
+
+        {this.renderError()}
       </div>
     );
   }
@@ -61,7 +73,8 @@ class Signin extends Component {
 
 function mapStateToProps(reduxState) {
   return {
-    authenticate: reduxState.auth.authenticated,
+    authenticated: reduxState.auth.authenticated,
+    userID: reduxState.auth.userID,
     error: reduxState.auth.error,
   };
 }

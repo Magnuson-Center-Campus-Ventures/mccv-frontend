@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../styles/startup-sign-up/startup-signup-desc.scss';
+import '../../../styles/startup-sign-up/startup-signup-desc.scss';
 import {
   fetchStartupByUserID, fetchUser, updateStartup,
-} from '../../actions';
+} from '../../../actions';
 
 class StartupDesc extends Component {
   constructor(props) {

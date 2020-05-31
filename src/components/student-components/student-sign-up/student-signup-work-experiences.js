@@ -3,11 +3,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import '../../styles/studentSignUp/student-signup-workexperiences.scss';
+import '../../../styles/student-sign-up/student-signup-workexperiences.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent, updateWorkExperience, fetchWorkExperiences,
-} from '../../actions';
-import WorkExperience from '../modals/new-work-exp';
+} from '../../../actions';
+import WorkExperience from '../student-modals/new-work-exp';
 
 class StudentWorkExperiences extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class StudentWorkExperiences extends Component {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       console.log('here');
       console.log(this.state.student);
-      this.props.fetchWorkExperiences(this.props.student.work_exp);
+      // this.props.fetchWorkExperiences(this.props.student.work_exp);
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
     }
