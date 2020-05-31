@@ -7,7 +7,7 @@ import Select from 'react-select';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
-  fetchPosts, fetchStartups, fetchPostSearch, getFilteredPostsIndustries, getFilteredPostsSkills,
+  fetchPosts, fetchStartups, fetchPostSearch, getFilteredPosts,
 } from '../../actions';
 
 import '../../styles/postings.scss';
@@ -31,7 +31,7 @@ class Posts extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.posts.length > 0 && prevProps.posts !== this.props.posts) {
-      // Set up options for dropdowns
+      // Set up lists of all fields and options for dropdowns
       const industryOptions = [];
       const skillOptions = [];
       this.props.posts.forEach((post) => {
@@ -61,12 +61,17 @@ class Posts extends Component {
     this.props.fetchPostSearch(text);
   }
 
-  filterIndustries = (industryNames) => {
-    this.props.getFilteredPostsIndustries(industryNames);
+  isFilterEmpty = (array) => {
+    return array.length === 1 && array.includes('filler');
   }
 
-  filterSkills = (skillNames) => {
-    this.props.getFilteredPostsSkills(skillNames);
+  onChangeFilter = (industries, skills) => {
+    // console.log(industries, skills);
+    if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills)) {
+      this.props.fetchPosts();
+    } else {
+      this.props.getFilteredPosts(industries, skills);
+    }
   }
 
   findStartup(id) {
@@ -119,13 +124,14 @@ class Posts extends Component {
               options={this.state.industryOptions}
               value={this.state.selectedIndustryOptions}
               onChange={(selectedOptions) => {
-                const industryNames = selectedOptions.map((option) => option.value);
-                if (industryNames.length > 0) {
-                  this.filterIndustries(industryNames);
-                } else {
-                  this.props.fetchPosts();
-                }
                 this.setState({ selectedIndustryOptions: selectedOptions });
+                const industries = (selectedOptions && selectedOptions.length > 0)
+                  ? selectedOptions.map((option) => option.value)
+                  : ['filler'];
+                const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+                  ? this.state.selectedSkillOptions.map((option) => option.value)
+                  : ['filler'];
+                this.onChangeFilter(industries, skills);
               }}
             />
             <Select
@@ -136,13 +142,14 @@ class Posts extends Component {
               options={this.state.skillOptions}
               value={this.state.selectedSkillOptions}
               onChange={(selectedOptions) => {
-                const skillNames = selectedOptions.map((option) => option.value);
-                if (skillNames.length > 0) {
-                  this.filterSkills(skillNames);
-                } else {
-                  this.props.fetchPosts();
-                }
                 this.setState({ selectedSkillOptions: selectedOptions });
+                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                  ? this.state.selectedIndustryOptions.map((option) => option.value)
+                  : ['filler'];
+                const skills = (selectedOptions && selectedOptions.length > 0)
+                  ? selectedOptions.map((option) => option.value)
+                  : ['filler'];
+                this.onChangeFilter(industries, skills);
               }}
             />
             <div className="list">
@@ -162,5 +169,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPosts, fetchStartups, fetchPostSearch, getFilteredPostsIndustries, getFilteredPostsSkills,
+  fetchPosts, fetchStartups, fetchPostSearch, getFilteredPosts,
 })(Posts));

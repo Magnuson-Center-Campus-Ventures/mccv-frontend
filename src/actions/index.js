@@ -66,21 +66,33 @@ export function fetchPostSearch(searchterm) {
   };
 }
 
-export const getFilteredPostsIndustries = (industryNames) => {
-  return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts-filter-industries/${industryNames}`, { headers: { authorization: localStorage.getItem('token') } })
-      .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
-      });
-  };
-};
+// export const getFilteredPostsIndustries = (industryNames) => {
+//   return (dispatch) => {
+//     axios.get(`${ROOT_URL}/posts-filter-industries/${industryNames}`, { headers: { authorization: localStorage.getItem('token') } })
+//       .then((response) => {
+//         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
+//       })
+//       .catch((error) => {
+//         console.log('broken');
+//       });
+//   };
+// };
 
-export const getFilteredPostsSkills = (skillNames) => {
+// export const getFilteredPostsSkills = (skillNames) => {
+//   return (dispatch) => {
+//     axios.get(`${ROOT_URL}/posts-filter-skills/${skillNames}`, { headers: { authorization: localStorage.getItem('token') } })
+//       .then((response) => {
+//         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
+//       })
+//       .catch((error) => {
+//         console.log('broken');
+//       });
+//   };
+// };
+
+export const getFilteredPosts = (industryNames, skillNames) => {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts-filter-skills/${skillNames}`, { headers: { authorization: localStorage.getItem('token') } })
+    axios.get(`${ROOT_URL}/posts-filter/${industryNames}/${skillNames}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
       })
