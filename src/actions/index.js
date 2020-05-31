@@ -513,7 +513,7 @@ export function signupUser({
       localStorage.setItem('userID', response.data.id); // can maybe take out
       dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       // dispatch({ type: ActionTypes.AUTH_USER });
-      history.push('/posts');
+      history.push('/student-signup');
       console.log('signed up succesfully');
     }).catch((error) => {
       // eslint-disable-next-line no-alert
