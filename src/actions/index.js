@@ -55,17 +55,19 @@ export function fetchPosts() {
   };
 }
 
-export function fetchPostSearch(searchterm) {
-  return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
-      .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
-      })
-      .catch((error) => {
-        dispatch({ type: ActionTypes.ERROR_SET, error });
-      });
-  };
-}
+// Moved to front-end implementation of search, as per Thomas' advice
+
+// export function fetchPostSearch(searchterm) {
+//   return (dispatch) => {
+//     axios.get(`${ROOT_URL}/posts-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+//       .then((response) => {
+//         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
+//       })
+//       .catch((error) => {
+//         dispatch({ type: ActionTypes.ERROR_SET, error });
+//       });
+//   };
+// }
 
 export function fetchPost(id) {
   return (dispatch) => {
