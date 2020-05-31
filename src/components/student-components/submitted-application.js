@@ -7,21 +7,8 @@ import { fetchSubmittedApplication } from '../../actions';
 import '../../styles/post.scss';
 
 class SubmittedApplication extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      post: '',
-    };
-  }
-
   componentDidMount() {
     this.props.fetchSubmittedApplication(this.props.match.params.applicationID);
-    for (const i in this.props.posts) {
-      if (this.props.posts[i].id === this.props.current.post_id) {
-        this.setState({ post: this.props.posts[i] });
-        break;
-      }
-    }
   }
 
   renderHelper= () => {
@@ -42,10 +29,17 @@ class SubmittedApplication extends Component {
   }
 
   render() {
+    let post = '';
+    for (const i in this.props.posts) {
+      if (this.props.posts[i].id === this.props.current.post_id) {
+        post = this.props.posts[i];
+        break;
+      }
+    }
     return (
       <div>
-        <h1>{this.state.post.title}</h1>
-        <div>{this.state.post.location}</div>
+        <h1>{post.title}</h1>
+        <div>{post.location}</div>
         <h2 id="title">{this.props.current.status}</h2>
       </div>
     );
