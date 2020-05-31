@@ -42,8 +42,10 @@ class StudentProfile extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchStudentByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
+    this.props.fetchStudentByUserID(localStorage.getItem('userID'));
+    this.props.fetchUser(localStorage.getItem('userID'));
+    // this.props.fetchStudentByUserID(this.props.userID);
+    // this.props.fetchUser(this.props.userID);
     this.props.fetchAllIndustries();
     this.props.fetchAllSkills();
     this.props.fetchAllClasses();

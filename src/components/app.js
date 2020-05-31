@@ -7,6 +7,7 @@ import Postings from './student-components/postings';
 import Startups from './student-components/startups';
 import StartupProfile from './student-components/startup-profile';
 import StudentProfile from './student-components/student-profile';
+import Students from './startup-components/students';
 import Post from './student-components/post';
 import Nav from './nav';
 import Signin from './signin';
@@ -23,6 +24,7 @@ import StudentSignUpMajorMinor from './student-components/student-sign-up/studen
 import StudentSignUpIndustries from './student-components/student-sign-up/student-signup-industries';
 import StudentSignUpSkills from './student-components/student-sign-up/student-signup-skills';
 import StudentSignUpClasses from './student-components/student-sign-up/student-signup-classes';
+import StudentSignUp from './student-components/student-sign-up/student-signup';
 
 const App = (props) => {
   return (
@@ -35,6 +37,7 @@ const App = (props) => {
           <Route path="/posts" component={Postings} />
           <Route path="/startups/:startupID" component={StartupProfile} />
           <Route path="/startups" component={Startups} />
+          <Route path="/students" component={Students} />
           <Route path="/applications" component={SubmittedApplications} />
           <Route path="/profile" component={StudentProfile} />
           <Route path="/signin" component={Signin} />
@@ -50,6 +53,7 @@ const App = (props) => {
           <Route path="/student-signup-industries" component={StudentSignUpIndustries} />
           <Route path="/student-signup-classes" component={StudentSignUpClasses} />
           <Route path="/student-signup-skills" component={StudentSignUpSkills} />
+          <Route path="/student-signup" component={StudentSignUp} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>
       </div>

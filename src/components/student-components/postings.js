@@ -1,5 +1,4 @@
 /* eslint-disable array-callback-return */
-/* eslint-disable consistent-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -7,7 +6,7 @@ import Select from 'react-select';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
-  fetchPosts, fetchStartups, fetchPostSearch, getFilteredPosts,
+  fetchPosts, getFilteredPosts,
 } from '../../actions';
 
 import '../../styles/postings.scss';
@@ -21,12 +20,13 @@ class Posts extends Component {
       selectedIndustryOptions: [],
       skillOptions: [],
       selectedSkillOptions: [],
+      search: false,
+      results: [],
     };
   }
 
   componentDidMount() {
     this.props.fetchPosts();
-    this.props.fetchStartups();
   }
 
   componentDidUpdate(prevProps) {
@@ -57,10 +57,6 @@ class Posts extends Component {
     }
   }
 
-  search = (text) => {
-    this.props.fetchPostSearch(text);
-  }
-
   isFilterEmpty = (array) => {
     return array.length === 1 && array.includes('filler');
   }
@@ -74,36 +70,57 @@ class Posts extends Component {
     }
   }
 
-  findStartup(id) {
-    let startupInfo = null;
-    this.props.startups.map((startup) => {
-      if (id === startup.id) {
-        startupInfo = startup;
+  search = (text) => {
+    this.setState({ search: true });
+    // console.log(this.props.posts);
+    const searchterm = text.toLowerCase();
+    this.props.posts.map((post) => {
+      const skills = post.required_skills.map((skill) => skill.toLowerCase());
+      const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
+      const postInd = post.industries.map((industry) => industry.toLowerCase());
+      const startupInd = post.startup_id.industry.map((industry) => industry.toLowerCase());
+      if (post.title.toLowerCase().includes(searchterm)
+      || post.location.toLowerCase().includes(searchterm)
+      || skills.includes(searchterm) // array
+      || responsibilities.includes(searchterm) // array
+      || postInd.includes(searchterm) // array
+      || post.startup_id.name.toLowerCase().includes(searchterm)
+      || startupInd.includes(searchterm)) { // array
+        this.setState((prevState) => ({
+          results: [...prevState.results, post],
+        }));
       }
     });
-    return startupInfo;
+  }
+
+  clear = () => {
+    this.setState({ search: false });
+    this.setState({ results: [] });
+  }
+
+  renderPosts() {
+    if (this.state.search) {
+      if (this.state.results.length > 0) {
+        return this.state.results.map((post) => {
+          return (
+            <PostListItem post={post} key={post.id} />
+          );
+        });
+      } else {
+        return (
+          <div> Sorry, no postings match that query</div>
+        );
+      }
+    } else {
+      return this.props.posts.map((post) => {
+        return (
+          <PostListItem post={post} key={post.id} />
+        );
+      });
+    }
   }
 
   render() {
-    const mappingPostings = this.props.posts !== undefined && this.props.posts !== null
-      ? this.props.posts.map((post) => {
-        const startup = this.props.startups !== undefined && this.props.startups !== null ? (
-          this.findStartup(post.startup_id)
-        )
-          : (null);
-        return (
-          startup !== null
-            ? (
-              <PostListItem post={post} startup={startup} key={post.id} />
-            ) : (<div />)
-        );
-      })
-      : (
-        <div>
-          Sorry, no posts currently
-        </div>
-      );
-
     // Styles for filter dropdowns
     const dropdownStyles = {
       control: (base) => ({
@@ -112,10 +129,10 @@ class Posts extends Component {
       }),
     };
     return (
-      this.props.posts !== undefined
+      (this.props.posts !== undefined || null) && (this.state.results !== null || undefined)
         ? (
           <div>
-            <SearchBar onSearchChange={this.search} onNoSearch={this.props.fetchPosts} />
+            <SearchBar onSearchChange={this.search} onNoSearch={this.clear} />
             <Select
               isMulti
               styles={dropdownStyles}
@@ -153,21 +170,21 @@ class Posts extends Component {
               }}
             />
             <div className="list">
-              {mappingPostings}
+              {this.renderPosts()}
             </div>
           </div>
         ) : (
-          <div />
+          <div> </div>
         )
     );
   }
 }
 
+
 const mapStateToProps = (reduxState) => ({
   posts: reduxState.posts.all,
-  startups: reduxState.startups.all,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPosts, fetchStartups, fetchPostSearch, getFilteredPosts,
+  fetchPosts, getFilteredPosts,
 })(Posts));

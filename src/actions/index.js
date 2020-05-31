@@ -45,6 +45,7 @@ export function fetchPosts() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/posts`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
+        console.log(response.data);
         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
       })
       .catch((error) => {
@@ -54,17 +55,19 @@ export function fetchPosts() {
   };
 }
 
-export function fetchPostSearch(searchterm) {
-  return (dispatch) => {
-    axios.get(`${ROOT_URL}/posts-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
-      .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
-      })
-      .catch((error) => {
-        dispatch({ type: ActionTypes.ERROR_SET, error });
-      });
-  };
-}
+// Moved to front-end implementation of search, as per Thomas' advice
+
+// export function fetchPostSearch(searchterm) {
+//   return (dispatch) => {
+//     axios.get(`${ROOT_URL}/posts-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+//       .then((response) => {
+//         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
+//       })
+//       .catch((error) => {
+//         dispatch({ type: ActionTypes.ERROR_SET, error });
+//       });
+//   };
+// }
 
 // export const getFilteredPostsIndustries = (industryNames) => {
 //   return (dispatch) => {
@@ -156,11 +159,10 @@ export function createStudent(newStudent) {
   };
 }
 
-export function fetchSearchResults(searchterm) {
+export function fetchStartupSearch(searchterm) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        // console.log('here');
         dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
       })
       .catch((error) => {
@@ -176,7 +178,6 @@ export function fetchStudents() {
         dispatch({ type: ActionTypes.FETCH_STUDENTS, payload: response.data });
       })
       .catch((error) => {
-        console.log('broken fetchStudents');
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
