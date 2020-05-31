@@ -7,11 +7,10 @@ import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import CreateableSelect from 'react-select/creatable';
 import {
-  fetchStudentByUserID, fetchWorkExperiences, updateStudent, fetchUser,
-  updateWorkExperience, deleteWorkExperience, updateOtherExperience,
-  deleteOtherExperience, fetchOtherExperiences, fetchCertainIndustries,
-  fetchCertainSkills, fetchCertainClasses, fetchAllIndustries,
-  fetchAllClasses, fetchAllSkills,
+  fetchStudentByUserID, updateStudent, fetchUser,
+  fetchWorkExperiences, updateWorkExperience, deleteWorkExperience,
+  fetchOtherExperiences, updateOtherExperience, deleteOtherExperience,
+  fetchAllIndustries, fetchAllClasses, fetchAllSkills,
   createIndustry, createSkill, createClass,
 } from '../../actions';
 import NewWorkExp from './student-modals/new-work-exp';
@@ -52,16 +51,53 @@ class StudentProfile extends Component {
   }
 
   // Get student fields into state (for editing),
-  // and fetch a student's work experiences,
+  // and fetch a student's experiences,
   // once the student is loaded into props
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
+      console.log(this.props.student);
       this.props.fetchWorkExperiences(this.props.student.work_exp);
       this.props.fetchOtherExperiences(this.props.student.other_exp);
-      this.props.fetchCertainIndustries(this.props.student.interested_industries);
-      this.props.fetchCertainSkills(this.props.student.skills);
-      this.props.fetchCertainClasses(this.props.student.relevant_classes);
-      this.setState({ student: this.props.student });
+      // Set initial dropdown options to be the indutries, skills, and classes the student already has
+      const selectedIndustryOptions = this.props.student.interested_industries.map((industry) => {
+        return { value: industry.name, label: industry.name, industry };
+      });
+      const selectedClassOptions = this.props.student.relevant_classes.map((_class) => {
+        return { value: _class.name, label: _class.name, _class };
+      });
+      const selectedSkillOptions = this.props.student.skills.map((skill) => {
+        return { value: skill.name, label: skill.name, skill };
+      });
+
+      this.setState({
+        student: this.props.student,
+        ownIndustries: this.props.student.interested_industries,
+        selectedIndustryOptions,
+        ownClasses: this.props.student.relevant_classes,
+        selectedClassOptions,
+        ownSkills: this.props.student.skills,
+        selectedSkillOptions,
+      });
+    }
+
+    // Set up options for dropdowns
+    if (prevProps.allIndustries !== this.props.allIndustries) {
+      const allIndustryOptions = this.props.allIndustries.map((industry) => {
+        return { value: industry.name, label: industry.name, industry };
+      });
+      this.setState({ allIndustryOptions });
+    }
+    if (prevProps.allClasses !== this.props.allClasses) {
+      const allClassOptions = this.props.allClasses.map((_class) => {
+        return { value: _class.name, label: _class.name, _class };
+      });
+      this.setState({ allClassOptions });
+    }
+    if (prevProps.allSkills !== this.props.allSkills) {
+      const allSkillOptions = this.props.allSkills.map((skill) => {
+        return { value: skill.name, label: skill.name, skill };
+      });
+      this.setState({ allSkillOptions });
     }
 
     if (prevProps.workExps !== this.props.workExps) {
@@ -72,68 +108,28 @@ class StudentProfile extends Component {
       this.setState({ otherExps: this.props.otherExps });
     }
 
-    if (prevProps.ownIndustries !== this.props.ownIndustries) {
-      // When industries are initially loaded from redux state, or redux state changes,
-      // updated local state for industries and the student's industries ids
-      const industryIDs = this.props.ownIndustries.map((industry) => { return industry._id; });
-      const student = { ...prevState.student };
-      student.interested_industries = industryIDs;
-      this.setState({
-        ownIndustries: this.props.ownIndustries,
-        student,
-      });
-      // Set up options for dropdown
-      const allIndustryOptions = this.props.allIndustries.map((industry) => {
-        return { value: industry.name, label: industry.name, industry };
-      });
-      // Set initial dropdown options to be the indutries the student already has
-      const selectedIndustryOptions = allIndustryOptions.filter((option) => {
-        return industryIDs.includes(option.industry._id);
-      });
-      this.setState({ allIndustryOptions, selectedIndustryOptions });
-    }
-
-    if (prevProps.ownSkills !== this.props.ownSkills) {
-      // When skills are initially loaded from redux state, or redux state changes,
-      // updated local state for skills and the student's skills ids
-      const skillIDs = this.props.ownSkills.map((skill) => { return skill._id; });
-      const student = { ...prevState.student };
-      student.skills = skillIDs;
-      this.setState({
-        ownSkills: this.props.ownSkills,
-        student,
-      });
-      // Set up options for dropdown
-      const allSkillOptions = this.props.allSkills.map((skill) => {
-        return { value: skill.name, label: skill.name, skill };
-      });
-      // Set initial dropdown options to be the skills the student already has
-      const selectedSkillOptions = allSkillOptions.filter((option) => {
-        return skillIDs.includes(option.skill._id);
-      });
-      this.setState({ allSkillOptions, selectedSkillOptions });
-    }
-
-    if (prevProps.ownClasses !== this.props.ownClasses) {
-      // When classes are initially loaded from redux state, or redux state changes,
-      // updated local state for classes and the student's classes ids
-      const classIDs = this.props.ownClasses.map((_class) => { return _class._id; });
-      const student = { ...prevState.student };
-      student.relevant_classes = classIDs;
-      this.setState({
-        ownClasses: this.props.ownClasses,
-        student,
-      });
-      // Set up options for dropdown
-      const allClassOptions = this.props.allClasses.map((_class) => {
-        return { value: _class.name, label: _class.name, _class };
-      });
-      // Set initial dropdown options to be the classes the student already has
-      const selectedClassOptions = allClassOptions.filter((option) => {
-        return classIDs.includes(option._class._id);
-      });
-      this.setState({ allClassOptions, selectedClassOptions });
-    }
+    // No longer using with change to object references in student object,
+    // but leaving here for a bit in case something changes
+    // if (prevProps.ownIndustries !== this.props.ownIndustries) {
+    //   // When industries are initially loaded from redux state, or redux state changes,
+    //   // updated local state for industries and the student's industries ids
+    //   const industryIDs = this.props.ownIndustries.map((industry) => { return industry._id; });
+    //   const student = { ...prevState.student };
+    //   student.interested_industries = industryIDs;
+    //   this.setState({
+    //     ownIndustries: this.props.ownIndustries,
+    //     student,
+    //   });
+    //   // Set up options for dropdown
+    //   const allIndustryOptions = this.props.allIndustries.map((industry) => {
+    //     return { value: industry.name, label: industry.name, industry };
+    //   });
+    //   // Set initial dropdown options to be the indutries the student already has
+    //   const selectedIndustryOptions = allIndustryOptions.filter((option) => {
+    //     return industryIDs.includes(option.industry._id);
+    //   });
+    //   this.setState({ allIndustryOptions, selectedIndustryOptions });
+    // }
   }
 
   changeStudentField = (field, event) => {
@@ -243,8 +239,6 @@ class StudentProfile extends Component {
           <input className="short-input" defaultValue={this.props.student.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
           <div className="input-title">Last Name</div>
           <input className="short-input" defaultValue={this.props.student.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
-          <div className="input-title">Email Address</div>
-          <input className="short-input" defaultValue={this.props.email} onBlur={(event) => console.log(event.target.value)} />
           <div className="input-title">Phone Number</div>
           <input className="short-input" defaultValue={this.props.student.phone_number} onBlur={(event) => this.changeStudentField('phone_number', event)} />
           <div id="lists-row">
@@ -258,14 +252,13 @@ class StudentProfile extends Component {
                 value={this.state.selectedIndustryOptions}
                 options={this.state.allIndustryOptions}
                 onChange={(selectedOptions) => {
-                  const tempIndustries = selectedOptions.map((option) => option.industry);
-                  const industryIDs = selectedOptions.map((option) => option.industry._id);
-                  // Update current industries in redux state based on selected options
-                  this.props.fetchCertainIndustries(industryIDs);
-                  // Update the student and their current industries in local state
+                  const tempIndustries = selectedOptions
+                    ? selectedOptions.map((option) => option.industry)
+                    : [];
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
-                    student.interested_industries = industryIDs;
+                    student.interested_industries = tempIndustries;
+                    console.log(student.interested_industries);
                     return {
                       ...prevState,
                       selectedIndustryOptions: selectedOptions,
@@ -289,14 +282,12 @@ class StudentProfile extends Component {
                 value={this.state.selectedClassOptions}
                 options={this.state.allClassOptions}
                 onChange={(selectedOptions) => {
-                  const tempClasses = selectedOptions.map((option) => option._class);
-                  const classIDs = selectedOptions.map((option) => option._class._id);
-                  // Update current classes in redux state based on selected options
-                  this.props.fetchCertainClasses(classIDs);
-                  // Update the student and their current classes in local state
+                  const tempClasses = selectedOptions
+                    ? selectedOptions.map((option) => option._class)
+                    : [];
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
-                    student.relevant_classes = classIDs;
+                    student.relevant_classes = tempClasses;
                     return {
                       ...prevState,
                       selectedClassOptions: selectedOptions,
@@ -320,14 +311,12 @@ class StudentProfile extends Component {
                 value={this.state.selectedSkillOptions}
                 options={this.state.allSkillOptions}
                 onChange={(selectedOptions) => {
-                  const tempSkills = selectedOptions.map((option) => option.skill);
-                  const skillIDs = selectedOptions.map((option) => option.skill._id);
-                  // Update current skills in redux state based on selected options
-                  this.props.fetchCertainSkills(skillIDs);
-                  // Update the student and current skills in local state
+                  const tempSkills = selectedOptions
+                    ? selectedOptions.map((option) => option.skill)
+                    : [];
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
-                    student.skills = skillIDs;
+                    student.skills = tempSkills;
                     return {
                       ...prevState,
                       selectedSkillOptions: selectedOptions,
@@ -503,14 +492,11 @@ class StudentProfile extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
+  // userID: reduxState.auth.userID,
   student: reduxState.students.current_student,
   email: reduxState.user.email,
   workExps: reduxState.students.current_work_exps,
   otherExps: reduxState.students.current_other_exps,
-  ownIndustries: reduxState.industries.current,
-  ownSkills: reduxState.skills.current,
-  ownClasses: reduxState.classes.current,
   allIndustries: reduxState.industries.all,
   allSkills: reduxState.skills.all,
   allClasses: reduxState.classes.all,
@@ -527,9 +513,6 @@ export default withRouter(connect(mapStateToProps, {
   fetchOtherExperiences,
   updateOtherExperience,
   deleteOtherExperience,
-  fetchCertainIndustries,
-  fetchCertainSkills,
-  fetchCertainClasses,
   fetchAllIndustries,
   fetchAllClasses,
   fetchAllSkills,
