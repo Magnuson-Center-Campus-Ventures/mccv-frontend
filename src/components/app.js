@@ -16,6 +16,7 @@ import StudentsFAQ from './student-components/students-faq';
 import StartupsFAQ from './startup-components/startups-faq';
 import StartupsLanding from './startup-components/startups-landing';
 import SubmittedApplications from './student-components/submitted-applications';
+import SubmittedApplication from './student-components/submitted-application';
 import StudentSignUpBio from './student-components/student-sign-up/student-signup-bio';
 import StudentSignUpTiming from './student-components/student-sign-up/student-signup-timing';
 import StudentSignUpWorkExperiences from './student-components/student-sign-up/student-signup-work-experiences';
@@ -42,6 +43,7 @@ const App = (props) => {
           <Route path="/startups/:startupID" component={StartupProfile} />
           <Route path="/startups" component={Startups} />
           <Route path="/students" component={Students} />
+          <Route path="/applications/:applicationID" component={SubmittedApplication} />
           <Route path="/applications" component={SubmittedApplications} />
           <Route path="/profile" component={StudentProfile} />
           <Route path="/signin" component={Signin} />

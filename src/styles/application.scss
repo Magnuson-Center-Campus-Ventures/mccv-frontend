@@ -4,6 +4,11 @@
     display: flex;
     justify-content: center;
 }
+#filters{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
 .application {
     z-index: 100;
     border: 3px solid #B5B5B5;
