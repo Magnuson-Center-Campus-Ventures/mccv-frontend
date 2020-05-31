@@ -1,4 +1,3 @@
-/* eslint-disable array-callback-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -6,7 +5,7 @@ import Select from 'react-select';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
-  fetchPosts, getFilteredPosts,
+  fetchPosts,
 } from '../../actions';
 
 import '../../styles/postings.scss';
@@ -20,7 +19,7 @@ class Posts extends Component {
       selectedIndustryOptions: [],
       skillOptions: [],
       selectedSkillOptions: [],
-      searchterm: 'filler',
+      searchterm: 'emptytext',
       search: false,
       filter: false,
       results: [],
@@ -31,12 +30,11 @@ class Posts extends Component {
     this.props.fetchPosts();
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.posts.length > 0 && prevProps.posts !== this.props.posts) {
-      // Set up lists of all fields and options for dropdowns
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.posts.length > 0) {
       const industryOptions = [];
       const skillOptions = [];
-      this.props.posts.forEach((post) => {
+      nextProps.posts.forEach((post) => {
         if (post.industries) {
           post.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
@@ -45,14 +43,13 @@ class Posts extends Component {
             }
           });
         }
-        if (post.startup_id.industry) {
-          post.startup_id.industry.forEach((industry) => {
+        if (post.startup_id.industries) {
+          post.startup_id.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
             if (industryOptions.filter((option) => option.value === industry).length === 0) {
               industryOptions.push({ value: industry, label: industry });
             }
           });
-          this.setState({ industryOptions });
         }
         if (post.required_skills) {
           post.required_skills.forEach((skill) => {
@@ -61,12 +58,19 @@ class Posts extends Component {
               skillOptions.push({ value: skill, label: skill });
             }
           });
-          this.setState({ skillOptions });
         }
       });
+      if (industryOptions.length > prevState.industryOptions.length || skillOptions.length > prevState.skillOptions.length) {
+        return {
+          industryOptions, skillOptions,
+        };
+      }
     }
+    // Return null if the state hasn't changed
+    return null;
   }
 
+  // Moved filtering to frontend as per thomas's advice, but leaving this here for now just in case
   // onChangeFilter = (industries, skills) => {
   //   // console.log(industries, skills);
   //   if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills)) {
@@ -79,11 +83,11 @@ class Posts extends Component {
   searchAndFilter = (text, selectedInds, selectedSkills) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    this.props.posts.map((post) => {
+    this.props.posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
       const postInd = post.industries.map((industry) => industry.toLowerCase());
-      const startupInd = post.startup_id.industry.map((industry) => industry.toLowerCase());
+      const startupInd = post.startup_id.industries.map((industry) => industry.toLowerCase());
       // Checks for search
       if (post.title.toLowerCase().includes(searchterm)
       || post.location.toLowerCase().includes(searchterm)
@@ -106,16 +110,16 @@ class Posts extends Component {
   onSearch = (text) => {
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
       ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-      : ['filler'];
+      : ['emptytext'];
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-      : ['filler'];
+      : ['emptytext'];
     this.searchAndFilter(text, industries, skills);
     this.setState({ search: true, searchterm: text });
   }
 
   isFilterEmpty = (array) => {
-    return array.length === 1 && array.includes('filler');
+    return array.length === 1 && array.includes('emptytext');
   }
 
   onFilter = (industries, skills) => {
@@ -126,15 +130,14 @@ class Posts extends Component {
   }
 
   clear = () => {
-    this.setState({ search: false, searchterm: 'filler' });
+    this.setState({ search: false, searchterm: 'emptytext' });
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
       ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-      : ['filler'];
+      : ['emptytext'];
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-      : ['filler'];
-    this.searchAndFilter('filler', industries, skills);
-    // this.setState({ results: [] });
+      : ['emptytext'];
+    this.searchAndFilter('emptytext', industries, skills);
   }
 
   renderPosts() {
@@ -183,10 +186,10 @@ class Posts extends Component {
                 this.setState({ selectedIndustryOptions: selectedOptions });
                 const industries = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['filler'];
+                  : ['emptytext'];
                 const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
                   ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-                  : ['filler'];
+                  : ['emptytext'];
                 // this.onChangeFilter(industries, skills);
                 this.onFilter(industries, skills);
               }}
@@ -202,10 +205,10 @@ class Posts extends Component {
                 this.setState({ selectedSkillOptions: selectedOptions });
                 const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
                   ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-                  : ['filler'];
+                  : ['emptytext'];
                 const skills = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['filler'];
+                  : ['emptytext'];
                 // this.onChangeFilter(industries, skills);
                 this.onFilter(industries, skills);
               }}
@@ -227,5 +230,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPosts, getFilteredPosts,
+  fetchPosts,
 })(Posts));
