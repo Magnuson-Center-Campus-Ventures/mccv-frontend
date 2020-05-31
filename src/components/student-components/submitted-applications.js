@@ -108,15 +108,11 @@ class SubmittedApplications extends Component {
       this.props.submittedApplications !== undefined
         ? (
           <div>
-            <div>
+            <div id="filters">
               <h3>Show pending: </h3>
               <ToggleSwitch id="pending" onChange={() => this.filter('pending')} />
-            </div>
-            <div>
               <h3>Show declined: </h3>
               <ToggleSwitch id="declined" onChange={() => this.filter('declined')} />
-            </div>
-            <div>
               <h3>Show approved: </h3>
               <ToggleSwitch id="approved" onChange={() => this.filter('approved')} />
             </div>

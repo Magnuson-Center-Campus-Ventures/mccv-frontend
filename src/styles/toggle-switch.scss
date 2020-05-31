@@ -1,6 +1,7 @@
 
 .toggle-switch {
     position: relative;
+    align-self: center;
     width: 75px;
     display: inline-block;
     vertical-align: middle;
@@ -39,22 +40,14 @@
     box-sizing: border-box;
   }
   .toggle-switch-inner:before {
-    content: "Yes";
+    content: "";
     text-transform: uppercase;
     padding-left: 10px;
     background-color: #f90;
     color: #fff;
   }
-  .toggle-switch-disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  .toggle-switch-disabled::before {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
   .toggle-switch-inner::after {
-    content: "No";
+    content: "";
     text-transform: uppercase;
     padding-right: 10px;
     background-color: #ccc;
@@ -63,13 +56,14 @@
   }
   .toggle-switch-switch {
     display: block;
-    width: 24px;
+    width: 34px;
+    height: 25px;
     margin: 5px;
     background: #fff;
     position: absolute;
     top: 0;
     bottom: 0;
-    right: 40px;
+    right: 30px;
     border: 0 solid #ccc;
     border-radius: 20px;
     transition: all 0.3s ease-in 0s;
