@@ -121,11 +121,10 @@ export function createStudent(newStudent) {
   };
 }
 
-export function fetchSearchResults(searchterm) {
+export function fetchStartupSearch(searchterm) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        // console.log('here');
         dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
       })
       .catch((error) => {
