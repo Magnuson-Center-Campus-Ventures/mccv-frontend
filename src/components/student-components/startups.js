@@ -127,7 +127,7 @@ class Startups extends Component {
       }),
     };
     return (
-      (this.props.startups !== undefined || null) && (this.state.results !== null || undefined)
+      this.props.startups && this.state.results
         ? (
           <div>
             <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />

@@ -5,7 +5,7 @@ import Select from 'react-select';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
-  fetchPosts,
+  fetchPosts, fetchStudentByUserID,
 } from '../../actions';
 
 import '../../styles/postings.scss';
@@ -15,11 +15,13 @@ class Posts extends Component {
     super(props);
 
     this.state = {
+      sortedPosts: [],
       industryOptions: [],
       selectedIndustryOptions: [],
       skillOptions: [],
       selectedSkillOptions: [],
       searchterm: 'emptytext',
+      recommend: false,
       search: false,
       filter: false,
       results: [],
@@ -28,6 +30,7 @@ class Posts extends Component {
 
   componentDidMount() {
     this.props.fetchPosts();
+    this.props.fetchStudentByUserID(localStorage.getItem('userID'));
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -70,20 +73,61 @@ class Posts extends Component {
     return null;
   }
 
-  // Moved filtering to frontend as per thomas's advice, but leaving this here for now just in case
-  // onChangeFilter = (industries, skills) => {
-  //   // console.log(industries, skills);
-  //   if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills)) {
-  //     this.props.fetchPosts();
-  //   } else {
-  //     this.props.getFilteredPosts(industries, skills);
-  //   }
-  // }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.posts.length > 0 && this.props.student !== {}
+      && (prevProps.posts !== this.props.posts || prevProps.student !== this.props.student)) {
+      // Score posts
+      this.scorePosts();
+    }
+  }
 
-  searchAndFilter = (text, selectedInds, selectedSkills) => {
+  scorePosts = () => {
+    let studentIndustries = [];
+    let studentSkills = [];
+    let studentClasses = [];
+    if (this.props.student.interested_industries) {
+      studentIndustries = this.props.student.interested_industries.map((industry) => {
+        return industry.name;
+      });
+    }
+    if (this.props.student.skills) {
+      studentSkills = this.props.student.skills.map((skill) => {
+        return skill.name;
+      });
+    }
+    if (this.props.student.relevant_classes) {
+      studentClasses = this.props.student.relevant_classes.map((_class) => {
+        return _class.name;
+      });
+    }
+    // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
+    const postScores = {};
+    this.props.posts.forEach((post) => {
+      const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry)).length
+      + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry)).length
+      + post.desired_classes.filter((_class) => studentClasses.includes(_class)).length
+      + post.required_skills.filter((skill) => studentSkills.includes(skill)).length
+      // Preferred skills get half the weight of required skills
+      + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill)).length);
+      postScores[post._id] = numMatches;
+    });
+
+    // Sort the posts in descending order of score
+    const tempPosts = this.props.posts;
+    tempPosts.sort((post1, post2) => {
+      return postScores[post2._id] - postScores[post1._id];
+    });
+    tempPosts.forEach((post) => {
+      console.log(post.title, postScores[post._id]);
+    });
+    this.setState({ sortedPosts: tempPosts.slice(0, 3) });
+  }
+
+  searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    this.props.posts.forEach((post) => {
+    const posts = recommend ? this.state.sortedPosts : this.props.posts;
+    posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
       const postInd = post.industries.map((industry) => industry.toLowerCase());
@@ -114,7 +158,7 @@ class Posts extends Component {
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(text, industries, skills);
+    this.searchAndFilter(text, industries, skills, this.state.recommend);
     this.setState({ search: true, searchterm: text });
   }
 
@@ -126,7 +170,18 @@ class Posts extends Component {
     if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills)) {
       this.setState({ filter: false });
     } else this.setState({ filter: true });
-    this.searchAndFilter(this.state.searchterm, industries, skills);
+    this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
+  }
+
+  onRecommendPress = () => {
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
+    this.setState((prevState) => ({ recommend: !prevState.recommend }));
   }
 
   clear = () => {
@@ -137,7 +192,7 @@ class Posts extends Component {
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter('emptytext', industries, skills);
+    this.searchAndFilter('emptytext', industries, skills, this.state.recommend);
   }
 
   renderPosts() {
@@ -154,7 +209,8 @@ class Posts extends Component {
         );
       }
     } else {
-      return this.props.posts.map((post) => {
+      const posts = this.state.recommend ? this.state.sortedPosts : this.props.posts;
+      return posts.map((post) => {
         return (
           <PostListItem post={post} key={post.id} />
         );
@@ -171,7 +227,7 @@ class Posts extends Component {
       }),
     };
     return (
-      (this.props.posts !== undefined || null) && (this.state.results !== null || undefined)
+      this.props.posts && this.state.results
         ? (
           <div>
             <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
@@ -190,7 +246,6 @@ class Posts extends Component {
                 const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
                   ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                // this.onChangeFilter(industries, skills);
                 this.onFilter(industries, skills);
               }}
             />
@@ -209,10 +264,13 @@ class Posts extends Component {
                 const skills = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                // this.onChangeFilter(industries, skills);
                 this.onFilter(industries, skills);
               }}
             />
+            <button type="button"
+              onClick={this.onRecommendPress}
+            >{this.state.recommend ? 'Show All Posts' : 'Show Recommended Posts'}
+            </button>
             <div className="list">
               {this.renderPosts()}
             </div>
@@ -227,8 +285,10 @@ class Posts extends Component {
 
 const mapStateToProps = (reduxState) => ({
   posts: reduxState.posts.all,
+  student: reduxState.students.current_student,
 });
 
 export default withRouter(connect(mapStateToProps, {
   fetchPosts,
+  fetchStudentByUserID,
 })(Posts));
