@@ -7,6 +7,7 @@ import Postings from './student-components/postings';
 import Startups from './student-components/startups';
 import StartupProfile from './student-components/startup-profile';
 import StudentProfile from './student-components/student-profile';
+import StudentProfileStartup from './startup-components/student-profile-startups';
 import Students from './startup-components/students';
 import Post from './student-components/post';
 import Nav from './nav';
@@ -17,14 +18,6 @@ import StartupsFAQ from './startup-components/startups-faq';
 import StartupsLanding from './startup-components/startups-landing';
 import SubmittedApplications from './student-components/submitted-applications';
 import SubmittedApplication from './student-components/submitted-application';
-import StudentSignUpBio from './student-components/student-sign-up/student-signup-bio';
-import StudentSignUpTiming from './student-components/student-sign-up/student-signup-timing';
-import StudentSignUpWorkExperiences from './student-components/student-sign-up/student-signup-work-experiences';
-import StudentSignUpOtherExperiences from './student-components/student-sign-up/student-signup-other-experiences';
-import StudentSignUpMajorMinor from './student-components/student-sign-up/student-signup-major-minor';
-import StudentSignUpIndustries from './student-components/student-sign-up/student-signup-industries';
-import StudentSignUpSkills from './student-components/student-sign-up/student-signup-skills';
-import StudentSignUpClasses from './student-components/student-sign-up/student-signup-classes';
 import StudentSignUp from './student-components/student-sign-up/student-signup';
 import StartupSignUpBio from './startup-components/startup-sign-up/startup-signup-bio';
 import StartupSignUpDesc from './startup-components/startup-sign-up/startup-signup-desc';
@@ -43,6 +36,7 @@ const App = (props) => {
           <Route path="/posts" component={Postings} />
           <Route path="/startups/:startupID" component={StartupProfile} />
           <Route path="/startups" component={Startups} />
+          <Route path="/students/:studentID" component={StudentProfileStartup} />
           <Route path="/students" component={Students} />
           <Route path="/applications/:applicationID" component={SubmittedApplication} />
           <Route path="/applications" component={SubmittedApplications} />
@@ -52,14 +46,14 @@ const App = (props) => {
           <Route path="/studentsfaq" component={StudentsFAQ} />
           <Route path="/startupsfaq" component={StartupsFAQ} />
           <Route path="/startupslanding" component={StartupsLanding} />
-          <Route path="/student-signup-bio" component={StudentSignUpBio} />
+          {/* <Route path="/student-signup-bio" component={StudentSignUpBio} />
           <Route path="/student-signup-timing" component={StudentSignUpTiming} />
           <Route path="/student-signup-workexperiences" component={StudentSignUpWorkExperiences} />
           <Route path="/student-signup-otherexperiences" component={StudentSignUpOtherExperiences} />
           <Route path="/student-signup-majorminor" component={StudentSignUpMajorMinor} />
           <Route path="/student-signup-industries" component={StudentSignUpIndustries} />
           <Route path="/student-signup-classes" component={StudentSignUpClasses} />
-          <Route path="/student-signup-skills" component={StudentSignUpSkills} />
+          <Route path="/student-signup-skills" component={StudentSignUpSkills} /> */}
           <Route path="/student-signup" component={StudentSignUp} />
           <Route path="/startup-signup-bio" component={StartupSignUpBio} />
           <Route path="/startup-signup-desc" component={StartupSignUpDesc} />

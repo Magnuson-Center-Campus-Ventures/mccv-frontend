@@ -23,13 +23,10 @@ class StudentOtherExperiences extends Component {
   componentDidMount() {
     this.props.fetchStudentByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
-    console.log(this.state.student);
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
-      console.log('here');
-      console.log(this.state.student);
       this.props.fetchOtherExperiences(this.props.student.other_exp);
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
@@ -46,20 +43,13 @@ class StudentOtherExperiences extends Component {
      });
    };
 
-   onSubmit = () => {
-     // console.log(this.state.student);
-     this.props.updateStudent(this.state.student.id, this.state.student);
-     this.state.otherExps.forEach((otherExp) => {
-       this.props.updateWorkExperience(otherExp._id, otherExp);
-     });
-     this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
-   }
-
    hideModal = (e) => {
      this.setState({
        show: false,
      });
-     console.log(this.state.student);
+     this.state.otherExps.forEach((otherExp) => {
+       this.props.updateWorkExperience(otherExp._id, otherExp);
+     });
    }
 
      // update student field
@@ -76,11 +66,6 @@ class StudentOtherExperiences extends Component {
          };
        });
      }
-
-     // Send update to database
-     // onSubmit = (e) => {
-     //   this.props.updateStudent(this.props.student.id, this.state.student);
-     // };
 
      // Removes time from date
      convertDate=(date) => {
@@ -136,11 +121,6 @@ class StudentOtherExperiences extends Component {
            </div>
            <div id="work-exps">
              {this.renderOtherExperiences()};
-           </div>
-           <div className="buttonContainer">
-             <button type="submit" className="submit-btn-student-timing" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-               Submit!
-             </button>
            </div>
          </div>
        );

@@ -13,6 +13,7 @@ export const ActionTypes = {
   FETCH_STUDENT: 'FETCH_STUDENT',
   CREATE_STUDENT: 'CREATE_STUDENT',
   FETCH_STUDENTS: 'FETCH_STUDENTS',
+  FETCH_STUDENT_USER: 'FETCH_STUDENT_USER',
   FETCH_WORK_EXPS: 'FETCH_WORK_EXPS',
   ADD_WORK_EXP: 'ADD_WORK_EXP',
   UPDATE_WORK_EXP: 'UPDATE_WORK_EXP',
@@ -207,10 +208,35 @@ export function fetchStudentByUserID(userID) {
   };
 }
 
+// For a startup clicking on a student to see their profile
+export function fetchUserByStudentID(studentID) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/studentuser/${studentID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_STUDENT_USER, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
 export function updateStudent(id, student) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/students/${id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+export function submitStudent(id, student, history) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/students/${id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
+      // eslint-disable-next-line no-restricted-globals
+      history.push('/profile');
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
@@ -325,8 +351,10 @@ export function fetchCertainSkills(idArray) {
 }
 
 export function createSkill(skill) {
+  console.log(skill);
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+    axios.post(`${ROOT_URL}/skills`, { skill }).then((response) => {
+      console.log(response.data);
       dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
     }).catch((error) => {
       console.log(error);

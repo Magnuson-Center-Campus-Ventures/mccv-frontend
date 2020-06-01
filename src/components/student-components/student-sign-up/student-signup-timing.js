@@ -36,11 +36,6 @@ class StudentTiming extends Component {
        });
      }
 
-     // Send update to database
-     onSubmit = (e) => {
-       this.props.updateStudent(this.props.student.id, this.state.student);
-     };
-
      // Removes time from date
      convertDate=(date) => {
        console.log(date);
@@ -85,11 +80,6 @@ class StudentTiming extends Component {
                </p>
                <TextareaAutosize onBlur={(event) => this.changeStudentField('time_commitment', event)} defaultValue={this.props.student.time_commitment} />
              </div>
-           </div>
-           <div className="buttonContainer">
-             <button type="submit" className="submit-btn-student-timing" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-               Submit!
-             </button>
            </div>
          </div>
        );

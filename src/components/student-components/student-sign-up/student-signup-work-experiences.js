@@ -46,20 +46,13 @@ class StudentWorkExperiences extends Component {
      });
    };
 
-   onSubmit = () => {
-     // console.log(this.state.student);
-     this.props.updateStudent(this.state.student.id, this.state.student);
-     this.state.workExps.forEach((workExp) => {
-       this.props.updateWorkExperience(workExp._id, workExp);
-     });
-     this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
-   }
-
    hideModal = (e) => {
      this.setState({
        show: false,
      });
-     console.log(this.state.student);
+     this.state.workExps.forEach((workExp) => {
+       this.props.updateWorkExperience(workExp._id, workExp);
+     });
    }
 
      // update student field
@@ -76,11 +69,6 @@ class StudentWorkExperiences extends Component {
          };
        });
      }
-
-     // Send update to database
-     // onSubmit = (e) => {
-     //   this.props.updateStudent(this.props.student.id, this.state.student);
-     // };
 
      // Removes time from date
      convertDate=(date) => {
@@ -140,11 +128,6 @@ class StudentWorkExperiences extends Component {
            </div>
            <div id="work-exps">
              {this.renderWorkExperiences()};
-           </div>
-           <div className="buttonContainer">
-             <button type="submit" className="submit-btn-student-timing" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-               Submit!
-             </button>
            </div>
          </div>
        );

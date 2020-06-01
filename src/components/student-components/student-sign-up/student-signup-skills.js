@@ -1,12 +1,10 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
 import '../../../styles/student-sign-up/student-signup-industries.scss';
 import {
-  fetchStudentByUserID, fetchUser, updateStudent,
+  fetchStudentByUserID, fetchUser,
   fetchAllSkills, fetchCertainSkills, createSkill,
 } from '../../../actions';
 
@@ -16,19 +14,15 @@ class StudentSkills extends Component {
     this.state = {
       student: {},
       skill: '',
-      nameSkills: [],
-      allSkillOptions: [],
+      displaySkills: [],
+      allSkills: [],
     };
-
-    this.onSkillChange = this.onSkillChange.bind(this);
-    this.deleteSkill = this.deleteSkill.bind(this);
   }
 
   // Get profile info
   componentDidMount() {
     this.props.fetchAllSkills();
     this.props.fetchStudentByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -36,35 +30,23 @@ class StudentSkills extends Component {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
     }
-    if (prevProps.student.skills !== this.props.student.skills) {
-      this.props.student.skills.forEach((skillID) => {
-        const name = this.getSkillName(skillID);
-        if (!this.state.nameSkills.includes(name)) {
-          this.state.nameSkills.push(name);
-        }
-      });
-    }
-    if (prevProps.student.skills !== this.props.student.skills) {
-      // Set up options for dropdown
-      const allSkillOptions = this.props.skills.all.map((skill) => {
+    if (prevProps.skills !== this.props.skills) {
+      const skills = this.props.skills.all.map((skill) => {
         return { value: skill.name, label: skill.name, skill };
       });
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ allSkillOptions });
+      this.state.allSkills = skills;
+      const displaySkills = this.state.allSkills.filter((value) => {
+        return !this.props.student.skills.includes(this.getSkill(value.value));
+      });
+      this.state.displaySkills = displaySkills;
     }
   }
 
-  // not done
-  //  onSubmit = () => {
-  //    this.props.updateStudent(this.state.student.id, this.state.student);
-  //    this.state.newSkills.forEach((skill) => this.props.createSkill(skill));
-  //    this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
-  //  }
-
-  onSkillChange(event) {
-    this.setState({
-      skill: event.target.value,
+  getSkill(name) {
+    const skillObject = this.props.skills.all.find((skill) => {
+      return (skill.name === name);
     });
+    return skillObject;
   }
 
   getSkillName(id) {
@@ -74,100 +56,110 @@ class StudentSkills extends Component {
     return skillObject.name;
   }
 
-   addSkill = () => {
-     if (!this.state.nameSkills.includes(this.state.skill)) {
-       this.state.nameSkills.push(this.state.skill);
-     }
-     this.state.skill = '';
-     this.forceUpdate();
-   }
-
-    deleteSkill = (skill) => {
-      const skills = this.state.nameSkills.filter((value) => {
-        return (value !== skill.skill);
-      });
-      this.state.nameSkills = skills;
-      this.forceUpdate();
+  addSkillDB = () => {
+    if (!this.state.allSkills.includes(this.state.skill)) {
+      this.props.createSkill({ name: this.state.skill });
     }
+    this.props.fetchAllSkills();
+  }
 
-    renderAddSkill() {
-      const customStyles = {
-        control: (base) => ({
-          ...base,
-          width: 200,
-        }),
-      };
-      return (
-        <div className="add-skills">
-          <CreateableSelect
-            className="select-dropdown"
-            styles={customStyles}
-            name="skills"
-            options={this.state.allSkillOptions}
-            onChange={(selectedOption) => {
-              this.state.skill = selectedOption.value;
-              this.addSkill();
-            }}
-            onCreateOption={(newOption) => {
-              this.state.skill = newOption;
-              this.addSkill();
-            }}
-          />
-        </div>
-      );
+  addSkill = () => {
+    if (!this.props.student.skills.includes(this.getSkill(this.state.skill))) {
+      this.props.student.skills.push(this.getSkill(this.state.skill));
     }
+    const displaySkills = this.state.allSkills.filter((value) => {
+      return !this.props.student.skills.includes(this.getSkill(value.value));
+    });
+    this.state.displaySkills = displaySkills;
+    this.state.skill = '';
+    this.forceUpdate();
+  }
 
-    renderSkills() {
-      return (
-        this.state.nameSkills.map((skill) => {
-          return (
-            <div className="skill" key={skill}>
-              <div className="text">
-                {skill}
-              </div>
-              <button type="submit" className="delete-btn-student-skills" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
-                <i className="far fa-trash-alt" id="icon" />
-              </button>
-            </div>
-          );
-        })
-      );
-    }
+  deleteSkill = (skill) => {
+    const skills = this.props.student.skills.filter((value) => {
+      return (value !== skill.skill);
+    });
+    this.props.student.skills = skills;
+    const displaySkills = this.state.allSkills.filter((value) => {
+      return !this.props.student.skills.includes(this.getSkill(value.value));
+    });
+    this.state.displaySkills = displaySkills;
+    this.forceUpdate();
+  }
 
-    render() {
-      // still have occasional rendering issue
-      if (this.state.student.skills !== undefined && this.props.skills.all !== []) {
+  renderAddSkill() {
+    const customStyles = {
+      control: (base) => ({
+        ...base,
+        width: 200,
+      }),
+    };
+    return (
+      <div className="add-skills">
+        <CreateableSelect
+          className="select-dropdown"
+          styles={customStyles}
+          name="skills"
+          options={this.state.displaySkills}
+          onChange={(selectedOption) => {
+            this.state.skill = selectedOption.value;
+            this.addSkill();
+          }}
+          onCreateOption={(newOption) => {
+            this.state.skill = newOption;
+            this.addSkillDB();
+            this.addSkill();
+          }}
+        />
+      </div>
+    );
+  }
+
+  renderSkills() {
+    return (
+      this.props.student.skills.map((skill) => {
         return (
-          <div className="StudentSkillContainer">
-            <div className="StudentSkillHeaderContainer">
-              <h1 className="StudentSkillHeader">
-                Skills
-              </h1>
+          <div className="skill" key={skill.id}>
+            <div className="text">
+              {skill.name}
             </div>
-            <div className="StudentSkillDescContainer">
-              <p className="StudentSkillDesc">
-                Add the skills you have!
-              </p>
-              <i className="fas fa-brain" id="icon" />
-            </div>
-            <div id="skills">
-              <div className="StudentSkillListHeader">Skills</div>
-              {this.renderAddSkill()}
-              {this.renderSkills()}
-            </div>
-            <div className="buttonContainer">
-              <button type="submit" className="submit-btn-student-timing" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-                Submit!
-              </button>
-            </div>
+            <button type="submit" className="delete-btn-student-skills" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
+              <i className="far fa-trash-alt" id="icon" />
+            </button>
           </div>
         );
-      } else {
-        return (
-          <div>loading</div>
-        );
-      }
+      })
+    );
+  }
+
+  render() {
+    if (this.state.student.skills !== undefined && this.props.skills.all !== []) {
+      return (
+        <div className="StudentSkillContainer">
+          <div className="StudentSkillHeaderContainer">
+            <h1 className="StudentSkillHeader">
+              Skills
+            </h1>
+          </div>
+          <div className="StudentSkillDescContainer">
+            <p className="StudentSkillDesc">
+              Add the skills you have!
+            </p>
+            <i className="fas fa-brain" id="icon" />
+          </div>
+          <div id="skills">
+            <div className="StudentSkillListHeader">Skills</div>
+            {this.renderAddSkill()}
+            {this.renderSkills()}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div>loading</div>
+      );
     }
+  }
 }
 
 const mapStateToProps = (reduxState) => ({
@@ -177,5 +169,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStudentByUserID, fetchUser, updateStudent, fetchAllSkills, fetchCertainSkills, createSkill,
+  fetchStudentByUserID, fetchUser, fetchAllSkills, fetchCertainSkills, createSkill,
 })(StudentSkills));
