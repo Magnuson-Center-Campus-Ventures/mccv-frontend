@@ -5,7 +5,7 @@ import Select from 'react-select';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
-  fetchPosts, fetchStudentByUserID,
+  fetchPosts, fetchStudentByUserID, fetchUser,
 } from '../../actions';
 
 import '../../styles/postings.scss';
@@ -31,6 +31,7 @@ class Posts extends Component {
   componentDidMount() {
     this.props.fetchPosts();
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
+    this.props.fetchUser(localStorage.getItem('userID'));
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -218,6 +219,19 @@ class Posts extends Component {
     }
   }
 
+  renderRecButton() {
+    if (this.props.user.role === 'admin') {
+      return <div />;
+    } else {
+      return (
+        <button type="button"
+          onClick={this.onRecommendPress}
+        >{this.state.recommend ? 'Show All Posts' : 'Show Recommended Posts'}
+        </button>
+      );
+    }
+  }
+
   render() {
     // Styles for filter dropdowns
     const dropdownStyles = {
@@ -267,10 +281,7 @@ class Posts extends Component {
                 this.onFilter(industries, skills);
               }}
             />
-            <button type="button"
-              onClick={this.onRecommendPress}
-            >{this.state.recommend ? 'Show All Posts' : 'Show Recommended Posts'}
-            </button>
+            {this.renderRecButton()}
             <div className="list">
               {this.renderPosts()}
             </div>
@@ -286,9 +297,11 @@ class Posts extends Component {
 const mapStateToProps = (reduxState) => ({
   posts: reduxState.posts.all,
   student: reduxState.students.current_student,
+  user: reduxState.user.current,
 });
 
 export default withRouter(connect(mapStateToProps, {
   fetchPosts,
   fetchStudentByUserID,
+  fetchUser,
 })(Posts));
