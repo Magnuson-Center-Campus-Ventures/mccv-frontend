@@ -1,12 +1,10 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
 import '../../../styles/student-sign-up/student-signup-industries.scss';
 import {
-  fetchStudentByUserID, fetchUser, updateStudent,
+  fetchStudentByUserID, fetchUser,
   fetchAllIndustries, fetchCertainIndustries, createIndustry,
 } from '../../../actions';
 
@@ -16,20 +14,15 @@ class StudentIndustries extends Component {
     this.state = {
       student: {},
       industry: '',
-      nameIndustries: [],
-      allIndustryOptions: [],
-      // newIndustries: [],
+      displayIndustries: [],
+      allIndustries: [],
     };
-
-    this.onIndustryChange = this.onIndustryChange.bind(this);
-    this.deleteIndustry = this.deleteIndustry.bind(this);
   }
 
   // Get profile info
   componentDidMount() {
     this.props.fetchAllIndustries();
     this.props.fetchStudentByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -37,35 +30,23 @@ class StudentIndustries extends Component {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
     }
-    if (prevProps.student.interested_industries !== this.props.student.interested_industries) {
-      this.props.student.interested_industries.forEach((industryID) => {
-        const name = this.getIndustryName(industryID);
-        if (!this.state.nameIndustries.includes(name)) {
-          this.state.nameIndustries.push(name);
-        }
-      });
-    }
-    if (prevProps.student.interested_industries !== this.props.student.interested_industries) {
-      // Set up options for dropdown
-      const allIndustryOptions = this.props.industries.all.map((industry) => {
+    if (prevProps.industries !== this.props.industries) {
+      const industries = this.props.industries.all.map((industry) => {
         return { value: industry.name, label: industry.name, industry };
       });
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ allIndustryOptions });
+      this.state.allIndustries = industries;
+      const displayIndustries = this.state.allIndustries.filter((value) => {
+        return !this.props.student.interested_industries.includes(this.getIndustry(value.value));
+      });
+      this.state.displayIndustries = displayIndustries;
     }
   }
 
-  // not done
-  //  onSubmit = () => {
-  //    this.props.updateStudent(this.state.student.id, this.state.student);
-  //    this.state.newIndustries.forEach((industry) => this.props.createIndustry(industry));
-  //    this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
-  //  }
-
-  onIndustryChange(event) {
-    this.setState({
-      industry: event.target.value,
+  getIndustry(name) {
+    const industryObject = this.props.industries.all.find((industry) => {
+      return (industry.name === name);
     });
+    return industryObject;
   }
 
   getIndustryName(id) {
@@ -75,100 +56,110 @@ class StudentIndustries extends Component {
     return industryObject.name;
   }
 
-   addIndustry = () => {
-     if (!this.state.nameIndustries.includes(this.state.industry)) {
-       this.state.nameIndustries.push(this.state.industry);
-     }
-     this.state.industry = '';
-     this.forceUpdate();
-   }
-
-    deleteIndustry = (industry) => {
-      const industries = this.state.nameIndustries.filter((value) => {
-        return (value !== industry.industry);
-      });
-      this.state.nameIndustries = industries;
-      this.forceUpdate();
+  addIndustryDB = () => {
+    if (!this.state.allIndustries.includes(this.state.industry)) {
+      this.props.createIndustry({ name: this.state.industry });
     }
+    this.props.fetchAllIndustries();
+  }
 
-    renderAddIndustry() {
-      const customStyles = {
-        control: (base) => ({
-          ...base,
-          width: 200,
-        }),
-      };
-      return (
-        <div className="add-industries">
-          <CreateableSelect
-            className="select-dropdown"
-            styles={customStyles}
-            name="industries"
-            options={this.state.allIndustryOptions}
-            onChange={(selectedOption) => {
-              this.state.industry = selectedOption.value;
-              this.addIndustry();
-            }}
-            onCreateOption={(newOption) => {
-              this.state.industry = newOption;
-              this.addIndustry();
-            }}
-          />
-        </div>
-      );
+  addIndustry = () => {
+    if (!this.props.student.interested_industries.includes(this.getIndustry(this.state.industry))) {
+      this.props.student.interested_industries.push(this.getIndustry(this.state.industry));
     }
+    const displayIndustries = this.state.allIndustries.filter((value) => {
+      return !this.props.student.interested_industries.includes(this.getIndustry(value.value));
+    });
+    this.state.displayIndustries = displayIndustries;
+    this.state.industry = '';
+    this.forceUpdate();
+  }
 
-    renderIndustries() {
-      return (
-        this.state.nameIndustries.map((industry) => {
-          return (
-            <div className="industry" key={industry}>
-              <div className="text">
-                {industry}
-              </div>
-              <button type="submit" className="delete-btn-student-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
-                <i className="far fa-trash-alt" id="icon" />
-              </button>
-            </div>
-          );
-        })
-      );
-    }
+  deleteIndustry = (industry) => {
+    const industries = this.props.student.interested_industries.filter((value) => {
+      return (value !== industry.industry);
+    });
+    this.props.student.interested_industries = industries;
+    const displayIndustries = this.state.allIndustries.filter((value) => {
+      return !this.props.student.interested_industries.includes(this.getIndustry(value.value));
+    });
+    this.state.displayIndustries = displayIndustries;
+    this.forceUpdate();
+  }
 
-    render() {
-      // still have occasioanl rendering issue for industries.all
-      if (this.state.student.interested_industries !== undefined && this.props.industries.all !== []) {
+  renderAddIndustry() {
+    const customStyles = {
+      control: (base) => ({
+        ...base,
+        width: 200,
+      }),
+    };
+    return (
+      <div className="add-industries">
+        <CreateableSelect
+          className="select-dropdown"
+          styles={customStyles}
+          name="industries"
+          options={this.state.displayIndustries}
+          onChange={(selectedOption) => {
+            this.state.industry = selectedOption.value;
+            this.addIndustry();
+          }}
+          onCreateOption={(newOption) => {
+            this.state.industry = newOption;
+            this.addIndustryDB();
+            this.addIndustry();
+          }}
+        />
+      </div>
+    );
+  }
+
+  renderIndustries() {
+    return (
+      this.props.student.interested_industries.map((industry) => {
         return (
-          <div className="StudentIndustryContainer">
-            <div className="StudentIndustryHeaderContainer">
-              <h1 className="StudentIndustryHeader">
-                Interested Industries
-              </h1>
+          <div className="industry" key={industry.id}>
+            <div className="text">
+              {industry.name}
             </div>
-            <div className="StudentIndustryDescContainer">
-              <p className="StudentIndustryDesc">
-                Add the industries you are interested in!
-              </p>
-              <i className="fas fa-building" id="icon" />
-            </div>
-            <div id="industries">
-              <div className="StudentIndustryListHeader">Industries</div>
-              {this.renderAddIndustry()}
-              {this.renderIndustries()}
-            </div>
-            <div className="buttonContainer">
-              <button type="submit" className="submit-btn-student-timing" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-                Submit!
-              </button>
-            </div>
+            <button type="submit" className="delete-btn-student-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
+              <i className="far fa-trash-alt" id="icon" />
+            </button>
           </div>
         );
-      } else {
-        return (
-          <div>loading</div>
-        );
-      }
+      })
+    );
+  }
+
+  render() {
+    if (this.state.student.interested_industries !== undefined && this.props.industries.all !== []) {
+      return (
+        <div className="StudentIndustryContainer">
+          <div className="StudentIndustryHeaderContainer">
+            <h1 className="StudentIndustryHeader">
+              Industries
+            </h1>
+          </div>
+          <div className="StudentIndustryDescContainer">
+            <p className="StudentIndustryDesc">
+              Add the industries you have!
+            </p>
+            <i className="fas fa-brain" id="icon" />
+          </div>
+          <div id="industries">
+            <div className="StudentIndustryListHeader">Industries</div>
+            {this.renderAddIndustry()}
+            {this.renderIndustries()}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div>loading</div>
+      );
     }
+  }
 }
 
 const mapStateToProps = (reduxState) => ({
@@ -178,5 +169,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStudentByUserID, fetchUser, updateStudent, fetchAllIndustries, fetchCertainIndustries, createIndustry,
+  fetchStudentByUserID, fetchUser, fetchAllIndustries, fetchCertainIndustries, createIndustry,
 })(StudentIndustries));

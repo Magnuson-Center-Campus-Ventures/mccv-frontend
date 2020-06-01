@@ -206,6 +206,19 @@ export function updateStudent(id, student) {
   };
 }
 
+export function submitStudent(id, student, history) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/students/${id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
+      // eslint-disable-next-line no-restricted-globals
+      history.push('/profile');
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // work experience functions
 export function fetchWorkExperiences(idArray) {
   return (dispatch) => {
@@ -313,8 +326,10 @@ export function fetchCertainSkills(idArray) {
 }
 
 export function createSkill(skill) {
+  console.log(skill);
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+    axios.post(`${ROOT_URL}/skills`, { skill }).then((response) => {
+      console.log(response.data);
       dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
     }).catch((error) => {
       console.log(error);
