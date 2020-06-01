@@ -10,6 +10,9 @@ import StudentSignUpMajorMinor from './student-signup-major-minor';
 import StudentSignUpIndustries from './student-signup-industries';
 import StudentSignUpSkills from './student-signup-skills';
 import StudentSignUpClasses from './student-signup-classes';
+import {
+  fetchStudentByUserID, fetchUser, updateStudent, submitStudent, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
+} from '../../../actions';
 
 class StudentSignUp extends Component {
   constructor(props) {
@@ -19,10 +22,33 @@ class StudentSignUp extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.fetchStudentByUserID(this.props.userID);
+    this.props.fetchUser(this.props.userID);
+    this.props.fetchAllIndustries();
+    this.props.fetchAllClasses();
+    this.props.fetchAllSkills();
+  }
+
   handlePageClick = (data) => {
+    this.props.updateStudent(this.props.student.id, this.props.student);
     this.setState({ index: data.selected });
     this.forceUpdate();
   };
+
+  onSubmit = () => {
+    this.props.submitStudent(this.props.student.id, this.props.student, this.props.history);
+  }
+
+  renderSubmit() {
+    return (
+      <div className="buttonContainer">
+        <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
+          Submit!
+        </button>
+      </div>
+    );
+  }
 
   renderComponent() {
     switch (this.state.index) {
@@ -49,7 +75,7 @@ class StudentSignUp extends Component {
 
   render() {
     return (
-      <div className="commentBox">
+      <div className="paginator">
         <ReactPaginate
           previousLabel="previous"
           nextLabel="next"
@@ -57,15 +83,24 @@ class StudentSignUp extends Component {
           // breakClassName="break-me"
           pageCount={8}
           marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={4}
           onPageChange={this.handlePageClick}
           // containerClassName="pagination"
           // subContainerClassName="pages pagination"
           // activeClassName="active"
         />
         {this.renderComponent()}
+        {this.renderSubmit()}
       </div>
     );
   }
 }
-export default withRouter(connect()(StudentSignUp));
+
+const mapStateToProps = (reduxState) => ({
+  userID: reduxState.auth.userID,
+  student: reduxState.students.current_student,
+});
+
+export default withRouter(connect(mapStateToProps, {
+  fetchStudentByUserID, fetchUser, updateStudent, submitStudent, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
+})(StudentSignUp));

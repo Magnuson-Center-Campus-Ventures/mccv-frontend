@@ -16,14 +16,14 @@ import StudentsFAQ from './student-components/students-faq';
 import StartupsFAQ from './startup-components/startups-faq';
 import StartupsLanding from './startup-components/startups-landing';
 import SubmittedApplications from './student-components/submitted-applications';
-import StudentSignUpBio from './student-components/student-sign-up/student-signup-bio';
-import StudentSignUpTiming from './student-components/student-sign-up/student-signup-timing';
-import StudentSignUpWorkExperiences from './student-components/student-sign-up/student-signup-work-experiences';
-import StudentSignUpOtherExperiences from './student-components/student-sign-up/student-signup-other-experiences';
-import StudentSignUpMajorMinor from './student-components/student-sign-up/student-signup-major-minor';
-import StudentSignUpIndustries from './student-components/student-sign-up/student-signup-industries';
-import StudentSignUpSkills from './student-components/student-sign-up/student-signup-skills';
-import StudentSignUpClasses from './student-components/student-sign-up/student-signup-classes';
+// import StudentSignUpBio from './student-components/student-sign-up/student-signup-bio';
+// import StudentSignUpTiming from './student-components/student-sign-up/student-signup-timing';
+// import StudentSignUpWorkExperiences from './student-components/student-sign-up/student-signup-work-experiences';
+// import StudentSignUpOtherExperiences from './student-components/student-sign-up/student-signup-other-experiences';
+// import StudentSignUpMajorMinor from './student-components/student-sign-up/student-signup-major-minor';
+// import StudentSignUpIndustries from './student-components/student-sign-up/student-signup-industries';
+// import StudentSignUpSkills from './student-components/student-sign-up/student-signup-skills';
+// import StudentSignUpClasses from './student-components/student-sign-up/student-signup-classes';
 import StudentSignUp from './student-components/student-sign-up/student-signup';
 
 const App = (props) => {
@@ -45,14 +45,14 @@ const App = (props) => {
           <Route path="/studentsfaq" component={StudentsFAQ} />
           <Route path="/startupsfaq" component={StartupsFAQ} />
           <Route path="/startupslanding" component={StartupsLanding} />
-          <Route path="/student-signup-bio" component={StudentSignUpBio} />
+          {/* <Route path="/student-signup-bio" component={StudentSignUpBio} />
           <Route path="/student-signup-timing" component={StudentSignUpTiming} />
           <Route path="/student-signup-workexperiences" component={StudentSignUpWorkExperiences} />
           <Route path="/student-signup-otherexperiences" component={StudentSignUpOtherExperiences} />
           <Route path="/student-signup-majorminor" component={StudentSignUpMajorMinor} />
           <Route path="/student-signup-industries" component={StudentSignUpIndustries} />
           <Route path="/student-signup-classes" component={StudentSignUpClasses} />
-          <Route path="/student-signup-skills" component={StudentSignUpSkills} />
+          <Route path="/student-signup-skills" component={StudentSignUpSkills} /> */}
           <Route path="/student-signup" component={StudentSignUp} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>
