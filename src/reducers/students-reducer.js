@@ -6,6 +6,7 @@ const initialState = {
   current_work_exps: [],
   studentID: '',
   current_other_exps: [],
+  current_email: '',
 };
 
 const StudentsReducer = (state = initialState, action) => {
@@ -16,6 +17,8 @@ const StudentsReducer = (state = initialState, action) => {
       return { ...state, all_students: action.payload };
     case ActionTypes.FETCH_STUDENT:
       return { ...state, current_student: action.payload };
+    case ActionTypes.FETCH_STUDENT_USER:
+      return { ...state, current_email: action.payload.email };
     case ActionTypes.FETCH_WORK_EXPS:
       return { ...state, current_work_exps: action.payload };
     case ActionTypes.ADD_WORK_EXP:
