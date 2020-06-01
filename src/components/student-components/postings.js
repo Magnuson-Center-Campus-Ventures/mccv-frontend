@@ -5,7 +5,7 @@ import Select from 'react-select';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
-  fetchPosts,
+  fetchPosts, fetchStudentByUserID,
 } from '../../actions';
 
 import '../../styles/postings.scss';
@@ -15,11 +15,13 @@ class Posts extends Component {
     super(props);
 
     this.state = {
+      sortedPosts: [],
       industryOptions: [],
       selectedIndustryOptions: [],
       skillOptions: [],
       selectedSkillOptions: [],
       searchterm: 'emptytext',
+      // recommend: false,
       search: false,
       filter: false,
       results: [],
@@ -28,6 +30,7 @@ class Posts extends Component {
 
   componentDidMount() {
     this.props.fetchPosts();
+    this.props.fetchStudentByUserID(localStorage.getItem('userID'));
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -70,6 +73,14 @@ class Posts extends Component {
     return null;
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.posts.length > 0 && this.props.student !== {}
+      && (prevProps.posts !== this.props.posts || prevProps.student !== this.props.student)) {
+      // Score posts
+      this.scorePosts();
+    }
+  }
+
   // Moved filtering to frontend as per thomas's advice, but leaving this here for now just in case
   // onChangeFilter = (industries, skills) => {
   //   // console.log(industries, skills);
@@ -79,6 +90,41 @@ class Posts extends Component {
   //     this.props.getFilteredPosts(industries, skills);
   //   }
   // }
+
+  scorePosts = () => {
+    let studentIndustries = [];
+    let studentSkills = [];
+    if (this.props.student.interested_industries) {
+      studentIndustries = this.props.student.interested_industries.map((industry) => {
+        return industry.name;
+      });
+    }
+    if (this.props.student.skills) {
+      studentSkills = this.props.student.skills.map((skill) => {
+        return skill.name;
+      });
+    }
+    // Score each post by the number of common elements between the student's and post's industry and skill arrays
+    const postScores = {};
+    this.props.posts.forEach((post) => {
+      const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry)).length
+      + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry)).length
+      + post.required_skills.filter((skill) => studentSkills.includes(skill)).length
+      // Preferred skills get half the weight of required skills
+      + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill)).length);
+      postScores[post._id] = numMatches;
+    });
+
+    // Sort the posts in descending order of score
+    const tempPosts = this.props.posts;
+    tempPosts.sort((post1, post2) => {
+      return postScores[post2._id] - postScores[post1._id];
+    });
+    tempPosts.forEach((post) => {
+      console.log(post.title, postScores[post._id]);
+    });
+    this.setState({ sortedPosts: tempPosts });
+  }
 
   searchAndFilter = (text, selectedInds, selectedSkills) => {
     this.setState({ results: [] });
@@ -154,7 +200,7 @@ class Posts extends Component {
         );
       }
     } else {
-      return this.props.posts.map((post) => {
+      return this.state.sortedPosts.map((post) => {
         return (
           <PostListItem post={post} key={post.id} />
         );
@@ -227,8 +273,10 @@ class Posts extends Component {
 
 const mapStateToProps = (reduxState) => ({
   posts: reduxState.posts.all,
+  student: reduxState.students.current_student,
 });
 
 export default withRouter(connect(mapStateToProps, {
   fetchPosts,
+  fetchStudentByUserID,
 })(Posts));

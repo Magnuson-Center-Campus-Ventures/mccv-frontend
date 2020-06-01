@@ -55,7 +55,6 @@ class StudentProfile extends Component {
   // once the student is loaded into props
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
-      console.log(this.props.student);
       this.props.fetchWorkExperiences(this.props.student.work_exp);
       this.props.fetchOtherExperiences(this.props.student.other_exp);
       // Set initial dropdown options to be the indutries, skills, and classes the student already has
