@@ -21,7 +21,7 @@ class Posts extends Component {
       skillOptions: [],
       selectedSkillOptions: [],
       searchterm: 'emptytext',
-      // recommend: false,
+      recommend: false,
       search: false,
       filter: false,
       results: [],
@@ -81,16 +81,6 @@ class Posts extends Component {
     }
   }
 
-  // Moved filtering to frontend as per thomas's advice, but leaving this here for now just in case
-  // onChangeFilter = (industries, skills) => {
-  //   // console.log(industries, skills);
-  //   if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills)) {
-  //     this.props.fetchPosts();
-  //   } else {
-  //     this.props.getFilteredPosts(industries, skills);
-  //   }
-  // }
-
   scorePosts = () => {
     let studentIndustries = [];
     let studentSkills = [];
@@ -123,13 +113,14 @@ class Posts extends Component {
     tempPosts.forEach((post) => {
       console.log(post.title, postScores[post._id]);
     });
-    this.setState({ sortedPosts: tempPosts });
+    this.setState({ sortedPosts: tempPosts.slice(0, 3) });
   }
 
   searchAndFilter = (text, selectedInds, selectedSkills) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    this.props.posts.forEach((post) => {
+    const posts = this.state.recommend ? this.state.sortedPosts : this.props.posts;
+    posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
       const postInd = post.industries.map((industry) => industry.toLowerCase());
@@ -175,6 +166,17 @@ class Posts extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills);
   }
 
+  onRecommendPress = () => {
+    this.setState((prevState) => ({ recommend: !prevState.recommend }));
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, skills);
+  }
+
   clear = () => {
     this.setState({ search: false, searchterm: 'emptytext' });
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
@@ -200,7 +202,8 @@ class Posts extends Component {
         );
       }
     } else {
-      return this.state.sortedPosts.map((post) => {
+      const posts = this.state.recommend ? this.state.sortedPosts : this.props.posts;
+      return posts.map((post) => {
         return (
           <PostListItem post={post} key={post.id} />
         );
@@ -217,7 +220,7 @@ class Posts extends Component {
       }),
     };
     return (
-      (this.props.posts !== undefined || null) && (this.state.results !== null || undefined)
+      this.props.posts && this.state.results
         ? (
           <div>
             <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
@@ -236,7 +239,6 @@ class Posts extends Component {
                 const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
                   ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                // this.onChangeFilter(industries, skills);
                 this.onFilter(industries, skills);
               }}
             />
@@ -255,10 +257,13 @@ class Posts extends Component {
                 const skills = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                // this.onChangeFilter(industries, skills);
                 this.onFilter(industries, skills);
               }}
             />
+            <button type="button"
+              onClick={this.onRecommendPress}
+            >{this.state.recommend ? 'Show All Posts' : 'Show Recommended Posts'}
+            </button>
             <div className="list">
               {this.renderPosts()}
             </div>
