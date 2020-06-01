@@ -109,7 +109,7 @@ export function fetchStartup(id) {
 // For getting the current startup user's profile
 export function fetchStartupByUserID(userID) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/startup-profile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+    axios.get(`${ROOT_URL}/startupprofile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
     }).catch((error) => {
       console.log(error);

@@ -19,7 +19,9 @@ class StartupVideo extends Component {
   componentDidMount() {
     // this.props.fetchStartupByUserID(this.props.userID);
     // this.props.fetchUser(this.props.userID);
-    this.props.fetchStartup(this.props.match.params.startupID);
+    // this.props.fetchStartup(this.props.match.params.startupID);
+    this.props.fetchStartupByUserID(this.props.userID);
+    this.props.fetchUser(this.props.userID);
   }
 
      // update startup field
@@ -63,7 +65,7 @@ class StartupVideo extends Component {
                <p className="StartupVideoLabel">
                  Video Link
                </p>
-               <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
+               <TextareaAutosize onBlur={(event) => this.changeStartupField('video', event)} defaultValue={this.props.startup.video} />
              </div>
            </div>
            <div className="buttonContainer">
