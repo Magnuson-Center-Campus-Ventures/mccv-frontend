@@ -36,12 +36,6 @@ class StudentBio extends Component {
        });
      }
 
-     // Send update to database
-     onSubmit = (e) => {
-       this.props.updateStudent(this.props.student.id, this.state.student);
-     };
-
-
      renderBioQuestions() {
        return (
 
@@ -84,11 +78,6 @@ class StudentBio extends Component {
                </p>
                <TextareaAutosize onBlur={(event) => this.changeStudentField('phone_number', event)} defaultValue={this.props.student.phone_number} />
              </div>
-           </div>
-           <div className="buttonContainer">
-             <button type="submit" className="submit-btn-student-bio" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-               Next
-             </button>
            </div>
          </div>
        );
