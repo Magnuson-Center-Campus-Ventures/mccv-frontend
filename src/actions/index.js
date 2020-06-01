@@ -513,9 +513,18 @@ export function signinUser({ email, password }, history) {
     axios.post(`${ROOT_URL}/signin`, { email, password }).then((response) => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userID', response.data.id); // can maybe take out
-      console.log('signed in successfully');
-      dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
-      history.push('/posts');
+      axios.get(`${ROOT_URL}/users/${response.data.id}`, { headers: { authorization: response.data.token } }).then((userResp) => {
+        dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
+        if (response.data.role === 'student') {
+          history.push('/posts');
+        } else if (response.data.role === 'startup') {
+          history.push('/students');
+        }
+        dispatch({ type: ActionTypes.FETCH_USER, payload: userResp.data });
+      }).catch((error) => {
+        console.log(error);
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
     }).catch((error) => {
       console.log(error.response.data);
       dispatch(authError(`Sign In Failed: ${error.response.data}`));
@@ -566,6 +575,18 @@ export function signoutUser(history) {
   };
 }
 
+
+export function fetchUser(id) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/users/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((userResp) => {
+      dispatch({ type: ActionTypes.FETCH_USER, payload: userResp.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
 export function clearUserState() {
   console.log('clear called');
   return (dispatch) => {
@@ -573,16 +594,6 @@ export function clearUserState() {
   };
 }
 
-export function fetchUser(id) {
-  return (dispatch) => {
-    axios.get(`${ROOT_URL}/users/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
-    }).catch((error) => {
-      console.log(error);
-      dispatch({ type: ActionTypes.ERROR_SET, error });
-    });
-  };
-}
 
 export function updateUser(id, user) {
   return (dispatch) => {

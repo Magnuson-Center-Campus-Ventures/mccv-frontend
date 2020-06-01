@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { signoutUser, fetchUser, clearUserState } from '../actions';
+import { signoutUser, clearUserState } from '../actions';
 
 class Nav extends Component {
   _isMounted = false;
@@ -16,8 +16,7 @@ class Nav extends Component {
   }
 
   componentDidMount() {
-    console.log(localStorage.getItem('userID'));
-    this.props.fetchUser(localStorage.getItem('userID'));
+    // console.log(localStorage.getItem('userID'));
     this.setState({ usertype: this.props.user.role });
     this._isMounted = true;
   }
@@ -145,4 +144,4 @@ const mapStateToProps = (reduxState) => ({
 });
 
 
-export default withRouter(connect(mapStateToProps, { signoutUser, fetchUser, clearUserState })(Nav));
+export default withRouter(connect(mapStateToProps, { signoutUser, clearUserState })(Nav));
