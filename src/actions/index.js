@@ -578,8 +578,8 @@ export function signoutUser(history) {
 
 export function fetchUser(id) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/users/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((userResp) => {
-      dispatch({ type: ActionTypes.FETCH_USER, payload: userResp.data });
+    axios.get(`${ROOT_URL}/users/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
@@ -588,7 +588,7 @@ export function fetchUser(id) {
 }
 
 export function clearUserState() {
-  console.log('clear called');
+  // console.log('clear called');
   return (dispatch) => {
     dispatch({ type: ActionTypes.LOGOUT_USER });
   };
