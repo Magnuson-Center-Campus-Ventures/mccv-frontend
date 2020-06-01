@@ -38,6 +38,7 @@ export const ActionTypes = {
   ERROR_SET: 'ERROR_SET',
   AUTH_USER: 'AUTH_USER',
   DEAUTH_USER: 'DEAUTH_USER',
+  LOGOUT_USER: 'LOGOUT_USER',
   AUTH_ERROR: 'AUTH_ERROR',
 };
 
@@ -530,6 +531,13 @@ export function signoutUser(history) {
     localStorage.removeItem('token');
     dispatch({ type: ActionTypes.DEAUTH_USER });
     history.push('/signin');
+  };
+}
+
+export function clearUserState() {
+  console.log('clear called');
+  return (dispatch) => {
+    dispatch({ type: ActionTypes.LOGOUT_USER });
   };
 }
 
