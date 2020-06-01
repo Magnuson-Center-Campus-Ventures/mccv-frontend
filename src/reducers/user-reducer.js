@@ -14,6 +14,11 @@ const AuthReducer = (state = initialState, action) => {
         current: action.payload,
         email: action.payload.email,
       };
+    case ActionTypes.LOGOUT_USER:
+      return {
+        current: {},
+        email: '',
+      };
     default:
       return state;
   }

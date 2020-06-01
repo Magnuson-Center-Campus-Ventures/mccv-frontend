@@ -25,6 +25,7 @@ class Signin extends Component {
   signinNow = (event) => {
     const fields = { ...this.state };
     this.props.signinUser(fields, this.props.history);
+    // this.props.fetchUser(localStorage.getItem('userID'));
   }
 
   renderError = () => {
