@@ -109,7 +109,7 @@ export function fetchStartup(id) {
 // For getting the current startup user's profile
 export function fetchStartupByUserID(userID) {
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/startups/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+    axios.get(`${ROOT_URL}/startup-profile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
     }).catch((error) => {
       console.log(error);
@@ -538,7 +538,8 @@ export function signupUser({
       localStorage.setItem('userID', response.data.id); // can maybe take out
       dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       // dispatch({ type: ActionTypes.AUTH_USER });
-      history.push('/student-signup');
+      // history.push('/student-signup');
+      history.push('/startup-signup');
       console.log('signed up succesfully');
     }).catch((error) => {
       // eslint-disable-next-line no-alert

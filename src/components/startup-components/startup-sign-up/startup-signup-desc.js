@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import '../../../styles/startup-sign-up/startup-signup-desc.scss';
 import {
-  fetchStartupByUserID, fetchUser, updateStartup,
+  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
 } from '../../../actions';
 
 class StartupDesc extends Component {
@@ -17,8 +17,11 @@ class StartupDesc extends Component {
 
   // Get profile info
   componentDidMount() {
-    this.props.fetchStartupByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
+    // this.props.fetchStartupByUserID(this.props.userID);
+    // this.props.fetchUser(this.props.userID);
+    console.log(this.props.match.params.startupID);
+    console.log(this.props.startup);
+    this.props.fetchStartup(this.props.match.params.startupID);
   }
 
      // update startup field
@@ -81,7 +84,9 @@ class StartupDesc extends Component {
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
-  startup: reduxState.startups.current_startup,
+  startup: reduxState.startups.current,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStartupByUserID, fetchUser, updateStartup })(StartupDesc));
+export default withRouter(connect(mapStateToProps, {
+  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
+})(StartupDesc));

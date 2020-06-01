@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import '../../../styles/startup-sign-up/startup-signup-video.scss';
 import {
-  fetchStartupByUserID, fetchUser, updateStartup,
+  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
 } from '../../../actions';
 
 class StartupVideo extends Component {
@@ -17,8 +17,9 @@ class StartupVideo extends Component {
 
   // Get profile info
   componentDidMount() {
-    this.props.fetchStartupByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
+    // this.props.fetchStartupByUserID(this.props.userID);
+    // this.props.fetchUser(this.props.userID);
+    this.props.fetchStartup(this.props.match.params.startupID);
   }
 
      // update startup field
@@ -81,7 +82,9 @@ class StartupVideo extends Component {
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
-  startup: reduxState.startups.current_startup,
+  startup: reduxState.startups.current,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStartupByUserID, fetchUser, updateStartup })(StartupVideo));
+export default withRouter(connect(mapStateToProps, {
+  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
+})(StartupVideo));

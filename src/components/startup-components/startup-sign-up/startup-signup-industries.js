@@ -7,7 +7,7 @@ import CreateableSelect from 'react-select/creatable';
 import '../../../styles/startup-sign-up/startup-signup-industries.scss';
 import {
   fetchStartupByUserID, fetchUser, updateStartup,
-  fetchAllIndustries, fetchCertainIndustries, createIndustry,
+  fetchAllIndustries, fetchCertainIndustries, createIndustry, fetchStartup,
 } from '../../../actions';
 
 class StartupIndustries extends Component {
@@ -28,8 +28,9 @@ class StartupIndustries extends Component {
   // Get profile info
   componentDidMount() {
     this.props.fetchAllIndustries();
-    this.props.fetchStartupByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
+    // this.props.fetchStartupByUserID(this.props.userID);
+    // this.props.fetchUser(this.props.userID);
+    this.props.fetchStartup(this.props.match.params.startupID);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -173,10 +174,10 @@ class StartupIndustries extends Component {
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
-  startup: reduxState.startups.current_startup,
+  startup: reduxState.startups.current,
   industries: reduxState.industries,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStartupByUserID, fetchUser, updateStartup, fetchAllIndustries, fetchCertainIndustries, createIndustry,
+  fetchStartupByUserID, fetchUser, updateStartup, fetchAllIndustries, fetchCertainIndustries, createIndustry, fetchStartup,
 })(StartupIndustries));

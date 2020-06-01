@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import '../../../styles/startup-sign-up/startup-signup-bio.scss';
 import {
-  fetchStartupByUserID, fetchUser, updateStartup,
+  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
 } from '../../../actions';
 
 class StartupBio extends Component {
@@ -17,8 +17,13 @@ class StartupBio extends Component {
 
   // Get profile info
   componentDidMount() {
-    this.props.fetchStartupByUserID(localStorage.userID);
-    this.props.fetchUser(localStorage.userID);
+    console.log(this.props.match.params.startupID);
+    // this.props.fetchUser(this.props.userID);
+    this.props.fetchStartupByUserID(this.props.userID);
+    // this.props.fetchStartup(this.props.startup.id);
+    // this.props.fetchStartup(this.props.match.params.startupID);
+    // this.props.fetchStartup(this.props.fetchUser(this.props.userID).startup_id);
+    this.props.fetchUser(this.props.userID);
   }
 
      // update startup field
@@ -94,8 +99,10 @@ class StartupBio extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  // userID: reduxState.auth.userID,
+  userID: reduxState.auth.userID,
   startup: reduxState.startups.current,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStartupByUserID, fetchUser, updateStartup })(StartupBio));
+export default withRouter(connect(mapStateToProps, {
+  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
+})(StartupBio));

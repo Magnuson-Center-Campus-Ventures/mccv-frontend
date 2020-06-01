@@ -93,7 +93,9 @@ class StudentOtherExperiences extends Component {
      }
 
      renderOtherExperiences = () => {
-       if (this.state.otherExps !== []) {
+       if (this.state.otherExps.length > 0) {
+         console.log('inrender');
+         console.log(this.state.otherExps);
          return this.state.otherExps.map((otherExp, index) => {
            return (
              <div key={index} className="work-exp">
@@ -123,7 +125,7 @@ class StudentOtherExperiences extends Component {
            </div>
            <div className="WorkExperienceSubtitle">
              <u>
-               Personal Projects And Other Experiencs
+               Personal Projects And Other Experiences
              </u>
              <i className="fas fa-plus-circle"
                id="addicon"
