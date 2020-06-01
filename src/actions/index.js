@@ -541,7 +541,11 @@ export function signupUser({
       localStorage.setItem('userID', response.data.id); // can maybe take out
       dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       // dispatch({ type: ActionTypes.AUTH_USER });
-      history.push('/student-signup');
+      if (role === 'student') {
+        history.push('/student-signup');
+      } else if (role === 'startup') {
+        // history.push('/startup-signup');
+      } // and maybe add admin as well
       console.log('signed up succesfully');
     }).catch((error) => {
       // eslint-disable-next-line no-alert
