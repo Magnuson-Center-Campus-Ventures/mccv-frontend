@@ -329,7 +329,7 @@ export function fetchCertainSkills(idArray) {
 export function createSkill(skill) {
   console.log(skill);
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/skills`, { skill }).then((response) => {
+    axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       console.log(response.data);
       dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
     }).catch((error) => {

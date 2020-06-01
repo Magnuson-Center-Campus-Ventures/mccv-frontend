@@ -84,6 +84,7 @@ class Posts extends Component {
   scorePosts = () => {
     let studentIndustries = [];
     let studentSkills = [];
+    let studentClasses = [];
     if (this.props.student.interested_industries) {
       studentIndustries = this.props.student.interested_industries.map((industry) => {
         return industry.name;
@@ -94,11 +95,17 @@ class Posts extends Component {
         return skill.name;
       });
     }
-    // Score each post by the number of common elements between the student's and post's industry and skill arrays
+    if (this.props.student.relevant_classes) {
+      studentClasses = this.props.student.relevant_classes.map((_class) => {
+        return _class.name;
+      });
+    }
+    // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
     const postScores = {};
     this.props.posts.forEach((post) => {
       const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry)).length
       + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry)).length
+      + post.desired_classes.filter((_class) => studentClasses.includes(_class)).length
       + post.required_skills.filter((skill) => studentSkills.includes(skill)).length
       // Preferred skills get half the weight of required skills
       + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill)).length);
@@ -116,10 +123,10 @@ class Posts extends Component {
     this.setState({ sortedPosts: tempPosts.slice(0, 3) });
   }
 
-  searchAndFilter = (text, selectedInds, selectedSkills) => {
+  searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    const posts = this.state.recommend ? this.state.sortedPosts : this.props.posts;
+    const posts = recommend ? this.state.sortedPosts : this.props.posts;
     posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
@@ -151,7 +158,7 @@ class Posts extends Component {
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(text, industries, skills);
+    this.searchAndFilter(text, industries, skills, this.state.recommend);
     this.setState({ search: true, searchterm: text });
   }
 
@@ -163,18 +170,18 @@ class Posts extends Component {
     if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills)) {
       this.setState({ filter: false });
     } else this.setState({ filter: true });
-    this.searchAndFilter(this.state.searchterm, industries, skills);
+    this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
   }
 
   onRecommendPress = () => {
-    this.setState((prevState) => ({ recommend: !prevState.recommend }));
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
       ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(this.state.searchterm, industries, skills);
+    this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
+    this.setState((prevState) => ({ recommend: !prevState.recommend }));
   }
 
   clear = () => {
@@ -185,7 +192,7 @@ class Posts extends Component {
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter('emptytext', industries, skills);
+    this.searchAndFilter('emptytext', industries, skills, this.state.recommend);
   }
 
   renderPosts() {
