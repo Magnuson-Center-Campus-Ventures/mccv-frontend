@@ -50,7 +50,6 @@ class Students extends Component {
   }
 
   renderStudents() {
-    console.log(this.props.students);
     if (this.state.search) {
       if (this.state.results.length > 0) {
         return this.state.results.map((student) => {

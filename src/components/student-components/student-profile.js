@@ -337,7 +337,7 @@ class StudentProfile extends Component {
       return (
         <div className="profile-fixed">
           <div id="profile-header">
-            <h1>{`${this.state.student.first_name} ${this.props.student.last_name}`}</h1>
+            <h1>{`${this.state.student.first_name} ${this.state.student.last_name}`}</h1>
             <div>{`Class of ${this.props.student.grad_year}`}</div>
             <div id="major-row">
               {this.renderMajMin(this.props.student.majors)}
@@ -500,7 +500,6 @@ const mapStateToProps = (reduxState) => ({
   allIndustries: reduxState.industries.all,
   allSkills: reduxState.skills.all,
   allClasses: reduxState.classes.all,
-  addedIndustry: reduxState.industries.new,
 });
 
 export default withRouter(connect(mapStateToProps, {

@@ -13,6 +13,7 @@ export const ActionTypes = {
   FETCH_STUDENT: 'FETCH_STUDENT',
   CREATE_STUDENT: 'CREATE_STUDENT',
   FETCH_STUDENTS: 'FETCH_STUDENTS',
+  FETCH_STUDENT_USER: 'FETCH_STUDENT_USER',
   FETCH_WORK_EXPS: 'FETCH_WORK_EXPS',
   ADD_WORK_EXP: 'ADD_WORK_EXP',
   UPDATE_WORK_EXP: 'UPDATE_WORK_EXP',
@@ -175,6 +176,18 @@ export function fetchStudentByUserID(userID) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/profile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
+// For a startup clicking on a student to see their profile
+export function fetchUserByStudentID(studentID) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/studentuser/${studentID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_STUDENT_USER, payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
