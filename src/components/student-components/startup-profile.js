@@ -4,8 +4,6 @@ import { withRouter } from 'react-router-dom';
 import { fetchStartup, fetchPosts, fetchPost } from '../../actions/index';
 import '../../styles/startup-profile.scss';
 
-const ID = '5ec9848db73b4100389ff67f';
-
 class Startup extends Component {
   constructor(props) {
     super(props);
@@ -15,7 +13,7 @@ class Startup extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchStartup(ID);
+    this.props.fetchStartup(this.props.match.params.startupID);
     this.props.fetchPosts();
   }
 
@@ -66,7 +64,7 @@ class Startup extends Component {
 
   renderIndustries() {
     return (
-      this.props.startup.industry.map((industry) => {
+      this.props.startup.industries.map((industry) => {
         return (
           <div className="industry" key={industry}>{industry}</div>
         );

@@ -5,7 +5,7 @@ import '../../styles/postings.scss';
 
 const StartupListItem = (props) => {
   const route = `/startups/${props.startup._id}`;
-  const industries = props.startup.industry.map((industry, index) => {
+  const industries = props.startup.industries.map((industry, index) => {
     return (
       <div className="industryPill" key={index}>
         {industry}

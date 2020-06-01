@@ -45,7 +45,6 @@ export function fetchPosts() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/posts`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        console.log(response.data);
         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
       })
       .catch((error) => {
@@ -55,7 +54,7 @@ export function fetchPosts() {
   };
 }
 
-// Moved to front-end implementation of search, as per Thomas' advice
+// Moved to front-end implementation of search and filter, as per Thomas' advice
 
 // export function fetchPostSearch(searchterm) {
 //   return (dispatch) => {
@@ -68,6 +67,18 @@ export function fetchPosts() {
 //       });
 //   };
 // }
+
+// export const getFilteredPosts = (industryNames, skillNames) => {
+//   return (dispatch) => {
+//     axios.get(`${ROOT_URL}/posts-filter/${industryNames}/${skillNames}`, { headers: { authorization: localStorage.getItem('token') } })
+//       .then((response) => {
+//         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
+//       })
+//       .catch((error) => {
+//         console.log('broken');
+//       });
+//   };
+// };
 
 export function fetchPost(id) {
   return (dispatch) => {

@@ -1,6 +1,5 @@
 ul {
     padding: 0;
-    list-style-type: none;
 }
 .post-h2 {
     font-family: Avenir Next;
@@ -60,9 +59,35 @@ ul {
 #skill + #skill {
     margin-left: 2%;
 }
+.bar{
+    display: flex;
+    flex-direction: row;
+    height: 2vw;
+}
+.bar *{
+    font-size: 1.5vw;
+    margin-left: 1vw;
+}
+.bar img{
+    height: inherit;
+    width: auto;
+}
+.top ul{
+    list-style: none;
+}
 .top {
     display: flex;
     flex-direction: row;
+}
+.bottom {
+    list-style: circle;
+    margin: 2vw;
+}
+.bottom ul {
+    line-height: 3vw;
+    display: flex;
+    flex-direction: column;
+    margin-left: 3vw;
 }
 #submit-app {
     font-family: Roboto;

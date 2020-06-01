@@ -16,14 +16,7 @@ import StudentsFAQ from './student-components/students-faq';
 import StartupsFAQ from './startup-components/startups-faq';
 import StartupsLanding from './startup-components/startups-landing';
 import SubmittedApplications from './student-components/submitted-applications';
-// import StudentSignUpBio from './student-components/student-sign-up/student-signup-bio';
-// import StudentSignUpTiming from './student-components/student-sign-up/student-signup-timing';
-// import StudentSignUpWorkExperiences from './student-components/student-sign-up/student-signup-work-experiences';
-// import StudentSignUpOtherExperiences from './student-components/student-sign-up/student-signup-other-experiences';
-// import StudentSignUpMajorMinor from './student-components/student-sign-up/student-signup-major-minor';
-// import StudentSignUpIndustries from './student-components/student-sign-up/student-signup-industries';
-// import StudentSignUpSkills from './student-components/student-sign-up/student-signup-skills';
-// import StudentSignUpClasses from './student-components/student-sign-up/student-signup-classes';
+import SubmittedApplication from './student-components/submitted-application';
 import StudentSignUp from './student-components/student-sign-up/student-signup';
 
 const App = (props) => {
@@ -38,6 +31,7 @@ const App = (props) => {
           <Route path="/startups/:startupID" component={StartupProfile} />
           <Route path="/startups" component={Startups} />
           <Route path="/students" component={Students} />
+          <Route path="/applications/:applicationID" component={SubmittedApplication} />
           <Route path="/applications" component={SubmittedApplications} />
           <Route path="/profile" component={StudentProfile} />
           <Route path="/signin" component={Signin} />
