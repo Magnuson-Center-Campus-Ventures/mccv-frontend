@@ -111,6 +111,7 @@ export function fetchStartup(id) {
 export function fetchStartupByUserID(userID) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startupprofile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      console.log(response.data);
       dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
     }).catch((error) => {
       console.log(error);

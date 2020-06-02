@@ -13,7 +13,9 @@ class StartupProfile extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchStartupByUserID(this.props.match.params.userID);
+    console.log('didMount');
+    // this.props.fetchStartupByUserID(this.props.match.params.userID);
+    this.props.fetchStartupByUserID(localStorage.getItem('userID'));
     this.props.fetchPosts();
   }
 
@@ -90,7 +92,13 @@ class StartupProfile extends Component {
   }
 
   render() {
-    if (this.props.startup.status === 'Approved') {
+    return (
+      <div className="startup">
+        { this.renderPostings()}
+        {this.renderStartup() }
+      </div>
+    );
+    /* if (this.props.startup.status === 'Approved') {
       return (
         <div className="startup">
           {this.renderPostings()}
@@ -101,7 +109,7 @@ class StartupProfile extends Component {
       return (
         <div>Company not Approved</div>
       );
-    }
+    } */
   }
 }
 

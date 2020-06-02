@@ -19,6 +19,7 @@ import StartupsLanding from './startup-components/startups-landing';
 import SubmittedApplications from './student-components/submitted-applications';
 import SubmittedApplication from './student-components/submitted-application';
 import StudentSignUp from './student-components/student-sign-up/student-signup';
+import StartupProfileStartups from './startup-components/startup-profile-startups';
 
 const App = (props) => {
   return (
@@ -50,6 +51,7 @@ const App = (props) => {
           <Route path="/student-signup-classes" component={StudentSignUpClasses} />
           <Route path="/student-signup-skills" component={StudentSignUpSkills} /> */}
           <Route path="/student-signup" component={StudentSignUp} />
+          <Route path="/startupprofile" component={StartupProfileStartups} />
           <Route render={() => (<div>post not found </div>)} />
         </Switch>
       </div>
