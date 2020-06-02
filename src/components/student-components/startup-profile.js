@@ -39,7 +39,7 @@ class Startup extends Component {
 
   renderDescription = (post) => {
     if (post.description !== undefined) {
-      console.log(post.description);
+      // console.log(post.description);
       if (post.description.length > 100) {
         const description = `${post.description.substring(0, 99)}...`;
         return (
@@ -96,7 +96,7 @@ class Startup extends Component {
 
   renderButtons() {
     if (this.props.user.role === 'admin') {
-      console.log('here');
+      // console.log('here');
       return (
         <button
           type="submit"

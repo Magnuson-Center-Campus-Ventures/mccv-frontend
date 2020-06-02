@@ -16,7 +16,6 @@ const Archive = (props) => {
 
   const onArchive = (e) => {
     if (props.post) {
-      // console.log('from modal ', props.post);
       const { post } = props;
       post.status = 'Archived';
       // console.log('post updated: ', post);

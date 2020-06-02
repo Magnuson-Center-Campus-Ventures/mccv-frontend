@@ -95,8 +95,7 @@ export function fetchPost(id) {
 }
 
 export function updatePost(id, post) {
-  console.log('reaching index.js');
-  // console.log('updated post', post);
+  // console.log('reaching index.js');
   return (dispatch) => {
     console.log('return of update method');
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
