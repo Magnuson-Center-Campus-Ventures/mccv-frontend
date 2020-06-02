@@ -65,23 +65,22 @@ class StartupBio extends Component {
            <div className="StartupBioQuestionsContainer">
              <div className="nameContainer">
                <div className="StartupBioQuestionLabelContainer">
-                 <div className="StartupBioQuestionLabelContainer">
-                   <p className="StartupBioLabel">
-                     Name
-                   </p>
-                   <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
-                 </div>
+                 <p className="StartupBioLabel">
+                   Name
+                 </p>
+                 <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
+                 <p className="StartupBioLabel">
+                   State
+                 </p>
+                 <TextareaAutosize onBlur={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
                  <p className="StartupBioLabel">
                    City
                  </p>
                  <TextareaAutosize onBlur={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
                </div>
-               <div className="StartupBioQuestionLabelContainer">
-                 <p className="StartupBioLabel">
-                   State
-                 </p>
-                 <TextareaAutosize onBlur={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
-               </div>
+             </div>
+             <div className="StartupBioQuestionLabelContainer">
+               <div className="StartupBioQuestionLabelContainer" />
              </div>
            </div>
            <div className="buttonContainer">

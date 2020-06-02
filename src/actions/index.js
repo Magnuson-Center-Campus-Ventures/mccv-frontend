@@ -649,7 +649,7 @@ export function signupUser({
       if (role === 'student') {
         history.push('/student-signup');
       } else if (role === 'startup') {
-        // history.push('/startup-signup');
+        history.push('/startup-signup');
       } // and maybe add admin as well
       console.log('signed up succesfully');
     }).catch((error) => {
