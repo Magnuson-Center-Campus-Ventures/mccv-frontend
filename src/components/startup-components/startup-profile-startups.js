@@ -14,7 +14,6 @@ class StartupProfile extends Component {
 
   componentDidMount() {
     console.log('didMount');
-    // this.props.fetchStartupByUserID(this.props.match.params.userID);
     this.props.fetchStartupByUserID(localStorage.getItem('userID'));
     this.props.fetchPosts();
   }
@@ -80,7 +79,7 @@ class StartupProfile extends Component {
         <div className="startup-body">
           <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
           <div className="startup-location">Location: {`${this.props.startup.location}`}</div>
-          <div className="startup-industries"><div>Industry: </div>{this.renderIndustries()}</div>
+          {/* <div className="startup-industries"><div>Industry: </div>{this.renderIndustries()}</div> */}
           <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
         </div>
       );
