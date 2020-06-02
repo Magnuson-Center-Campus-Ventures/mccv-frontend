@@ -244,6 +244,19 @@ export function submitStudent(id, student, history) {
   };
 }
 
+export function submitStartup(id, startup, history) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/startups/${id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+      // eslint-disable-next-line no-restricted-globals
+      history.push('/profile');
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // work experience functions
 export function fetchWorkExperiences(idArray) {
   return (dispatch) => {
