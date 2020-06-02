@@ -107,6 +107,18 @@ export function fetchStartup(id) {
   };
 }
 
+// For getting the current student user's profile
+export function fetchStartupByUserID(userID) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/startupprofile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
 export function fetchStartups() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startups`, { headers: { authorization: localStorage.getItem('token') } })
