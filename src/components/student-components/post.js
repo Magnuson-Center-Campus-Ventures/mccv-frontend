@@ -70,7 +70,6 @@ class Post extends Component {
     const responsibilities = [];
     if (this.props.current.responsibilities) {
       for (let i = 0; i < this.props.current.responsibilities.length; i++) {
-        console.log(this.props.current.responsibilities[i]);
         responsibilities.push(
           <li id="responsibility" key={this.props.current.responsibilities[i]}>{this.props.current.responsibilities[i]}</li>,
         );
