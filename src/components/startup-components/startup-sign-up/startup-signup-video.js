@@ -29,11 +29,14 @@ class StartupVideo extends Component {
        this.setState((prevState) => {
          const startup = { ...prevState.startup };
          startup[field] = value;
+         this.props.updateStartup(this.props.startup.id,
+           startup);
          return {
            ...prevState,
            startup,
          };
        });
+       this.props.updateStartup(this.props.startup.id, this.state.startup);
      }
 
      // Send update to database
@@ -53,7 +56,7 @@ class StartupVideo extends Component {
            </div>
            <div className="StartupVideoDescContainer">
              <p className="StartupVideoDesc">
-               Add a link of a short informal video pitching your startup!
+               Add a link to a short informal video pitching your startup!
              </p>
              <i className="far fa-id-badge" id="icon" />
            </div>
@@ -62,7 +65,7 @@ class StartupVideo extends Component {
                <p className="StartupVideoLabel">
                  Video Link
                </p>
-               <TextareaAutosize onBlur={(event) => this.changeStartupField('video', event)} defaultValue={this.props.startup.video} />
+               <TextareaAutosize onChange={(event) => this.changeStartupField('video', event)} defaultValue={this.props.startup.video} />
              </div>
            </div>
            <div className="buttonContainer">

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -5,7 +6,7 @@ import CreateableSelect from 'react-select/creatable';
 import '../../../styles/startup-sign-up/startup-signup-industries.scss';
 import {
   fetchStartupByUserID, fetchUser,
-  fetchAllIndustries, fetchCertainIndustries, createIndustry, createIndustryForStartup,
+  fetchAllIndustries, fetchCertainIndustries, createIndustry, createIndustryForStartup, updateStartup,
 } from '../../../actions';
 
 class StartupIndustries extends Component {
@@ -16,6 +17,7 @@ class StartupIndustries extends Component {
       industry: '',
       displayIndustries: [],
       allIndustries: [],
+      ownIndustries: [],
       allIndustryOptions: [],
       selectedIndustryOptions: [],
     };
@@ -31,7 +33,7 @@ class StartupIndustries extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.startup !== {} && prevProps.startup !== this.props.startup) {
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ startup: this.props.startup });
+      this.setState({ startup: this.props.startup, ownIndustries: this.props.startup.industries });
     }
     if (prevProps.industries !== this.props.industries) {
       const industries = this.props.industries.all.map((industry) => {
@@ -90,6 +92,34 @@ class StartupIndustries extends Component {
     this.forceUpdate();
   }
 
+  renderPills = (pillsArray) => {
+    console.log(pillsArray);
+    if (pillsArray) {
+      return pillsArray.map((elem, index) => {
+        console.log(elem);
+        console.log(elem.name);
+        return <div key={index} className="profile-pill">{elem.label}</div>;
+      });
+    } else return null;
+  }
+
+  changeStartupField = (field, value) => {
+    // eslint-disable-next-line prefer-destructuring
+    // const value = event.target.value;
+
+    this.setState((prevState) => {
+      const startup = { ...prevState.startup };
+      startup[field] = value;
+      this.props.updateStartup(this.props.startup.id,
+        Object.assign(this.props.startup, startup));
+      return {
+        ...prevState,
+        startup,
+      };
+    });
+    this.props.updateStartup(this.props.startup.id, this.state.startup);
+  }
+
   renderAddIndustry() {
     const dropdownStyles = {
       control: (base) => ({
@@ -125,10 +155,14 @@ class StartupIndustries extends Component {
             const tempIndustries = selectedOptions
               ? selectedOptions.map((option) => option.industry)
               : [];
+            console.log(this.state.startup);
+            this.props.updateStartup(this.props.startup.id, this.state.startup);
             this.setState((prevState) => {
               const startup = { ...prevState.startup };
               startup.industries = tempIndustries;
               console.log(startup.industries);
+              // this.props.updateStartup(this.props.startup.id,
+              //   Object.assign(startup, { industries: selectedOptions }));
               return {
                 ...prevState,
                 selectedIndustryOptions: selectedOptions,
@@ -136,6 +170,7 @@ class StartupIndustries extends Component {
                 startup,
               };
             });
+            this.changeStartupField('industries', selectedOptions);
           }}
           onCreateOption={(newOption) => {
             this.props.createIndustryForStartup({ name: newOption }, this.state.startup);
@@ -173,14 +208,14 @@ class StartupIndustries extends Component {
           </div>
           <div className="StartupIndustryDescContainer">
             <p className="StartupIndustryDesc">
-              Add the industries you have!
+              What industries characterize your startup?
             </p>
             <i className="fas fa-brain" id="icon" />
           </div>
           <div id="industries">
             <div className="StartupIndustryListHeader">Industries</div>
             {this.renderAddIndustry()}
-            {this.renderIndustries()}
+            {this.renderPills(this.state.ownIndustries)}
           </div>
         </div>
       );
@@ -200,5 +235,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStartupByUserID, fetchUser, fetchAllIndustries, fetchCertainIndustries, createIndustry, createIndustryForStartup,
+  fetchStartupByUserID, fetchUser, fetchAllIndustries, fetchCertainIndustries, createIndustry, createIndustryForStartup, updateStartup,
 })(StartupIndustries));

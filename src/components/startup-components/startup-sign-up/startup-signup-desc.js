@@ -29,11 +29,14 @@ class StartupDesc extends Component {
        this.setState((prevState) => {
          const startup = { ...prevState.startup };
          startup[field] = value;
+         this.props.updateStartup(this.props.startup.id,
+           startup);
          return {
            ...prevState,
            startup,
          };
        });
+       this.props.updateStartup(this.props.startup.id, this.state.startup);
      }
 
      // Send update to database
@@ -62,7 +65,7 @@ class StartupDesc extends Component {
                <p className="StartupDescLabel">
                  Description
                </p>
-               <TextareaAutosize onBlur={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
+               <TextareaAutosize onChange={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
              </div>
            </div>
            <div className="buttonContainer">

@@ -30,11 +30,16 @@ class StartupBio extends Component {
        this.setState((prevState) => {
          const startup = { ...prevState.startup };
          startup[field] = value;
+         this.props.updateStartup(this.props.startup.id,
+           startup);
          return {
            ...prevState,
            startup,
          };
        });
+       //  this.props.updateStartup(this.props.startup.id,
+       //    Object.assign(this.state.student, startup));
+       //  this.props.updateStartup(this.props.startup.id, this.state.startup);
      }
 
      // Send update to database
@@ -64,15 +69,15 @@ class StartupBio extends Component {
                  <p className="StartupBioLabel">
                    Name
                  </p>
-                 <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
-                 <p className="StartupBioLabel">
-                   State
-                 </p>
-                 <TextareaAutosize onBlur={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
+                 <TextareaAutosize onChange={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
                  <p className="StartupBioLabel">
                    City
                  </p>
-                 <TextareaAutosize onBlur={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
+                 <TextareaAutosize onChange={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
+                 <p className="StartupBioLabel">
+                   State
+                 </p>
+                 <TextareaAutosize onChange={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
                </div>
              </div>
              <div className="StartupBioQuestionLabelContainer">
