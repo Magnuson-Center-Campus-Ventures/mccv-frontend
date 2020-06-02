@@ -5,47 +5,38 @@ import { fetchStartup, fetchPosts, fetchPost } from '../../actions/index';
 import '../../styles/startup-profile.scss';
 
 class Startup extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-    this.renderPostings = this.renderPostings.bind(this);
-  }
-
   componentDidMount() {
     this.props.fetchStartup(this.props.match.params.startupID);
-    this.props.fetchPosts();
   }
 
-  renderDescription() {
-    if (this.post.description.length > 100) {
-      this.description = `${this.post.description.substring(0, 99)}...`;
+  renderDescription = (post) => {
+    if (post.description.length > 100) {
+      const description = `${post.description.substring(0, 99)}...`;
       return (
-        <div className="startup-posting-description">{this.description}</div>
+        <div className="startup-posting-description">{description}</div>
       );
     } else {
       return (
-        <div className="startup-posting-description">{this.post.description}</div>
+        <div className="startup-posting-description">{post.description}</div>
       );
     }
   }
 
   renderPostings() {
-    if (this.props.posts && this.props.posts.length && typeof this.props.startup !== 'undefined') {
-      const mappingPostings = this.props.startup.posts.map((postID) => {
-        this.post = this.props.posts.find((x) => x.id === postID);
+    if (this.props.startup.posts) {
+      const mappingPostings = this.props.startup.posts.map((post) => {
         return (
-          <li className="startup-posting" key={postID}>
-            <div className="startup-posting-title">{this.post.title}</div>
+          <li className="startup-posting" key={post._id}>
+            <div className="startup-posting-title">{post.title}</div>
             <br />
-            {this.renderDescription()}
+            {this.renderDescription(post)}
             <br />
-            <div className="startup-posting-time">Time Commitment: {this.post.time_commitment} hours per week</div>
+            <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
           </li>
         );
       });
       return (
-        this.props.posts !== undefined
+        this.props.startup.posts !== undefined
           ? (
             <div className="startup-postings">
               <h1>Internship Postings:</h1>
@@ -73,7 +64,7 @@ class Startup extends Component {
   }
 
   renderStartup() {
-    if (typeof this.props.startup !== 'undefined') {
+    if (this.props.startup) {
       return (
         <div className="startup-body">
           <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
