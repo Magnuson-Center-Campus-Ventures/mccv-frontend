@@ -55,18 +55,31 @@ class StudentProfile extends Component {
   // once the student is loaded into props
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
-      this.props.fetchWorkExperiences(this.props.student.work_exp);
-      this.props.fetchOtherExperiences(this.props.student.other_exp);
+      if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
+        this.props.fetchWorkExperiences(this.props.student.work_exp);
+      }
+      if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
+        this.props.fetchOtherExperiences(this.props.student.other_exp);
+      }
       // Set initial dropdown options to be the indutries, skills, and classes the student already has
-      const selectedIndustryOptions = this.props.student.interested_industries.map((industry) => {
-        return { value: industry.name, label: industry.name, industry };
-      });
-      const selectedClassOptions = this.props.student.relevant_classes.map((_class) => {
-        return { value: _class.name, label: _class.name, _class };
-      });
-      const selectedSkillOptions = this.props.student.skills.map((skill) => {
-        return { value: skill.name, label: skill.name, skill };
-      });
+      let selectedIndustryOptions = [];
+      if (this.props.student.interested_industries) {
+        selectedIndustryOptions = this.props.student.interested_industries.map((industry) => {
+          return { value: industry.name, label: industry.name, industry };
+        });
+      }
+      let selectedClassOptions = [];
+      if (this.props.student.relevant_classes) {
+        selectedClassOptions = this.props.student.relevant_classes.map((_class) => {
+          return { value: _class.name, label: _class.name, _class };
+        });
+      }
+      let selectedSkillOptions = [];
+      if (this.props.student.skills) {
+        selectedSkillOptions = this.props.student.skills.map((skill) => {
+          return { value: skill.name, label: skill.name, skill };
+        });
+      }
 
       this.setState({
         student: this.props.student,
@@ -106,29 +119,6 @@ class StudentProfile extends Component {
     if (prevProps.otherExps !== this.props.otherExps) {
       this.setState({ otherExps: this.props.otherExps });
     }
-
-    // No longer using with change to object references in student object,
-    // but leaving here for a bit in case something changes
-    // if (prevProps.ownIndustries !== this.props.ownIndustries) {
-    //   // When industries are initially loaded from redux state, or redux state changes,
-    //   // updated local state for industries and the student's industries ids
-    //   const industryIDs = this.props.ownIndustries.map((industry) => { return industry._id; });
-    //   const student = { ...prevState.student };
-    //   student.interested_industries = industryIDs;
-    //   this.setState({
-    //     ownIndustries: this.props.ownIndustries,
-    //     student,
-    //   });
-    //   // Set up options for dropdown
-    //   const allIndustryOptions = this.props.allIndustries.map((industry) => {
-    //     return { value: industry.name, label: industry.name, industry };
-    //   });
-    //   // Set initial dropdown options to be the indutries the student already has
-    //   const selectedIndustryOptions = allIndustryOptions.filter((option) => {
-    //     return industryIDs.includes(option.industry._id);
-    //   });
-    //   this.setState({ allIndustryOptions, selectedIndustryOptions });
-    // }
   }
 
   changeStudentField = (field, event) => {
@@ -209,7 +199,7 @@ class StudentProfile extends Component {
           );
         } else {
           return (
-            <div key={index} className="minors">{elem}</div>
+            <div key={index} className="majors">{elem}</div>
           );
         }
       });
@@ -217,11 +207,11 @@ class StudentProfile extends Component {
   }
 
   renderPills = (pillsArray) => {
-    if (pillsArray) {
+    if (pillsArray && pillsArray.length > 0) {
       return pillsArray.map((elem, index) => {
         return <div key={index} className="profile-pill">{elem.name}</div>;
       });
-    } else return null;
+    } else return <div>None</div>;
   }
 
   renderBody = () => {
@@ -239,7 +229,10 @@ class StudentProfile extends Component {
           <div className="input-title">Last Name</div>
           <input className="short-input" defaultValue={this.props.student.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
           <div className="input-title">Phone Number</div>
-          <input className="short-input" defaultValue={this.props.student.phone_number} onBlur={(event) => this.changeStudentField('phone_number', event)} />
+          <input className="short-input"
+            defaultValue={this.props.student.phone_number ? this.props.student.phone_number : null}
+            onBlur={(event) => this.changeStudentField('phone_number', event)}
+          />
           <div id="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
@@ -344,7 +337,7 @@ class StudentProfile extends Component {
               {this.renderMajMin(this.props.student.minors)}
             </div>
             <div>{this.props.email}</div>
-            <div>{this.state.student.phone_number}</div>
+            <div>{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
             <div id="lists-row">
               <div className="list-section">
                 <h2>Industries</h2>
