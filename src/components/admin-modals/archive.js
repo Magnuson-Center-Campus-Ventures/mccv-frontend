@@ -4,7 +4,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { } from '../../actions';
+import { updatePost } from '../../actions';
 import close from '../../../static/img/close.png';
 import '../../styles/archive-modal.scss';
 
@@ -15,8 +15,20 @@ const Archive = (props) => {
   }
 
   const onArchive = (e) => {
-
+    if (props.post) {
+      // console.log('from modal ', props.post);
+      const { post } = props;
+      post.status = 'Archived';
+      // console.log('post updated: ', post);
+      updatePost(post.id, post);
+    }
+    props.onClose(e);
   };
+  if (props.startup) {
+    console.log(props.startup);
+  }
+  console.log('in archive');
+  // console.log(props.post);
 
   return (
     <div className="archiveContainer">
@@ -61,6 +73,6 @@ const Archive = (props) => {
 
 // });
 
-// export default withRouter(connect(mapStateToProps, { })(Archive));
+export default withRouter(connect(null, { updatePost })(Archive));
 
-export default Archive;
+// export default Archive;

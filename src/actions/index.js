@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -91,6 +91,21 @@ export function fetchPost(id) {
       .catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
+  };
+}
+
+export function updatePost(id, post) {
+  console.log('reaching index.js');
+  // console.log('updated post', post);
+  return (dispatch) => {
+    console.log('return of update method');
+    axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      console.log('put went through');
+      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
   };
 }
 
