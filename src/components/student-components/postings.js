@@ -83,22 +83,22 @@ class Posts extends Component {
   }
 
   scorePosts = () => {
-    let studentIndustries = [];
-    let studentSkills = [];
-    let studentClasses = [];
+    const studentIndustries = [];
+    const studentSkills = [];
+    const studentClasses = [];
     if (this.props.student.interested_industries) {
-      studentIndustries = this.props.student.interested_industries.map((industry) => {
-        return industry.name;
+      this.props.student.interested_industries.forEach((industry) => {
+        studentIndustries.push(industry.name);
       });
     }
     if (this.props.student.skills) {
-      studentSkills = this.props.student.skills.map((skill) => {
-        return skill.name;
+      this.props.student.skills.forEach((skill) => {
+        studentSkills.push(skill.name);
       });
     }
     if (this.props.student.relevant_classes) {
-      studentClasses = this.props.student.relevant_classes.map((_class) => {
-        return _class.name;
+      this.props.student.relevant_classes.forEach((_class) => {
+        studentClasses.push(_class.name);
       });
     }
     // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
