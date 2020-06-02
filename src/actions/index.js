@@ -301,6 +301,25 @@ export function createIndustry(industry) {
   };
 }
 
+export function createIndustryForStudent(industry, student) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/industries`, industry, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
+      // Update the student with the newly created industry
+      student.interested_industries.push(response.data);
+      axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
+      }).catch((error2) => {
+        console.log(error2);
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // skills functions
 export function fetchAllSkills() {
   return (dispatch) => {
@@ -339,6 +358,25 @@ export function createSkill(skill) {
   };
 }
 
+export function createSkillForStudent(skill, student) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
+      // Update the student with the newly created skill
+      student.skills.push(response.data);
+      axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
+      }).catch((error2) => {
+        console.log(error2);
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // classes functions
 export function fetchAllClasses() {
   return (dispatch) => {
@@ -364,10 +402,29 @@ export function fetchCertainClasses(idArray) {
   };
 }
 
-export function createClass(newClass) {
+export function createClass(_class) {
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/classes`, newClass, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+    axios.post(`${ROOT_URL}/classes`, _class, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.ADD_CLASS, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+export function createClassForStudent(_class, student) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/classes`, _class, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_CLASS, payload: response.data });
+      // Update the student with the newly created class
+      student.relevant_classes.push(response.data);
+      axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
+      }).catch((error2) => {
+        console.log(error2);
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
