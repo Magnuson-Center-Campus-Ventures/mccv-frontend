@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unused-state */
@@ -6,7 +7,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { submitApplication } from '../../../actions';
+import { submitApplication, fetchQuestions } from '../../../actions';
 import close from '../../../../static/img/close.png';
 import '../../../styles/application.scss';
 
@@ -17,6 +18,10 @@ class Application extends React.Component {
       questionToAnswer: {},
     };
     this.onAnswerChange = this.onAnswerChange.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.fetchQuestions();
   }
 
   onSubmit = (e) => {
@@ -36,22 +41,23 @@ class Application extends React.Component {
 
   onAnswerChange(event) {
     const { target: { name, value } } = event;
-    const newName = name.replace(/ /g, '_').replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, '');
-    const newQuestionToAnswer = { ...this.state.questionToAnswer, [newName]: value };
+    const newQuestionToAnswer = { ...this.state.questionToAnswer, [name]: value };
     this.setState({ questionToAnswer: newQuestionToAnswer });
   }
 
   renderHelper= () => {
     const items = [];
-    if (this.props.application.questions) {
-      for (const [index, value] of this.props.application.questions.entries()) {
-        items.push(
-          <div>
-            <h3 id="question" key={index}>{value}</h3>
-            <input name={value} onChange={this.onAnswerChange} value={this.state.questionToAnswer[value]} />
-          </div>,
-        );
-      }
+    if (this.props.questions && this.props.application.questions) {
+      this.props.questions.map((question) => {
+        if (this.props.application.questions.includes(question._id)) {
+          items.push(
+            <div key={question._id}>
+              <h3 id="question" key={question._id}>{question.question}</h3>
+              <input name={question._id} onChange={this.onAnswerChange} value={this.state.questionToAnswer[question._id]} />
+            </div>,
+          );
+        }
+      });
       return items;
     } else {
       return <div />;
@@ -98,6 +104,7 @@ class Application extends React.Component {
 const mapStateToProps = (reduxState) => ({
   current: reduxState.posts.current,
   application: reduxState.application.current,
+  questions: reduxState.questions.all,
 });
 
-export default withRouter(connect(mapStateToProps, { submitApplication })(Application));
+export default withRouter(connect(mapStateToProps, { submitApplication, fetchQuestions })(Application));

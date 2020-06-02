@@ -24,6 +24,8 @@ export const ActionTypes = {
   DELETE_OTHER_EXP: 'DELETE_OTHER_EXP',
   FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
   FETCH_APPLICATION: 'FETCH_APPLICATION',
+  FETCH_QUESTIONS: 'FETCH_QUESTIONS',
+  FETCH_QUESTION: 'FETCH_QUESTION',
   FETCH_SUBMITTED_APPLICATIONS: 'FETCH_SUBMITTED_APPLICATIONS',
   FETCH_SUBMITTED_APPLICATION: 'FETCH_SUBMITTED_APPLICATION',
   FETCH_ALL_INDUSTRIES: 'FETCH_ALL_INDUSTRIES',
@@ -108,11 +110,10 @@ export function fetchStartup(id) {
   };
 }
 
-// For getting the current student user's profile
+// For getting the current startup user's info
 export function fetchStartupByUserID(userID) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startupprofile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      console.log(response.data);
       dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
     }).catch((error) => {
       console.log(error);
@@ -139,28 +140,27 @@ export function createStudent(newStudent) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/students`, newStudent, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        console.log(response.data);
         dispatch({ type: ActionTypes.CREATE_STUDENT, payload: response.data });
         console.log('student profile created');
       })
       .catch((error) => {
-        console.log(error.response.data);
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
 }
 
-export function fetchStartupSearch(searchterm) {
-  return (dispatch) => {
-    axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
-      .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
-      })
-      .catch((error) => {
-        dispatch({ type: ActionTypes.ERROR_SET, error });
-      });
-  };
-}
+// Moved search to frontend
+// export function fetchStartupSearch(searchterm) {
+//   return (dispatch) => {
+//     axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+//       .then((response) => {
+//         dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
+//       })
+//       .catch((error) => {
+//         dispatch({ type: ActionTypes.ERROR_SET, error });
+//       });
+//   };
+// }
 
 export function fetchStudents() {
   return (dispatch) => {
@@ -360,10 +360,8 @@ export function fetchCertainSkills(idArray) {
 }
 
 export function createSkill(skill) {
-  console.log(skill);
   return (dispatch) => {
     axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      console.log(response.data);
       dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
     }).catch((error) => {
       console.log(error);
@@ -477,7 +475,6 @@ export function submitApplication(newApplication) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/submittedapplications`, newApplication, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        console.log(response);
         dispatch({ type: ActionTypes.SUBMIT_APPLICATION, payload: response.data });
       })
       .catch((error) => {
@@ -486,6 +483,21 @@ export function submitApplication(newApplication) {
       });
   };
 }
+
+// questions functions
+export function fetchQuestions() {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/questions`, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_QUESTIONS, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
 
 // submitted application functions
 export function fetchSubmittedApplications() {

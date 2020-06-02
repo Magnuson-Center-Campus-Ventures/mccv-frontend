@@ -12,6 +12,7 @@ import ApplicationReducer from './application-reducer';
 import UserReducer from './user-reducer';
 import AuthReducer from './auth-reducer';
 import SubmittedApplicationsReducer from './submitted-applications-reducer';
+import QuestionsReducer from './questions-reducer';
 
 const rootReducer = combineReducers({
   posts: PostsReducer,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   skills: SkillsReducer,
   classes: ClassesReducer,
   application: ApplicationReducer,
+  questions: QuestionsReducer,
   submittedApplications: SubmittedApplicationsReducer,
   user: UserReducer,
   auth: AuthReducer,
