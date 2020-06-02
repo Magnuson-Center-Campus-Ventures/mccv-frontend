@@ -19,7 +19,6 @@ class StudentProfileStartup extends Component {
   // Fetch a student's experiences once the student is loaded into props
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
-      console.log(this.props.student);
       this.props.fetchUserByStudentID(this.props.student._id);
       this.props.fetchWorkExperiences(this.props.student.work_exp);
       this.props.fetchOtherExperiences(this.props.student.other_exp);

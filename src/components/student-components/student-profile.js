@@ -257,7 +257,6 @@ class StudentProfile extends Component {
                   this.setState((prevState) => {
                     const student = { ...prevState.student };
                     student.interested_industries = tempIndustries;
-                    console.log(student.interested_industries);
                     return {
                       ...prevState,
                       selectedIndustryOptions: selectedOptions,
