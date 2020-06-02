@@ -358,6 +358,26 @@ export function createIndustryForStudent(industry, student) {
   };
 }
 
+
+export function createIndustryForStartup(industry, startup) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/industries`, industry, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
+      // Update the student with the newly created industry
+      startup.industries.push(response.data);
+      axios.put(`${ROOT_URL}/startups/${startup._id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response2.data });
+      }).catch((error2) => {
+        console.log(error2);
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // skills functions
 export function fetchAllSkills() {
   return (dispatch) => {

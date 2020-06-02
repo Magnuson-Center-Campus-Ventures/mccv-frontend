@@ -17,9 +17,6 @@ class StartupVideo extends Component {
 
   // Get profile info
   componentDidMount() {
-    // this.props.fetchStartupByUserID(this.props.userID);
-    // this.props.fetchUser(this.props.userID);
-    // this.props.fetchStartup(this.props.match.params.startupID);
     this.props.fetchStartupByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
   }
