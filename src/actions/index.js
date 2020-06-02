@@ -39,6 +39,7 @@ export const ActionTypes = {
   ERROR_SET: 'ERROR_SET',
   AUTH_USER: 'AUTH_USER',
   DEAUTH_USER: 'DEAUTH_USER',
+  LOGOUT_USER: 'LOGOUT_USER',
   AUTH_ERROR: 'AUTH_ERROR',
 };
 
@@ -338,6 +339,25 @@ export function createIndustry(industry) {
   };
 }
 
+export function createIndustryForStudent(industry, student) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/industries`, industry, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
+      // Update the student with the newly created industry
+      student.interested_industries.push(response.data);
+      axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
+      }).catch((error2) => {
+        console.log(error2);
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // skills functions
 export function fetchAllSkills() {
   return (dispatch) => {
@@ -366,9 +386,28 @@ export function fetchCertainSkills(idArray) {
 export function createSkill(skill) {
   console.log(skill);
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/skills`, { skill }).then((response) => {
+    axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       console.log(response.data);
       dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+export function createSkillForStudent(skill, student) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
+      // Update the student with the newly created skill
+      student.skills.push(response.data);
+      axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
+      }).catch((error2) => {
+        console.log(error2);
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
@@ -401,10 +440,29 @@ export function fetchCertainClasses(idArray) {
   };
 }
 
-export function createClass(newClass) {
+export function createClass(_class) {
   return (dispatch) => {
-    axios.post(`${ROOT_URL}/classes`, newClass, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+    axios.post(`${ROOT_URL}/classes`, _class, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.ADD_CLASS, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+export function createClassForStudent(_class, student) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/classes`, _class, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_CLASS, payload: response.data });
+      // Update the student with the newly created class
+      student.relevant_classes.push(response.data);
+      axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
+      }).catch((error2) => {
+        console.log(error2);
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
@@ -550,9 +608,18 @@ export function signinUser({ email, password }, history) {
     axios.post(`${ROOT_URL}/signin`, { email, password }).then((response) => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userID', response.data.id); // can maybe take out
-      console.log('signed in successfully');
-      dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
-      history.push('/posts');
+      axios.get(`${ROOT_URL}/users/${response.data.id}`, { headers: { authorization: response.data.token } }).then((userResp) => {
+        dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
+        if (response.data.role === 'student') {
+          history.push('/posts');
+        } else if (response.data.role === 'startup') {
+          history.push('/students');
+        }
+        dispatch({ type: ActionTypes.FETCH_USER, payload: userResp.data });
+      }).catch((error) => {
+        console.log(error);
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
     }).catch((error) => {
       console.log(error.response.data);
       dispatch(authError(`Sign In Failed: ${error.response.data}`));
@@ -579,8 +646,11 @@ export function signupUser({
       localStorage.setItem('userID', response.data.id); // can maybe take out
       dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       // dispatch({ type: ActionTypes.AUTH_USER });
-      // history.push('/student-signup');
-      history.push('/startup-signup');
+      if (role === 'student') {
+        history.push('/student-signup');
+      } else if (role === 'startup') {
+        // history.push('/startup-signup');
+      } // and maybe add admin as well
       console.log('signed up succesfully');
     }).catch((error) => {
       // eslint-disable-next-line no-alert
@@ -600,6 +670,7 @@ export function signoutUser(history) {
   };
 }
 
+
 export function fetchUser(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/users/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
@@ -610,6 +681,14 @@ export function fetchUser(id) {
     });
   };
 }
+
+export function clearUserState() {
+  // console.log('clear called');
+  return (dispatch) => {
+    dispatch({ type: ActionTypes.LOGOUT_USER });
+  };
+}
+
 
 export function updateUser(id, user) {
   return (dispatch) => {

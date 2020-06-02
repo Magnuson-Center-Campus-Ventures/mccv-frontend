@@ -11,7 +11,7 @@ import {
   fetchWorkExperiences, updateWorkExperience, deleteWorkExperience,
   fetchOtherExperiences, updateOtherExperience, deleteOtherExperience,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills,
-  createIndustry, createSkill, createClass,
+  createIndustryForStudent, createSkillForStudent, createClassForStudent,
 } from '../../actions';
 import NewWorkExp from './student-modals/new-work-exp';
 import NewOtherExp from './student-modals/new-other-exp';
@@ -55,7 +55,6 @@ class StudentProfile extends Component {
   // once the student is loaded into props
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
-      console.log(this.props.student);
       this.props.fetchWorkExperiences(this.props.student.work_exp);
       this.props.fetchOtherExperiences(this.props.student.other_exp);
       // Set initial dropdown options to be the indutries, skills, and classes the student already has
@@ -268,7 +267,7 @@ class StudentProfile extends Component {
                   });
                 }}
                 onCreateOption={(newOption) => {
-                  this.props.createIndustry({ name: newOption });
+                  this.props.createIndustryForStudent({ name: newOption }, this.state.student);
                 }}
               />
             </div>
@@ -297,7 +296,7 @@ class StudentProfile extends Component {
                   });
                 }}
                 onCreateOption={(newOption) => {
-                  this.props.createClass({ name: newOption });
+                  this.props.createClassForStudent({ name: newOption }, this.state.student);
                 }}
               />
             </div>
@@ -326,7 +325,7 @@ class StudentProfile extends Component {
                   });
                 }}
                 onCreateOption={(newOption) => {
-                  this.props.createSkill({ name: newOption });
+                  this.props.createSkillForStudent({ name: newOption }, this.state.student);
                 }}
               />
             </div>
@@ -515,7 +514,7 @@ export default withRouter(connect(mapStateToProps, {
   fetchAllIndustries,
   fetchAllClasses,
   fetchAllSkills,
-  createIndustry,
-  createSkill,
-  createClass,
+  createIndustryForStudent,
+  createSkillForStudent,
+  createClassForStudent,
 })(StudentProfile));

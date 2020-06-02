@@ -20,7 +20,7 @@ const PostListItem = (props) => {
       </div>
       <div className="postInfo">
         <h1 id="postTitle">{ props.post.title}</h1>
-        <h2 id="matched">Matched on: </h2>
+        {/* <h2 id="matched">Matched on: </h2> */}
       </div>
     </Link>
   );
