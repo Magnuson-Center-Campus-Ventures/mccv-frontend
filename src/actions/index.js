@@ -109,6 +109,18 @@ export function fetchStartup(id) {
   };
 }
 
+// For getting the current startup user's info
+export function fetchStartupByUserID(userID) {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/startupprofile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
 export function fetchStartups() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/startups`, { headers: { authorization: localStorage.getItem('token') } })
@@ -136,17 +148,18 @@ export function createStudent(newStudent) {
   };
 }
 
-export function fetchStartupSearch(searchterm) {
-  return (dispatch) => {
-    axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
-      .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
-      })
-      .catch((error) => {
-        dispatch({ type: ActionTypes.ERROR_SET, error });
-      });
-  };
-}
+// Moved search to frontend
+// export function fetchStartupSearch(searchterm) {
+//   return (dispatch) => {
+//     axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
+//       .then((response) => {
+//         dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
+//       })
+//       .catch((error) => {
+//         dispatch({ type: ActionTypes.ERROR_SET, error });
+//       });
+//   };
+// }
 
 export function fetchStudents() {
   return (dispatch) => {
