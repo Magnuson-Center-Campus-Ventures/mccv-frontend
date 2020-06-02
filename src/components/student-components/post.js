@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  fetchPost, fetchApplication, fetchUser, updatePost,
+  fetchPost, fetchApplication, fetchUser,
 } from '../../actions';
 import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
@@ -175,5 +175,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPost, fetchUser, updatePost, fetchApplication,
+  fetchPost, fetchUser, fetchApplication,
 })(Post));

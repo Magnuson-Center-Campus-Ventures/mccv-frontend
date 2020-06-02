@@ -1,10 +1,11 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-unused-expressions */
 
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { updatePost } from '../../actions';
+import { updatePost, updateStartup } from '../../actions';
 import close from '../../../static/img/close.png';
 import '../../styles/archive-modal.scss';
 
@@ -18,16 +19,24 @@ const Archive = (props) => {
     if (props.post) {
       const { post } = props;
       post.status = 'Archived';
-      // console.log('post updated: ', post);
-      updatePost(post.id, post);
+      props.updatePost(post.id, post);
+      console.log('not here');
     }
     props.onClose(e);
   };
   if (props.startup) {
-    console.log(props.startup);
+    console.log('startup: ', props.startup);
+    const { startup } = props;
+    startup.status = 'Archived';
+    props.updateStartup(startup.id, startup);
+    startup.posts.map((post) => {
+      const postCopy = post;
+      postCopy.status = 'Archived';
+      console.log('post copy: ', postCopy);
+      props.updatePost(post.id, postCopy);
+    });
   }
   console.log('in archive');
-  // console.log(props.post);
 
   return (
     <div className="archiveContainer">
@@ -68,10 +77,6 @@ const Archive = (props) => {
 };
 // }
 
-// const mapStateToProps = (reduxState) => ({
-
-// });
-
-export default withRouter(connect(null, { updatePost })(Archive));
+export default withRouter(connect(null, { updatePost, updateStartup })(Archive));
 
 // export default Archive;

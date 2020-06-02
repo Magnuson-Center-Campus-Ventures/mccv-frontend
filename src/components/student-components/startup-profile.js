@@ -96,7 +96,6 @@ class Startup extends Component {
 
   renderButtons() {
     if (this.props.user.role === 'admin') {
-      // console.log('here');
       return (
         <button
           type="submit"

@@ -97,11 +97,8 @@ export function fetchPost(id) {
 }
 
 export function updatePost(id, post) {
-  // console.log('reaching index.js');
   return (dispatch) => {
-    console.log('return of update method');
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      console.log('put went through');
       dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
     }).catch((error) => {
       console.log(error);
@@ -148,15 +145,28 @@ export function fetchStartups() {
   };
 }
 
+export function updateStartup(id, startup) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/startups/${id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // student functions
 export function createStudent(newStudent) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/students`, newStudent, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
+        console.log(response.data);
         dispatch({ type: ActionTypes.CREATE_STUDENT, payload: response.data });
         console.log('student profile created');
       })
       .catch((error) => {
+        console.log(error.response.data);
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -373,8 +383,10 @@ export function fetchCertainSkills(idArray) {
 }
 
 export function createSkill(skill) {
+  console.log(skill);
   return (dispatch) => {
     axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      console.log(response.data);
       dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
     }).catch((error) => {
       console.log(error);
@@ -488,6 +500,7 @@ export function submitApplication(newApplication) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/submittedapplications`, newApplication, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
+        console.log(response);
         dispatch({ type: ActionTypes.SUBMIT_APPLICATION, payload: response.data });
       })
       .catch((error) => {
@@ -497,7 +510,6 @@ export function submitApplication(newApplication) {
   };
 }
 
-// questions functions
 export function fetchQuestions() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/questions`, { headers: { authorization: localStorage.getItem('token') } })
@@ -510,7 +522,6 @@ export function fetchQuestions() {
       });
   };
 }
-
 
 // submitted application functions
 export function fetchSubmittedApplications() {
