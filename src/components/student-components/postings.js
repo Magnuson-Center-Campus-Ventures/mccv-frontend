@@ -86,42 +86,44 @@ class Posts extends Component {
     const studentIndustries = [];
     const studentSkills = [];
     const studentClasses = [];
-    if (this.props.student.interested_industries) {
-      this.props.student.interested_industries.forEach((industry) => {
-        studentIndustries.push(industry.name);
+    if (this.props.user.role === 'student') {
+      if (this.props.student.interested_industries) {
+        this.props.student.interested_industries.forEach((industry) => {
+          studentIndustries.push(industry.name);
+        });
+      }
+      if (this.props.student.skills) {
+        this.props.student.skills.forEach((skill) => {
+          studentSkills.push(skill.name);
+        });
+      }
+      if (this.props.student.relevant_classes) {
+        this.props.student.relevant_classes.forEach((_class) => {
+          studentClasses.push(_class.name);
+        });
+      }
+      // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
+      const postScores = {};
+      this.props.posts.forEach((post) => {
+        const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry)).length
+        + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry)).length
+        + post.desired_classes.filter((_class) => studentClasses.includes(_class)).length
+        + post.required_skills.filter((skill) => studentSkills.includes(skill)).length
+        // Preferred skills get half the weight of required skills
+        + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill)).length);
+        postScores[post._id] = numMatches;
       });
-    }
-    if (this.props.student.skills) {
-      this.props.student.skills.forEach((skill) => {
-        studentSkills.push(skill.name);
-      });
-    }
-    if (this.props.student.relevant_classes) {
-      this.props.student.relevant_classes.forEach((_class) => {
-        studentClasses.push(_class.name);
-      });
-    }
-    // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
-    const postScores = {};
-    this.props.posts.forEach((post) => {
-      const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry)).length
-      + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry)).length
-      + post.desired_classes.filter((_class) => studentClasses.includes(_class)).length
-      + post.required_skills.filter((skill) => studentSkills.includes(skill)).length
-      // Preferred skills get half the weight of required skills
-      + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill)).length);
-      postScores[post._id] = numMatches;
-    });
 
-    // Sort the posts in descending order of score
-    const tempPosts = this.props.posts;
-    tempPosts.sort((post1, post2) => {
-      return postScores[post2._id] - postScores[post1._id];
-    });
-    tempPosts.forEach((post) => {
-      // console.log(post.title, postScores[post._id]);
-    });
-    this.setState({ sortedPosts: tempPosts.slice(0, 3) });
+      // Sort the posts in descending order of score
+      const tempPosts = this.props.posts;
+      tempPosts.sort((post1, post2) => {
+        return postScores[post2._id] - postScores[post1._id];
+      });
+      tempPosts.forEach((post) => {
+        // console.log(post.title, postScores[post._id]);
+      });
+      this.setState({ sortedPosts: tempPosts.slice(0, 3) });
+    }
   }
 
   searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {

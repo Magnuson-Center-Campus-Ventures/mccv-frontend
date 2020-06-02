@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -37,15 +38,18 @@ class Startup extends Component {
   }
 
   renderDescription = (post) => {
-    if (post.description.length > 100) {
-      const description = `${post.description.substring(0, 99)}...`;
-      return (
-        <div className="startup-posting-description">{description}</div>
-      );
-    } else {
-      return (
-        <div className="startup-posting-description">{post.description}</div>
-      );
+    if (post.description !== undefined) {
+      console.log(post.description);
+      if (post.description.length > 100) {
+        const description = `${post.description.substring(0, 99)}...`;
+        return (
+          <div className="startup-posting-description">{description}</div>
+        );
+      } else {
+        return (
+          <div className="startup-posting-description">{post.description}</div>
+        );
+      }
     }
   }
 
