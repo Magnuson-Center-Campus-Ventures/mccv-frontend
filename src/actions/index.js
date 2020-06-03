@@ -58,6 +58,18 @@ export function fetchPosts() {
   };
 }
 
+export function createPost(post) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      })
+      .catch((error) => {
+        console.log('broken');
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
 // Moved to front-end implementation of search and filter, as per Thomas' advice
 
 // export function fetchPostSearch(searchterm) {
@@ -88,6 +100,7 @@ export function fetchPost(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/posts/${id}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
+        console.log(response.data);
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
       })
       .catch((error) => {

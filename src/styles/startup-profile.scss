@@ -16,9 +16,18 @@
   text-align: center;
 }
 
+.startup-postings-h1{
+  margin-top: 30px;
+  font-size: medium;
+  font-weight: bolder;
+  text-align: center;
+  margin: 0px;
+}
+
 .startup-postings-list {
   display: flex;
   flex-direction: column;
+  list-style: none;
 }
 
 .startup-posting {
@@ -100,3 +109,32 @@ br{
 //     width: 100vw;
 //   }
 // }
+
+.startup-add-posting-btn {
+  background-color:  #45B990;
+  color: white;
+  border: 0px solid #C2C8CB; // 3px on white
+  text-decoration: none;
+  font-size: 1.25em;
+  border-radius: 1.25em;
+  width: 2em;
+  height: 2em;
+  transition: width .25s, height .25s, font-size .25s;
+  transition-timing-function: linear;
+  margin-left: 1em;
+  font-family: Avenir Next;
+}
+
+.startup-add-posting-btn:hover {
+  background-color: #2D7D61;
+}
+
+.startup-add-posting-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+

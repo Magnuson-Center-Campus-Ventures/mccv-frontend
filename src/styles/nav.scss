@@ -9,7 +9,7 @@ body, html {
     background: #2D7D61;
     margin:0;
     padding: 0;
-    height: 5vw;
+    height: 3.5em;
     align-items: center;
     width: 100%;
     display: flex;
@@ -43,4 +43,23 @@ a:link {
 #navbar li:first-child {
   // margin-right: auto;
   flex-grow: 1;
+}
+
+.navLoginBtn {
+  background-color: #EFEFF0;
+  color: black;
+  border: 0px solid #C2C8CB; // 3px on white
+  text-decoration: none;
+  font-size: 1em;
+  border-radius: .85em;
+  width: 5.5em;
+  height: 2.25em;
+  transition: width .25s, height .25s, font-size .25s;
+  transition-timing-function: linear;
+  margin: 1.5em;
+  font-family: Avenir Next;
+}
+
+.navLoginBtn:hover {
+  background-color: #C2C8CB;
 }
