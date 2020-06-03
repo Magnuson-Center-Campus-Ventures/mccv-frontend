@@ -148,14 +148,15 @@ export function fetchStartups() {
 export function updateStartup(id, startup) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/startups/${id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
     }).catch((error) => {
       console.log(error);
-      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
   };
 }
 
+// export function fetchSearchResults(searchterm) {
 // student functions
 export function createStudent(newStudent) {
   return (dispatch) => {
@@ -257,6 +258,19 @@ export function submitStudent(id, student, history) {
   };
 }
 
+export function submitStartup(id, startup, history) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/startups/${id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+      // eslint-disable-next-line no-restricted-globals
+      history.push('/startupprofile');
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // work experience functions
 export function fetchWorkExperiences(idArray) {
   return (dispatch) => {
@@ -346,6 +360,26 @@ export function createIndustryForStudent(industry, student) {
       student.interested_industries.push(response.data);
       axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
         dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
+      }).catch((error2) => {
+        console.log(error2);
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+
+export function createIndustryForStartup(industry, startup) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/industries`, industry, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
+      // Update the student with the newly created industry
+      startup.industries.push(response.data);
+      axios.put(`${ROOT_URL}/startups/${startup._id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response2.data });
       }).catch((error2) => {
         console.log(error2);
         dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
@@ -661,7 +695,7 @@ export function signupUser({
       if (role === 'student') {
         history.push('/student-signup');
       } else if (role === 'startup') {
-        // history.push('/startup-signup');
+        history.push('/startup-signup');
       } // and maybe add admin as well
       console.log('signed up succesfully');
     }).catch((error) => {
