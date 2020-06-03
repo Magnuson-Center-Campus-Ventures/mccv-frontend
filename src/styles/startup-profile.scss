@@ -19,6 +19,7 @@
 .startup-postings-list {
   display: flex;
   flex-direction: column;
+  list-style: none;
 }
 
 .startup-posting {
@@ -100,3 +101,29 @@ br{
 //     width: 100vw;
 //   }
 // }
+
+.startup-add-posting-btn {
+  background-color:  #45B990;
+  color: white;
+  border: 0px solid #C2C8CB; // 3px on white
+  text-decoration: none;
+  font-size: 1em;
+  border-radius: 1.25em;
+  width: 2.5em;
+  height: 2.5em;
+  transition: width .25s, height .25s, font-size .25s;
+  transition-timing-function: linear;
+  margin: 1.5em;
+  font-family: Avenir Next;
+}
+
+.startup-add-posting-btn:hover {
+  background-color: #2D7D61;
+}
+
+.btn-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
