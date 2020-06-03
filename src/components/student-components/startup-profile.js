@@ -11,6 +11,8 @@ import Deny from '../admin-modals/deny';
 import '../../styles/startup-profile.scss';
 
 class Startup extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -31,6 +33,7 @@ class Startup extends Component {
     this.props.fetchStartup(this.props.match.params.startupID);
     this.props.fetchPosts();
     this.props.fetchUser(localStorage.getItem('userID'));
+    this._isMounted = true;
   }
 
   showArchiveModal = (e) => {
@@ -176,26 +179,32 @@ class Startup extends Component {
   }
 
   render() {
-    if (this.props.startup.status === 'Approved') {
-      return (
-        <div className="startup">
-          {this.renderPostings()}
-          <Archive startup={this.props.startup} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
-          {this.renderStartup()}
-        </div>
-      );
-    } else if (this.props.user.role === 'admin') {
-      return (
-        <div className="startup">
-          {this.renderPostings()}
-          <Approve startup={this.props.startup} onClose={this.hideApproveModal} show={this.state.approveShow} />
-          <Deny startup={this.props.startup} onClose={this.hideDenyModal} show={this.state.denyShow} />
-          {this.renderStartup()}
-        </div>
-      );
+    if (this._isMounted) {
+      if (this.props.startup.status === 'Approved') {
+        return (
+          <div className="startup">
+            {this.renderPostings()}
+            <Archive startup={this.props.startup} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
+            {this.renderStartup()}
+          </div>
+        );
+      } else if (this.props.user.role === 'admin') {
+        return (
+          <div className="startup">
+            {this.renderPostings()}
+            <Approve startup={this.props.startup} onClose={this.hideApproveModal} show={this.state.approveShow} />
+            <Deny startup={this.props.startup} onClose={this.hideDenyModal} show={this.state.denyShow} />
+            {this.renderStartup()}
+          </div>
+        );
+      } else {
+        return (
+          <div>Company not Approved</div>
+        );
+      }
     } else {
       return (
-        <div>Company not Approved</div>
+        <div />
       );
     }
   }
