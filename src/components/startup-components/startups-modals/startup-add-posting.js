@@ -66,7 +66,7 @@ class AddPosting extends React.Component {
     return (
       <div className="addposting-questions">
         <h3 className="addposting-h3">Title</h3>
-        <input name="title" onChange={this.onAnswerChange} value={this.state.title} />
+        <input name="title" onChange={this.onTitleChange} value={this.state.title} />
       </div>
     );
   }
