@@ -7,6 +7,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import TextareaAutosize from 'react-textarea-autosize';
 import { submitApplication, fetchQuestions } from '../../../actions';
 import close from '../../../../static/img/close.png';
 import '../../../styles/addposting.scss';
@@ -21,17 +22,17 @@ class AddPosting extends React.Component {
       required_skills: [],
       preferred_skills: [],
       responsibilities: [],
-      time_commitment: 0,
-      desired_start_date: Date,
-      desired_end_date: Date,
+      time_commitment: undefined,
+      desired_start_date: undefined,
+      desired_end_date: undefined,
       desired_classes: [],
-      available_until: Date,
+      available_until: undefined,
       status: '',
       applicants: [],
       application_id: '',
       students_selected: [],
       location: '',
-      remote: false,
+      remote: undefined,
     };
     this.onAnswerChange = this.onAnswerChange.bind(this);
   }

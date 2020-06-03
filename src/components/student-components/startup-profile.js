@@ -2,14 +2,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-<<<<<<< HEAD
-import { fetchStartup, fetchPosts, fetchPost } from '../../actions';
-=======
 import {
   fetchStartup, fetchPosts, fetchPost, fetchUser,
 } from '../../actions/index';
 import Archive from '../admin-modals/archive';
->>>>>>> 308d4eb54ef3af82707ec233c8ad3ea62bb5a9f6
 import '../../styles/startup-profile.scss';
 
 class Startup extends Component {

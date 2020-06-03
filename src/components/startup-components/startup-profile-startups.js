@@ -91,13 +91,20 @@ class StartupProfile extends Component {
   }
 
   renderIndustries() {
-    return (
-      this.props.startup.industries.map((industry) => {
-        return (
-          <div className="industry" key={industry}>{industry}</div>
-        );
-      })
-    );
+    console.log(this.props.startup.industries);
+    if (typeof this.props.startup.industries !== 'undefined') {
+      return (
+        this.props.startup.industries.map((industry) => {
+          return (
+            <div className="industry" key={industry}>{industry}</div>
+          );
+        })
+      );
+    } else {
+      return (
+        <div>Loading</div>
+      );
+    }
   }
 
   renderStartup() {
@@ -107,7 +114,7 @@ class StartupProfile extends Component {
           <AddPosting onClose={this.hideModal} show={this.state.show} />
           <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
           <div className="startup-location">Location: {`${this.props.startup.location}`}</div>
-          {/* <div className="startup-industries"><div>Industry: </div>{this.renderIndustries()}</div> */}
+          <div className="startup-industries"><div>Industry: </div>{this.renderIndustries()}</div>
           <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
         </div>
       );
@@ -121,8 +128,8 @@ class StartupProfile extends Component {
   render() {
     return (
       <div className="startup">
-        { this.renderPostings()}
-        {this.renderStartup() }
+        { this.renderPostings() }
+        { this.renderStartup() }
       </div>
     );
     /* if (this.props.startup.status === 'Approved') {
