@@ -72,9 +72,10 @@ class Posts extends Component {
             }
           });
         }
-        if (post.location) {
-          if (locationOptions.filter((option) => option.value === post.location).length === 0) {
-            locationOptions.push({ value: post.location, label: post.location });
+        if (post.city && post.state) {
+          const locationString = `${post.city}, ${post.state}`;
+          if (locationOptions.filter((option) => option.value === locationString).length === 0) {
+            locationOptions.push({ value: locationString, label: locationString });
           }
         }
         if (post.startup_id.city && post.startup_id.state) {
@@ -157,11 +158,11 @@ class Posts extends Component {
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
       const postInd = post.industries.map((industry) => industry.toLowerCase());
       const startupInd = post.startup_id.industries.map((industry) => industry.toLowerCase());
-      const postLoc = post.location;
+      const postLoc = `${post.city}, ${post.state}`;
       const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`;
       // Checks for search
       if (post.title.toLowerCase().includes(searchterm)
-      || post.location.toLowerCase().includes(searchterm)
+      || postLoc.toLowerCase().includes(searchterm)
       || skills.includes(searchterm) // array
       || responsibilities.includes(searchterm) // array
       || postInd.includes(searchterm) // array

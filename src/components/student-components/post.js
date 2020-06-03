@@ -142,7 +142,7 @@ class Post extends Component {
             <img src={this.props.current.startup_id.logo} alt="no logo" />
             <h2 id="name">{this.props.current.startup_id.name}</h2>
             <img src={pin} alt="location" />
-            <h2 id="name">{this.props.current.location}</h2>
+            <h2 id="name">{`${this.props.current.city}, ${this.props.current.state}`}</h2>
           </div>
           <div className="top">
             <div id="project">
