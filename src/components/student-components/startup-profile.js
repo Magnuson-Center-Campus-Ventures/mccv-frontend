@@ -6,6 +6,8 @@ import {
   fetchStartup, fetchPosts, fetchPost, fetchUser,
 } from '../../actions/index';
 import Archive from '../admin-modals/archive';
+import Approve from '../admin-modals/approve';
+import Deny from '../admin-modals/deny';
 import '../../styles/startup-profile.scss';
 
 class Startup extends Component {
@@ -13,10 +15,16 @@ class Startup extends Component {
     super(props);
     this.state = {
       archiveShow: false,
+      approveShow: false,
+      denyShow: false,
     };
     this.renderPostings = this.renderPostings.bind(this);
     this.showArchiveModal = this.showArchiveModal.bind(this);
     this.hideArchiveModal = this.hideArchiveModal.bind(this);
+    this.showApproveModal = this.showApproveModal.bind(this);
+    this.hideApproveModal = this.hideApproveModal.bind(this);
+    this.showDenyModal = this.showDenyModal.bind(this);
+    this.hideDenyModal = this.hideDenyModal.bind(this);
   }
 
   componentDidMount() {
@@ -26,15 +34,27 @@ class Startup extends Component {
   }
 
   showArchiveModal = (e) => {
-    this.setState({
-      archiveShow: true,
-    });
+    this.setState({ archiveShow: true });
   }
 
   hideArchiveModal = (e) => {
-    this.setState({
-      archiveShow: false,
-    });
+    this.setState({ archiveShow: false });
+  }
+
+  showApproveModal = (e) => {
+    this.setState({ approveShow: true });
+  }
+
+  hideApproveModal = (e) => {
+    this.setState({ approveShow: false });
+  }
+
+  showDenyModal = (e) => {
+    this.setState({ denyShow: true });
+  }
+
+  hideDenyModal = (e) => {
+    this.setState({ denyShow: false });
   }
 
   renderDescription = (post) => {
@@ -85,27 +105,53 @@ class Startup extends Component {
   }
 
   renderIndustries() {
-    return (
-      this.props.startup.industries.map((industry) => {
-        return (
-          <div className="industry" key={industry}>{industry}</div>
-        );
-      })
-    );
+    if (this.props.startup.industries) {
+      return (
+        this.props.startup.industries.map((industry) => {
+          return (
+            <div className="industry" key={industry}>{industry}</div>
+          );
+        })
+      );
+    }
   }
 
   renderButtons() {
     if (this.props.user.role === 'admin') {
-      return (
-        <button
-          type="submit"
-          onClick={(e) => {
-            this.showArchiveModal();
-          }}
-        >
-          Archive
-        </button>
-      );
+      if (this.props.startup.status === 'Approved') {
+        return (
+          <button
+            type="submit"
+            onClick={(e) => {
+              this.showArchiveModal();
+            }}
+          >
+            Archive
+          </button>
+        );
+      } else if (this.props.startup.status === 'Pending') {
+        return (
+          <div>
+            <button
+              type="submit"
+              onClick={(e) => {
+                this.showApproveModal();
+              }}
+            >
+              Approve
+            </button>
+            <button
+              type="submit"
+              onClick={(e) => {
+                this.showDenyModal();
+              }}
+            >
+              Deny
+            </button>
+          </div>
+
+        );
+      }
     } else {
       return (<div />);
     }
@@ -135,6 +181,15 @@ class Startup extends Component {
         <div className="startup">
           {this.renderPostings()}
           <Archive startup={this.props.startup} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
+          {this.renderStartup()}
+        </div>
+      );
+    } else if (this.props.user.role === 'admin') {
+      return (
+        <div className="startup">
+          {this.renderPostings()}
+          <Approve startup={this.props.startup} onClose={this.hideApproveModal} show={this.state.approveShow} />
+          <Deny startup={this.props.startup} onClose={this.hideDenyModal} show={this.state.denyShow} />
           {this.renderStartup()}
         </div>
       );
