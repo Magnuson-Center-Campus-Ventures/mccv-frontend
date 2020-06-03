@@ -148,7 +148,7 @@ export function fetchStartups() {
 export function updateStartup(id, startup) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/startups/${id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
