@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
+import Switch from 'react-switch';
 import StartupListItem from './startup-item';
 import SearchBar from './search-bar';
-import { fetchStartups } from '../../actions';
+import { fetchStartups, fetchUser } from '../../actions';
 import '../../styles/postings.scss';
 
 
@@ -18,12 +19,19 @@ class Startups extends Component {
       searchterm: 'filler',
       search: false,
       filter: false,
+      archive: false,
+      approved: false,
+      pending: false,
       results: [],
     };
+    this.handleArchiveChange = this.handleArchiveChange.bind(this);
+    this.handleApprovedChange = this.handleApprovedChange.bind(this);
+    this.handlePendingChange = this.handlePendingChange.bind(this);
   }
 
   componentDidMount() {
     this.props.fetchStartups();
+    this.props.fetchUser(localStorage.getItem('userID'));
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -96,8 +104,50 @@ class Startups extends Component {
     this.searchAndFilter('emptytext', industries);
   }
 
+  handleArchiveChange(checked) {
+    this.setState({ archive: checked });
+    this.setState({ results: [] });
+    if (checked) {
+      this.props.startups.forEach((startup) => {
+        if (startup.status === 'Archived') {
+          this.setState((prevState) => ({
+            results: [...prevState.results, startup],
+          }));
+        }
+      });
+    }
+  }
+
+  handleApprovedChange(checked) {
+    this.setState({ approved: checked });
+    this.setState({ results: [] });
+    if (checked) {
+      this.props.startups.forEach((startup) => {
+        if (startup.status === 'Approved') {
+          this.setState((prevState) => ({
+            results: [...prevState.results, startup],
+          }));
+        }
+      });
+    }
+  }
+
+  handlePendingChange(checked) {
+    this.setState({ pending: checked });
+    this.setState({ results: [] });
+    if (checked) {
+      this.props.startups.forEach((startup) => {
+        if (startup.status === 'Pending') {
+          this.setState((prevState) => ({
+            results: [...prevState.results, startup],
+          }));
+        }
+      });
+    }
+  }
+
   renderStartups() {
-    if (this.state.search || this.state.filter) {
+    if (this.state.search || this.state.filter || this.state.archive || this.state.approved || this.state.pending) {
       if (this.state.results.length > 0) {
         return this.state.results.map((startup) => {
           return (
@@ -115,6 +165,23 @@ class Startups extends Component {
           <StartupListItem startup={startup} key={startup.id} />
         );
       });
+    }
+  }
+
+  renderToggles() {
+    if (this.props.user.role === 'admin') {
+      return (
+        <div id="filters">
+          <h3>show approved startups: </h3>
+          <Switch id="approvedToggle" onChange={this.handleApprovedChange} checked={this.state.approved} />
+          <h3>show pending startups:</h3>
+          <Switch id="pendingToggle" onChange={this.handlePendingChange} checked={this.state.pending} />
+          <h3>show archived startups:</h3>
+          <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
+        </div>
+      );
+    } else {
+      return (<div> </div>);
     }
   }
 
@@ -146,6 +213,7 @@ class Startups extends Component {
                 this.onFilter(industries);
               }}
             />
+            {this.renderToggles()}
             <div className="list">
               {this.renderStartups()}
             </div>
@@ -159,6 +227,7 @@ class Startups extends Component {
 
 const mapStateToProps = (reduxState) => ({
   startups: reduxState.startups.all,
+  user: reduxState.user.current,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStartups })(Startups));
+export default withRouter(connect(mapStateToProps, { fetchStartups, fetchUser })(Startups));
