@@ -1,42 +1,38 @@
-/* eslint-disable consistent-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import {
-  fetchStartup, fetchPosts, fetchPost, fetchUser,
-} from '../../actions/index';
-import Archive from '../admin-modals/archive';
+import { fetchStartupByUserID, fetchPosts, fetchPost } from '../../actions/index';
+import AddPosting from './startups-modals/startup-add-posting';
 import '../../styles/startup-profile.scss';
 
-class Startup extends Component {
+class StartupProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      archiveShow: false,
+      show: false,
     };
-    this.renderPostings = this.renderPostings.bind(this);
-    this.showArchiveModal = this.showArchiveModal.bind(this);
-    this.hideArchiveModal = this.hideArchiveModal.bind(this);
+    // this.renderPostings = this.renderPostings.bind(this);
   }
 
   componentDidMount() {
-    this.props.fetchStartup(this.props.match.params.startupID);
-    this.props.fetchPosts();
-    this.props.fetchUser(localStorage.getItem('userID'));
+    console.log('didMount');
+    this.props.fetchStartupByUserID(localStorage.getItem('userID'));
+    // this.props.fetchPosts();
   }
 
-  showArchiveModal = (e) => {
+  showModal = () => {
     this.setState({
-      archiveShow: true,
+      show: true,
     });
-  }
+  };
 
-  hideArchiveModal = (e) => {
+  hideModal = () => {
     this.setState({
-      archiveShow: false,
+      show: false,
     });
-  }
+  };
 
+  // eslint-disable-next-line consistent-return
   renderDescription = (post) => {
     if (post.description !== undefined) {
       // console.log(post.description);
@@ -53,8 +49,8 @@ class Startup extends Component {
     }
   }
 
-  renderPostings() {
-    if (this.props.startup.posts) {
+  renderPostings = (e) => {
+    if (this.props.startup.posts && this.props.startup.posts.length && typeof this.props.startup !== 'undefined') {
       const mappingPostings = this.props.startup.posts.map((post) => {
         return (
           <li className="startup-posting" key={post._id}>
@@ -70,7 +66,17 @@ class Startup extends Component {
         this.props.startup.posts !== undefined
           ? (
             <div className="startup-postings">
-              <h1>Volunteer Positions:</h1>
+              <div className="startup-add-posting-box">
+                <span className="startup-postings-h1">Volunteer Positions:</span>
+                <button type="button"
+                  className="startup-add-posting-btn"
+                  onClick={() => {
+                    this.showModal();
+                  }}
+                >
+                  <i className="fas fa-plus" />
+                </button>
+              </div>
               <ul className="startup-postings-list">
                 {mappingPostings}
               </ul>
@@ -79,62 +85,69 @@ class Startup extends Component {
       );
     } else {
       return (
-        <div>posts are undefined</div>
+        <div className="startup-postings">
+          <div className="startup-add-posting-box">
+            <span className="startup-postings-h1">Volunteer Positions:</span>
+            <button type="button"
+              className="startup-add-posting-btn"
+              onClick={() => {
+                this.showModal();
+              }}
+            >
+              <i className="fas fa-plus" />
+            </button>
+          </div>
+        </div>
       );
     }
   }
 
   renderIndustries() {
-    return (
-      this.props.startup.industries.map((industry) => {
-        return (
-          <div className="industry" key={industry}>{industry}</div>
-        );
-      })
-    );
-  }
-
-  renderButtons() {
-    if (this.props.user.role === 'admin') {
+    console.log(this.props.startup.industries);
+    if (typeof this.props.startup.industries !== 'undefined') {
       return (
-        <button
-          type="submit"
-          onClick={(e) => {
-            this.showArchiveModal();
-          }}
-        >
-          Archive
-        </button>
+        this.props.startup.industries.map((industry) => {
+          return (
+            <div className="industry" key={industry}>{industry}</div>
+          );
+        })
       );
     } else {
-      return (<div />);
+      return (
+        <div>Loading</div>
+      );
     }
   }
 
   renderStartup() {
-    if (this.props.startup) {
+    if (typeof this.props.startup !== 'undefined') {
       return (
         <div className="startup-body">
+          <AddPosting onClose={this.hideModal} show={this.state.show} />
           <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
           <div className="startup-location">Location: {`${this.props.startup.location}`}</div>
           <div className="startup-industries"><div>Industry: </div>{this.renderIndustries()}</div>
           <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
-          {this.renderButtons()}
         </div>
       );
     } else {
       return (
-        <div>Startups are undefined</div>
+        <div>Startup profile does not exist</div>
       );
     }
   }
 
   render() {
-    if (this.props.startup.status === 'Approved') {
+    return (
+      <div className="startup">
+        { this.renderPostings() }
+        { this.renderStartup() }
+      </div>
+    );
+    /* if (this.props.startup.status === 'Approved') {
       return (
         <div className="startup">
           {this.renderPostings()}
-          <Archive startup={this.props.startup} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
           {this.renderStartup()}
         </div>
       );
@@ -142,18 +155,15 @@ class Startup extends Component {
       return (
         <div>Company not Approved</div>
       );
-    }
+    } */
   }
 }
 
 function mapStateToProps(reduxState) {
   return {
     startup: reduxState.startups.current,
-    posts: reduxState.posts.all,
-    user: reduxState.user.current,
+    // posts: reduxState.posts.all,
   };
 }
 
-export default withRouter(connect(mapStateToProps, {
-  fetchStartup, fetchPosts, fetchPost, fetchUser,
-})(Startup));
+export default withRouter(connect(mapStateToProps, { fetchStartupByUserID, fetchPosts, fetchPost })(StartupProfile));
