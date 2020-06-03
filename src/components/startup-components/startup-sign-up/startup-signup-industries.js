@@ -20,6 +20,7 @@ class StartupIndustries extends Component {
       ownIndustries: [],
       allIndustryOptions: [],
       selectedIndustryOptions: [],
+      industriesIDs: [],
     };
   }
 
@@ -95,10 +96,14 @@ class StartupIndustries extends Component {
   renderPills = (pillsArray) => {
     console.log(pillsArray);
     if (pillsArray) {
-      return pillsArray.map((elem, index) => {
-        console.log(elem);
-        console.log(elem.name);
-        return <div key={index} className="profile-pill">{elem.label}</div>;
+      // eslint-disable-next-line array-callback-return
+      return pillsArray.map((indName, index) => {
+        if (typeof (indName) === 'string') {
+          console.log(indName);
+          return <div key={index} className="profile-pill">{indName}</div>;
+        } else {
+          return null;
+        }
       });
     } else return null;
   }
@@ -106,18 +111,28 @@ class StartupIndustries extends Component {
   changeStartupField = (field, value) => {
     // eslint-disable-next-line prefer-destructuring
     // const value = event.target.value;
+    const ind = [];
+    // eslint-disable-next-line array-callback-return
+    value.map((elem) => {
+      ind.push(elem.industry.name);
+    });
+    this.props.updateStartup(this.props.startup.id,
+      Object.assign(this.props.startup, { industries: ind }));
 
     this.setState((prevState) => {
       const startup = { ...prevState.startup };
-      startup[field] = value;
-      this.props.updateStartup(this.props.startup.id,
-        Object.assign(this.props.startup, startup));
+
+      // startup[field] = Object.assign(this.props.startup.industries, value);
+      // console.log(startup);
+      // this.props.updateStartup(this.props.startup.id,
+      //   Object.assign(this.props.startup, startup));
       return {
         ...prevState,
         startup,
       };
     });
-    this.props.updateStartup(this.props.startup.id, this.state.startup);
+    console.log(this.props.startup);
+    // this.props.updateStartup(this.props.startup.id, this.state.startup);
   }
 
   renderAddIndustry() {
@@ -155,12 +170,12 @@ class StartupIndustries extends Component {
             const tempIndustries = selectedOptions
               ? selectedOptions.map((option) => option.industry)
               : [];
-            console.log(this.state.startup);
-            this.props.updateStartup(this.props.startup.id, this.state.startup);
+            // console.log(this.state.startup);
+            // this.props.updateStartup(this.props.startup.id, this.state.startup);
             this.setState((prevState) => {
               const startup = { ...prevState.startup };
               startup.industries = tempIndustries;
-              console.log(startup.industries);
+              // console.log(startup.industries);
               // this.props.updateStartup(this.props.startup.id,
               //   Object.assign(startup, { industries: selectedOptions }));
               return {
