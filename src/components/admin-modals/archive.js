@@ -19,8 +19,8 @@ const Archive = (props) => {
       const { post } = props;
       post.status = 'Archived';
       props.updatePost(post.id, post);
+      props.onClose(e);
     }
-    props.onClose(e);
     if (props.startup) {
       const { startup } = props;
       startup.status = 'Archived';
@@ -36,8 +36,8 @@ const Archive = (props) => {
       const { student } = props;
       student.status = 'Archived';
       props.updateStudent(student.id, student);
+      props.onClose(e);
     }
-    props.onClose(e);
   };
 
 
