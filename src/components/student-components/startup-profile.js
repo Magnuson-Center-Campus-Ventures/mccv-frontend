@@ -1,24 +1,59 @@
+/* eslint-disable consistent-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+<<<<<<< HEAD
 import { fetchStartup, fetchPosts, fetchPost } from '../../actions';
+=======
+import {
+  fetchStartup, fetchPosts, fetchPost, fetchUser,
+} from '../../actions/index';
+import Archive from '../admin-modals/archive';
+>>>>>>> 308d4eb54ef3af82707ec233c8ad3ea62bb5a9f6
 import '../../styles/startup-profile.scss';
 
 class Startup extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      archiveShow: false,
+    };
+    this.renderPostings = this.renderPostings.bind(this);
+    this.showArchiveModal = this.showArchiveModal.bind(this);
+    this.hideArchiveModal = this.hideArchiveModal.bind(this);
+  }
+
   componentDidMount() {
     this.props.fetchStartup(this.props.match.params.startupID);
+    this.props.fetchPosts();
+    this.props.fetchUser(localStorage.getItem('userID'));
+  }
+
+  showArchiveModal = (e) => {
+    this.setState({
+      archiveShow: true,
+    });
+  }
+
+  hideArchiveModal = (e) => {
+    this.setState({
+      archiveShow: false,
+    });
   }
 
   renderDescription = (post) => {
-    if (post.description.length > 100) {
-      const description = `${post.description.substring(0, 99)}...`;
-      return (
-        <div className="startup-posting-description">{description}</div>
-      );
-    } else {
-      return (
-        <div className="startup-posting-description">{post.description}</div>
-      );
+    if (post.description !== undefined) {
+      // console.log(post.description);
+      if (post.description.length > 100) {
+        const description = `${post.description.substring(0, 99)}...`;
+        return (
+          <div className="startup-posting-description">{description}</div>
+        );
+      } else {
+        return (
+          <div className="startup-posting-description">{post.description}</div>
+        );
+      }
     }
   }
 
@@ -63,6 +98,23 @@ class Startup extends Component {
     );
   }
 
+  renderButtons() {
+    if (this.props.user.role === 'admin') {
+      return (
+        <button
+          type="submit"
+          onClick={(e) => {
+            this.showArchiveModal();
+          }}
+        >
+          Archive
+        </button>
+      );
+    } else {
+      return (<div />);
+    }
+  }
+
   renderStartup() {
     if (this.props.startup) {
       return (
@@ -71,6 +123,7 @@ class Startup extends Component {
           <div className="startup-location">Location: {`${this.props.startup.location}`}</div>
           <div className="startup-industries"><div>Industry: </div>{this.renderIndustries()}</div>
           <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
+          {this.renderButtons()}
         </div>
       );
     } else {
@@ -85,6 +138,7 @@ class Startup extends Component {
       return (
         <div className="startup">
           {this.renderPostings()}
+          <Archive startup={this.props.startup} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
           {this.renderStartup()}
         </div>
       );
@@ -100,7 +154,10 @@ function mapStateToProps(reduxState) {
   return {
     startup: reduxState.startups.current,
     posts: reduxState.posts.all,
+    user: reduxState.user.current,
   };
 }
 
-export default withRouter(connect(mapStateToProps, { fetchStartup, fetchPosts, fetchPost })(Startup));
+export default withRouter(connect(mapStateToProps, {
+  fetchStartup, fetchPosts, fetchPost, fetchUser,
+})(Startup));

@@ -5,7 +5,7 @@ import Select from 'react-select';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
-  fetchPosts, fetchStudentByUserID,
+  fetchPosts, fetchStudentByUserID, fetchUser,
 } from '../../actions';
 
 import '../../styles/postings.scss';
@@ -31,6 +31,7 @@ class Posts extends Component {
   componentDidMount() {
     this.props.fetchPosts();
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
+    this.props.fetchUser(localStorage.getItem('userID'));
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -85,42 +86,44 @@ class Posts extends Component {
     const studentIndustries = [];
     const studentSkills = [];
     const studentClasses = [];
-    if (this.props.student.interested_industries) {
-      this.props.student.interested_industries.forEach((industry) => {
-        studentIndustries.push(industry.name);
+    if (this.props.user.role === 'student') {
+      if (this.props.student.interested_industries) {
+        this.props.student.interested_industries.forEach((industry) => {
+          studentIndustries.push(industry.name);
+        });
+      }
+      if (this.props.student.skills) {
+        this.props.student.skills.forEach((skill) => {
+          studentSkills.push(skill.name);
+        });
+      }
+      if (this.props.student.relevant_classes) {
+        this.props.student.relevant_classes.forEach((_class) => {
+          studentClasses.push(_class.name);
+        });
+      }
+      // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
+      const postScores = {};
+      this.props.posts.forEach((post) => {
+        const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry)).length
+        + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry)).length
+        + post.desired_classes.filter((_class) => studentClasses.includes(_class)).length
+        + post.required_skills.filter((skill) => studentSkills.includes(skill)).length
+        // Preferred skills get half the weight of required skills
+        + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill)).length);
+        postScores[post._id] = numMatches;
       });
-    }
-    if (this.props.student.skills) {
-      this.props.student.skills.forEach((skill) => {
-        studentSkills.push(skill.name);
-      });
-    }
-    if (this.props.student.relevant_classes) {
-      this.props.student.relevant_classes.forEach((_class) => {
-        studentClasses.push(_class.name);
-      });
-    }
-    // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
-    const postScores = {};
-    this.props.posts.forEach((post) => {
-      const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry)).length
-      + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry)).length
-      + post.desired_classes.filter((_class) => studentClasses.includes(_class)).length
-      + post.required_skills.filter((skill) => studentSkills.includes(skill)).length
-      // Preferred skills get half the weight of required skills
-      + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill)).length);
-      postScores[post._id] = numMatches;
-    });
 
-    // Sort the posts in descending order of score
-    const tempPosts = this.props.posts;
-    tempPosts.sort((post1, post2) => {
-      return postScores[post2._id] - postScores[post1._id];
-    });
-    tempPosts.forEach((post) => {
-      console.log(post.title, postScores[post._id]);
-    });
-    this.setState({ sortedPosts: tempPosts.slice(0, 3) });
+      // Sort the posts in descending order of score
+      const tempPosts = this.props.posts;
+      tempPosts.sort((post1, post2) => {
+        return postScores[post2._id] - postScores[post1._id];
+      });
+      tempPosts.forEach((post) => {
+        // console.log(post.title, postScores[post._id]);
+      });
+      this.setState({ sortedPosts: tempPosts.slice(0, 3) });
+    }
   }
 
   searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {
@@ -200,7 +203,7 @@ class Posts extends Component {
       if (this.state.results.length > 0) {
         return this.state.results.map((post) => {
           return (
-            <PostListItem post={post} key={post.id} />
+            <PostListItem user={this.props.user} post={post} key={post.id} />
           );
         });
       } else {
@@ -212,9 +215,22 @@ class Posts extends Component {
       const posts = this.state.recommend ? this.state.sortedPosts : this.props.posts;
       return posts.map((post) => {
         return (
-          <PostListItem post={post} key={post.id} />
+          <PostListItem user={this.props.user} post={post} key={post.id} />
         );
       });
+    }
+  }
+
+  renderRecButton() {
+    if (this.props.user.role === 'admin') {
+      return <div />;
+    } else {
+      return (
+        <button type="button"
+          onClick={this.onRecommendPress}
+        >{this.state.recommend ? 'Show All Posts' : 'Show Recommended Posts'}
+        </button>
+      );
     }
   }
 
@@ -267,10 +283,7 @@ class Posts extends Component {
                 this.onFilter(industries, skills);
               }}
             />
-            <button type="button"
-              onClick={this.onRecommendPress}
-            >{this.state.recommend ? 'Show All Posts' : 'Show Recommended Posts'}
-            </button>
+            {this.renderRecButton()}
             <div className="list">
               {this.renderPosts()}
             </div>
@@ -286,9 +299,11 @@ class Posts extends Component {
 const mapStateToProps = (reduxState) => ({
   posts: reduxState.posts.all,
   student: reduxState.students.current_student,
+  user: reduxState.user.current,
 });
 
 export default withRouter(connect(mapStateToProps, {
   fetchPosts,
   fetchStudentByUserID,
+  fetchUser,
 })(Posts));

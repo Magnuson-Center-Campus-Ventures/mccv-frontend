@@ -1,11 +1,15 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-plusplus */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchPost, fetchApplication } from '../../actions';
+import {
+  fetchPost, fetchApplication, fetchUser,
+} from '../../actions';
 import Application from './student-modals/application';
+import Archive from '../admin-modals/archive';
 import pin from '../../../static/img/pin.png';
 import '../../styles/post.scss';
 
@@ -13,28 +17,49 @@ class Post extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: false,
+      applyShow: false,
+      archiveShow: false,
     };
-    this.showModal = this.showModal.bind(this);
-    this.hideModal = this.hideModal.bind(this);
+    this.showApplyModal = this.showApplyModal.bind(this);
+    this.hideApplyModal = this.hideApplyModal.bind(this);
+    this.showArchiveModal = this.showArchiveModal.bind(this);
+    this.hideArchiveModal = this.hideArchiveModal.bind(this);
   }
 
   componentDidMount() {
     this.props.fetchPost(this.props.match.params.postID);
+    this.props.fetchUser(localStorage.getItem('userID'));
   }
 
-  showModal = (e) => {
+  // onArchive(id, post) {
+  //   this.props.updatePost(id, post);
+  // }
+
+  showApplyModal = (e) => {
     this.props.fetchApplication(this.props.current.application_id);
     this.setState({
-      show: true,
+      applyShow: true,
     });
   };
 
-  hideModal = (e) => {
+  showArchiveModal = (e) => {
     this.setState({
-      show: false,
+      archiveShow: true,
     });
   }
+
+  hideApplyModal = (e) => {
+    this.setState({
+      applyShow: false,
+    });
+  }
+
+  hideArchiveModal = (e) => {
+    this.setState({
+      archiveShow: false,
+    });
+  }
+
 
   requiredSkillsHelper= () => {
     const requiredSkills = [];
@@ -70,6 +95,7 @@ class Post extends Component {
     const responsibilities = [];
     if (this.props.current.responsibilities) {
       for (let i = 0; i < this.props.current.responsibilities.length; i++) {
+        // console.log(this.props.current.responsibilities[i]);
         responsibilities.push(
           <li id="responsibility" key={this.props.current.responsibilities[i]}>{this.props.current.responsibilities[i]}</li>,
         );
@@ -80,11 +106,37 @@ class Post extends Component {
     }
   }
 
+  renderButtons() {
+    if (this.props.user.role === 'admin') {
+      return (
+        <button
+          type="submit"
+          onClick={(e) => {
+            this.showArchiveModal();
+          }}
+        >
+          Archive
+        </button>
+      );
+    } else {
+      return (
+        <button id="submit-app"
+          type="submit"
+          onClick={(e) => {
+            this.showApplyModal();
+          }}
+        >Apply Now!
+        </button>
+      );
+    }
+  }
+
   render() {
     if (this.props.current.startup_id) {
       return (
         <div>
-          <Application onClose={this.hideModal} show={this.state.show} />
+          <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
+          <Archive post={this.props.current} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
           <h1 id="title">{this.props.current.title}</h1>
           <div className="bar">
             <img src={this.props.current.startup_id.logo} alt="no logo" />
@@ -108,13 +160,7 @@ class Post extends Component {
             <h2>Responsibilities</h2>
             <ul id="skills">{this.responsibilitiesHelper()}</ul>
           </div>
-          <button id="submit-app"
-            type="submit"
-            onClick={(e) => {
-              this.showModal();
-            }}
-          >Apply Now!
-          </button>
+          {this.renderButtons()}
         </div>
       );
     } else {
@@ -125,6 +171,9 @@ class Post extends Component {
 
 const mapStateToProps = (reduxState) => ({
   current: reduxState.posts.current,
+  user: reduxState.user.current,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchPost, fetchApplication })(Post));
+export default withRouter(connect(mapStateToProps, {
+  fetchPost, fetchUser, fetchApplication,
+})(Post));

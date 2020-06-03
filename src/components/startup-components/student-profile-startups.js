@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
@@ -6,13 +7,23 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   fetchStudentByID, fetchUserByStudentID, fetchWorkExperiences, fetchOtherExperiences,
-  fetchAllIndustries, fetchAllClasses, fetchAllSkills,
+  fetchAllIndustries, fetchAllClasses, fetchAllSkills, fetchUser,
 } from '../../actions';
+import Archive from '../admin-modals/archive';
+
 import '../../styles/student-profile.scss';
 
 class StudentProfileStartup extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      archiveShow: false,
+    };
+  }
+
   componentDidMount() {
     this.props.fetchStudentByID(this.props.match.params.studentID);
+    this.props.fetchUser(localStorage.getItem('userID'));
     // this.props.fetchUserByStudentID();
   }
 
@@ -20,10 +31,42 @@ class StudentProfileStartup extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       this.props.fetchUserByStudentID(this.props.student._id);
-      this.props.fetchWorkExperiences(this.props.student.work_exp);
-      this.props.fetchOtherExperiences(this.props.student.other_exp);
+      if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
+        this.props.fetchWorkExperiences(this.props.student.work_exp);
+      }
+      if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
+        this.props.fetchOtherExperiences(this.props.student.other_exp);
+      }
     }
   }
+
+  showArchiveModal = (e) => {
+    this.setState({
+      archiveShow: true,
+    });
+  }
+
+  hideArchiveModal = (e) => {
+    this.setState({
+      archiveShow: false,
+    });
+  }
+
+  renderButtons() {
+    if (this.props.user.role === 'admin') {
+      return (
+        <button
+          type="submit"
+          onClick={(e) => {
+            this.showArchiveModal();
+          }}
+        >
+          Archive
+        </button>
+      );
+    }
+  }
+
 
   renderMajMin = (array) => {
     if (array) {
@@ -34,7 +77,7 @@ class StudentProfileStartup extends Component {
           );
         } else {
           return (
-            <div key={index} className="minors">{elem}</div>
+            <div key={index} className="majors">{elem}</div>
           );
         }
       });
@@ -42,11 +85,11 @@ class StudentProfileStartup extends Component {
   }
 
   renderPills = (pillsArray) => {
-    if (pillsArray) {
+    if (pillsArray && pillsArray.length > 0) {
       return pillsArray.map((elem, index) => {
         return <div key={index} className="profile-pill">{elem.name}</div>;
       });
-    } else return null;
+    } else return <div>None</div>;
   }
 
   renderBody = () => {
@@ -62,7 +105,7 @@ class StudentProfileStartup extends Component {
             {this.renderMajMin(this.props.student.minors)}
           </div>
           <div>{this.props.email}</div>
-          <div>{this.props.student.phone_number}</div>
+          <div>{this.props.student.phone_number ? this.props.student.phone_number : null}</div>
           <div id="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
@@ -117,6 +160,11 @@ class StudentProfileStartup extends Component {
   render() {
     return (
       <div className="student-profile">
+        <Archive
+          student={this.props.student}
+          onClose={this.hideArchiveModal}
+          show={this.state.archiveShow}
+        />
         {this.renderBody()}
         <div id="work-exps">
           <h2>Work Experience</h2>
@@ -124,6 +172,7 @@ class StudentProfileStartup extends Component {
           <h2>Other Experience</h2>
           {this.renderOtherExperiences()}
         </div>
+        {this.renderButtons()}
       </div>
     );
   }
@@ -134,6 +183,7 @@ const mapStateToProps = (reduxState) => ({
   email: reduxState.students.current_email,
   workExps: reduxState.students.current_work_exps,
   otherExps: reduxState.students.current_other_exps,
+  user: reduxState.user.current,
 });
 
 export default withRouter(connect(mapStateToProps, {
@@ -144,4 +194,5 @@ export default withRouter(connect(mapStateToProps, {
   fetchAllIndustries,
   fetchAllClasses,
   fetchAllSkills,
+  fetchUser,
 })(StudentProfileStartup));
