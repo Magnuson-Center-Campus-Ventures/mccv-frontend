@@ -41,13 +41,19 @@ class StudentSignUp extends Component {
   }
 
   renderSubmit() {
-    return (
-      <div className="buttonContainer">
-        <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-          Submit!
-        </button>
-      </div>
-    );
+    if (this.state.index === 7) {
+      return (
+        <div className="buttonContainer">
+          <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
+            Submit!
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <div className="empty" />
+      );
+    }
   }
 
   renderComponent() {
