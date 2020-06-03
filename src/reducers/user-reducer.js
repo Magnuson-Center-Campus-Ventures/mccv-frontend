@@ -8,7 +8,6 @@ const initialState = {
 const AuthReducer = (state = initialState, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_USER:
-      console.log(action.payload);
       return {
         ...state,
         current: action.payload,
