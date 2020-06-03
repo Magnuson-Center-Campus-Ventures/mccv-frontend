@@ -31,8 +31,12 @@ class StudentProfileStartup extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       this.props.fetchUserByStudentID(this.props.student._id);
-      this.props.fetchWorkExperiences(this.props.student.work_exp);
-      this.props.fetchOtherExperiences(this.props.student.other_exp);
+      if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
+        this.props.fetchWorkExperiences(this.props.student.work_exp);
+      }
+      if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
+        this.props.fetchOtherExperiences(this.props.student.other_exp);
+      }
     }
   }
 
@@ -73,7 +77,7 @@ class StudentProfileStartup extends Component {
           );
         } else {
           return (
-            <div key={index} className="minors">{elem}</div>
+            <div key={index} className="majors">{elem}</div>
           );
         }
       });
@@ -81,11 +85,11 @@ class StudentProfileStartup extends Component {
   }
 
   renderPills = (pillsArray) => {
-    if (pillsArray) {
+    if (pillsArray && pillsArray.length > 0) {
       return pillsArray.map((elem, index) => {
         return <div key={index} className="profile-pill">{elem.name}</div>;
       });
-    } else return null;
+    } else return <div>None</div>;
   }
 
   renderBody = () => {
@@ -101,7 +105,7 @@ class StudentProfileStartup extends Component {
             {this.renderMajMin(this.props.student.minors)}
           </div>
           <div>{this.props.email}</div>
-          <div>{this.props.student.phone_number}</div>
+          <div>{this.props.student.phone_number ? this.props.student.phone_number : null}</div>
           <div id="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
