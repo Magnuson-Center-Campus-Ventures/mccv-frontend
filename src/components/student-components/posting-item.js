@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Archive from '../admin-modals/archive';
@@ -45,7 +46,7 @@ const PostListItem = (props) => {
         <div className="postInfo">
           <h1 id="postTitle">{ props.post.title}</h1>
           {/* <h2 id="matched">Matched on: </h2> */}
-          {buttons}
+          {/* {buttons} */}
         </div>
       </Link>
 
