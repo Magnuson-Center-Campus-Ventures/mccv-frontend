@@ -203,7 +203,7 @@ class Posts extends Component {
       if (this.state.results.length > 0) {
         return this.state.results.map((post) => {
           return (
-            <PostListItem post={post} key={post.id} />
+            <PostListItem user={this.props.user} post={post} key={post.id} />
           );
         });
       } else {
@@ -215,7 +215,7 @@ class Posts extends Component {
       const posts = this.state.recommend ? this.state.sortedPosts : this.props.posts;
       return posts.map((post) => {
         return (
-          <PostListItem post={post} key={post.id} />
+          <PostListItem user={this.props.user} post={post} key={post.id} />
         );
       });
     }

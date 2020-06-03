@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
@@ -6,13 +7,23 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   fetchStudentByID, fetchUserByStudentID, fetchWorkExperiences, fetchOtherExperiences,
-  fetchAllIndustries, fetchAllClasses, fetchAllSkills,
+  fetchAllIndustries, fetchAllClasses, fetchAllSkills, fetchUser,
 } from '../../actions';
+import Archive from '../admin-modals/archive';
+
 import '../../styles/student-profile.scss';
 
 class StudentProfileStartup extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      archiveShow: false,
+    };
+  }
+
   componentDidMount() {
     this.props.fetchStudentByID(this.props.match.params.studentID);
+    this.props.fetchUser(localStorage.getItem('userID'));
     // this.props.fetchUserByStudentID();
   }
 
@@ -24,6 +35,34 @@ class StudentProfileStartup extends Component {
       this.props.fetchOtherExperiences(this.props.student.other_exp);
     }
   }
+
+  showArchiveModal = (e) => {
+    this.setState({
+      archiveShow: true,
+    });
+  }
+
+  hideArchiveModal = (e) => {
+    this.setState({
+      archiveShow: false,
+    });
+  }
+
+  renderButtons() {
+    if (this.props.user.role === 'admin') {
+      return (
+        <button
+          type="submit"
+          onClick={(e) => {
+            this.showArchiveModal();
+          }}
+        >
+          Archive
+        </button>
+      );
+    }
+  }
+
 
   renderMajMin = (array) => {
     if (array) {
@@ -117,6 +156,11 @@ class StudentProfileStartup extends Component {
   render() {
     return (
       <div className="student-profile">
+        <Archive
+          student={this.props.student}
+          onClose={this.hideArchiveModal}
+          show={this.state.archiveShow}
+        />
         {this.renderBody()}
         <div id="work-exps">
           <h2>Work Experience</h2>
@@ -124,6 +168,7 @@ class StudentProfileStartup extends Component {
           <h2>Other Experience</h2>
           {this.renderOtherExperiences()}
         </div>
+        {this.renderButtons()}
       </div>
     );
   }
@@ -134,6 +179,7 @@ const mapStateToProps = (reduxState) => ({
   email: reduxState.students.current_email,
   workExps: reduxState.students.current_work_exps,
   otherExps: reduxState.students.current_other_exps,
+  user: reduxState.user.current,
 });
 
 export default withRouter(connect(mapStateToProps, {
@@ -144,4 +190,5 @@ export default withRouter(connect(mapStateToProps, {
   fetchAllIndustries,
   fetchAllClasses,
   fetchAllSkills,
+  fetchUser,
 })(StudentProfileStartup));

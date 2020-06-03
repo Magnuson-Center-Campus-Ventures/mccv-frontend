@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -71,48 +72,50 @@ class Students extends Component {
   }
 
   scoreStudents = () => {
-    const startupIndustries = [];
-    const postsReqSkills = [];
-    const postsPrefSkills = [];
-    const postsClasses = [];
-    if (this.props.startup.industries) {
-      this.props.startup.industries.forEach((industry) => {
-        startupIndustries.push(industry);
+    if (this.props.user.role === 'student') {
+      const startupIndustries = [];
+      const postsReqSkills = [];
+      const postsPrefSkills = [];
+      const postsClasses = [];
+      if (this.props.startup.industries) {
+        this.props.startup.industries.forEach((industry) => {
+          startupIndustries.push(industry);
+        });
+      }
+      if (this.props.startup.posts) {
+        this.props.startup.posts.forEach((post) => {
+          post.required_skills.forEach((skill) => {
+            postsReqSkills.push(skill);
+          });
+          post.preferred_skills.forEach((skill) => {
+            postsPrefSkills.push(skill);
+          });
+          post.desired_classes.forEach((_class) => {
+            postsClasses.push(_class);
+          });
+        });
+      }
+      // Score each student by the number of common elements between the student's and startup's industry arrays
+      const studentScores = {};
+      this.props.students.forEach((student) => {
+        const numMatches = student.interested_industries.filter((industry) => startupIndustries.includes(industry.name)).length
+          + student.skills.filter((skill) => postsReqSkills.includes(skill.name)).length
+          // Preferred skills get half the weight of required skills
+          + 0.5 * (student.skills.filter((skill) => postsPrefSkills.includes(skill.name)).length)
+          + student.relevant_classes.filter((_class) => postsClasses.includes(_class.name)).length;
+        studentScores[student._id] = numMatches;
       });
-    }
-    if (this.props.startup.posts) {
-      this.props.startup.posts.forEach((post) => {
-        post.required_skills.forEach((skill) => {
-          postsReqSkills.push(skill);
-        });
-        post.preferred_skills.forEach((skill) => {
-          postsPrefSkills.push(skill);
-        });
-        post.desired_classes.forEach((_class) => {
-          postsClasses.push(_class);
-        });
-      });
-    }
-    // Score each student by the number of common elements between the student's and startup's industry arrays
-    const studentScores = {};
-    this.props.students.forEach((student) => {
-      const numMatches = student.interested_industries.filter((industry) => startupIndustries.includes(industry.name)).length
-        + student.skills.filter((skill) => postsReqSkills.includes(skill.name)).length
-        // Preferred skills get half the weight of required skills
-        + 0.5 * (student.skills.filter((skill) => postsPrefSkills.includes(skill.name)).length)
-        + student.relevant_classes.filter((_class) => postsClasses.includes(_class.name)).length;
-      studentScores[student._id] = numMatches;
-    });
 
-    // Sort the posts in descending order of score
-    const tempStudents = this.props.students;
-    tempStudents.sort((student1, student2) => {
-      return studentScores[student2._id] - studentScores[student1._id];
-    });
-    tempStudents.forEach((student) => {
-      console.log(student.first_name, studentScores[student._id]);
-    });
-    this.setState({ sortedStudents: tempStudents.slice(0, 1) });
+      // Sort the posts in descending order of score
+      const tempStudents = this.props.students;
+      tempStudents.sort((student1, student2) => {
+        return studentScores[student2._id] - studentScores[student1._id];
+      });
+      tempStudents.forEach((student) => {
+        console.log(student.first_name, studentScores[student._id]);
+      });
+      this.setState({ sortedStudents: tempStudents.slice(0, 1) });
+    }
   }
 
   searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {
@@ -209,6 +212,17 @@ class Students extends Component {
     }
   }
 
+  renderRecButton() {
+    if (this.props.user.role === 'student') {
+      return (
+        <button type="button"
+          onClick={this.onRecommendPress}
+        >{this.state.recommend ? 'Show All Students' : 'Show Recommended Students'}
+        </button>
+      );
+    }
+  }
+
   render() {
     // Styles for filter dropdowns
     const dropdownStyles = {
@@ -258,10 +272,7 @@ class Students extends Component {
                 this.onFilter(industries, skills);
               }}
             />
-            <button type="button"
-              onClick={this.onRecommendPress}
-            >{this.state.recommend ? 'Show All Students' : 'Show Recommended Students'}
-            </button>
+            {this.renderRecButton()}
             <div className="list">
               {this.renderStudents()}
             </div>
@@ -277,6 +288,7 @@ class Students extends Component {
 const mapStateToProps = (reduxState) => ({
   students: reduxState.students.all_students,
   startup: reduxState.startups.current,
+  user: reduxState.user.current,
 });
 
 export default withRouter(connect(mapStateToProps, { fetchStudents, fetchStartupByUserID })(Students));

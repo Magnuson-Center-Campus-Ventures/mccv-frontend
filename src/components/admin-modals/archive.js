@@ -5,7 +5,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { updatePost, updateStartup } from '../../actions';
+import { updatePost, updateStartup, updateStudent } from '../../actions';
 import close from '../../../static/img/close.png';
 import '../../styles/archive-modal.scss';
 
@@ -20,23 +20,29 @@ const Archive = (props) => {
       const { post } = props;
       post.status = 'Archived';
       props.updatePost(post.id, post);
-      console.log('not here');
+      // console.log('not here');
     }
     props.onClose(e);
+    if (props.startup) {
+      // console.log('startup: ', props.startup);
+      const { startup } = props;
+      startup.status = 'Archived';
+      props.updateStartup(startup.id, startup);
+      startup.posts.map((post) => {
+        const postCopy = post;
+        postCopy.status = 'Archived';
+        props.updatePost(post.id, postCopy);
+      });
+    }
+    if (props.student) {
+      // console.log('viewing student: ', props.student);
+      const { student } = props;
+      student.status = 'Archived';
+      props.updateStudent(student.id, student);
+    }
   };
-  if (props.startup) {
-    console.log('startup: ', props.startup);
-    const { startup } = props;
-    startup.status = 'Archived';
-    props.updateStartup(startup.id, startup);
-    startup.posts.map((post) => {
-      const postCopy = post;
-      postCopy.status = 'Archived';
-      console.log('post copy: ', postCopy);
-      props.updatePost(post.id, postCopy);
-    });
-  }
-  console.log('in archive');
+
+  // console.log('in archive');
 
   return (
     <div className="archiveContainer">
@@ -77,6 +83,6 @@ const Archive = (props) => {
 };
 // }
 
-export default withRouter(connect(null, { updatePost, updateStartup })(Archive));
+export default withRouter(connect(null, { updatePost, updateStartup, updateStudent })(Archive));
 
 // export default Archive;

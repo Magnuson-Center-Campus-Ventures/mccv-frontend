@@ -16,6 +16,18 @@ const PostListItem = (props) => {
     archiveShow = false;
   };
 
+  const buttons = props.user.role === 'admin' ? (
+    <button
+      type="submit"
+      onClick={(e) => {
+        showArchiveModal();
+      }}
+    >
+      Archive
+    </button>
+  ) : <div />;
+
+
   return (
     <div>
       <Link to={route} key={props.post.id} className="listItem link">
@@ -33,16 +45,10 @@ const PostListItem = (props) => {
         <div className="postInfo">
           <h1 id="postTitle">{ props.post.title}</h1>
           {/* <h2 id="matched">Matched on: </h2> */}
+          {buttons}
         </div>
       </Link>
-      <button
-        type="submit"
-        onClick={(e) => {
-          showArchiveModal();
-        }}
-      >
-        Archive
-      </button>
+
     </div>
 
   );
