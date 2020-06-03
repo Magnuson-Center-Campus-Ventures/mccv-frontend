@@ -15,6 +15,8 @@ class Startups extends Component {
     this.state = {
       industryOptions: [],
       selectedIndustryOptions: [],
+      locationOptions: [],
+      selectedLocationOptions: [],
       searchterm: 'filler',
       search: false,
       filter: false,
@@ -29,6 +31,7 @@ class Startups extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.startups.length > 0) {
       const industryOptions = [];
+      const locationOptions = [];
       nextProps.startups.forEach((startup) => {
         if (startup.industries) {
           startup.industries.forEach((industry) => {
@@ -38,10 +41,17 @@ class Startups extends Component {
             }
           });
         }
+        if (startup.city && startup.state) {
+          const locationString = `${startup.city}, ${startup.state}`;
+          if (locationOptions.filter((option) => option.value === locationString).length === 0) {
+            locationOptions.push({ value: locationString, label: locationString });
+          }
+        }
       });
-      if (industryOptions.length > prevState.industryOptions.length) {
+      if (industryOptions.length > prevState.industryOptions.length
+        || locationOptions.length > prevState.locationOptions.length) {
         return {
-          industryOptions,
+          industryOptions, locationOptions,
         };
       }
     }
@@ -49,11 +59,12 @@ class Startups extends Component {
     return null;
   }
 
-  searchAndFilter = (text, selectedIndustries) => {
+  searchAndFilter = (text, selectedIndustries, selectedLocations) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
     this.props.startups.forEach((startup) => {
       const industries = startup.industries.map((industry) => industry.toLowerCase());
+      const location = `${startup.city}, ${startup.state}`;
       // Checks for search
       if (startup.name.toLowerCase().includes(searchterm)
       || startup.city.toLowerCase().includes(searchterm)
@@ -61,7 +72,8 @@ class Startups extends Component {
       || startup.description.toLowerCase().includes(searchterm)
       || industries.includes(searchterm) // array
       // Checks for filter
-      || selectedIndustries.some((industry) => industries.includes(industry))) {
+      || selectedIndustries.some((industry) => industries.includes(industry))
+      || selectedLocations.includes(location)) {
         this.setState((prevState) => ({
           results: [...prevState.results, startup],
         }));
@@ -73,7 +85,10 @@ class Startups extends Component {
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
       ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(text, industries);
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(text, industries, locations);
     this.setState({ search: true, searchterm: text });
   }
 
@@ -81,11 +96,11 @@ class Startups extends Component {
     return array.length === 1 && array.includes('emptytext');
   }
 
-  onFilter = (industries) => {
-    if (this.isFilterEmpty(industries)) {
+  onFilter = (industries, locations) => {
+    if (this.isFilterEmpty(industries) && (this.isFilterEmpty(locations))) {
       this.setState({ filter: false });
     } else this.setState({ filter: true });
-    this.searchAndFilter(this.state.searchterm, industries);
+    this.searchAndFilter(this.state.searchterm, industries, locations);
   }
 
   clear = () => {
@@ -93,7 +108,10 @@ class Startups extends Component {
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
       ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter('emptytext', industries);
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter('emptytext', industries, locations);
   }
 
   renderStartups() {
@@ -143,7 +161,28 @@ class Startups extends Component {
                 const industries = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                this.onFilter(industries);
+                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                  ? this.state.selectedLocationOptions.map((option) => option.value)
+                  : ['emptytext'];
+                this.onFilter(industries, locations);
+              }}
+            />
+            <Select
+              isMulti
+              styles={dropdownStyles}
+              name="location-filter"
+              placeholder="Filter by location"
+              options={this.state.locationOptions}
+              value={this.state.selectedLocationOptions}
+              onChange={(selectedOptions) => {
+                this.setState({ selectedLocationOptions: selectedOptions });
+                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                const locations = (selectedOptions && selectedOptions.length > 0)
+                  ? selectedOptions.map((option) => option.value)
+                  : ['emptytext'];
+                this.onFilter(industries, locations);
               }}
             />
             <div className="list">
