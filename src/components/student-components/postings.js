@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
+import Switch from 'react-switch';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
   fetchPosts, fetchStudentByUserID, fetchUser,
 } from '../../actions';
+// import ToggleSwitch from './toggle-switch';
 
 import '../../styles/postings.scss';
 
@@ -26,8 +28,12 @@ class Posts extends Component {
       recommend: false,
       search: false,
       filter: false,
+      archive: false,
+      live: false,
       results: [],
     };
+    this.handleArchiveChange = this.handleArchiveChange.bind(this);
+    this.handleLiveChange = this.handleLiveChange.bind(this);
   }
 
   componentDidMount() {
@@ -224,8 +230,36 @@ class Posts extends Component {
     this.searchAndFilter('emptytext', industries, skills, locations, this.state.recommend);
   }
 
+  handleArchiveChange(checked) {
+    this.setState({ archive: checked });
+    this.setState({ results: [] });
+    if (checked) {
+      this.props.posts.forEach((post) => {
+        if (post.status === 'Archived') {
+          this.setState((prevState) => ({
+            results: [...prevState.results, post],
+          }));
+        }
+      });
+    }
+  }
+
+  handleLiveChange(checked) {
+    this.setState({ live: checked });
+    this.setState({ results: [] });
+    if (checked) {
+      this.props.posts.forEach((post) => {
+        if (post.status === 'Approved') {
+          this.setState((prevState) => ({
+            results: [...prevState.results, post],
+          }));
+        }
+      });
+    }
+  }
+
   renderPosts() {
-    if (this.state.search || this.state.filter) {
+    if (this.state.search || this.state.filter || this.state.archive || this.state.live) {
       if (this.state.results.length > 0) {
         return this.state.results.map((post) => {
           return (
@@ -247,9 +281,16 @@ class Posts extends Component {
     }
   }
 
-  renderRecButton() {
+  renderButtons() {
     if (this.props.user.role === 'admin') {
-      return <div />;
+      return (
+        <div id="filters">
+          <h3>show archived: </h3>
+          <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
+          <h3>show live posts:</h3>
+          <Switch id="archiveToggle" onChange={this.handleLiveChange} checked={this.state.live} />
+        </div>
+      );
     } else {
       return (
         <button type="button"
@@ -259,6 +300,7 @@ class Posts extends Component {
       );
     }
   }
+
 
   render() {
     // Styles for filter dropdowns
@@ -336,7 +378,7 @@ class Posts extends Component {
                 this.onFilter(industries, skills, locations);
               }}
             />
-            {this.renderRecButton()}
+            {this.renderButtons()}
             <div className="list">
               {this.renderPosts()}
             </div>

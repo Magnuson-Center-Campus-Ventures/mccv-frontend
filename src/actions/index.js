@@ -250,6 +250,7 @@ export function fetchUserByStudentID(studentID) {
 export function updateStudent(id, student) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/students/${id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      console.log('student from index', student);
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
     }).catch((error) => {
       console.log(error);
