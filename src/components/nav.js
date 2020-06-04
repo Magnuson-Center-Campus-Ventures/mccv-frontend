@@ -93,7 +93,6 @@ class Nav extends Component {
                 <span className="navNameCta">Name</span>
               </button>
               <div className="dropdownOptions">
-                <NavLink to="/profile">Profile</NavLink>
                 <button type="button" className="signoutBtn" onClick={this.signout}>
                   <span className="signoutCta">Logout</span>
                 </button>
