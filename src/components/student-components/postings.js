@@ -21,6 +21,8 @@ class Posts extends Component {
       selectedIndustryOptions: [],
       skillOptions: [],
       selectedSkillOptions: [],
+      locationOptions: [],
+      selectedLocationOptions: [],
       searchterm: 'emptytext',
       recommend: false,
       search: false,
@@ -43,6 +45,7 @@ class Posts extends Component {
     if (nextProps.posts.length > 0) {
       const industryOptions = [];
       const skillOptions = [];
+      const locationOptions = [];
       nextProps.posts.forEach((post) => {
         if (post.industries) {
           post.industries.forEach((industry) => {
@@ -68,10 +71,24 @@ class Posts extends Component {
             }
           });
         }
+        if (post.city && post.state) {
+          const locationString = `${post.city}, ${post.state}`;
+          if (locationOptions.filter((option) => option.value === locationString).length === 0) {
+            locationOptions.push({ value: locationString, label: locationString });
+          }
+        }
+        if (post.startup_id.city && post.startup_id.state) {
+          const locationString = `${post.startup_id.city}, ${post.startup_id.state}`;
+          if (locationOptions.filter((option) => option.value === locationString).length === 0) {
+            locationOptions.push({ value: locationString, label: locationString });
+          }
+        }
       });
-      if (industryOptions.length > prevState.industryOptions.length || skillOptions.length > prevState.skillOptions.length) {
+      if (industryOptions.length > prevState.industryOptions.length
+        || skillOptions.length > prevState.skillOptions.length
+        || locationOptions.length > prevState.locationOptions.length) {
         return {
-          industryOptions, skillOptions,
+          industryOptions, skillOptions, locationOptions,
         };
       }
     }
@@ -131,7 +148,7 @@ class Posts extends Component {
     }
   }
 
-  searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {
+  searchAndFilter = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
     const posts = recommend ? this.state.sortedPosts : this.props.posts;
@@ -140,9 +157,11 @@ class Posts extends Component {
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
       const postInd = post.industries.map((industry) => industry.toLowerCase());
       const startupInd = post.startup_id.industries.map((industry) => industry.toLowerCase());
+      const postLoc = `${post.city}, ${post.state}`;
+      const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`;
       // Checks for search
       if (post.title.toLowerCase().includes(searchterm)
-      || post.location.toLowerCase().includes(searchterm)
+      || postLoc.toLowerCase().includes(searchterm)
       || skills.includes(searchterm) // array
       || responsibilities.includes(searchterm) // array
       || postInd.includes(searchterm) // array
@@ -151,7 +170,9 @@ class Posts extends Component {
       // Checks for filter
       || selectedInds.some((industry) => postInd.includes(industry))
       || selectedInds.some((industry) => startupInd.includes(industry))
-      || selectedSkills.some((skill) => skills.includes(skill))) {
+      || selectedSkills.some((skill) => skills.includes(skill))
+      || selectedLocations.includes(postLoc)
+      || selectedLocations.includes(startupLoc)) {
         this.setState((prevState) => ({
           results: [...prevState.results, post],
         }));
@@ -166,7 +187,10 @@ class Posts extends Component {
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(text, industries, skills, this.state.recommend);
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(text, industries, skills, locations, this.state.recommend);
     this.setState({ search: true, searchterm: text });
   }
 
@@ -174,11 +198,11 @@ class Posts extends Component {
     return array.length === 1 && array.includes('emptytext');
   }
 
-  onFilter = (industries, skills) => {
-    if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills)) {
+  onFilter = (industries, skills, locations) => {
+    if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills) && this.isFilterEmpty(locations)) {
       this.setState({ filter: false });
     } else this.setState({ filter: true });
-    this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
+    this.searchAndFilter(this.state.searchterm, industries, skills, locations, this.state.recommend);
   }
 
   onRecommendPress = () => {
@@ -200,7 +224,10 @@ class Posts extends Component {
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter('emptytext', industries, skills, this.state.recommend);
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter('emptytext', industries, skills, locations, this.state.recommend);
   }
 
   handleArchiveChange(checked) {
@@ -303,7 +330,10 @@ class Posts extends Component {
                 const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
                   ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                this.onFilter(industries, skills);
+                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                  ? this.state.selectedLocationOptions.map((option) => option.value)
+                  : ['emptytext'];
+                this.onFilter(industries, skills, locations);
               }}
             />
             <Select
@@ -321,7 +351,31 @@ class Posts extends Component {
                 const skills = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                this.onFilter(industries, skills);
+                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                  ? this.state.selectedLocationOptions.map((option) => option.value)
+                  : ['emptytext'];
+                this.onFilter(industries, skills, locations);
+              }}
+            />
+            <Select
+              isMulti
+              styles={dropdownStyles}
+              name="location-filter"
+              placeholder="Filter by location"
+              options={this.state.locationOptions}
+              value={this.state.selectedLocationOptions}
+              onChange={(selectedOptions) => {
+                this.setState({ selectedLocationOptions: selectedOptions });
+                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+                  ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                const locations = (selectedOptions && selectedOptions.length > 0)
+                  ? selectedOptions.map((option) => option.value)
+                  : ['emptytext'];
+                this.onFilter(industries, skills, locations);
               }}
             />
             {this.renderButtons()}

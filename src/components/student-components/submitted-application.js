@@ -47,7 +47,7 @@ class SubmittedApplication extends Component {
       return (
         <div>
           <h1>{post.title}</h1>
-          <div>{post.location}</div>
+          <div>{`${post.city}, ${post.state}`}</div>
           <h2 id="title">{this.props.current.status}</h2>
           {this.renderHelper()}
         </div>

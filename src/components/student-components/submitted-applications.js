@@ -77,7 +77,7 @@ class SubmittedApplications extends Component {
           <Link to={route} key={application.id} className="listItem link">
             <div className="Status">
               <div>{post.title}</div>
-              <div>{post.location}</div>
+              <div>{`${post.city}, ${post.state}`}</div>
               <div>status: {application.status}</div>
             </div>
           </Link>
@@ -97,7 +97,7 @@ class SubmittedApplications extends Component {
           <Link to={route} key={application.id} className="listItem link">
             <div className="Status">
               <div>{post.title}</div>
-              <div>{post.location}</div>
+              <div>{`${post.city}, ${post.state}`}</div>
               <div>status: {application.status}</div>
             </div>
           </Link>
