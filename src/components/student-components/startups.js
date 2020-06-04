@@ -39,7 +39,7 @@ class Startups extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.startups.length > 0) {
+    if (nextProps.startups?.length > 0) {
       const industryOptions = [];
       const locationOptions = [];
       nextProps.startups.forEach((startup) => {
@@ -70,7 +70,7 @@ class Startups extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.startups.length > 0 // && this.props.student !== {}
+    if (this.props.startups?.length > 0 // && this.props.student !== {}
       && (prevProps.startups !== this.props.startups)) {
       // Score posts
       this.loadApproved();
