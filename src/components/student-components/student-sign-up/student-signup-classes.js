@@ -5,7 +5,7 @@ import CreateableSelect from 'react-select/creatable';
 import '../../../styles/student-sign-up/student-signup-industries.scss';
 import {
   fetchStudentByUserID, fetchUser,
-  fetchAllClasses, fetchCertainClasses, createClass,
+  fetchAllClasses, fetchCertainClasses, createClassForStudent,
 } from '../../../actions';
 
 class StudentClasses extends Component {
@@ -49,16 +49,9 @@ class StudentClasses extends Component {
     return classObject;
   }
 
-  getClassName(id) {
-    const classObject = this.props.classes.all.find((course) => {
-      return (course.id === id);
-    });
-    return classObject.name;
-  }
-
   addClassDB = () => {
     if (!this.state.allClasses.includes(this.state.class)) {
-      this.props.createClass({ name: this.state.class });
+      this.props.createClassForStudent({ name: this.state.class });
     }
     this.props.fetchAllClasses();
   }
@@ -169,5 +162,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStudentByUserID, fetchUser, fetchAllClasses, fetchCertainClasses, createClass,
+  fetchStudentByUserID, fetchUser, fetchAllClasses, fetchCertainClasses, createClassForStudent,
 })(StudentClasses));

@@ -5,7 +5,7 @@ import CreateableSelect from 'react-select/creatable';
 import '../../../styles/student-sign-up/student-signup-industries.scss';
 import {
   fetchStudentByUserID, fetchUser,
-  fetchAllIndustries, fetchCertainIndustries, createIndustry,
+  fetchAllIndustries, fetchCertainIndustries, createIndustryForStudent,
 } from '../../../actions';
 
 class StudentIndustries extends Component {
@@ -49,16 +49,9 @@ class StudentIndustries extends Component {
     return industryObject;
   }
 
-  getIndustryName(id) {
-    const industryObject = this.props.industries.all.find((industry) => {
-      return (industry.id === id);
-    });
-    return industryObject.name;
-  }
-
   addIndustryDB = () => {
     if (!this.state.allIndustries.includes(this.state.industry)) {
-      this.props.createIndustry({ name: this.state.industry });
+      this.props.createIndustryForStudent({ name: this.state.industry });
     }
     this.props.fetchAllIndustries();
   }
@@ -169,5 +162,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStudentByUserID, fetchUser, fetchAllIndustries, fetchCertainIndustries, createIndustry,
+  fetchStudentByUserID, fetchUser, fetchAllIndustries, fetchCertainIndustries, createIndustryForStudent,
 })(StudentIndustries));

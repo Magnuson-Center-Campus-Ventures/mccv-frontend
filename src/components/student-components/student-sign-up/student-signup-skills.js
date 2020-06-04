@@ -5,7 +5,7 @@ import CreateableSelect from 'react-select/creatable';
 import '../../../styles/student-sign-up/student-signup-industries.scss';
 import {
   fetchStudentByUserID, fetchUser,
-  fetchAllSkills, fetchCertainSkills, createSkill,
+  fetchAllSkills, fetchCertainSkills, createSkillForStudent,
 } from '../../../actions';
 
 class StudentSkills extends Component {
@@ -49,16 +49,9 @@ class StudentSkills extends Component {
     return skillObject;
   }
 
-  getSkillName(id) {
-    const skillObject = this.props.skills.all.find((skill) => {
-      return (skill.id === id);
-    });
-    return skillObject.name;
-  }
-
   addSkillDB = () => {
     if (!this.state.allSkills.includes(this.state.skill)) {
-      this.props.createSkill({ name: this.state.skill });
+      this.props.createSkillForStudent({ name: this.state.skill });
     }
     this.props.fetchAllSkills();
   }
@@ -169,5 +162,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStudentByUserID, fetchUser, fetchAllSkills, fetchCertainSkills, createSkill,
+  fetchStudentByUserID, fetchUser, fetchAllSkills, fetchCertainSkills, createSkillForStudent,
 })(StudentSkills));
