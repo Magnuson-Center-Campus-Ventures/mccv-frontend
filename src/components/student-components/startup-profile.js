@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import {
   fetchStartup, fetchPosts, fetchPost, fetchUser,
 } from '../../actions/index';
@@ -81,11 +81,13 @@ class Startup extends Component {
       const mappingPostings = this.props.startup.posts.map((post) => {
         return (
           <li className="startup-posting" key={post._id}>
-            <div className="startup-posting-title">{post.title}</div>
-            <br />
-            {this.renderDescription(post)}
-            <br />
-            <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
+            <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
+              <div className="startup-posting-title">{post.title}</div>
+              <br />
+              {this.renderDescription(post)}
+              <br />
+              <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
+            </Link>
           </li>
         );
       });
