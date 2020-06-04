@@ -100,7 +100,6 @@ export function fetchPost(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/posts/${id}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        console.log(response.data);
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
       })
       .catch((error) => {
