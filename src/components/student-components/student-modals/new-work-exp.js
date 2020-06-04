@@ -21,6 +21,21 @@ class NewWorkExp extends React.Component {
     };
   }
 
+  // Date validation function modified from https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
+  isValidDate = (dateString) => {
+    // Check for yyyy-mm pattern
+    // if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString)) { return false; }
+    if (!/^\d{4}-\d{2}$/.test(dateString)) { return false; }
+
+    // Parse the date parts to integers
+    const parts = dateString.split('-');
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+
+    // Check the ranges of month and year
+    return (year > 1000 && year < 3000 && month !== 0 && month <= 12);
+  };
+
   render() {
     if (!this.props.show) {
       return null;
@@ -45,7 +60,7 @@ class NewWorkExp extends React.Component {
             <div className="input-title">Start Date (YYYY-MM)</div>
             <input className="short-input"
               placeholder="YYYY-MM"
-              onBlur={(event) => this.setState({ start_date: event.target.value })}
+              onBlur={(event) => console.log(this.isValidDate(event.target.value))} // this.setState({ start_date: event.target.value })}
             />
             {!this.state.currently_working
               ? (
