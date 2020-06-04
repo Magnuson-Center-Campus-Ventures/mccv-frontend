@@ -44,8 +44,8 @@ class Startups extends Component {
         if (startup.industries) {
           startup.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
-            if (industryOptions.filter((option) => option.value === industry).length === 0) {
-              industryOptions.push({ value: industry, label: industry });
+            if (industryOptions.filter((option) => option.value === industry.name).length === 0) {
+              industryOptions.push({ value: industry.name, label: industry.name });
             }
           });
         }
@@ -71,7 +71,7 @@ class Startups extends Component {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
     this.props.startups.forEach((startup) => {
-      const industries = startup.industries.map((industry) => industry.toLowerCase());
+      const industries = startup.industries.map((industry) => industry.name.toLowerCase());
       const location = `${startup.city}, ${startup.state}`;
       // Checks for search
       if (startup.name.toLowerCase().includes(searchterm)

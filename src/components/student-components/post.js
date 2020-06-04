@@ -67,7 +67,7 @@ class Post extends Component {
       for (const [index, value] of this.props.current.required_skills.entries()) {
         requiredSkills.push(
           // eslint-disable-next-line no-loop-func
-          <li id="skill" key={index}>{value}</li>,
+          <li id="skill" key={index}>{value.name}</li>,
         );
       }
       return requiredSkills;
@@ -82,7 +82,7 @@ class Post extends Component {
       for (const [index, value] of this.props.current.preferred_skills.entries()) {
         preferredSkills.push(
           // eslint-disable-next-line no-loop-func
-          <li id="skill" key={index}>{value}</li>,
+          <li id="skill" key={index}>{value.name}</li>,
         );
       }
       return preferredSkills;
