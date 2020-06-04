@@ -61,8 +61,7 @@ class Startup extends Component {
   }
 
   renderDescription = (post) => {
-    if (post.description !== undefined) {
-      // console.log(post.description);
+    if (post.description) {
       if (post.description.length > 100) {
         const description = `${post.description.substring(0, 99)}...`;
         return (
@@ -77,7 +76,7 @@ class Startup extends Component {
   }
 
   renderPostings() {
-    if (this.props.startup.posts) {
+    if (this.props.startup?.posts) {
       const mappingPostings = this.props.startup.posts.map((post) => {
         return (
           <li className="startup-posting" key={post._id}>
@@ -92,7 +91,7 @@ class Startup extends Component {
         );
       });
       return (
-        this.props.startup.posts !== undefined
+        this.props.startup.posts
           ? (
             <div className="startup-postings">
               <h1>Volunteer Positions:</h1>
@@ -110,7 +109,7 @@ class Startup extends Component {
   }
 
   renderIndustries() {
-    if (this.props.startup.industries) {
+    if (this.props.startup?.industries) {
       return (
         this.props.startup.industries.map((industry) => {
           return (
@@ -123,7 +122,7 @@ class Startup extends Component {
 
   renderButtons() {
     if (this.props.user.role === 'admin') {
-      if (this.props.startup.status === 'Approved') {
+      if (this.props.startup?.status === 'Approved') {
         return (
           <button
             type="submit"
@@ -134,7 +133,7 @@ class Startup extends Component {
             Archive
           </button>
         );
-      } else if (this.props.startup.status === 'Pending') {
+      } else if (this.props.startup?.status === 'Pending') {
         return (
           <div>
             <button
@@ -182,7 +181,7 @@ class Startup extends Component {
 
   render() {
     if (this._isMounted) {
-      if (this.props.startup.status === 'Approved') {
+      if (this.props.startup?.status === 'Approved') {
         return (
           <div className="startup">
             {this.renderPostings()}
