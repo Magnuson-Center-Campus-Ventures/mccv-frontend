@@ -155,19 +155,19 @@ class Startups extends Component {
     }
   }
 
-  handleApprovedChange(checked) {
-    this.setState({ approved: checked });
-    this.setState({ results: [] });
-    if (checked) {
-      this.props.startups.forEach((startup) => {
-        if (startup.status === 'Approved') {
-          this.setState((prevState) => ({
-            results: [...prevState.results, startup],
-          }));
-        }
-      });
-    }
-  }
+  // handleApprovedChange(checked) {
+  //   this.setState({ approved: checked });
+  //   this.setState({ results: [] });
+  //   if (checked) {
+  //     this.props.startups.forEach((startup) => {
+  //       if (startup.status === 'Approved') {
+  //         this.setState((prevState) => ({
+  //           results: [...prevState.results, startup],
+  //         }));
+  //       }
+  //     });
+  //   }
+  // }
 
   handlePendingChange(checked) {
     this.setState({ pending: checked });

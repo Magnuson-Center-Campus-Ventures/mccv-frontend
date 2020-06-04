@@ -8,7 +8,7 @@ import SearchBar from './search-bar';
 import {
   fetchPosts, fetchStudentByUserID, fetchUser,
 } from '../../actions';
-
+import { fetchIndustriesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
 
 class Posts extends Component {
@@ -153,12 +153,15 @@ class Posts extends Component {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
     const posts = recommend ? this.state.sortedPosts : this.state.live;
-    console.log(posts);
+    // console.log(posts);
     posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.name.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
       const postInd = post.industries.map((industry) => industry.name.toLowerCase());
-      const startupInd = post.startup_id.industries.map((industry) => industry.name.toLowerCase());
+      const startupInd = [];
+      fetchIndustriesFromID(post.startup_id.industries, (industry) => { startupInd.push(industry.name.toLowerCase()); });
+      // console.log(startupInd);
+      // const startupInd = post.startup_id.industries.map((industry) => industry.name.toLowerCase());
       const postLoc = `${post.city}, ${post.state}`;
       const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`;
       // Checks for search
