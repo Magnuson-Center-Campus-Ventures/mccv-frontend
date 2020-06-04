@@ -8,7 +8,6 @@ import SearchBar from './search-bar';
 import {
   fetchPosts, fetchStudentByUserID, fetchUser,
 } from '../../actions';
-// import ToggleSwitch from './toggle-switch';
 
 import '../../styles/postings.scss';
 
