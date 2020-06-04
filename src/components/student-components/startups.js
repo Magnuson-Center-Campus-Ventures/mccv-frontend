@@ -22,12 +22,14 @@ class Startups extends Component {
       search: false,
       filter: false,
       archive: false,
-      approved: false,
       pending: false,
+      approved: [],
+      archived: [],
+      pendingArr: [],
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
-    this.handleApprovedChange = this.handleApprovedChange.bind(this);
+    // this.handleApprovedChange = this.handleApprovedChange.bind(this);
     this.handlePendingChange = this.handlePendingChange.bind(this);
   }
 
@@ -67,10 +69,25 @@ class Startups extends Component {
     return null;
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.startups.length > 0 // && this.props.student !== {}
+      && (prevProps.startups !== this.props.startups)) {
+      // Score posts
+      this.loadApproved();
+    }
+  }
+
   searchAndFilter = (text, selectedIndustries, selectedLocations) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    this.props.startups.forEach((startup) => {
+    let startups = [];
+    // determining which set of startups are being searched on
+    if (this.props.user.role === 'admin') {
+      if (this.state.archive) { startups = this.state.archived; } else if (this.state.pending) { startups = this.state.pendingArr; } else { startups = this.state.approved; }
+    } else {
+      startups = this.state.approved;
+    }
+    startups.forEach((startup) => {
       const industries = startup.industries.map((industry) => industry.name.toLowerCase());
       const location = `${startup.city}, ${startup.state}`;
       // Checks for search
@@ -122,28 +139,24 @@ class Startups extends Component {
     this.searchAndFilter('emptytext', industries, locations);
   }
 
+  loadApproved() {
+    this.props.startups.forEach((startup) => {
+      if (startup.status === 'Approved') {
+        this.setState((prevState) => ({
+          approved: [...prevState.approved, startup],
+        }));
+      }
+    });
+  }
+
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
-    this.setState({ results: [] });
+    this.setState({ archived: [] });
     if (checked) {
       this.props.startups.forEach((startup) => {
         if (startup.status === 'Archived') {
           this.setState((prevState) => ({
-            results: [...prevState.results, startup],
-          }));
-        }
-      });
-    }
-  }
-
-  handleApprovedChange(checked) {
-    this.setState({ approved: checked });
-    this.setState({ results: [] });
-    if (checked) {
-      this.props.startups.forEach((startup) => {
-        if (startup.status === 'Approved') {
-          this.setState((prevState) => ({
-            results: [...prevState.results, startup],
+            archived: [...prevState.archived, startup],
           }));
         }
       });
@@ -152,12 +165,12 @@ class Startups extends Component {
 
   handlePendingChange(checked) {
     this.setState({ pending: checked });
-    this.setState({ results: [] });
+    this.setState({ pendingArr: [] });
     if (checked) {
       this.props.startups.forEach((startup) => {
         if (startup.status === 'Pending') {
           this.setState((prevState) => ({
-            results: [...prevState.results, startup],
+            pendingArr: [...prevState.pendingArr, startup],
           }));
         }
       });
@@ -165,7 +178,7 @@ class Startups extends Component {
   }
 
   renderStartups() {
-    if (this.state.search || this.state.filter || this.state.archive || this.state.approved || this.state.pending) {
+    if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
         return this.state.results.map((startup) => {
           return (
@@ -177,8 +190,20 @@ class Startups extends Component {
           <div> Sorry, no postings match that query</div>
         );
       }
+    } else if (this.state.archive) {
+      return this.state.archived.map((startup) => {
+        return (
+          <StartupListItem startup={startup} key={startup.id} />
+        );
+      });
+    } else if (this.state.pending) {
+      return this.state.pendingArr.map((startup) => {
+        return (
+          <StartupListItem startup={startup} key={startup.id} />
+        );
+      });
     } else {
-      return this.props.startups.map((startup) => {
+      return this.state.approved.map((startup) => {
         return (
           <StartupListItem startup={startup} key={startup.id} />
         );
@@ -190,8 +215,6 @@ class Startups extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          <h3>show approved startups: </h3>
-          <Switch id="approvedToggle" onChange={this.handleApprovedChange} checked={this.state.approved} />
           <h3>show pending startups:</h3>
           <Switch id="pendingToggle" onChange={this.handlePendingChange} checked={this.state.pending} />
           <h3>show archived startups:</h3>

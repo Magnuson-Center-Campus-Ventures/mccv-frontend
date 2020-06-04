@@ -8,8 +8,7 @@ import SearchBar from './search-bar';
 import {
   fetchPosts, fetchStudentByUserID, fetchUser,
 } from '../../actions';
-// import ToggleSwitch from './toggle-switch';
-
+import { fetchIndustriesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
 
 class Posts extends Component {
@@ -29,11 +28,12 @@ class Posts extends Component {
       search: false,
       filter: false,
       archive: false,
-      live: false,
+      archived: [],
+      live: [],
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
-    this.handleLiveChange = this.handleLiveChange.bind(this);
+    // this.handleLiveChange = this.handleLiveChange.bind(this);
   }
 
   componentDidMount() {
@@ -102,6 +102,10 @@ class Posts extends Component {
       && (prevProps.posts !== this.props.posts || prevProps.student !== this.props.student)) {
       // Score posts
       this.scorePosts();
+      // Load in approved posts
+      if (prevProps.posts !== this.props.posts) {
+        this.loadPosts();
+      }
     }
   }
 
@@ -152,12 +156,19 @@ class Posts extends Component {
   searchAndFilter = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    const posts = recommend ? this.state.sortedPosts : this.props.posts;
+    let posts = [];
+    if (this.props.user.role === 'admin') {
+      posts = this.state.archive ? this.state.archived : this.state.live;
+    } else {
+      posts = recommend ? this.state.sortedPosts : this.state.live;
+    }
+    // console.log(posts);
     posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.name.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
       const postInd = post.industries.map((industry) => industry.name.toLowerCase());
-      const startupInd = post.startup_id.industries.map((industry) => industry.name.toLowerCase());
+      const startupInd = [];
+      fetchIndustriesFromID(post.startup_id.industries, (industry) => { startupInd.push(industry.name.toLowerCase()); });
       const postLoc = `${post.city}, ${post.state}`;
       const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`;
       // Checks for search
@@ -231,28 +242,24 @@ class Posts extends Component {
     this.searchAndFilter('emptytext', industries, skills, locations, this.state.recommend);
   }
 
+  loadPosts() {
+    this.props.posts.forEach((post) => {
+      if (post.status === 'Approved') {
+        this.setState((prevState) => ({
+          live: [...prevState.live, post],
+        }));
+      }
+    });
+  }
+
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
-    this.setState({ results: [] });
+    this.setState({ archived: [] });
     if (checked) {
       this.props.posts.forEach((post) => {
         if (post.status === 'Archived') {
           this.setState((prevState) => ({
-            results: [...prevState.results, post],
-          }));
-        }
-      });
-    }
-  }
-
-  handleLiveChange(checked) {
-    this.setState({ live: checked });
-    this.setState({ results: [] });
-    if (checked) {
-      this.props.posts.forEach((post) => {
-        if (post.status === 'Approved') {
-          this.setState((prevState) => ({
-            results: [...prevState.results, post],
+            archived: [...prevState.archived, post],
           }));
         }
       });
@@ -260,7 +267,7 @@ class Posts extends Component {
   }
 
   renderPosts() {
-    if (this.state.search || this.state.filter || this.state.archive || this.state.live) {
+    if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
         return this.state.results.map((post) => {
           return (
@@ -272,8 +279,15 @@ class Posts extends Component {
           <div> Sorry, no postings match that query</div>
         );
       }
+    } else if (this.state.archive) {
+      const posts = this.state.archived;
+      return posts.map((post) => {
+        return (
+          <PostListItem user={this.props.user} post={post} key={post.id} />
+        );
+      });
     } else {
-      const posts = this.state.recommend ? this.state.sortedPosts : this.props.posts;
+      const posts = this.state.recommend ? this.state.sortedPosts : this.state.live;
       return posts.map((post) => {
         return (
           <PostListItem user={this.props.user} post={post} key={post.id} />
@@ -288,8 +302,6 @@ class Posts extends Component {
         <div id="filters">
           <h3>show archived: </h3>
           <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
-          <h3>show live posts:</h3>
-          <Switch id="archiveToggle" onChange={this.handleLiveChange} checked={this.state.live} />
         </div>
       );
     } else {
