@@ -34,6 +34,7 @@ const Archive = (props) => {
     }
     if (props.student) {
       const { student } = props;
+      delete student._id;
       student.status = 'Archived';
       props.updateStudent(student.id, student);
       props.onClose(e);
