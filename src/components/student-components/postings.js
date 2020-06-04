@@ -102,7 +102,10 @@ class Posts extends Component {
       && (prevProps.posts !== this.props.posts || prevProps.student !== this.props.student)) {
       // Score posts
       this.scorePosts();
-      this.loadPosts();
+      // Load in approved posts
+      if (prevProps.posts !== this.props.posts) {
+        this.loadPosts();
+      }
     }
   }
 
