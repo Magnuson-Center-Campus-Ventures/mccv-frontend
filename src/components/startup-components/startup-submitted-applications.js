@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import {
-  fetchSubmittedApplication, fetchSubmittedApplications, fetchPosts, fetchStartupByUserID, fetchUser,
+  fetchSubmittedApplication, fetchSubmittedApplications, fetchPosts, fetchStartupByUserID,
 } from '../../actions';
 import ToggleSwitch from '../toggle-switch';
 
@@ -25,10 +25,13 @@ class SubmittedApplications extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchStartupByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
+    this.props.fetchStartupByUserID(localStorage.getItem('userID'));
     this.props.fetchSubmittedApplications();
     this.props.fetchPosts();
+  }
+
+  componentDidUpdate() {
+
   }
 
   mapResults() {
@@ -66,46 +69,60 @@ class SubmittedApplications extends Component {
   }
 
   render() {
+    const startupPostIds = [];
+    if (this.props.posts.length > 0) {
+      this.props.posts.map((post) => {
+        if (post.startup_id._id === this.props.startup._id) {
+          startupPostIds.push(post._id);
+        }
+      });
+      console.log(startupPostIds);
+    }
     let mappingApplications = null;
     if (this.state.filtering) {
       mappingApplications = this.state.results.map((application) => {
-        const route = `/startupsubmittedapplications/${application._id}`;
-        let post = '';
-        for (const i in this.props.posts) {
-          if (this.props.posts[i].id === application.post_id) {
-            post = this.props.posts[i];
-            break;
+        console.log(application);
+        if (startupPostIds.includes(application.post_id)) {
+          const route = `/startupsubmittedapplications/${application._id}`;
+          let post = '';
+          for (const i in this.props.posts) {
+            if (this.props.posts[i].id === application.post_id) {
+              post = this.props.posts[i];
+              break;
+            }
           }
+          return (
+            <Link to={route} key={application.id} className="listItem link">
+              <div className="Status">
+                <div>{post.title}</div>
+                <div>{post.location}</div>
+                <div>status: {application.status}</div>
+              </div>
+            </Link>
+          );
         }
-        return (
-          <Link to={route} key={application.id} className="listItem link">
-            <div className="Status">
-              <div>{post.title}</div>
-              <div>{post.location}</div>
-              <div>status: {application.status}</div>
-            </div>
-          </Link>
-        );
       });
     } else {
       mappingApplications = this.props.submittedApplications.map((application) => {
-        const route = `/applications/${application._id}`;
-        let post = '';
-        for (const i in this.props.posts) {
-          if (this.props.posts[i].id === application.post_id) {
-            post = this.props.posts[i];
-            break;
+        if (startupPostIds.includes(application.post_id)) {
+          const route = `/applications/${application._id}`;
+          let post = '';
+          for (const i in this.props.posts) {
+            if (this.props.posts[i].id === application.post_id) {
+              post = this.props.posts[i];
+              break;
+            }
           }
+          return (
+            <Link to={route} key={application.id} className="listItem link">
+              <div className="Status">
+                <div>{post.title}</div>
+                <div>{post.location}</div>
+                <div>status: {application.status}</div>
+              </div>
+            </Link>
+          );
         }
-        return (
-          <Link to={route} key={application.id} className="listItem link">
-            <div className="Status">
-              <div>{post.title}</div>
-              <div>{post.location}</div>
-              <div>status: {application.status}</div>
-            </div>
-          </Link>
-        );
       });
     }
     return (
@@ -137,5 +154,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPosts, fetchSubmittedApplication, fetchSubmittedApplications, fetchStartupByUserID, fetchUser,
+  fetchPosts, fetchSubmittedApplication, fetchSubmittedApplications, fetchStartupByUserID,
 })(SubmittedApplications));
