@@ -132,7 +132,7 @@ class StudentProfileStartup extends Component {
           <div key={index} className="work-exp">
             <div>{workExp.role}</div>
             <div>{workExp.employer}</div>
-            <div>{workExp.location}</div>
+            <div>{`${workExp.city}, ${workExp.state}`}</div>
             <div className="date-row">
               {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
               {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}

@@ -108,7 +108,7 @@ class StartupProfile extends Component {
       return (
         this.props.startup.industries.map((industry) => {
           return (
-            <div className="industry" key={industry}>{industry}</div>
+            <div className="industry" key={industry.name}>{industry.name}</div>
           );
         })
       );
