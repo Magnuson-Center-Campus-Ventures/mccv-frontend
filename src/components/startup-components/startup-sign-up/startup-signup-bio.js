@@ -84,11 +84,6 @@ class StartupBio extends Component {
                <div className="StartupBioQuestionLabelContainer" />
              </div>
            </div>
-           <div className="buttonContainer">
-             <button type="submit" className="submit-btn-startup-bio" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-               Next
-             </button>
-           </div>
          </div>
        );
      }
