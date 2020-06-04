@@ -28,6 +28,7 @@ class Posts extends Component {
       search: false,
       filter: false,
       archive: false,
+      archived: [],
       live: [],
       results: [],
     };
@@ -152,7 +153,12 @@ class Posts extends Component {
   searchAndFilter = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    const posts = recommend ? this.state.sortedPosts : this.state.live;
+    let posts = [];
+    if (this.props.user.role === 'admin') {
+      posts = this.state.archive ? this.state.archived : this.state.live;
+    } else {
+      posts = recommend ? this.state.sortedPosts : this.state.live;
+    }
     // console.log(posts);
     posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.name.toLowerCase());
@@ -160,8 +166,6 @@ class Posts extends Component {
       const postInd = post.industries.map((industry) => industry.name.toLowerCase());
       const startupInd = [];
       fetchIndustriesFromID(post.startup_id.industries, (industry) => { startupInd.push(industry.name.toLowerCase()); });
-      // console.log(startupInd);
-      // const startupInd = post.startup_id.industries.map((industry) => industry.name.toLowerCase());
       const postLoc = `${post.city}, ${post.state}`;
       const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`;
       // Checks for search
@@ -247,12 +251,12 @@ class Posts extends Component {
 
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
-    this.setState({ results: [] });
+    this.setState({ archived: [] });
     if (checked) {
       this.props.posts.forEach((post) => {
         if (post.status === 'Archived') {
           this.setState((prevState) => ({
-            results: [...prevState.results, post],
+            archived: [...prevState.archived, post],
           }));
         }
       });
@@ -274,7 +278,7 @@ class Posts extends Component {
   // }
 
   renderPosts() {
-    if (this.state.search || this.state.filter || this.state.archive) {
+    if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
         return this.state.results.map((post) => {
           return (
@@ -286,6 +290,13 @@ class Posts extends Component {
           <div> Sorry, no postings match that query</div>
         );
       }
+    } else if (this.state.archive) {
+      const posts = this.state.archived;
+      return posts.map((post) => {
+        return (
+          <PostListItem user={this.props.user} post={post} key={post.id} />
+        );
+      });
     } else {
       const posts = this.state.recommend ? this.state.sortedPosts : this.state.live;
       return posts.map((post) => {

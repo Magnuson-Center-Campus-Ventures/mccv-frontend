@@ -79,7 +79,8 @@ class Startups extends Component {
   searchAndFilter = (text, selectedIndustries, selectedLocations) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    this.state.startups.forEach((startup) => {
+    const startups = this.props.user.role === 'admin' && this.state.archive ? this.state.results : this.state.approved;
+    startups.forEach((startup) => {
       const industries = startup.industries.map((industry) => industry.name.toLowerCase());
       const location = `${startup.city}, ${startup.state}`;
       // Checks for search
