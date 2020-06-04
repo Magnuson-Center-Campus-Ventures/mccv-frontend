@@ -22,8 +22,10 @@ class Startups extends Component {
       search: false,
       filter: false,
       archive: false,
-      approved: [],
       pending: false,
+      approved: [],
+      archived: [],
+      pendingArr: [],
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
@@ -72,14 +74,19 @@ class Startups extends Component {
       && (prevProps.startups !== this.props.startups)) {
       // Score posts
       this.loadApproved();
-      console.log('here');
     }
   }
 
   searchAndFilter = (text, selectedIndustries, selectedLocations) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    const startups = this.props.user.role === 'admin' && this.state.archive ? this.state.results : this.state.approved;
+    let startups = [];
+    // determining which set of startups are being searched on
+    if (this.props.user.role === 'admin') {
+      if (this.state.archive) { startups = this.state.archived; } else if (this.state.pending) { startups = this.state.pendingArr; } else { startups = this.state.approved; }
+    } else {
+      startups = this.state.approved;
+    }
     startups.forEach((startup) => {
       const industries = startup.industries.map((industry) => industry.name.toLowerCase());
       const location = `${startup.city}, ${startup.state}`;
@@ -144,40 +151,26 @@ class Startups extends Component {
 
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
-    this.setState({ results: [] });
+    this.setState({ archived: [] });
     if (checked) {
       this.props.startups.forEach((startup) => {
         if (startup.status === 'Archived') {
           this.setState((prevState) => ({
-            results: [...prevState.results, startup],
+            archived: [...prevState.archived, startup],
           }));
         }
       });
     }
   }
 
-  // handleApprovedChange(checked) {
-  //   this.setState({ approved: checked });
-  //   this.setState({ results: [] });
-  //   if (checked) {
-  //     this.props.startups.forEach((startup) => {
-  //       if (startup.status === 'Approved') {
-  //         this.setState((prevState) => ({
-  //           results: [...prevState.results, startup],
-  //         }));
-  //       }
-  //     });
-  //   }
-  // }
-
   handlePendingChange(checked) {
     this.setState({ pending: checked });
-    this.setState({ results: [] });
+    this.setState({ pendingArr: [] });
     if (checked) {
       this.props.startups.forEach((startup) => {
         if (startup.status === 'Pending') {
           this.setState((prevState) => ({
-            results: [...prevState.results, startup],
+            pendingArr: [...prevState.pendingArr, startup],
           }));
         }
       });
@@ -185,7 +178,7 @@ class Startups extends Component {
   }
 
   renderStartups() {
-    if (this.state.search || this.state.filter || this.state.archive || this.state.pending) {
+    if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
         return this.state.results.map((startup) => {
           return (
@@ -197,6 +190,18 @@ class Startups extends Component {
           <div> Sorry, no postings match that query</div>
         );
       }
+    } else if (this.state.archive) {
+      return this.state.archived.map((startup) => {
+        return (
+          <StartupListItem startup={startup} key={startup.id} />
+        );
+      });
+    } else if (this.state.pending) {
+      return this.state.pendingArr.map((startup) => {
+        return (
+          <StartupListItem startup={startup} key={startup.id} />
+        );
+      });
     } else {
       return this.state.approved.map((startup) => {
         return (
@@ -210,8 +215,6 @@ class Startups extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          {/* <h3>show approved startups: </h3>
-          <Switch id="approvedToggle" onChange={this.handleApprovedChange} checked={this.state.approved} /> */}
           <h3>show pending startups:</h3>
           <Switch id="pendingToggle" onChange={this.handlePendingChange} checked={this.state.pending} />
           <h3>show archived startups:</h3>

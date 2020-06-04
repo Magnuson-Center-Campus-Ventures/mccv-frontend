@@ -263,20 +263,6 @@ class Posts extends Component {
     }
   }
 
-  // handleLiveChange(checked) {
-  //   this.setState({ live: checked });
-  //   this.setState({ results: [] });
-  //   if (checked) {
-  //     this.props.posts.forEach((post) => {
-  //       if (post.status === 'Approved') {
-  //         this.setState((prevState) => ({
-  //           results: [...prevState.results, post],
-  //         }));
-  //       }
-  //     });
-  //   }
-  // }
-
   renderPosts() {
     if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
@@ -313,8 +299,6 @@ class Posts extends Component {
         <div id="filters">
           <h3>show archived: </h3>
           <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
-          {/* <h3>show live posts:</h3>
-          <Switch id="archiveToggle" onChange={this.handleLiveChange} checked={this.state.live} /> */}
         </div>
       );
     } else {
