@@ -366,8 +366,10 @@ class StudentProfile extends Component {
               <input className="short-input" defaultValue={workExp.role} onBlur={(event) => this.changeWorkExpField(index, 'role', event.target.value)} />
               <div className="input-title">Employer</div>
               <input className="short-input" defaultValue={workExp.employer} onBlur={(event) => this.changeWorkExpField(index, 'employer', event.target.value)} />
-              <div className="input-title">Location</div>
-              <input className="short-input" defaultValue={workExp.location} onBlur={(event) => this.changeWorkExpField(index, 'location', event.target.value)} />
+              <div className="input-title">City</div>
+              <input className="short-input" defaultValue={workExp.city} onBlur={(event) => this.changeWorkExpField(index, 'city', event.target.value)} />
+              <div className="input-title">State Abbreviation</div>
+              <input className="short-input" defaultValue={workExp.state} onBlur={(event) => this.changeWorkExpField(index, 'state', event.target.value)} />
               <div className="input-title">Start Date (YYYY-MM-DD)</div>
               <input className="short-input"
                 placeholder="YYYY-MM-DD"
@@ -411,7 +413,7 @@ class StudentProfile extends Component {
             <div key={index} className="work-exp">
               <div>{workExp.role}</div>
               <div>{workExp.employer}</div>
-              <div>{workExp.location}</div>
+              <div>{`${workExp.city}, ${workExp.state}`}</div>
               <div className="date-row">
                 {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
                 {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}

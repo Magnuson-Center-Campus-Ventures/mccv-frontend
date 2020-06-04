@@ -50,24 +50,24 @@ class Posts extends Component {
         if (post.industries) {
           post.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
-            if (industryOptions.filter((option) => option.value === industry).length === 0) {
-              industryOptions.push({ value: industry, label: industry });
+            if (industryOptions.filter((option) => option.value === industry.name).length === 0) {
+              industryOptions.push({ value: industry.name, label: industry.name });
             }
           });
         }
         if (post.startup_id.industries) {
           post.startup_id.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
-            if (industryOptions.filter((option) => option.value === industry).length === 0) {
-              industryOptions.push({ value: industry, label: industry });
+            if (industryOptions.filter((option) => option.value === industry.name).length === 0) {
+              industryOptions.push({ value: industry.name, label: industry.name });
             }
           });
         }
         if (post.required_skills) {
           post.required_skills.forEach((skill) => {
             // Add option if it's not already in the array
-            if (skillOptions.filter((option) => option.value === skill).length === 0) {
-              skillOptions.push({ value: skill, label: skill });
+            if (skillOptions.filter((option) => option.value === skill.name).length === 0) {
+              skillOptions.push({ value: skill.name, label: skill.name });
             }
           });
         }
@@ -127,12 +127,12 @@ class Posts extends Component {
       // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
       const postScores = {};
       this.props.posts.forEach((post) => {
-        const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry)).length
-        + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry)).length
-        + post.desired_classes.filter((_class) => studentClasses.includes(_class)).length
-        + post.required_skills.filter((skill) => studentSkills.includes(skill)).length
+        const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry.name)).length
+        + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry.name)).length
+        + post.desired_classes.filter((_class) => studentClasses.includes(_class.name)).length
+        + post.required_skills.filter((skill) => studentSkills.includes(skill.name)).length
         // Preferred skills get half the weight of required skills
-        + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill)).length);
+        + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill.name)).length);
         postScores[post._id] = numMatches;
       });
 
@@ -153,10 +153,10 @@ class Posts extends Component {
     const searchterm = text.toLowerCase();
     const posts = recommend ? this.state.sortedPosts : this.props.posts;
     posts.forEach((post) => {
-      const skills = post.required_skills.map((skill) => skill.toLowerCase());
+      const skills = post.required_skills.map((skill) => skill.name.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
-      const postInd = post.industries.map((industry) => industry.toLowerCase());
-      const startupInd = post.startup_id.industries.map((industry) => industry.toLowerCase());
+      const postInd = post.industries.map((industry) => industry.name.toLowerCase());
+      const startupInd = post.startup_id.industries.map((industry) => industry.name.toLowerCase());
       const postLoc = `${post.city}, ${post.state}`;
       const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`;
       // Checks for search

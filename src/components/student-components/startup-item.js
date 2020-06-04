@@ -8,7 +8,7 @@ const StartupListItem = (props) => {
   const industries = props.startup.industries.map((industry, index) => {
     return (
       <div className="industryPill" key={index}>
-        {industry}
+        {industry.name}
       </div>
     );
   });
