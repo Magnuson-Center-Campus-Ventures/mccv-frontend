@@ -165,7 +165,7 @@ class Startup extends Component {
       return (
         <div className="startup-body">
           <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
-          <div className="startup-location">Location: {`${this.props.startup.location}`}</div>
+          <div className="startup-location">Location: {`${this.props.startup.city}, ${this.props.startup.state}`}</div>
           <div className="startup-industries"><div>Industry: </div>{this.renderIndustries()}</div>
           <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
           {this.renderButtons()}
