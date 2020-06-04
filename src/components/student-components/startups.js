@@ -22,12 +22,12 @@ class Startups extends Component {
       search: false,
       filter: false,
       archive: false,
-      approved: false,
+      approved: [],
       pending: false,
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
-    this.handleApprovedChange = this.handleApprovedChange.bind(this);
+    // this.handleApprovedChange = this.handleApprovedChange.bind(this);
     this.handlePendingChange = this.handlePendingChange.bind(this);
   }
 
@@ -67,10 +67,19 @@ class Startups extends Component {
     return null;
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.startups.length > 0 // && this.props.student !== {}
+      && (prevProps.startups !== this.props.startups)) {
+      // Score posts
+      this.loadApproved();
+      console.log('here');
+    }
+  }
+
   searchAndFilter = (text, selectedIndustries, selectedLocations) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    this.props.startups.forEach((startup) => {
+    this.state.startups.forEach((startup) => {
       const industries = startup.industries.map((industry) => industry.name.toLowerCase());
       const location = `${startup.city}, ${startup.state}`;
       // Checks for search
@@ -122,6 +131,16 @@ class Startups extends Component {
     this.searchAndFilter('emptytext', industries, locations);
   }
 
+  loadApproved() {
+    this.props.startups.forEach((startup) => {
+      if (startup.status === 'Approved') {
+        this.setState((prevState) => ({
+          approved: [...prevState.approved, startup],
+        }));
+      }
+    });
+  }
+
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
     this.setState({ results: [] });
@@ -165,7 +184,7 @@ class Startups extends Component {
   }
 
   renderStartups() {
-    if (this.state.search || this.state.filter || this.state.archive || this.state.approved || this.state.pending) {
+    if (this.state.search || this.state.filter || this.state.archive || this.state.pending) {
       if (this.state.results.length > 0) {
         return this.state.results.map((startup) => {
           return (
@@ -178,7 +197,7 @@ class Startups extends Component {
         );
       }
     } else {
-      return this.props.startups.map((startup) => {
+      return this.state.approved.map((startup) => {
         return (
           <StartupListItem startup={startup} key={startup.id} />
         );
@@ -190,8 +209,8 @@ class Startups extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          <h3>show approved startups: </h3>
-          <Switch id="approvedToggle" onChange={this.handleApprovedChange} checked={this.state.approved} />
+          {/* <h3>show approved startups: </h3>
+          <Switch id="approvedToggle" onChange={this.handleApprovedChange} checked={this.state.approved} /> */}
           <h3>show pending startups:</h3>
           <Switch id="pendingToggle" onChange={this.handlePendingChange} checked={this.state.pending} />
           <h3>show archived startups:</h3>

@@ -28,11 +28,11 @@ class Posts extends Component {
       search: false,
       filter: false,
       archive: false,
-      live: false,
+      live: [],
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
-    this.handleLiveChange = this.handleLiveChange.bind(this);
+    // this.handleLiveChange = this.handleLiveChange.bind(this);
   }
 
   componentDidMount() {
@@ -101,6 +101,7 @@ class Posts extends Component {
       && (prevProps.posts !== this.props.posts || prevProps.student !== this.props.student)) {
       // Score posts
       this.scorePosts();
+      this.loadPosts();
     }
   }
 
@@ -151,7 +152,8 @@ class Posts extends Component {
   searchAndFilter = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    const posts = recommend ? this.state.sortedPosts : this.props.posts;
+    const posts = recommend ? this.state.sortedPosts : this.state.live;
+    console.log(posts);
     posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.name.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
@@ -230,6 +232,16 @@ class Posts extends Component {
     this.searchAndFilter('emptytext', industries, skills, locations, this.state.recommend);
   }
 
+  loadPosts() {
+    this.props.posts.forEach((post) => {
+      if (post.status === 'Approved') {
+        this.setState((prevState) => ({
+          live: [...prevState.live, post],
+        }));
+      }
+    });
+  }
+
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
     this.setState({ results: [] });
@@ -244,22 +256,22 @@ class Posts extends Component {
     }
   }
 
-  handleLiveChange(checked) {
-    this.setState({ live: checked });
-    this.setState({ results: [] });
-    if (checked) {
-      this.props.posts.forEach((post) => {
-        if (post.status === 'Approved') {
-          this.setState((prevState) => ({
-            results: [...prevState.results, post],
-          }));
-        }
-      });
-    }
-  }
+  // handleLiveChange(checked) {
+  //   this.setState({ live: checked });
+  //   this.setState({ results: [] });
+  //   if (checked) {
+  //     this.props.posts.forEach((post) => {
+  //       if (post.status === 'Approved') {
+  //         this.setState((prevState) => ({
+  //           results: [...prevState.results, post],
+  //         }));
+  //       }
+  //     });
+  //   }
+  // }
 
   renderPosts() {
-    if (this.state.search || this.state.filter || this.state.archive || this.state.live) {
+    if (this.state.search || this.state.filter || this.state.archive) {
       if (this.state.results.length > 0) {
         return this.state.results.map((post) => {
           return (
@@ -272,7 +284,7 @@ class Posts extends Component {
         );
       }
     } else {
-      const posts = this.state.recommend ? this.state.sortedPosts : this.props.posts;
+      const posts = this.state.recommend ? this.state.sortedPosts : this.state.live;
       return posts.map((post) => {
         return (
           <PostListItem user={this.props.user} post={post} key={post.id} />
@@ -287,8 +299,8 @@ class Posts extends Component {
         <div id="filters">
           <h3>show archived: </h3>
           <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
-          <h3>show live posts:</h3>
-          <Switch id="archiveToggle" onChange={this.handleLiveChange} checked={this.state.live} />
+          {/* <h3>show live posts:</h3>
+          <Switch id="archiveToggle" onChange={this.handleLiveChange} checked={this.state.live} /> */}
         </div>
       );
     } else {
