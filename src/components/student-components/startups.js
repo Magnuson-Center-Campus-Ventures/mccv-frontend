@@ -78,7 +78,12 @@ class Startups extends Component {
   }
 
   searchAndFilter = (text, selectedIndustries, selectedLocations) => {
-    this.setState({ results: [] });
+    this.setState({ results: [] }, () => {
+      this.searchAndFilterCallback(text, selectedIndustries, selectedLocations);
+    });
+  }
+
+  searchAndFilterCallback = (text, selectedIndustries, selectedLocations) => {
     const searchterm = text.toLowerCase();
     let startups = [];
     // determining which set of startups are being searched on
@@ -161,6 +166,13 @@ class Startups extends Component {
         }
       });
     }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, locations);
   }
 
   handlePendingChange(checked) {
@@ -175,6 +187,13 @@ class Startups extends Component {
         }
       });
     }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, locations);
   }
 
   renderStartups() {
