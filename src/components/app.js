@@ -66,7 +66,7 @@ const App = (props) => {
           <Route path="/startup-signup-industries" component={StartupSignUpIndustries} />
           <Route path="/startup-signup-video" component={StartupSignUpVideo} />
           <Route path="/startup-signup" component={StartupSignUp} />
-          <Route render={() => (<div>post not found </div>)} />
+          <Route render={() => (<div>page not found </div>)} />
         </Switch>
       </div>
     </Router>
