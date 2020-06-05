@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react';
@@ -81,11 +82,11 @@ class Students extends Component {
   }
 
   scoreStudents = () => {
+    const startupIndustries = [];
+    const postsReqSkills = [];
+    const postsPrefSkills = [];
+    const postsClasses = [];
     if (this.props.user.role === 'student') {
-      const startupIndustries = [];
-      const postsReqSkills = [];
-      const postsPrefSkills = [];
-      const postsClasses = [];
       if (this.props.startup.industries) {
         this.props.startup.industries.forEach((industry) => {
           startupIndustries.push(industry);
@@ -130,7 +131,17 @@ class Students extends Component {
   searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    const students = recommend ? this.state.sortedStudents : this.props.students;
+    // let students = [];
+    // if (this.props.user.role === 'admin') {
+    //   console.log('archived? ', this.state.archive);
+    //   students = this.state.archive ? this.state.archived : this.state.live;
+    // } else {
+    //   students = recommend ? this.state.sortedStudents : this.state.live;
+    // }
+    const students = this.props.user.role === 'admin' ? this.state.archive ? this.state.archived : this.state.live
+      : recommend ? this.state.sortedStudents : this.state.live;
+    console.log('students: ', students);
+    console.log('results:', this.state.results);
     students.map((student) => {
       const majors = student.majors.map((major) => major.toLowerCase());
       const minors = student.minors.map((minor) => minor.toLowerCase());
@@ -222,6 +233,13 @@ class Students extends Component {
         }
       });
     }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
   }
 
   renderStudents() {
