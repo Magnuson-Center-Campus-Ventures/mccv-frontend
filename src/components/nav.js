@@ -64,7 +64,7 @@ class Nav extends Component {
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
           <li><NavLink to="/students">Students</NavLink></li>
-          <li><NavLink to="/applications">Applications</NavLink></li>
+          <li><NavLink to="/startupsubmittedapplications">Applications</NavLink></li>
           <li>
             <div className="userDropdown">
               <button type="button" className="navNameBtn">
