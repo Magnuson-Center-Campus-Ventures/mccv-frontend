@@ -138,7 +138,6 @@ class Students extends Component {
     const searchterm = text.toLowerCase();
     let students = [];
     if (this.props.user.role === 'admin') {
-      console.log('archived? ', this.state.archive);
       students = this.state.archive ? this.state.archived : this.state.live;
     } else {
       students = recommend ? this.state.sortedStudents : this.state.live;
