@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -114,17 +115,17 @@ class Posts extends Component {
     const studentSkills = [];
     const studentClasses = [];
     if (this.props.user.role === 'student') {
-      if (this.props.student.interested_industries) {
+      if (this.props.student?.interested_industries) {
         this.props.student.interested_industries.forEach((industry) => {
           studentIndustries.push(industry.name);
         });
       }
-      if (this.props.student.skills) {
+      if (this.props.student?.skills) {
         this.props.student.skills.forEach((skill) => {
           studentSkills.push(skill.name);
         });
       }
-      if (this.props.student.relevant_classes) {
+      if (this.props.student?.relevant_classes) {
         this.props.student.relevant_classes.forEach((_class) => {
           studentClasses.push(_class.name);
         });
@@ -154,7 +155,10 @@ class Posts extends Component {
   }
 
   searchAndFilter = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
-    this.setState({ results: [] });
+    this.setState({ results: [] }, () => this.searchAndFilterCallback(text, selectedInds, selectedSkills, selectedLocations, recommend));
+  }
+
+  searchAndFilterCallback = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
     const searchterm = text.toLowerCase();
     let posts = [];
     if (this.props.user.role === 'admin') {
@@ -162,7 +166,6 @@ class Posts extends Component {
     } else {
       posts = recommend ? this.state.sortedPosts : this.state.live;
     }
-    // console.log(posts);
     posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.name.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
@@ -170,7 +173,8 @@ class Posts extends Component {
       const startupInd = [];
       fetchIndustriesFromID(post.startup_id.industries, (industry) => { startupInd.push(industry.name.toLowerCase()); });
       const postLoc = `${post.city}, ${post.state}`;
-      const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`;
+      const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`.toLowerCase();
+      // console.log(startupLoc);
       // Checks for search
       if (post.title.toLowerCase().includes(searchterm)
       || postLoc.toLowerCase().includes(searchterm)
@@ -264,6 +268,16 @@ class Posts extends Component {
         }
       });
     }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, skills, locations, this.state.recommend);
   }
 
   renderPosts() {

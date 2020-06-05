@@ -16,17 +16,9 @@ class Nav extends Component {
   }
 
   componentDidMount() {
-    // console.log(localStorage.getItem('userID'));
     this.setState({ usertype: this.props.user.role });
     this._isMounted = true;
   }
-
-  // componentDidUpdate() {
-  //   if (this.props.user.role !== this.state.usertype) {
-  //     this.props.fetchUser(localStorage.getItem('userID'));
-  //     this.setState({ usertype: this.props.user.role });
-  //   }
-  // }
 
   signout = (event) => {
     localStorage.clear();
@@ -64,7 +56,7 @@ class Nav extends Component {
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
           <li><NavLink to="/students">Students</NavLink></li>
-          <li><NavLink to="/applications">Applications</NavLink></li>
+          <li><NavLink to="/startupsubmittedapplications">Applications</NavLink></li>
           <li>
             <div className="userDropdown">
               <button type="button" className="navNameBtn">

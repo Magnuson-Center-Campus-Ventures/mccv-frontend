@@ -298,7 +298,6 @@ function mapStateToProps(reduxState) {
   return {
     startup: reduxState.startups.current,
     industries: reduxState.industries.all,
-    // posts: reduxState.posts.all,
   };
 }
 

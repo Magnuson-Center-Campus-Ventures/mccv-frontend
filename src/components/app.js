@@ -25,7 +25,7 @@ import StartupSignUpDesc from './startup-components/startup-sign-up/startup-sign
 import StartupSignUpVideo from './startup-components/startup-sign-up/startup-signup-video';
 import StartupSignUpIndustries from './startup-components/startup-sign-up/startup-signup-industries';
 import StartupSignUp from './startup-components/startup-sign-up/startup-signup';
-import StartupSubmittedApplication from './startup-components/startup-submitted-application';
+import ApplicationListItem from './startup-components/application-list-item';
 import StartupSubmittedApplications from './startup-components/startup-submitted-applications';
 
 const App = (props) => {
@@ -49,7 +49,7 @@ const App = (props) => {
           <Route path="/studentsfaq" component={StudentsFAQ} />
           <Route path="/startupsfaq" component={StartupsFAQ} />
           <Route path="/startupslanding" component={StartupsLanding} />
-          <Route path="/startupsubmittedapplications/:applicationID" component={StartupSubmittedApplication} />
+          <Route path="/startupsubmittedapplications/:applicationID" component={ApplicationListItem} />
           <Route path="/startupsubmittedapplications" component={StartupSubmittedApplications} />
           {/* <Route path="/student-signup-bio" component={StudentSignUpBio} />
           <Route path="/student-signup-timing" component={StudentSignUpTiming} />
@@ -66,7 +66,7 @@ const App = (props) => {
           <Route path="/startup-signup-industries" component={StartupSignUpIndustries} />
           <Route path="/startup-signup-video" component={StartupSignUpVideo} />
           <Route path="/startup-signup" component={StartupSignUp} />
-          <Route render={() => (<div>post not found </div>)} />
+          <Route render={() => (<div>page not found </div>)} />
         </Switch>
       </div>
     </Router>

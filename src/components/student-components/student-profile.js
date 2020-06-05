@@ -1,10 +1,12 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable camelcase */
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import TextareaAutosize from 'react-textarea-autosize';
+// import TextareaAutosize from 'react-textarea-autosize';
 import CreateableSelect from 'react-select/creatable';
 import {
   fetchStudentByUserID, updateStudent, fetchUser,
@@ -13,6 +15,8 @@ import {
   fetchAllIndustries, fetchAllClasses, fetchAllSkills,
   createIndustryForStudent, createSkillForStudent, createClassForStudent,
 } from '../../actions';
+import WorkExperience from './work-experience';
+import OtherExperience from './other-experience';
 import NewWorkExp from './student-modals/new-work-exp';
 import NewOtherExp from './student-modals/new-other-exp';
 import '../../styles/student-profile.scss';
@@ -26,6 +30,8 @@ class StudentProfile extends Component {
       showWorkExpModal: false,
       showOtherExpModal: false,
       student: {},
+      majors: [],
+      minors: [],
       workExps: [],
       otherExps: [],
       ownIndustries: [],
@@ -52,7 +58,7 @@ class StudentProfile extends Component {
   // and fetch a student's experiences,
   // once the student is loaded into props
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.student !== {} && prevProps.student !== this.props.student) {
+    if (this.props.student && this.props.student !== {} && prevProps.student !== this.props.student) {
       if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
         this.props.fetchWorkExperiences(this.props.student.work_exp);
       }
@@ -81,6 +87,8 @@ class StudentProfile extends Component {
 
       this.setState({
         student: this.props.student,
+        majors: this.props.student.majors,
+        minors: this.props.student.minors,
         ownIndustries: this.props.student.interested_industries,
         selectedIndustryOptions,
         ownClasses: this.props.student.relevant_classes,
@@ -120,7 +128,6 @@ class StudentProfile extends Component {
   }
 
   changeStudentField = (field, event) => {
-    // eslint-disable-next-line prefer-destructuring
     const value = event.target.value;
 
     this.setState((prevState) => {
@@ -134,7 +141,6 @@ class StudentProfile extends Component {
   }
 
   changeWorkExpField = (index, field, value) => {
-    // eslint-disable-next-line prefer-destructuring
     this.setState((prevState) => {
       const workExps = [...prevState.workExps];
       workExps[index][field] = value;
@@ -146,7 +152,6 @@ class StudentProfile extends Component {
   }
 
   changeOtherExpField = (index, field, value) => {
-    // eslint-disable-next-line prefer-destructuring
     this.setState((prevState) => {
       const otherExps = [...prevState.otherExps];
       otherExps[index][field] = value;
@@ -175,17 +180,18 @@ class StudentProfile extends Component {
 
   submit = () => {
     if (this.state.isEditing) {
-      this.props.updateStudent(this.state.student.id, this.state.student);
+      const student = { ...this.state.student };
+      student.majors = this.state.majors;
+      student.minors = this.state.minors;
+      this.props.updateStudent(this.state.student.id, student);
       this.state.workExps.forEach((workExp) => {
         this.props.updateWorkExperience(workExp._id, workExp);
       });
       this.state.otherExps.forEach((otherExp) => {
         this.props.updateOtherExperience(otherExp._id, otherExp);
       });
-      this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
-    } else {
-      this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
     }
+    this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
   }
 
   renderMajMin = (array) => {
@@ -202,6 +208,78 @@ class StudentProfile extends Component {
         }
       });
     } else return null;
+  }
+
+  renderEditMajors = () => {
+    return this.state.majors.map((major, index) => {
+      return (
+        <div key={major}>
+          <input className="short-input"
+            defaultValue={major}
+            onBlur={(event) => {
+              const value = event.target.value;
+              this.setState((prevState) => {
+                const majors = [...prevState.majors];
+                majors[index] = value;
+                return {
+                  ...prevState,
+                  majors,
+                };
+              });
+            }}
+          />
+          <button className="del-maj-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                const majors = [...prevState.majors];
+                majors.splice(index, 1);
+                return {
+                  ...prevState,
+                  majors,
+                };
+              });
+            }}
+          >Delete Major
+          </button>
+        </div>
+      );
+    });
+  }
+
+  renderEditMinors = () => {
+    return this.state.minors.map((minor, index) => {
+      return (
+        <div key={minor}>
+          <input className="short-input"
+            defaultValue={minor}
+            onBlur={(event) => {
+              const value = event.target.value;
+              this.setState((prevState) => {
+                const minors = [...prevState.minors];
+                minors[index] = value;
+                return {
+                  ...prevState,
+                  minors,
+                };
+              });
+            }}
+          />
+          <button className="del-maj-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                const minors = [...prevState.minors];
+                minors.splice(index, 1);
+                return {
+                  ...prevState,
+                  minors,
+                };
+              });
+            }}
+          >Delete Minor
+          </button>
+        </div>
+      );
+    });
   }
 
   renderPills = (pillsArray) => {
@@ -223,14 +301,44 @@ class StudentProfile extends Component {
       return (
         <div className="profile-edit">
           <div className="input-title">First Name</div>
-          <input className="short-input" defaultValue={this.props.student.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
+          <input className="short-input" defaultValue={this.props.student?.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
           <div className="input-title">Last Name</div>
-          <input className="short-input" defaultValue={this.props.student.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
+          <input className="short-input" defaultValue={this.props.student?.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
           <div className="input-title">Phone Number</div>
           <input className="short-input"
-            defaultValue={this.props.student.phone_number ? this.props.student.phone_number : null}
+            defaultValue={this.props.student?.phone_number ? this.props.student?.phone_number : null}
             onBlur={(event) => this.changeStudentField('phone_number', event)}
           />
+          <div className="input-title">Majors</div>
+          {this.renderEditMajors()}
+          <button className="add-maj-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                const majors = [...prevState.majors];
+                majors.push('');
+                return {
+                  ...prevState,
+                  majors,
+                };
+              });
+            }}
+          >Add Major
+          </button>
+          <div className="input-title">Minors</div>
+          {this.renderEditMinors()}
+          <button className="add-maj-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                const minors = [...prevState.minors];
+                minors.push('');
+                return {
+                  ...prevState,
+                  minors,
+                };
+              });
+            }}
+          >Add Minor
+          </button>
           <div id="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
@@ -327,12 +435,12 @@ class StudentProfile extends Component {
         <div className="profile-fixed">
           <div id="profile-header">
             <h1>{`${this.state.student.first_name} ${this.state.student.last_name}`}</h1>
-            <div>{`Class of ${this.props.student.grad_year}`}</div>
+            <div>{`Class of ${this.props.student?.grad_year}`}</div>
             <div id="major-row">
-              {this.renderMajMin(this.props.student.majors)}
+              {this.renderMajMin(this.props.student?.majors)}
             </div>
             <div id="minor-row">
-              {this.renderMajMin(this.props.student.minors)}
+              {this.renderMajMin(this.props.student?.minors)}
             </div>
             <div>{this.props.email}</div>
             <div>{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
@@ -358,98 +466,33 @@ class StudentProfile extends Component {
 
   renderWorkExperiences = () => {
     if (this.state.workExps !== []) {
-      if (this.state.isEditing) {
-        return this.state.workExps.map((workExp, index) => {
-          return (
-            <div key={index} className="work-exp">
-              <div className="input-title">Role</div>
-              <input className="short-input" defaultValue={workExp.role} onBlur={(event) => this.changeWorkExpField(index, 'role', event.target.value)} />
-              <div className="input-title">Employer</div>
-              <input className="short-input" defaultValue={workExp.employer} onBlur={(event) => this.changeWorkExpField(index, 'employer', event.target.value)} />
-              <div className="input-title">City</div>
-              <input className="short-input" defaultValue={workExp.city} onBlur={(event) => this.changeWorkExpField(index, 'city', event.target.value)} />
-              <div className="input-title">State Abbreviation</div>
-              <input className="short-input" defaultValue={workExp.state} onBlur={(event) => this.changeWorkExpField(index, 'state', event.target.value)} />
-              <div className="input-title">Start Date (YYYY-MM-DD)</div>
-              <input className="short-input"
-                placeholder="YYYY-MM-DD"
-                defaultValue={`${new Date(workExp.start_date).getFullYear()}-${new Date(workExp.start_date).getMonth() + 1}`}
-                // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
-                onBlur={(event) => this.changeWorkExpField(index, 'start_date', `${event.target.value}-15`)}
-              />
-              {!workExp.currently_working
-                ? (
-                  <div>
-                    <div className="input-title">End Date (YYYY-MM-DD)</div>
-                    <input className="short-input"
-                      placeholder="YYYY-MM-DD"
-                      defaultValue={`${new Date(workExp.end_date).getFullYear()}-${new Date(workExp.end_date).getMonth() + 1}`}
-                      // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
-                      onBlur={(event) => this.changeWorkExpField(index, 'end_date', `${event.target.value}-15`)}
-                    />
-                  </div>
-                )
-                : null}
-              <form>
-                <label htmlFor={`currentlyWorking-${workExp._id}`}>I currently work here
-                  <input
-                    name="currentlyWorking"
-                    id={`currentlyWorking-${workExp._id}`}
-                    type="checkbox"
-                    checked={workExp.currently_working}
-                    onChange={(event) => this.changeWorkExpField(index, 'currently_working', event.target.checked)}
-                  />
-                </label>
-              </form>
-              <div className="input-title">Description</div>
-              <TextareaAutosize className="tall-input" defaultValue={workExp.description} onBlur={(event) => this.changeWorkExpField(index, 'description', event.target.value)} />
-              <button onClick={() => this.props.deleteWorkExperience(workExp._id)}>Delete Work Experience</button>
-            </div>
-          );
-        });
-      } else {
-        return this.state.workExps.map((workExp, index) => {
-          return (
-            <div key={index} className="work-exp">
-              <div>{workExp.role}</div>
-              <div>{workExp.employer}</div>
-              <div>{`${workExp.city}, ${workExp.state}`}</div>
-              <div className="date-row">
-                {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
-                {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}
-              </div>
-              <div>{workExp.description}</div>
-            </div>
-          );
-        });
-      }
+      return this.state.workExps.map((workExp, index) => {
+        return (
+          <WorkExperience key={index}
+            className="work-exp"
+            isEditing={this.state.isEditing}
+            workExp={workExp}
+            index={index}
+            changeWorkExpField={this.changeWorkExpField}
+          />
+        );
+      });
     } else return null;
   }
 
   renderOtherExperiences = () => {
     if (this.state.otherExps !== []) {
-      if (this.state.isEditing) {
-        return this.state.otherExps.map((otherExp, index) => {
-          return (
-            <div key={index} className="work-exp">
-              <div className="input-title">Name</div>
-              <input className="short-input" defaultValue={otherExp.name} onBlur={(event) => this.changeOtherExpField(index, 'name', event.target.value)} />
-              <div className="input-title">Description</div>
-              <TextareaAutosize className="tall-input" defaultValue={otherExp.description} onBlur={(event) => this.changeOtherExpField(index, 'description', event.target.value)} />
-              <button onClick={() => this.props.deleteOtherExperience(otherExp._id)}>Delete Experience</button>
-            </div>
-          );
-        });
-      } else {
-        return this.state.otherExps.map((otherExp, index) => {
-          return (
-            <div key={index} className="work-exp">
-              <div>{otherExp.name}</div>
-              <div>{otherExp.description}</div>
-            </div>
-          );
-        });
-      }
+      return this.state.otherExps.map((otherExp, index) => {
+        return (
+          <OtherExperience key={index}
+            className="work-exp"
+            isEditing={this.state.isEditing}
+            otherExp={otherExp}
+            index={index}
+            changeOtherExpField={this.changeOtherExpField}
+          />
+        );
+      });
     } else return null;
   }
 
@@ -467,11 +510,27 @@ class StudentProfile extends Component {
         {this.renderBody()}
         <div id="work-exps">
           <h2>Work Experience</h2>
+          {this.state.isEditing ? (
+            <button
+              onClick={() => {
+                this.setState({ showWorkExpModal: true });
+                window.scrollTo(0, 0);
+              }}
+            >Add Work Experience
+            </button>
+          ) : null}
           {this.renderWorkExperiences()}
-          {this.state.isEditing ? <button onClick={() => this.setState({ showWorkExpModal: true })}>Add Work Experience</button> : null}
           <h2>Other Experience</h2>
+          {this.state.isEditing ? (
+            <button
+              onClick={() => {
+                this.setState({ showOtherExpModal: true });
+                window.scrollTo(0, 0);
+              }}
+            >Add Other Experience
+            </button>
+          ) : null}
           {this.renderOtherExperiences()}
-          {this.state.isEditing ? <button onClick={() => this.setState({ showOtherExpModal: true })}>Add Other Experience</button> : null}
         </div>
         <button className="edit-button"
           onClick={this.submit}
