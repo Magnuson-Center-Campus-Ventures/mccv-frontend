@@ -29,7 +29,6 @@ class Startups extends Component {
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
-    // this.handleApprovedChange = this.handleApprovedChange.bind(this);
     this.handlePendingChange = this.handlePendingChange.bind(this);
   }
 
@@ -72,7 +71,7 @@ class Startups extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.startups?.length > 0 // && this.props.student !== {}
       && (prevProps.startups !== this.props.startups)) {
-      // Score posts
+      // render only approved startups
       this.loadApproved();
     }
   }
@@ -94,7 +93,7 @@ class Startups extends Component {
     }
     startups.forEach((startup) => {
       const industries = startup.industries.map((industry) => industry.name.toLowerCase());
-      const location = `${startup.city}, ${startup.state}`;
+      const location = `${startup.city}, ${startup.state}`.toLowerCase();
       // Checks for search
       if (startup.name.toLowerCase().includes(searchterm)
       || startup.city.toLowerCase().includes(searchterm)

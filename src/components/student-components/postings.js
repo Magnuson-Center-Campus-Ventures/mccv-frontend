@@ -159,7 +159,6 @@ class Posts extends Component {
   }
 
   searchAndFilterCallback = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
-    // this.setState({ results: [] });
     const searchterm = text.toLowerCase();
     let posts = [];
     if (this.props.user.role === 'admin') {
@@ -167,8 +166,6 @@ class Posts extends Component {
     } else {
       posts = recommend ? this.state.sortedPosts : this.state.live;
     }
-    // console.log(posts);
-    console.log('results:', this.state.results);
     posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.name.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
@@ -176,7 +173,8 @@ class Posts extends Component {
       const startupInd = [];
       fetchIndustriesFromID(post.startup_id.industries, (industry) => { startupInd.push(industry.name.toLowerCase()); });
       const postLoc = `${post.city}, ${post.state}`;
-      const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`;
+      const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`.toLowerCase();
+      // console.log(startupLoc);
       // Checks for search
       if (post.title.toLowerCase().includes(searchterm)
       || postLoc.toLowerCase().includes(searchterm)
