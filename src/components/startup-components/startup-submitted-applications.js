@@ -79,6 +79,7 @@ class SubmittedApplications extends Component {
   onFilter = (statuses, titles) => {
     if (this.isFilterEmpty(statuses) && this.isFilterEmpty(titles)) {
       this.setState({ filter: false });
+      console.log('not filtergin');
     } else this.setState({ filter: true });
     this.searchAndFilter(this.state.searchterm, statuses, titles);
   }
@@ -200,14 +201,14 @@ class SubmittedApplications extends Component {
             <Select
               isMulti
               styles={dropdownStyles}
-              name="industry-filter"
+              name="status-filter"
               placeholder="Filter by Status"
               options={this.state.statusOptions}
               value={this.state.selectedStatusOptions}
               onChange={(selectedOptions) => {
                 this.setState({ selectedStatusOptions: selectedOptions });
-                const titles = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
+                const titles = (this.state.selectedTitleOptions && this.state.selectedTitleOptions.length > 0)
+                  ? this.state.selectedTitleOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
                 const statuses = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
@@ -218,7 +219,7 @@ class SubmittedApplications extends Component {
             <Select
               isMulti
               styles={dropdownStyles}
-              name="skill-filter"
+              name="title-filter"
               placeholder="Filter by Title"
               options={this.state.titleOptions}
               value={this.state.selectedTitleOptions}
@@ -227,8 +228,8 @@ class SubmittedApplications extends Component {
                 const titles = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                const statuses = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
+                const statuses = (this.state.selectedStatusOptions && this.state.selectedStatusOptions.length > 0)
+                  ? this.state.selectedStatusOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
                 this.onFilter(statuses, titles);
               }}
