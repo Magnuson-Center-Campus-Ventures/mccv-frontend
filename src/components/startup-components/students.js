@@ -280,7 +280,7 @@ class Students extends Component {
       );
     } else if (this.props.user.role === 'admin') {
       return (
-        <div id="filters">
+        <div id="toggles">
           <h3>show archived: </h3>
           <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
         </div>
