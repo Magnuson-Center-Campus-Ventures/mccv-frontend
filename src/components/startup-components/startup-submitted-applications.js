@@ -18,6 +18,7 @@ class SubmittedApplications extends Component {
     this.state = {
       startupApplications: [],
       statusOptions: [],
+      applicationToTitle: {},
       selectedStatusOptions: [],
       titleOptions: [],
       selectedTitleOptions: [],
@@ -48,10 +49,10 @@ class SubmittedApplications extends Component {
     const { startupApplications } = this.state;
     startupApplications.map((application) => {
       if (application.status.toLowerCase().includes(searchterm)
-      || this.props.posts[application.post_id].title.toLowerCase.includes(searchterm)
+      || this.state.applicationToTitle[application.post_id].toLowerCase().includes(searchterm)
       // Checks for filter
       || selectedStatuses.some((status) => application.status.toLowerCase().includes(status))
-      || selectedTitles.some((title) => this.props.posts[application.post_id].title.toLowerCase.includes(title))) {
+      || selectedTitles.some((title) => this.state.applicationToTitle[application.post_id].toLowerCase().includes(title))) {
         this.setState((prevState) => ({
           results: [...prevState.results, application],
         }));
@@ -67,7 +68,7 @@ class SubmittedApplications extends Component {
     const titles = (this.state.selectedTitleOptions && this.state.selectedTitleOptions.length > 0)
       ? this.state.selectedTitleOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(text, statuses, titles, this.state.recommend);
+    this.searchAndFilter(text, statuses, titles);
     this.setState({ search: true, searchterm: text });
   }
 
@@ -76,8 +77,9 @@ class SubmittedApplications extends Component {
   }
 
   onFilter = (statuses, titles) => {
-    if (this.isFilterEmpty(statuses)) {
+    if (this.isFilterEmpty(statuses) && this.isFilterEmpty(titles)) {
       this.setState({ filter: false });
+      console.log('not filtergin');
     } else this.setState({ filter: true });
     this.searchAndFilter(this.state.searchterm, statuses, titles);
   }
@@ -90,7 +92,7 @@ class SubmittedApplications extends Component {
     const titles = (this.state.selectedTitleOptions && this.state.selectedTitleOptions.length > 0)
       ? this.state.selectedTitleOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter('emptytext', statuses, titles, this.state.recommend);
+    this.searchAndFilter('emptytext', statuses, titles);
   }
 
   filterByCompany() {
@@ -109,6 +111,7 @@ class SubmittedApplications extends Component {
     if (updatedStartupApplications.length > 0) {
       const newStatusOptions = [];
       const newTitleOptions = [];
+      const newApplicationToTitle = {};
       updatedStartupApplications.forEach((application) => {
         // Add option if it's not already in the array (not using sets because react-select expects an array)
         if (newStatusOptions.filter((option) => option.value === application.status).length === 0) {
@@ -116,13 +119,16 @@ class SubmittedApplications extends Component {
         }
       });
       this.props.posts.forEach((post) => {
-        // Add option if it's not already in the array (not using sets because react-select expects an array)
-        if (newTitleOptions.filter((option) => option.value === post.title).length === 0 && startupPostIds.includes(post._id)) {
-          newTitleOptions.push({ label: post.title, value: post.title });
+        if (startupPostIds.includes(post._id)) {
+          // Add option if it's not already in the array (not using sets because react-select expects an array)
+          if (newTitleOptions.filter((option) => option.value === post.title).length === 0) {
+            newTitleOptions.push({ label: post.title, value: post.title });
+          }
+          newApplicationToTitle[post._id] = post.title;
         }
       });
       this.setState({
-        startupApplications: updatedStartupApplications, statusOptions: newStatusOptions, titleOptions: newTitleOptions,
+        startupApplications: updatedStartupApplications, statusOptions: newStatusOptions, titleOptions: newTitleOptions, applicationToTitle: newApplicationToTitle,
       });
     }
   }
@@ -195,16 +201,19 @@ class SubmittedApplications extends Component {
             <Select
               isMulti
               styles={dropdownStyles}
-              name="industry-filter"
+              name="status-filter"
               placeholder="Filter by Status"
               options={this.state.statusOptions}
               value={this.state.selectedStatusOptions}
               onChange={(selectedOptions) => {
                 this.setState({ selectedStatusOptions: selectedOptions });
+                const titles = (this.state.selectedTitleOptions && this.state.selectedTitleOptions.length > 0)
+                  ? this.state.selectedTitleOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
                 const statuses = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                this.onFilter(statuses);
+                this.onFilter(statuses, titles);
               }}
             />
             <Select
@@ -219,7 +228,10 @@ class SubmittedApplications extends Component {
                 const titles = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                this.onFilter(titles);
+                const statuses = (this.state.selectedStatusOptions && this.state.selectedStatusOptions.length > 0)
+                  ? this.state.selectedStatusOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                this.onFilter(statuses, titles);
               }}
             />
             <div className="list">
