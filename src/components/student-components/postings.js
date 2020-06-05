@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
 import Switch from 'react-switch';
+import moment from 'moment';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
@@ -24,6 +25,8 @@ class Posts extends Component {
       selectedSkillOptions: [],
       locationOptions: [],
       selectedLocationOptions: [],
+      dateOptions: [],
+      selectedDateOptions: [],
       searchterm: 'emptytext',
       recommend: false,
       search: false,
@@ -41,6 +44,18 @@ class Posts extends Component {
     this.props.fetchPosts();
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchUser(localStorage.getItem('userID'));
+
+    // Set up options for date dropdown
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+      'August', 'September', 'October', 'November', 'December'];
+    const dateOptions = [];
+    for (let i = 0; i < 13; i += 1) {
+      const newMonth = moment().add(i, 'months');
+      const monthName = newMonth.month() === 11 ? months[0] : months[newMonth.month() + 1];
+      dateOptions.push({ value: newMonth, label: `${monthName}, ${newMonth.year()}` });
+    }
+    console.log(dateOptions);
+    this.setState({ dateOptions });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -49,6 +64,7 @@ class Posts extends Component {
       const skillOptions = [];
       const locationOptions = [];
       nextProps.posts.forEach((post) => {
+        console.log(post.desired_start_date, post.desired_end_date);
         if (post.industries) {
           post.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
@@ -402,6 +418,31 @@ class Posts extends Component {
                 const locations = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value)
                   : ['emptytext'];
+                this.onFilter(industries, skills, locations);
+              }}
+            />
+            <Select
+              isMulti
+              styles={dropdownStyles}
+              name="start-date-filter"
+              placeholder="Filter by start date"
+              options={this.state.dateOptions}
+              value={this.state.selectedDateOptions}
+              onChange={(selectedOptions) => {
+                this.setState({ selectedDateOptions: selectedOptions });
+                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+                  ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                  ? this.state.selectedLocationOptions.map((option) => option.value)
+                  : ['emptytext'];
+                const dates = (selectedOptions && selectedOptions.length > 0)
+                  ? selectedOptions.map((option) => option.value.month())
+                  : ['emptytext'];
+                console.log(dates);
                 this.onFilter(industries, skills, locations);
               }}
             />
