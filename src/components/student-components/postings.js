@@ -44,17 +44,6 @@ class Posts extends Component {
     this.props.fetchPosts();
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchUser(localStorage.getItem('userID'));
-
-    // Set up options for date dropdown
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-      'August', 'September', 'October', 'November', 'December'];
-    const dateOptions = [];
-    for (let i = 0; i < 13; i += 1) {
-      const newMonth = moment().add(i, 'months');
-      const monthName = months[newMonth.month()];
-      dateOptions.push({ value: newMonth, label: `${monthName}, ${newMonth.year()}` });
-    }
-    this.setState({ dateOptions });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -62,8 +51,9 @@ class Posts extends Component {
       const industryOptions = [];
       const skillOptions = [];
       const locationOptions = [];
+      const dateOptions = [];
       nextProps.posts.forEach((post) => {
-        if (post.industries) {
+        if (post.industries && post.status === 'Approved') {
           post.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
             if (industryOptions.filter((option) => option.value === industry.name).length === 0) {
@@ -71,7 +61,7 @@ class Posts extends Component {
             }
           });
         }
-        if (post.startup_id.industries) {
+        if (post.startup_id.industries && post.status === 'Approved') {
           post.startup_id.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
             if (industryOptions.filter((option) => option.value === industry.name).length === 0) {
@@ -79,7 +69,7 @@ class Posts extends Component {
             }
           });
         }
-        if (post.required_skills) {
+        if (post.required_skills && post.status === 'Approved') {
           post.required_skills.forEach((skill) => {
             // Add option if it's not already in the array
             if (skillOptions.filter((option) => option.value === skill.name).length === 0) {
@@ -87,24 +77,35 @@ class Posts extends Component {
             }
           });
         }
-        if (post.city && post.state) {
+        if (post.city && post.state && post.status === 'Approved') {
           const locationString = `${post.city}, ${post.state}`;
           if (locationOptions.filter((option) => option.value === locationString).length === 0) {
             locationOptions.push({ value: locationString, label: locationString });
           }
         }
-        if (post.startup_id.city && post.startup_id.state) {
+        if (post.startup_id.city && post.startup_id.state && post.status === 'Approved') {
           const locationString = `${post.startup_id.city}, ${post.startup_id.state}`;
           if (locationOptions.filter((option) => option.value === locationString).length === 0) {
             locationOptions.push({ value: locationString, label: locationString });
           }
         }
+        if (post.desired_start_date && post.status === 'Approved') {
+          const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+            'August', 'September', 'October', 'November', 'December'];
+          const date = moment(post.desired_start_date);
+          const monthName = months[date.month()];
+          const dateString = `${monthName}, ${date.year()}`;
+          if (dateOptions.filter((option) => option.label === dateString).length === 0) {
+            dateOptions.push({ value: date, label: dateString });
+          }
+        }
       });
       if (industryOptions.length > prevState.industryOptions.length
         || skillOptions.length > prevState.skillOptions.length
-        || locationOptions.length > prevState.locationOptions.length) {
+        || locationOptions.length > prevState.locationOptions.length
+        || dateOptions.length > prevState.dateOptions.length) {
         return {
-          industryOptions, skillOptions, locationOptions,
+          industryOptions, skillOptions, locationOptions, dateOptions,
         };
       }
     }
