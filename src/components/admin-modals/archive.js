@@ -1,82 +1,144 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-unused-expressions */
-
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { updatePost, updateStartup, updateStudent } from '../../actions';
 import close from '../../../static/img/close.png';
 import '../../styles/archive-modal.scss';
 
-const Archive = (props) => {
-  if (!props.show) {
-    return null;
+class Archive extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filled: false,
+    };
+    this.notFilled = this.notFilled.bind(this);
+    this.filled = this.filled.bind(this);
   }
 
-  const onArchive = (e) => {
-    if (props.post) {
-      const { post } = props;
+  notFilled = (e) => {
+    this.setState({ filled: false });
+  }
+
+  filled = (e) => {
+    this.setState({ filled: true });
+  }
+
+  onArchive = (e) => {
+    if (this.props.post) {
+      const { post } = this.props;
       post.status = 'Archived';
-      props.updatePost(post.id, post);
-      props.onClose(e);
+      this.props.updatePost(post.id, post);
+      this.props.onClose(e);
     }
-    if (props.startup) {
-      const { startup } = props;
+    if (this.props.startup) {
+      const { startup } = this.props;
       startup.status = 'Archived';
-      props.updateStartup(startup.id, startup);
+      this.props.updateStartup(startup.id, startup);
       startup.posts.map((post) => {
         const postCopy = post;
         postCopy.status = 'Archived';
-        props.updatePost(post.id, postCopy);
+        this.props.updatePost(post.id, postCopy);
       });
-      props.onClose(e);
+      this.props.onClose(e);
     }
-    if (props.student) {
-      const { student } = props;
+    if (this.props.student) {
+      const { student } = this.props;
       student.status = 'Archived';
-      props.updateStudent(student.id, student);
-      props.onClose(e);
+      this.props.updateStudent(student.id, student);
+      this.props.onClose(e);
     }
-  };
+  }
 
+  filledRender() {
+    if (this.state.filled) {
+      return (
+        <p>Select the student(s) who filled the position</p>
+      );
+    } else {
+      return null;
+    }
+  }
 
-  return (
-    <div className="archiveContainer">
-      <div className="archiveModal" id="archiveModal">
-        <img id="close-app"
-          src={close}
-          alt="close"
-          style={{ cursor: 'pointer' }}
-          onClick={(e) => {
-            props.onClose(e);
-          }}
-        />
-        <p> Are you sure you want to archive this?</p>
-        <div className="archiveOptions">
-          <button type="submit"
-            id="noarchive"
-            style={{ cursor: 'pointer' }}
-            onClick={(e) => {
-              props.onClose(e);
-            }}
-          >
-            No
-          </button>
-          <button type="submit"
-            id="archive"
-            style={{ cursor: 'pointer' }}
-            onClick={(e) => {
-              onArchive(e);
-            }}
-          >
-            Yes
-          </button>
+  // eslint-disable-next-line consistent-return
+  postArchive() {
+    if (this.props.post) {
+      return (
+        <div className="archiveQuestions">
+          <p> Has this position been filled?</p>
+          <div className="archiveOptions">
+            <button type="submit"
+              id="noarchive"
+              style={{ cursor: 'pointer' }}
+              onClick={(e) => {
+                this.notFilled();
+              }}
+            >
+              No
+            </button>
+            <button type="submit"
+              id="archive"
+              style={{ cursor: 'pointer' }}
+              onClick={(e) => {
+                this.filled();
+              }}
+            >
+              Yes
+            </button>
+          </div>
+          {this.filledRender}
         </div>
+      );
+    } else {
+      return null;
+    }
+  }
 
-      </div>
-    </div>
-  );
-};
+  render() {
+    if (!this.props.show) {
+      return null;
+    } else {
+      return (
+        <div className="archiveContainer">
+          <div className="archiveModal" id="archiveModal">
+            <img id="close-app"
+              src={close}
+              alt="close"
+              style={{ cursor: 'pointer' }}
+              onClick={(e) => {
+                this.props.onClose(e);
+              }}
+            />
+            <p> Are you sure you want to archive this?</p>
+            <div className="archiveOptions">
+              <button type="submit"
+                id="noarchive"
+                style={{ cursor: 'pointer' }}
+                onClick={(e) => {
+                  this.props.onClose(e);
+                }}
+              >
+                No
+              </button>
+              <button type="submit"
+                id="archive"
+                style={{ cursor: 'pointer' }}
+                onClick={(e) => {
+                  this.onArchive(e);
+                }}
+              >
+                Yes
+              </button>
+              {this.postArchive}
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+  }
+}
 
 export default withRouter(connect(null, { updatePost, updateStartup, updateStudent })(Archive));

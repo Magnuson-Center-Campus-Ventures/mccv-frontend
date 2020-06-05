@@ -21,7 +21,6 @@ class Post extends Component {
     this.state = {
       applyShow: false,
       archiveShow: false,
-      startupArchiveShow: false,
       isEditing: false,
     };
     this.showApplyModal = this.showApplyModal.bind(this);
@@ -52,12 +51,6 @@ class Post extends Component {
     });
   }
 
-  showStartupArchiveModal = (e) => {
-    this.setState({
-      startupArchiveShow: true,
-    });
-  }
-
   hideApplyModal = (e) => {
     this.setState({
       applyShow: false,
@@ -67,12 +60,6 @@ class Post extends Component {
   hideArchiveModal = (e) => {
     this.setState({
       archiveShow: false,
-    });
-  }
-
-  hideStartupArchiveModal = (e) => {
-    this.setState({
-      startupArchiveShow: false,
     });
   }
 
@@ -181,7 +168,6 @@ class Post extends Component {
         <div>
           <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
           <Archive post={this.props.current} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
-          <StartupArchive post={this.props.current} onClose={this.hideStartupArchiveModal} show={this.state.startupArchiveShow} />
           <h1 id="title">{this.props.current.title}</h1>
           <div className="bar">
             <img src={this.props.current.startup_id.logo} alt="no logo" />
