@@ -23,8 +23,8 @@ class SubmittedApplications extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchSubmittedApplications();
-    this.props.fetchPosts();
+    this.props.fetchStartupByUserID(this.props.userID);
+    this.props.fetchUser(this.props.userID);
   }
 
   mapResults() {
@@ -126,6 +126,8 @@ class SubmittedApplications extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
+  userID: reduxState.auth.userID,
+  startup: reduxState.startups.current,
   submittedApplications: reduxState.submittedApplications.all,
   posts: reduxState.posts.all,
 });
