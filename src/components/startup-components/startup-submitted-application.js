@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import { fetchSubmittedApplication, fetchQuestions, fetchPosts } from '../../actions';
 import '../../styles/post.scss';
 
-class SubmittedApplication extends Component {
+class StartupSubmittedApplication extends Component {
   componentDidMount() {
     this.props.fetchPosts();
     this.props.fetchSubmittedApplication(this.props.match.params.applicationID);
@@ -47,7 +47,7 @@ class SubmittedApplication extends Component {
       return (
         <div>
           <h1>{post.title}</h1>
-          <div>{`${post.city}, ${post.state}`}</div>
+          <div>{post.location}</div>
           <h2 id="title">{this.props.current.status}</h2>
           {this.renderHelper()}
         </div>
@@ -64,4 +64,4 @@ const mapStateToProps = (reduxState) => ({
   questions: reduxState.questions.all,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchSubmittedApplication, fetchQuestions, fetchPosts })(SubmittedApplication));
+export default withRouter(connect(mapStateToProps, { fetchSubmittedApplication, fetchQuestions, fetchPosts })(StartupSubmittedApplication));

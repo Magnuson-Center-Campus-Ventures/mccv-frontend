@@ -4,7 +4,7 @@
 /* eslint-disable react/sort-comp */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
-import '../../styles/toggle-switch.scss';
+import '../styles/toggle-switch.scss';
 import PropTypes from 'prop-types';
 
 class ToggleSwitch extends Component {
@@ -65,7 +65,7 @@ class ToggleSwitch extends Component {
 static defaultProps = {
   Text: ['Yes', 'No'],
   Name: 'toggle',
-  // onChange: () => (console.log('hi')),
+  onChange: () => (console.log('hi')),
   defaultChecked: false,
   Small: true,
   disabled: false,

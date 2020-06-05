@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable consistent-return */
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
@@ -96,28 +97,28 @@ class StudentProfileStartup extends Component {
     return (
       <div className="profile-fixed">
         <div id="profile-header">
-          <h1>{`${this.props.student.first_name} ${this.props.student.last_name}`}</h1>
-          <div>{`Class of ${this.props.student.grad_year}`}</div>
+          <h1>{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
+          <div>{`Class of ${this.props.student?.grad_year}`}</div>
           <div id="major-row">
-            {this.renderMajMin(this.props.student.majors)}
+            {this.renderMajMin(this.props.student?.majors)}
           </div>
           <div id="minor-row">
-            {this.renderMajMin(this.props.student.minors)}
+            {this.renderMajMin(this.props.student?.minors)}
           </div>
           <div>{this.props.email}</div>
-          <div>{this.props.student.phone_number ? this.props.student.phone_number : null}</div>
+          <div>{this.props.student?.phone_number ? this.props.student?.phone_number : null}</div>
           <div id="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
-              {this.renderPills(this.props.student.interested_industries)}
+              {this.renderPills(this.props.student?.interested_industries)}
             </div>
             <div className="list-section">
               <h2>Classes</h2>
-              {this.renderPills(this.props.student.relevant_classes)}
+              {this.renderPills(this.props.student?.relevant_classes)}
             </div>
             <div className="list-section">
               <h2>Skills</h2>
-              {this.renderPills(this.props.student.skills)}
+              {this.renderPills(this.props.student?.skills)}
             </div>
           </div>
         </div>
@@ -132,7 +133,7 @@ class StudentProfileStartup extends Component {
           <div key={index} className="work-exp">
             <div>{workExp.role}</div>
             <div>{workExp.employer}</div>
-            <div>{workExp.location}</div>
+            <div>{`${workExp.city}, ${workExp.state}`}</div>
             <div className="date-row">
               {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
               {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}

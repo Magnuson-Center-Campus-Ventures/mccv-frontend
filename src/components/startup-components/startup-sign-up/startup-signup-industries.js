@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -6,7 +5,7 @@ import CreateableSelect from 'react-select/creatable';
 import '../../../styles/startup-sign-up/startup-signup-industries.scss';
 import {
   fetchStartupByUserID, fetchUser,
-  fetchAllIndustries, fetchCertainIndustries, createIndustry, createIndustryForStartup, updateStartup,
+  fetchAllIndustries, fetchCertainIndustries, createIndustry,
 } from '../../../actions';
 
 class StartupIndustries extends Component {
@@ -17,10 +16,6 @@ class StartupIndustries extends Component {
       industry: '',
       displayIndustries: [],
       allIndustries: [],
-      ownIndustries: [],
-      allIndustryOptions: [],
-      selectedIndustryOptions: [],
-      industriesIDs: [],
     };
   }
 
@@ -28,13 +23,12 @@ class StartupIndustries extends Component {
   componentDidMount() {
     this.props.fetchAllIndustries();
     this.props.fetchStartupByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.startup !== {} && prevProps.startup !== this.props.startup) {
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ startup: this.props.startup, ownIndustries: this.props.startup.industries });
+      this.setState({ startup: this.props.startup });
     }
     if (prevProps.industries !== this.props.industries) {
       const industries = this.props.industries.all.map((industry) => {
@@ -93,50 +87,8 @@ class StartupIndustries extends Component {
     this.forceUpdate();
   }
 
-  renderPills = (pillsArray) => {
-    console.log(pillsArray);
-    if (pillsArray) {
-      // eslint-disable-next-line array-callback-return
-      return pillsArray.map((indName, index) => {
-        if (typeof (indName) === 'string') {
-          console.log(indName);
-          return <div key={index} className="profile-pill">{indName}</div>;
-        } else {
-          return null;
-        }
-      });
-    } else return null;
-  }
-
-  changeStartupField = (field, value) => {
-    // eslint-disable-next-line prefer-destructuring
-    // const value = event.target.value;
-    const ind = [];
-    // eslint-disable-next-line array-callback-return
-    value.map((elem) => {
-      ind.push(elem.industry.name);
-    });
-    this.props.updateStartup(this.props.startup.id,
-      Object.assign(this.props.startup, { industries: ind }));
-
-    this.setState((prevState) => {
-      const startup = { ...prevState.startup };
-
-      // startup[field] = Object.assign(this.props.startup.industries, value);
-      // console.log(startup);
-      // this.props.updateStartup(this.props.startup.id,
-      //   Object.assign(this.props.startup, startup));
-      return {
-        ...prevState,
-        startup,
-      };
-    });
-    console.log(this.props.startup);
-    // this.props.updateStartup(this.props.startup.id, this.state.startup);
-  }
-
   renderAddIndustry() {
-    const dropdownStyles = {
+    const customStyles = {
       control: (base) => ({
         ...base,
         width: 200,
@@ -144,7 +96,7 @@ class StartupIndustries extends Component {
     };
     return (
       <div className="add-industries">
-        {/* <CreateableSelect
+        <CreateableSelect
           className="select-dropdown"
           styles={customStyles}
           name="industries"
@@ -157,38 +109,6 @@ class StartupIndustries extends Component {
             this.state.industry = newOption;
             this.addIndustryDB();
             this.addIndustry();
-          }}
-        /> */}
-        <CreateableSelect
-          className="select-dropdown"
-          isMulti
-          styles={dropdownStyles}
-          name="industries"
-          value={this.state.selectedIndustryOptions}
-          options={this.state.displayIndustries}
-          onChange={(selectedOptions) => {
-            const tempIndustries = selectedOptions
-              ? selectedOptions.map((option) => option.industry)
-              : [];
-            // console.log(this.state.startup);
-            // this.props.updateStartup(this.props.startup.id, this.state.startup);
-            this.setState((prevState) => {
-              const startup = { ...prevState.startup };
-              startup.industries = tempIndustries;
-              // console.log(startup.industries);
-              // this.props.updateStartup(this.props.startup.id,
-              //   Object.assign(startup, { industries: selectedOptions }));
-              return {
-                ...prevState,
-                selectedIndustryOptions: selectedOptions,
-                ownIndustries: tempIndustries,
-                startup,
-              };
-            });
-            this.changeStartupField('industries', selectedOptions);
-          }}
-          onCreateOption={(newOption) => {
-            this.props.createIndustryForStartup({ name: newOption }, this.state.startup);
           }}
         />
       </div>
@@ -223,14 +143,14 @@ class StartupIndustries extends Component {
           </div>
           <div className="StartupIndustryDescContainer">
             <p className="StartupIndustryDesc">
-              What industries characterize your startup?
+              Add the industries you have!
             </p>
             <i className="fas fa-brain" id="icon" />
           </div>
           <div id="industries">
             <div className="StartupIndustryListHeader">Industries</div>
             {this.renderAddIndustry()}
-            {this.renderPills(this.state.ownIndustries)}
+            {this.renderIndustries()}
           </div>
         </div>
       );
@@ -246,9 +166,8 @@ const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
   startup: reduxState.startups.current,
   industries: reduxState.industries,
-  allIndustries: reduxState.industries.all,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStartupByUserID, fetchUser, fetchAllIndustries, fetchCertainIndustries, createIndustry, createIndustryForStartup, updateStartup,
+  fetchStartupByUserID, fetchUser, fetchAllIndustries, fetchCertainIndustries, createIndustry,
 })(StartupIndustries));

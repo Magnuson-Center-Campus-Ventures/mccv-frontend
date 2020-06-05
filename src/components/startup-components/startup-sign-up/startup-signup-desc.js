@@ -68,11 +68,6 @@ class StartupDesc extends Component {
                <TextareaAutosize onChange={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
              </div>
            </div>
-           <div className="buttonContainer">
-             <button type="submit" className="submit-btn-startup-bio" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-               Next
-             </button>
-           </div>
          </div>
        );
      }

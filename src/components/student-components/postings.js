@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
+import Switch from 'react-switch';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
   fetchPosts, fetchStudentByUserID, fetchUser,
 } from '../../actions';
-
+import { fetchIndustriesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
 
 class Posts extends Component {
@@ -20,12 +21,19 @@ class Posts extends Component {
       selectedIndustryOptions: [],
       skillOptions: [],
       selectedSkillOptions: [],
+      locationOptions: [],
+      selectedLocationOptions: [],
       searchterm: 'emptytext',
       recommend: false,
       search: false,
       filter: false,
+      archive: false,
+      archived: [],
+      live: [],
       results: [],
     };
+    this.handleArchiveChange = this.handleArchiveChange.bind(this);
+    // this.handleLiveChange = this.handleLiveChange.bind(this);
   }
 
   componentDidMount() {
@@ -38,35 +46,50 @@ class Posts extends Component {
     if (nextProps.posts.length > 0) {
       const industryOptions = [];
       const skillOptions = [];
+      const locationOptions = [];
       nextProps.posts.forEach((post) => {
         if (post.industries) {
           post.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
-            if (industryOptions.filter((option) => option.value === industry).length === 0) {
-              industryOptions.push({ value: industry, label: industry });
+            if (industryOptions.filter((option) => option.value === industry.name).length === 0) {
+              industryOptions.push({ value: industry.name, label: industry.name });
             }
           });
         }
         if (post.startup_id.industries) {
           post.startup_id.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
-            if (industryOptions.filter((option) => option.value === industry).length === 0) {
-              industryOptions.push({ value: industry, label: industry });
+            if (industryOptions.filter((option) => option.value === industry.name).length === 0) {
+              industryOptions.push({ value: industry.name, label: industry.name });
             }
           });
         }
         if (post.required_skills) {
           post.required_skills.forEach((skill) => {
             // Add option if it's not already in the array
-            if (skillOptions.filter((option) => option.value === skill).length === 0) {
-              skillOptions.push({ value: skill, label: skill });
+            if (skillOptions.filter((option) => option.value === skill.name).length === 0) {
+              skillOptions.push({ value: skill.name, label: skill.name });
             }
           });
         }
+        if (post.city && post.state) {
+          const locationString = `${post.city}, ${post.state}`;
+          if (locationOptions.filter((option) => option.value === locationString).length === 0) {
+            locationOptions.push({ value: locationString, label: locationString });
+          }
+        }
+        if (post.startup_id.city && post.startup_id.state) {
+          const locationString = `${post.startup_id.city}, ${post.startup_id.state}`;
+          if (locationOptions.filter((option) => option.value === locationString).length === 0) {
+            locationOptions.push({ value: locationString, label: locationString });
+          }
+        }
       });
-      if (industryOptions.length > prevState.industryOptions.length || skillOptions.length > prevState.skillOptions.length) {
+      if (industryOptions.length > prevState.industryOptions.length
+        || skillOptions.length > prevState.skillOptions.length
+        || locationOptions.length > prevState.locationOptions.length) {
         return {
-          industryOptions, skillOptions,
+          industryOptions, skillOptions, locationOptions,
         };
       }
     }
@@ -79,6 +102,10 @@ class Posts extends Component {
       && (prevProps.posts !== this.props.posts || prevProps.student !== this.props.student)) {
       // Score posts
       this.scorePosts();
+      // Load in approved posts
+      if (prevProps.posts !== this.props.posts) {
+        this.loadPosts();
+      }
     }
   }
 
@@ -105,12 +132,12 @@ class Posts extends Component {
       // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
       const postScores = {};
       this.props.posts.forEach((post) => {
-        const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry)).length
-        + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry)).length
-        + post.desired_classes.filter((_class) => studentClasses.includes(_class)).length
-        + post.required_skills.filter((skill) => studentSkills.includes(skill)).length
+        const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry.name)).length
+        + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry.name)).length
+        + post.desired_classes.filter((_class) => studentClasses.includes(_class.name)).length
+        + post.required_skills.filter((skill) => studentSkills.includes(skill.name)).length
         // Preferred skills get half the weight of required skills
-        + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill)).length);
+        + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill.name)).length);
         postScores[post._id] = numMatches;
       });
 
@@ -126,18 +153,27 @@ class Posts extends Component {
     }
   }
 
-  searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {
+  searchAndFilter = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
     this.setState({ results: [] });
     const searchterm = text.toLowerCase();
-    const posts = recommend ? this.state.sortedPosts : this.props.posts;
+    let posts = [];
+    if (this.props.user.role === 'admin') {
+      posts = this.state.archive ? this.state.archived : this.state.live;
+    } else {
+      posts = recommend ? this.state.sortedPosts : this.state.live;
+    }
+    // console.log(posts);
     posts.forEach((post) => {
-      const skills = post.required_skills.map((skill) => skill.toLowerCase());
+      const skills = post.required_skills.map((skill) => skill.name.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
-      const postInd = post.industries.map((industry) => industry.toLowerCase());
-      const startupInd = post.startup_id.industries.map((industry) => industry.toLowerCase());
+      const postInd = post.industries.map((industry) => industry.name.toLowerCase());
+      const startupInd = [];
+      fetchIndustriesFromID(post.startup_id.industries, (industry) => { startupInd.push(industry.name.toLowerCase()); });
+      const postLoc = `${post.city}, ${post.state}`;
+      const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`;
       // Checks for search
       if (post.title.toLowerCase().includes(searchterm)
-      || post.location.toLowerCase().includes(searchterm)
+      || postLoc.toLowerCase().includes(searchterm)
       || skills.includes(searchterm) // array
       || responsibilities.includes(searchterm) // array
       || postInd.includes(searchterm) // array
@@ -146,7 +182,9 @@ class Posts extends Component {
       // Checks for filter
       || selectedInds.some((industry) => postInd.includes(industry))
       || selectedInds.some((industry) => startupInd.includes(industry))
-      || selectedSkills.some((skill) => skills.includes(skill))) {
+      || selectedSkills.some((skill) => skills.includes(skill))
+      || selectedLocations.includes(postLoc)
+      || selectedLocations.includes(startupLoc)) {
         this.setState((prevState) => ({
           results: [...prevState.results, post],
         }));
@@ -161,7 +199,10 @@ class Posts extends Component {
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(text, industries, skills, this.state.recommend);
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(text, industries, skills, locations, this.state.recommend);
     this.setState({ search: true, searchterm: text });
   }
 
@@ -169,11 +210,11 @@ class Posts extends Component {
     return array.length === 1 && array.includes('emptytext');
   }
 
-  onFilter = (industries, skills) => {
-    if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills)) {
+  onFilter = (industries, skills, locations) => {
+    if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills) && this.isFilterEmpty(locations)) {
       this.setState({ filter: false });
     } else this.setState({ filter: true });
-    this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
+    this.searchAndFilter(this.state.searchterm, industries, skills, locations, this.state.recommend);
   }
 
   onRecommendPress = () => {
@@ -195,7 +236,34 @@ class Posts extends Component {
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter('emptytext', industries, skills, this.state.recommend);
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter('emptytext', industries, skills, locations, this.state.recommend);
+  }
+
+  loadPosts() {
+    this.props.posts.forEach((post) => {
+      if (post.status === 'Approved') {
+        this.setState((prevState) => ({
+          live: [...prevState.live, post],
+        }));
+      }
+    });
+  }
+
+  handleArchiveChange(checked) {
+    this.setState({ archive: checked });
+    this.setState({ archived: [] });
+    if (checked) {
+      this.props.posts.forEach((post) => {
+        if (post.status === 'Archived') {
+          this.setState((prevState) => ({
+            archived: [...prevState.archived, post],
+          }));
+        }
+      });
+    }
   }
 
   renderPosts() {
@@ -211,8 +279,15 @@ class Posts extends Component {
           <div> Sorry, no postings match that query</div>
         );
       }
+    } else if (this.state.archive) {
+      const posts = this.state.archived;
+      return posts.map((post) => {
+        return (
+          <PostListItem user={this.props.user} post={post} key={post.id} />
+        );
+      });
     } else {
-      const posts = this.state.recommend ? this.state.sortedPosts : this.props.posts;
+      const posts = this.state.recommend ? this.state.sortedPosts : this.state.live;
       return posts.map((post) => {
         return (
           <PostListItem user={this.props.user} post={post} key={post.id} />
@@ -221,9 +296,14 @@ class Posts extends Component {
     }
   }
 
-  renderRecButton() {
+  renderButtons() {
     if (this.props.user.role === 'admin') {
-      return <div />;
+      return (
+        <div id="filters">
+          <h3>show archived: </h3>
+          <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
+        </div>
+      );
     } else {
       return (
         <button type="button"
@@ -233,6 +313,7 @@ class Posts extends Component {
       );
     }
   }
+
 
   render() {
     // Styles for filter dropdowns
@@ -262,7 +343,10 @@ class Posts extends Component {
                 const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
                   ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                this.onFilter(industries, skills);
+                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                  ? this.state.selectedLocationOptions.map((option) => option.value)
+                  : ['emptytext'];
+                this.onFilter(industries, skills, locations);
               }}
             />
             <Select
@@ -280,10 +364,34 @@ class Posts extends Component {
                 const skills = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                this.onFilter(industries, skills);
+                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                  ? this.state.selectedLocationOptions.map((option) => option.value)
+                  : ['emptytext'];
+                this.onFilter(industries, skills, locations);
               }}
             />
-            {this.renderRecButton()}
+            <Select
+              isMulti
+              styles={dropdownStyles}
+              name="location-filter"
+              placeholder="Filter by location"
+              options={this.state.locationOptions}
+              value={this.state.selectedLocationOptions}
+              onChange={(selectedOptions) => {
+                this.setState({ selectedLocationOptions: selectedOptions });
+                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+                  ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                const locations = (selectedOptions && selectedOptions.length > 0)
+                  ? selectedOptions.map((option) => option.value)
+                  : ['emptytext'];
+                this.onFilter(industries, skills, locations);
+              }}
+            />
+            {this.renderButtons()}
             <div className="list">
               {this.renderPosts()}
             </div>

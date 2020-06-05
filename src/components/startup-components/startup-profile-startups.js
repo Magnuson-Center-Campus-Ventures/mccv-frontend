@@ -228,6 +228,7 @@ class StartupProfile extends Component {
   renderIndustries() {
     console.log(this.props.startup.industries);
     if (typeof this.props.startup.industries !== 'undefined') {
+<<<<<<< HEAD
       if (this.state.isEditing === false) {
         return (
           this.props.startup.industries.map((industry) => {
@@ -250,6 +251,15 @@ class StartupProfile extends Component {
           })
         );
       }
+=======
+      return (
+        this.props.startup.industries.map((industry) => {
+          return (
+            <div className="industry" key={industry.name}>{industry.name}</div>
+          );
+        })
+      );
+>>>>>>> 7eb4568aeea2051984e625ef53918096d52cefc5
     } else {
       return (
         <div>Loading</div>

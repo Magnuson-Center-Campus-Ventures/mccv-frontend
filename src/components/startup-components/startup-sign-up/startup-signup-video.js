@@ -68,11 +68,6 @@ class StartupVideo extends Component {
                <TextareaAutosize onChange={(event) => this.changeStartupField('video', event)} defaultValue={this.props.startup.video} />
              </div>
            </div>
-           <div className="buttonContainer">
-             <button type="submit" className="submit-btn-startup-bio" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-               Next
-             </button>
-           </div>
          </div>
        );
      }
