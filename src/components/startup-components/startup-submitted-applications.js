@@ -79,7 +79,6 @@ class SubmittedApplications extends Component {
   onFilter = (statuses, titles) => {
     if (this.isFilterEmpty(statuses) && this.isFilterEmpty(titles)) {
       this.setState({ filter: false });
-      console.log('not filtergin');
     } else this.setState({ filter: true });
     this.searchAndFilter(this.state.searchterm, statuses, titles);
   }

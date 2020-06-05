@@ -95,7 +95,35 @@
     border-radius: 20px;
     margin: 4vw;
   }
-  
+
+  #confirmation-popup{
+    position: fixed;
+    background-color: white;
+    margin: 20px;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+  }
+
+  #confirmation-popup button{
+    color: white;
+    background-color: #45B990;
+    border: none;
+    padding: 10px;
+    padding-right: 30px;
+    padding-left: 30px;
+    border-radius: 20px;
+    margin: 4vw;
+  }
+
+  .ui-widget-overlay.modal-opened{
+    background: rgb(0, 0, 0);
+    opacity: 0.5;
+    filter: Alpha(Opacity=50);         
+  }
+
   .new-pill-field-container{
     width: 100%;
     display: flex;

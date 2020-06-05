@@ -6,6 +6,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { Confirm } from 'semantic-ui-react';
 import {
   fetchSubmittedApplication,
   fetchQuestions,
@@ -27,6 +28,12 @@ function isEmpty(obj) {
 }
 
 class ApplicationListItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { openConfirmApprove: false };
+    this.state = { openConfirmDecline: false };
+  }
+
   componentDidMount() {
     this.props.fetchSubmittedApplication(this.props.match.params.applicationID);
     this.props.fetchQuestions();
@@ -126,24 +133,56 @@ class ApplicationListItem extends Component {
   handleApprove = () => {
     const newSubmittedApp = this.props.current;
     newSubmittedApp.status = 'approved';
-    console.log(newSubmittedApp);
     this.props.updateSubmittedApplication(newSubmittedApp._id, newSubmittedApp);
+    this.setState({ openConfirmApprove: false });
   }
 
   handleDecline = () => {
     const newSubmittedApp = this.props.current;
     newSubmittedApp.status = 'declined';
-    console.log(newSubmittedApp);
     this.props.updateSubmittedApplication(newSubmittedApp._id, newSubmittedApp);
+    this.setState({ openConfirmDecline: false });
   }
 
+  handleCancel = () => {
+    this.setState({ openConfirmDecline: false, openConfirmApprove: false });
+  }
+
+  showConfirmApprove = () => {
+    this.setState({ openConfirmApprove: true });
+  }
+
+  showConfirmDecline = () => this.setState({ openConfirmDecline: true })
+
   renderActionBtns = () => {
-    return (
-      <div id="action-btns">
-        <button type="submit" onClick={this.handleApprove} style={{ cursor: 'pointer' }}>Approve</button>
-        <button type="submit" onClick={this.handleDecline} style={{ cursor: 'pointer' }}>Decline</button>
-      </div>
-    );
+    if (this.props.current.status === 'pending') {
+      return (
+        <div id="action-btns">
+          <button type="submit" onClick={this.showConfirmApprove} style={{ cursor: 'pointer' }}>Approve</button>
+          <Confirm
+            id="confirmation-popup"
+            open={this.state.openConfirmApprove}
+            content="Approve candidate for this position?"
+            onCancel={this.handleCancel}
+            onConfirm={this.handleApprove}
+          />
+          <button type="submit" onClick={this.showConfirmDecline} style={{ cursor: 'pointer' }}>Decline</button>
+          <Confirm
+            id="confirmation-popup"
+            open={this.state.openConfirmDecline}
+            content="Decline candidate for this position?"
+            onCancel={this.handleCancel}
+            onConfirm={this.handleDecline}
+          />
+        </div>
+      );
+    } else {
+      return (
+        <div id="action-btns">
+          <div>{this.props.current.status[0].toUpperCase() + this.props.current.status.slice(1)}</div>
+        </div>
+      );
+    }
   }
 
   renderBody = () => {
@@ -181,7 +220,6 @@ class ApplicationListItem extends Component {
 
   render() {
     if (this.props.post != null && !isEmpty(this.props.post) && this.props.student != null && !isEmpty(this.props.student)) {
-      console.log(this.props.student);
       return (
         <div>
           {this.renderBody()}
