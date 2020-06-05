@@ -50,7 +50,7 @@ class StartupProfile extends Component {
   }
 
   renderPostings = (e) => {
-    if (this.props.startup.posts && this.props.startup.posts.length && typeof this.props.startup !== 'undefined') {
+    if (this.props.startup && this.props.startup.posts && this.props.startup.posts.length) {
       const mappingPostings = this.props.startup.posts.map((post) => {
         return (
           <li className="startup-posting" key={post._id}>
@@ -63,7 +63,7 @@ class StartupProfile extends Component {
         );
       });
       return (
-        this.props.startup.posts !== undefined
+        this.props.startup.posts
           ? (
             <div className="startup-postings">
               <div className="startup-add-posting-box">
@@ -103,8 +103,7 @@ class StartupProfile extends Component {
   }
 
   renderIndustries() {
-    console.log(this.props.startup.industries);
-    if (typeof this.props.startup.industries !== 'undefined') {
+    if (this.props.startup?.industries) {
       return (
         this.props.startup.industries.map((industry) => {
           return (
@@ -120,7 +119,7 @@ class StartupProfile extends Component {
   }
 
   renderStartup() {
-    if (typeof this.props.startup !== 'undefined') {
+    if (this.props.startup) {
       return (
         <div className="startup-body">
           <AddPosting onClose={this.hideModal} show={this.state.show} />

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -114,17 +115,17 @@ class Posts extends Component {
     const studentSkills = [];
     const studentClasses = [];
     if (this.props.user.role === 'student') {
-      if (this.props.student.interested_industries) {
+      if (this.props.student?.interested_industries) {
         this.props.student.interested_industries.forEach((industry) => {
           studentIndustries.push(industry.name);
         });
       }
-      if (this.props.student.skills) {
+      if (this.props.student?.skills) {
         this.props.student.skills.forEach((skill) => {
           studentSkills.push(skill.name);
         });
       }
-      if (this.props.student.relevant_classes) {
+      if (this.props.student?.relevant_classes) {
         this.props.student.relevant_classes.forEach((_class) => {
           studentClasses.push(_class.name);
         });
