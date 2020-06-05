@@ -11,6 +11,7 @@ import {
   fetchSubmittedApplication,
   fetchQuestions,
   fetchPost,
+  updatePost,
   fetchStudentByID,
   fetchUserByStudentID,
   fetchWorkExperiences,
@@ -44,7 +45,7 @@ class StartupApplicationListItem extends Component {
       this.props.fetchPost(this.props.current.post_id);
       this.props.fetchStudentByID(this.props.current.student_id);
     }
-    if (!isEmpty(this.props.student) && prevProps.student !== this.props.student) {
+    if (this.props.student && !isEmpty(this.props.student) && prevProps.student !== this.props.student) {
       this.props.fetchUserByStudentID(this.props.student._id);
       if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
         this.props.fetchWorkExperiences(this.props.student.work_exp);
@@ -133,6 +134,9 @@ class StartupApplicationListItem extends Component {
   handleApprove = () => {
     const newSubmittedApp = this.props.current;
     newSubmittedApp.status = 'approved';
+    const newPost = this.props.post;
+    newPost.students_selected.push(this.props.student);
+    this.props.updatePost(this.props.post._id, newPost);
     this.props.updateSubmittedApplication(newSubmittedApp._id, newSubmittedApp);
     this.setState({ openConfirmApprove: false });
   }
@@ -266,5 +270,6 @@ export default withRouter(connect(mapStateToProps, {
   fetchSubmittedApplication,
   fetchQuestions,
   fetchPost,
+  updatePost,
   updateSubmittedApplication,
 })(StartupApplicationListItem));

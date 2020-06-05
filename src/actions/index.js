@@ -8,6 +8,7 @@ export const ActionTypes = {
   FETCH_USER: 'FETCH_USER',
   FETCH_POST: 'FETCH_POST',
   FETCH_POSTS: 'FETCH_POSTS',
+  UPDATE_POST: 'UPDATE_POST',
   FETCH_STARTUP: 'FETCH_STARTUP',
   FETCH_STARTUPS: 'FETCH_STARTUPS',
   FETCH_STUDENT: 'FETCH_STUDENT',
@@ -112,7 +113,7 @@ export function fetchPost(id) {
 export function updatePost(id, post) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      dispatch({ type: ActionTypes.UPDATE_POST, payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });

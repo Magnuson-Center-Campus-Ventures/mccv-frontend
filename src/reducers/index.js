@@ -8,7 +8,7 @@ import StudentsReducer from './students-reducer';
 import IndustriesReducer from './industries-reducer';
 import SkillsReducer from './skills-reducer';
 import ClassesReducer from './classes-reducer';
-import ApplicationReducer from './application-reducer';
+import ApplicationsReducer from './applications-reducer';
 import UserReducer from './user-reducer';
 import AuthReducer from './auth-reducer';
 import SubmittedApplicationsReducer from './submitted-applications-reducer';
@@ -21,7 +21,7 @@ const rootReducer = combineReducers({
   industries: IndustriesReducer,
   skills: SkillsReducer,
   classes: ClassesReducer,
-  application: ApplicationReducer,
+  applications: ApplicationsReducer,
   questions: QuestionsReducer,
   submittedApplications: SubmittedApplicationsReducer,
   user: UserReducer,

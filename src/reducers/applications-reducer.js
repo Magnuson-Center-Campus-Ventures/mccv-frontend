@@ -5,7 +5,7 @@ const initialState = {
   current: {},
 };
 
-const ApplicationReducer = (state = initialState, action) => {
+const ApplicationsReducer = (state = initialState, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_APPLICATIONS:
       return { ...state, all: action.payload };
@@ -18,4 +18,4 @@ const ApplicationReducer = (state = initialState, action) => {
   }
 };
 
-export default ApplicationReducer;
+export default ApplicationsReducer;
