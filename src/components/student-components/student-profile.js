@@ -574,10 +574,26 @@ class StudentProfile extends Component {
         {this.renderBody()}
         <div id="work-exps">
           <h2>Work Experience</h2>
-          {this.state.isEditing ? <button onClick={() => this.setState({ showWorkExpModal: true })}>Add Work Experience</button> : null}
+          {this.state.isEditing ? (
+            <button
+              onClick={() => {
+                this.setState({ showWorkExpModal: true });
+                window.scrollTo(0, 0);
+              }}
+            >Add Work Experience
+            </button>
+          ) : null}
           {this.renderWorkExperiences()}
           <h2>Other Experience</h2>
-          {this.state.isEditing ? <button onClick={() => this.setState({ showOtherExpModal: true })}>Add Other Experience</button> : null}
+          {this.state.isEditing ? (
+            <button
+              onClick={() => {
+                this.setState({ showOtherExpModal: true });
+                window.scrollTo(0, 0);
+              }}
+            >Add Other Experience
+            </button>
+          ) : null}
           {this.renderOtherExperiences()}
         </div>
         <button className="edit-button"
