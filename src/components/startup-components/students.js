@@ -1,9 +1,11 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable consistent-return */
 /* eslint-disable array-callback-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
+import Switch from 'react-switch';
 import SearchBar from '../student-components/search-bar';
 import { fetchStudents, fetchStartupByUserID } from '../../actions';
 import '../../styles/postings.scss';
@@ -22,8 +24,12 @@ class Students extends Component {
       recommend: false,
       search: false,
       filter: false,
+      archive: false,
       results: [],
+      archived: [],
+      live: [],
     };
+    this.handleArchiveChange = this.handleArchiveChange.bind(this);
   }
 
   componentDidMount() {
@@ -68,15 +74,19 @@ class Students extends Component {
       && (prevProps.students !== this.props.students || prevProps.startup !== this.props.startup)) {
       // Score students
       this.scoreStudents();
+      // Load in approved students
+      if (prevProps.students !== this.props.students) {
+        this.loadStudents();
+      }
     }
   }
 
   scoreStudents = () => {
+    const startupIndustries = [];
+    const postsReqSkills = [];
+    const postsPrefSkills = [];
+    const postsClasses = [];
     if (this.props.user.role === 'student') {
-      const startupIndustries = [];
-      const postsReqSkills = [];
-      const postsPrefSkills = [];
-      const postsClasses = [];
       if (this.props.startup.industries) {
         this.props.startup.industries.forEach((industry) => {
           startupIndustries.push(industry);
@@ -119,9 +129,19 @@ class Students extends Component {
   }
 
   searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {
-    this.setState({ results: [] });
+    this.setState({ results: [] }, () => {
+      this.searchAndFilterCallback(text, selectedInds, selectedSkills, recommend);
+    });
+  }
+
+  searchAndFilterCallback = (text, selectedInds, selectedSkills, recommend) => {
     const searchterm = text.toLowerCase();
-    const students = recommend ? this.state.sortedStudents : this.props.students;
+    let students = [];
+    if (this.props.user.role === 'admin') {
+      students = this.state.archive ? this.state.archived : this.state.live;
+    } else {
+      students = recommend ? this.state.sortedStudents : this.state.live;
+    }
     students.map((student) => {
       const majors = student.majors.map((major) => major.toLowerCase());
       const minors = student.minors.map((minor) => minor.toLowerCase());
@@ -191,6 +211,37 @@ class Students extends Component {
     this.searchAndFilter('emptytext', industries, skills, this.state.recommend);
   }
 
+  loadStudents() {
+    this.props.students.forEach((student) => {
+      if (student.status === 'Approved') {
+        this.setState((prevState) => ({
+          live: [...prevState.live, student],
+        }));
+      }
+    });
+  }
+
+  handleArchiveChange(checked) {
+    this.setState({ archive: checked });
+    this.setState({ archived: [] });
+    if (checked) {
+      this.props.students.forEach((student) => {
+        if (student.status === 'Archived') {
+          this.setState((prevState) => ({
+            archived: [...prevState.archived, student],
+          }));
+        }
+      });
+    }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
+  }
+
   renderStudents() {
     if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
@@ -202,8 +253,15 @@ class Students extends Component {
           <div> Sorry, no students match that query</div>
         );
       }
+    } else if (this.state.archive) {
+      const students = this.state.archived;
+      return students.map((student) => {
+        return (
+          <StudentListItem student={student} key={student.id} />
+        );
+      });
     } else {
-      const students = this.state.recommend ? this.state.sortedStudents : this.props.students;
+      const students = this.state.recommend ? this.state.sortedStudents : this.state.live;
       return students.map((student) => {
         return (
           <StudentListItem student={student} key={student.id} />
@@ -219,6 +277,13 @@ class Students extends Component {
           onClick={this.onRecommendPress}
         >{this.state.recommend ? 'Show All Students' : 'Show Recommended Students'}
         </button>
+      );
+    } else if (this.props.user.role === 'admin') {
+      return (
+        <div id="toggles">
+          <h3>show archived: </h3>
+          <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
+        </div>
       );
     }
   }

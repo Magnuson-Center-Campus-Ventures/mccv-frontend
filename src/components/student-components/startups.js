@@ -29,7 +29,6 @@ class Startups extends Component {
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
-    // this.handleApprovedChange = this.handleApprovedChange.bind(this);
     this.handlePendingChange = this.handlePendingChange.bind(this);
   }
 
@@ -72,13 +71,18 @@ class Startups extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.startups?.length > 0 // && this.props.student !== {}
       && (prevProps.startups !== this.props.startups)) {
-      // Score posts
+      // render only approved startups
       this.loadApproved();
     }
   }
 
   searchAndFilter = (text, selectedIndustries, selectedLocations) => {
-    this.setState({ results: [] });
+    this.setState({ results: [] }, () => {
+      this.searchAndFilterCallback(text, selectedIndustries, selectedLocations);
+    });
+  }
+
+  searchAndFilterCallback = (text, selectedIndustries, selectedLocations) => {
     const searchterm = text.toLowerCase();
     let startups = [];
     // determining which set of startups are being searched on
@@ -89,7 +93,7 @@ class Startups extends Component {
     }
     startups.forEach((startup) => {
       const industries = startup.industries.map((industry) => industry.name.toLowerCase());
-      const location = `${startup.city}, ${startup.state}`;
+      const location = `${startup.city}, ${startup.state}`.toLowerCase();
       // Checks for search
       if (startup.name.toLowerCase().includes(searchterm)
       || startup.city.toLowerCase().includes(searchterm)
@@ -161,6 +165,13 @@ class Startups extends Component {
         }
       });
     }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, locations);
   }
 
   handlePendingChange(checked) {
@@ -175,6 +186,13 @@ class Startups extends Component {
         }
       });
     }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, locations);
   }
 
   renderStartups() {

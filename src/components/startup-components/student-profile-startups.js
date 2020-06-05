@@ -54,7 +54,7 @@ class StudentProfileStartup extends Component {
   }
 
   renderButtons() {
-    if (this.props.user.role === 'admin') {
+    if (this.props.user.role === 'admin' && this.props.student.status === 'Approved') {
       return (
         <button
           type="submit"
@@ -67,7 +67,6 @@ class StudentProfileStartup extends Component {
       );
     }
   }
-
 
   renderMajMin = (array) => {
     if (array) {
@@ -159,6 +158,7 @@ class StudentProfileStartup extends Component {
   }
 
   render() {
+    // console.log('student: ', this.props.student);
     return (
       <div className="student-profile">
         <Archive

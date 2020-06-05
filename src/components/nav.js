@@ -16,17 +16,9 @@ class Nav extends Component {
   }
 
   componentDidMount() {
-    // console.log(localStorage.getItem('userID'));
     this.setState({ usertype: this.props.user.role });
     this._isMounted = true;
   }
-
-  // componentDidUpdate() {
-  //   if (this.props.user.role !== this.state.usertype) {
-  //     this.props.fetchUser(localStorage.getItem('userID'));
-  //     this.setState({ usertype: this.props.user.role });
-  //   }
-  // }
 
   signout = (event) => {
     localStorage.clear();
