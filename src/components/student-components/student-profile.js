@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
@@ -26,6 +27,8 @@ class StudentProfile extends Component {
       showWorkExpModal: false,
       showOtherExpModal: false,
       student: {},
+      majors: [],
+      minors: [],
       workExps: [],
       otherExps: [],
       ownIndustries: [],
@@ -81,6 +84,8 @@ class StudentProfile extends Component {
 
       this.setState({
         student: this.props.student,
+        majors: this.props.student.majors,
+        minors: this.props.student.minors,
         ownIndustries: this.props.student.interested_industries,
         selectedIndustryOptions,
         ownClasses: this.props.student.relevant_classes,
@@ -120,7 +125,6 @@ class StudentProfile extends Component {
   }
 
   changeStudentField = (field, event) => {
-    // eslint-disable-next-line prefer-destructuring
     const value = event.target.value;
 
     this.setState((prevState) => {
@@ -134,7 +138,6 @@ class StudentProfile extends Component {
   }
 
   changeWorkExpField = (index, field, value) => {
-    // eslint-disable-next-line prefer-destructuring
     this.setState((prevState) => {
       const workExps = [...prevState.workExps];
       workExps[index][field] = value;
@@ -146,7 +149,6 @@ class StudentProfile extends Component {
   }
 
   changeOtherExpField = (index, field, value) => {
-    // eslint-disable-next-line prefer-destructuring
     this.setState((prevState) => {
       const otherExps = [...prevState.otherExps];
       otherExps[index][field] = value;
@@ -175,17 +177,18 @@ class StudentProfile extends Component {
 
   submit = () => {
     if (this.state.isEditing) {
-      this.props.updateStudent(this.state.student.id, this.state.student);
+      const student = { ...this.state.student };
+      student.majors = this.state.majors;
+      student.minors = this.state.minors;
+      this.props.updateStudent(this.state.student.id, student);
       this.state.workExps.forEach((workExp) => {
         this.props.updateWorkExperience(workExp._id, workExp);
       });
       this.state.otherExps.forEach((otherExp) => {
         this.props.updateOtherExperience(otherExp._id, otherExp);
       });
-      this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
-    } else {
-      this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
     }
+    this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
   }
 
   renderMajMin = (array) => {
@@ -202,6 +205,78 @@ class StudentProfile extends Component {
         }
       });
     } else return null;
+  }
+
+  renderEditMajors = () => {
+    return this.state.majors.map((major, index) => {
+      return (
+        <div key={major}>
+          <input className="short-input"
+            defaultValue={major}
+            onBlur={(event) => {
+              const value = event.target.value;
+              this.setState((prevState) => {
+                const majors = [...prevState.majors];
+                majors[index] = value;
+                return {
+                  ...prevState,
+                  majors,
+                };
+              });
+            }}
+          />
+          <button className="del-maj-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                const majors = [...prevState.majors];
+                majors.splice(index, 1);
+                return {
+                  ...prevState,
+                  majors,
+                };
+              });
+            }}
+          >Delete Major
+          </button>
+        </div>
+      );
+    });
+  }
+
+  renderEditMinors = () => {
+    return this.state.minors.map((minor, index) => {
+      return (
+        <div key={minor}>
+          <input className="short-input"
+            defaultValue={minor}
+            onBlur={(event) => {
+              const value = event.target.value;
+              this.setState((prevState) => {
+                const minors = [...prevState.minors];
+                minors[index] = value;
+                return {
+                  ...prevState,
+                  minors,
+                };
+              });
+            }}
+          />
+          <button className="del-maj-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                const minors = [...prevState.minors];
+                minors.splice(index, 1);
+                return {
+                  ...prevState,
+                  minors,
+                };
+              });
+            }}
+          >Delete Minor
+          </button>
+        </div>
+      );
+    });
   }
 
   renderPills = (pillsArray) => {
@@ -231,6 +306,36 @@ class StudentProfile extends Component {
             defaultValue={this.props.student.phone_number ? this.props.student.phone_number : null}
             onBlur={(event) => this.changeStudentField('phone_number', event)}
           />
+          <div className="input-title">Majors</div>
+          {this.renderEditMajors()}
+          <button className="add-maj-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                const majors = [...prevState.majors];
+                majors.push('');
+                return {
+                  ...prevState,
+                  majors,
+                };
+              });
+            }}
+          >Add Major
+          </button>
+          <div className="input-title">Minors</div>
+          {this.renderEditMinors()}
+          <button className="add-maj-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                const minors = [...prevState.minors];
+                minors.push('');
+                return {
+                  ...prevState,
+                  minors,
+                };
+              });
+            }}
+          >Add Minor
+          </button>
           <div id="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
@@ -467,11 +572,11 @@ class StudentProfile extends Component {
         {this.renderBody()}
         <div id="work-exps">
           <h2>Work Experience</h2>
-          {this.renderWorkExperiences()}
           {this.state.isEditing ? <button onClick={() => this.setState({ showWorkExpModal: true })}>Add Work Experience</button> : null}
+          {this.renderWorkExperiences()}
           <h2>Other Experience</h2>
-          {this.renderOtherExperiences()}
           {this.state.isEditing ? <button onClick={() => this.setState({ showOtherExpModal: true })}>Add Other Experience</button> : null}
+          {this.renderOtherExperiences()}
         </div>
         <button className="edit-button"
           onClick={this.submit}

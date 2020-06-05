@@ -18,6 +18,8 @@ class NewWorkExp extends React.Component {
       end_date: undefined,
       description: '',
       currently_working: false,
+      badStartDate: false,
+      badEndDate: false,
     };
   }
 
@@ -58,14 +60,16 @@ class NewWorkExp extends React.Component {
             <div className="input-title">Location</div>
             <input className="short-input" onBlur={(event) => this.setState({ location: event.target.value })} />
             <div className="input-title">Start Date (YYYY-MM)</div>
+            <div style={{ color: 'red' }}>{this.state.badStartDate ? 'Please enter a valid date with the format YYYY-MM' : null}</div>
             <input className="short-input"
               placeholder="YYYY-MM"
-              onBlur={(event) => console.log(this.isValidDate(event.target.value))} // this.setState({ start_date: event.target.value })}
+              onBlur={(event) => this.setState({ start_date: event.target.value })}
             />
             {!this.state.currently_working
               ? (
                 <div>
                   <div className="input-title">End Date (YYYY-MM)</div>
+                  <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format YYYY-MM' : null}</div>
                   <input className="short-input"
                     placeholder="YYYY-MM"
                     onBlur={(event) => this.setState({ end_date: event.target.value })}
@@ -88,12 +92,29 @@ class NewWorkExp extends React.Component {
             <textarea className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
             <button className="modal-add-button"
               onClick={() => {
-                // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
-                const workExperience = this.state;
-                workExperience.start_date += '-15';
-                workExperience.end_date += '-15';
-                this.props.createWorkExperience(workExperience);
-                this.props.onClose();
+                if (!this.isValidDate(this.state.start_date) || !this.isValidDate(this.state.end_date)) {
+                  if (!this.isValidDate(this.state.start_date)) {
+                    this.setState({ badStartDate: true });
+                  }
+                  if (!this.isValidDate(this.state.end_date)) {
+                    this.setState({ badEndDate: true });
+                  }
+                } else {
+                  // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
+                  const workExperience = {
+                    role: this.state.role,
+                    employer: this.state.employer,
+                    location: this.state.location,
+                    start_date: this.state.start_date,
+                    end_date: this.state.end_date,
+                    description: this.state.description,
+                    currently_working: this.state.currently_working,
+                  };
+                  workExperience.start_date += '-15';
+                  workExperience.end_date += '-15';
+                  this.props.createWorkExperience(workExperience);
+                  this.props.onClose();
+                }
               }}
             >Add Work Experience
             </button>

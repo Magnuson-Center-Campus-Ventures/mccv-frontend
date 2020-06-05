@@ -49,6 +49,12 @@
   flex-direction: row;
 }
 
+.edit-button {
+  position: absolute;
+  top: 70px;
+  right: 20px;
+}
+
 .new-work-exp-container{
   width: 100%;
   display: flex;
@@ -61,7 +67,7 @@
   box-sizing: border-box;
   border-radius: 35px;
   width: 70%;
-  height: 70vh;
+  height: 80vh;
   margin-top: 15vh;
   background: white;
   border: 1px solid #ccc;
