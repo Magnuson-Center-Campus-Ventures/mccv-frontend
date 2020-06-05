@@ -88,7 +88,7 @@ class Archive extends Component {
               Yes
             </button>
           </div>
-          {this.filledRender}
+          {this.filledRender()}
         </div>
       );
     } else {
@@ -131,7 +131,7 @@ class Archive extends Component {
               >
                 Yes
               </button>
-              {this.postArchive}
+              {this.postArchive()}
             </div>
 
           </div>

@@ -11,7 +11,6 @@ import {
 } from '../../actions';
 import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
-import StartupArchive from '../startup-components/startups-modals/startup-post-archive';
 import pin from '../../../static/img/pin.png';
 import '../../styles/post.scss';
 
@@ -134,7 +133,7 @@ class Post extends Component {
           <button
             type="submit"
             onClick={(e) => {
-              this.showStartupArchiveModal();
+              this.showArchiveModal();
             }}
           >
             Archive Position
