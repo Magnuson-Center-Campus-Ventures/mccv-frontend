@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
+import TextareaAutosize from 'react-textarea-autosize';
 import {
   fetchStartupByUserID, fetchPosts, fetchPost, updateStartup,
   fetchAllIndustries, createIndustryForStartup,
@@ -71,6 +72,20 @@ class StartupProfile extends Component {
     } else {
       this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
     }
+  }
+
+  changeStartupField = (field, event) => {
+    // eslint-disable-next-line prefer-destructuring
+    const value = event.target.value;
+
+    this.setState((prevState) => {
+      const startup = { ...prevState.startup };
+      startup[field] = value;
+      return {
+        ...prevState,
+        startup,
+      };
+    });
   }
 
   showModal = () => {
@@ -167,15 +182,41 @@ class StartupProfile extends Component {
 
   renderStartup() {
     if (typeof this.props.startup !== 'undefined') {
-      return (
-        <div className="startup-body">
-          <AddPosting onClose={this.hideModal} show={this.state.show} />
-          <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
-          <div className="startup-location">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
-          <div className="startup-industries">{this.renderAddIndustry()}{this.renderIndustries()}</div>
-          <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
-        </div>
-      );
+      if (this.state.isEditing === false) {
+        return (
+          <div className="startup-body">
+            <AddPosting onClose={this.hideModal} show={this.state.show} />
+            <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
+            <div className="startup-location">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
+            <div className="startup-industries">{this.renderAddIndustry()}{this.renderIndustries()}</div>
+            <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
+          </div>
+        );
+      } else {
+        return (
+          <div className="nameContainer">
+            <div className="StartupBioQuestionLabelContainer">
+              <p className="StartupBioLabel">
+                Name
+              </p>
+              <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
+              <p className="StartupBioLabel">
+                City
+              </p>
+              <TextareaAutosize onBlur={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
+              <p className="StartupBioLabel">
+                State
+              </p>
+              <TextareaAutosize onBlur={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
+              <div className="startup-industries">{this.renderAddIndustry()}{this.renderIndustries()}</div>
+              <p className="StartupDescLabel">
+                Description
+              </p>
+              <TextareaAutosize onBlur={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
+            </div>
+          </div>
+        );
+      }
     } else {
       return (
         <div>Startup profile does not exist</div>
