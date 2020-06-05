@@ -155,7 +155,11 @@ class Posts extends Component {
   }
 
   searchAndFilter = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
-    this.setState({ results: [] });
+    this.setState({ results: [] }, () => this.searchAndFilterCallback(text, selectedInds, selectedSkills, selectedLocations, recommend));
+  }
+
+  searchAndFilterCallback = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
+    // this.setState({ results: [] });
     const searchterm = text.toLowerCase();
     let posts = [];
     if (this.props.user.role === 'admin') {
@@ -164,6 +168,7 @@ class Posts extends Component {
       posts = recommend ? this.state.sortedPosts : this.state.live;
     }
     // console.log(posts);
+    console.log('results:', this.state.results);
     posts.forEach((post) => {
       const skills = post.required_skills.map((skill) => skill.name.toLowerCase());
       const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
@@ -265,6 +270,16 @@ class Posts extends Component {
         }
       });
     }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, skills, locations, this.state.recommend);
   }
 
   renderPosts() {
