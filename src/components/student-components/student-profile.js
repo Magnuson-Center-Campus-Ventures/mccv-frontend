@@ -1,4 +1,5 @@
 /* eslint-disable prefer-destructuring */
+/* eslint-disable camelcase */
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
@@ -44,6 +45,7 @@ class StudentProfile extends Component {
   }
 
   componentDidMount() {
+    console.log(localStorage.getItem('userID'));
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchUser(localStorage.getItem('userID'));
     this.props.fetchAllIndustries();
@@ -55,7 +57,7 @@ class StudentProfile extends Component {
   // and fetch a student's experiences,
   // once the student is loaded into props
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.student !== {} && prevProps.student !== this.props.student) {
+    if (this.props.student && this.props.student !== {} && prevProps.student !== this.props.student) {
       if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
         this.props.fetchWorkExperiences(this.props.student.work_exp);
       }
@@ -298,12 +300,12 @@ class StudentProfile extends Component {
       return (
         <div className="profile-edit">
           <div className="input-title">First Name</div>
-          <input className="short-input" defaultValue={this.props.student.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
+          <input className="short-input" defaultValue={this.props.student?.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
           <div className="input-title">Last Name</div>
-          <input className="short-input" defaultValue={this.props.student.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
+          <input className="short-input" defaultValue={this.props.student?.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
           <div className="input-title">Phone Number</div>
           <input className="short-input"
-            defaultValue={this.props.student.phone_number ? this.props.student.phone_number : null}
+            defaultValue={this.props.student?.phone_number ? this.props.student?.phone_number : null}
             onBlur={(event) => this.changeStudentField('phone_number', event)}
           />
           <div className="input-title">Majors</div>
@@ -432,12 +434,12 @@ class StudentProfile extends Component {
         <div className="profile-fixed">
           <div id="profile-header">
             <h1>{`${this.state.student.first_name} ${this.state.student.last_name}`}</h1>
-            <div>{`Class of ${this.props.student.grad_year}`}</div>
+            <div>{`Class of ${this.props.student?.grad_year}`}</div>
             <div id="major-row">
-              {this.renderMajMin(this.props.student.majors)}
+              {this.renderMajMin(this.props.student?.majors)}
             </div>
             <div id="minor-row">
-              {this.renderMajMin(this.props.student.minors)}
+              {this.renderMajMin(this.props.student?.minors)}
             </div>
             <div>{this.props.email}</div>
             <div>{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
