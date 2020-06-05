@@ -129,19 +129,20 @@ class Students extends Component {
   }
 
   searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {
-    this.setState({ results: [] });
+    this.setState({ results: [] }, () => {
+      this.searchAndFilterCallback(text, selectedInds, selectedSkills, recommend);
+    });
+  }
+
+  searchAndFilterCallback = (text, selectedInds, selectedSkills, recommend) => {
     const searchterm = text.toLowerCase();
-    // let students = [];
-    // if (this.props.user.role === 'admin') {
-    //   console.log('archived? ', this.state.archive);
-    //   students = this.state.archive ? this.state.archived : this.state.live;
-    // } else {
-    //   students = recommend ? this.state.sortedStudents : this.state.live;
-    // }
-    const students = this.props.user.role === 'admin' ? this.state.archive ? this.state.archived : this.state.live
-      : recommend ? this.state.sortedStudents : this.state.live;
-    console.log('students: ', students);
-    console.log('results:', this.state.results);
+    let students = [];
+    if (this.props.user.role === 'admin') {
+      console.log('archived? ', this.state.archive);
+      students = this.state.archive ? this.state.archived : this.state.live;
+    } else {
+      students = recommend ? this.state.sortedStudents : this.state.live;
+    }
     students.map((student) => {
       const majors = student.majors.map((major) => major.toLowerCase());
       const minors = student.minors.map((minor) => minor.toLowerCase());
