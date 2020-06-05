@@ -13,9 +13,10 @@ class NewWorkExp extends React.Component {
     this.state = {
       role: '',
       employer: '',
-      location: '',
+      city: '',
+      state: '',
       start_date: '',
-      end_date: undefined,
+      end_date: null,
       description: '',
       currently_working: false,
       badStartDate: false,
@@ -26,7 +27,6 @@ class NewWorkExp extends React.Component {
   // Date validation function modified from https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
   isValidDate = (dateString) => {
     // Check for yyyy-mm pattern
-    // if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString)) { return false; }
     if (!/^\d{4}-\d{2}$/.test(dateString)) { return false; }
 
     // Parse the date parts to integers
@@ -57,8 +57,10 @@ class NewWorkExp extends React.Component {
             <input className="short-input" onBlur={(event) => this.setState({ role: event.target.value })} />
             <div className="input-title">Employer</div>
             <input className="short-input" onBlur={(event) => this.setState({ employer: event.target.value })} />
-            <div className="input-title">Location</div>
-            <input className="short-input" onBlur={(event) => this.setState({ location: event.target.value })} />
+            <div className="input-title">City</div>
+            <input className="short-input" onBlur={(event) => this.setState({ city: event.target.value })} />
+            <div className="input-title">State Abbreviation</div>
+            <input className="short-input" onBlur={(event) => this.setState({ state: event.target.value })} />
             <div className="input-title">Start Date (YYYY-MM)</div>
             <div style={{ color: 'red' }}>{this.state.badStartDate ? 'Please enter a valid date with the format YYYY-MM' : null}</div>
             <input className="short-input"
@@ -104,7 +106,8 @@ class NewWorkExp extends React.Component {
                   const workExperience = {
                     role: this.state.role,
                     employer: this.state.employer,
-                    location: this.state.location,
+                    city: this.state.city,
+                    state: this.state.state,
                     start_date: this.state.start_date,
                     end_date: this.state.end_date,
                     description: this.state.description,
@@ -112,6 +115,7 @@ class NewWorkExp extends React.Component {
                   };
                   workExperience.start_date += '-15';
                   workExperience.end_date += '-15';
+                  console.log('here');
                   this.props.createWorkExperience(workExperience);
                   this.props.onClose();
                 }

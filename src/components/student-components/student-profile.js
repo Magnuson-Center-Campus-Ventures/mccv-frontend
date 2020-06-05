@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import TextareaAutosize from 'react-textarea-autosize';
+// import TextareaAutosize from 'react-textarea-autosize';
 import CreateableSelect from 'react-select/creatable';
 import {
   fetchStudentByUserID, updateStudent, fetchUser,
@@ -15,6 +15,8 @@ import {
   fetchAllIndustries, fetchAllClasses, fetchAllSkills,
   createIndustryForStudent, createSkillForStudent, createClassForStudent,
 } from '../../actions';
+import WorkExperience from './work-experience';
+import OtherExperience from './other-experience';
 import NewWorkExp from './student-modals/new-work-exp';
 import NewOtherExp from './student-modals/new-other-exp';
 import '../../styles/student-profile.scss';
@@ -45,7 +47,6 @@ class StudentProfile extends Component {
   }
 
   componentDidMount() {
-    console.log(localStorage.getItem('userID'));
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchUser(localStorage.getItem('userID'));
     this.props.fetchAllIndustries();
@@ -465,98 +466,33 @@ class StudentProfile extends Component {
 
   renderWorkExperiences = () => {
     if (this.state.workExps !== []) {
-      if (this.state.isEditing) {
-        return this.state.workExps.map((workExp, index) => {
-          return (
-            <div key={index} className="work-exp">
-              <div className="input-title">Role</div>
-              <input className="short-input" defaultValue={workExp.role} onBlur={(event) => this.changeWorkExpField(index, 'role', event.target.value)} />
-              <div className="input-title">Employer</div>
-              <input className="short-input" defaultValue={workExp.employer} onBlur={(event) => this.changeWorkExpField(index, 'employer', event.target.value)} />
-              <div className="input-title">City</div>
-              <input className="short-input" defaultValue={workExp.city} onBlur={(event) => this.changeWorkExpField(index, 'city', event.target.value)} />
-              <div className="input-title">State Abbreviation</div>
-              <input className="short-input" defaultValue={workExp.state} onBlur={(event) => this.changeWorkExpField(index, 'state', event.target.value)} />
-              <div className="input-title">Start Date (YYYY-MM-DD)</div>
-              <input className="short-input"
-                placeholder="YYYY-MM-DD"
-                defaultValue={`${new Date(workExp.start_date).getFullYear()}-${new Date(workExp.start_date).getMonth() + 1}`}
-                // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
-                onBlur={(event) => this.changeWorkExpField(index, 'start_date', `${event.target.value}-15`)}
-              />
-              {!workExp.currently_working
-                ? (
-                  <div>
-                    <div className="input-title">End Date (YYYY-MM-DD)</div>
-                    <input className="short-input"
-                      placeholder="YYYY-MM-DD"
-                      defaultValue={`${new Date(workExp.end_date).getFullYear()}-${new Date(workExp.end_date).getMonth() + 1}`}
-                      // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
-                      onBlur={(event) => this.changeWorkExpField(index, 'end_date', `${event.target.value}-15`)}
-                    />
-                  </div>
-                )
-                : null}
-              <form>
-                <label htmlFor={`currentlyWorking-${workExp._id}`}>I currently work here
-                  <input
-                    name="currentlyWorking"
-                    id={`currentlyWorking-${workExp._id}`}
-                    type="checkbox"
-                    checked={workExp.currently_working}
-                    onChange={(event) => this.changeWorkExpField(index, 'currently_working', event.target.checked)}
-                  />
-                </label>
-              </form>
-              <div className="input-title">Description</div>
-              <TextareaAutosize className="tall-input" defaultValue={workExp.description} onBlur={(event) => this.changeWorkExpField(index, 'description', event.target.value)} />
-              <button onClick={() => this.props.deleteWorkExperience(workExp._id)}>Delete Work Experience</button>
-            </div>
-          );
-        });
-      } else {
-        return this.state.workExps.map((workExp, index) => {
-          return (
-            <div key={index} className="work-exp">
-              <div>{workExp.role}</div>
-              <div>{workExp.employer}</div>
-              <div>{`${workExp.city}, ${workExp.state}`}</div>
-              <div className="date-row">
-                {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
-                {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}
-              </div>
-              <div>{workExp.description}</div>
-            </div>
-          );
-        });
-      }
+      return this.state.workExps.map((workExp, index) => {
+        return (
+          <WorkExperience key={index}
+            className="work-exp"
+            isEditing={this.state.isEditing}
+            workExp={workExp}
+            index={index}
+            changeWorkExpField={this.changeWorkExpField}
+          />
+        );
+      });
     } else return null;
   }
 
   renderOtherExperiences = () => {
     if (this.state.otherExps !== []) {
-      if (this.state.isEditing) {
-        return this.state.otherExps.map((otherExp, index) => {
-          return (
-            <div key={index} className="work-exp">
-              <div className="input-title">Name</div>
-              <input className="short-input" defaultValue={otherExp.name} onBlur={(event) => this.changeOtherExpField(index, 'name', event.target.value)} />
-              <div className="input-title">Description</div>
-              <TextareaAutosize className="tall-input" defaultValue={otherExp.description} onBlur={(event) => this.changeOtherExpField(index, 'description', event.target.value)} />
-              <button onClick={() => this.props.deleteOtherExperience(otherExp._id)}>Delete Experience</button>
-            </div>
-          );
-        });
-      } else {
-        return this.state.otherExps.map((otherExp, index) => {
-          return (
-            <div key={index} className="work-exp">
-              <div>{otherExp.name}</div>
-              <div>{otherExp.description}</div>
-            </div>
-          );
-        });
-      }
+      return this.state.otherExps.map((otherExp, index) => {
+        return (
+          <OtherExperience key={index}
+            className="work-exp"
+            isEditing={this.state.isEditing}
+            otherExp={otherExp}
+            index={index}
+            changeOtherExpField={this.changeOtherExpField}
+          />
+        );
+      });
     } else return null;
   }
 
