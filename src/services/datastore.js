@@ -9,9 +9,8 @@ export const fetchIndustriesFromID = (idArray, callback) => {
     response.data.forEach((industry) => {
       callback(industry);
     });
-    // return (response.data);
   }).catch((error) => {
-    console.log(error);
+    // console.log(error);
     return (error);
   });
 };
