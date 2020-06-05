@@ -27,7 +27,7 @@ function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
 
-class ApplicationListItem extends Component {
+class StartupApplicationListItem extends Component {
   constructor(props) {
     super(props);
     this.state = { openConfirmApprove: false };
@@ -267,4 +267,4 @@ export default withRouter(connect(mapStateToProps, {
   fetchQuestions,
   fetchPost,
   updateSubmittedApplication,
-})(ApplicationListItem));
+})(StartupApplicationListItem));
