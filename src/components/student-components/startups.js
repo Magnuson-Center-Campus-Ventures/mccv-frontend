@@ -16,16 +16,19 @@ class Startups extends Component {
     this.state = {
       industryOptions: [],
       selectedIndustryOptions: [],
+      locationOptions: [],
+      selectedLocationOptions: [],
       searchterm: 'filler',
       search: false,
       filter: false,
       archive: false,
-      approved: false,
       pending: false,
+      approved: [],
+      archived: [],
+      pendingArr: [],
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
-    this.handleApprovedChange = this.handleApprovedChange.bind(this);
     this.handlePendingChange = this.handlePendingChange.bind(this);
   }
 
@@ -35,21 +38,29 @@ class Startups extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.startups.length > 0) {
+    if (nextProps.startups?.length > 0) {
       const industryOptions = [];
+      const locationOptions = [];
       nextProps.startups.forEach((startup) => {
         if (startup.industries) {
           startup.industries.forEach((industry) => {
             // Add option if it's not already in the array (not using sets because react-select expects an array)
-            if (industryOptions.filter((option) => option.value === industry).length === 0) {
-              industryOptions.push({ value: industry, label: industry });
+            if (industryOptions.filter((option) => option.value === industry.name).length === 0) {
+              industryOptions.push({ value: industry.name, label: industry.name });
             }
           });
         }
+        if (startup.city && startup.state) {
+          const locationString = `${startup.city}, ${startup.state}`;
+          if (locationOptions.filter((option) => option.value === locationString).length === 0) {
+            locationOptions.push({ value: locationString, label: locationString });
+          }
+        }
       });
-      if (industryOptions.length > prevState.industryOptions.length) {
+      if (industryOptions.length > prevState.industryOptions.length
+        || locationOptions.length > prevState.locationOptions.length) {
         return {
-          industryOptions,
+          industryOptions, locationOptions,
         };
       }
     }
@@ -57,11 +68,32 @@ class Startups extends Component {
     return null;
   }
 
-  searchAndFilter = (text, selectedIndustries) => {
-    this.setState({ results: [] });
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.startups?.length > 0 // && this.props.student !== {}
+      && (prevProps.startups !== this.props.startups)) {
+      // render only approved startups
+      this.loadApproved();
+    }
+  }
+
+  searchAndFilter = (text, selectedIndustries, selectedLocations) => {
+    this.setState({ results: [] }, () => {
+      this.searchAndFilterCallback(text, selectedIndustries, selectedLocations);
+    });
+  }
+
+  searchAndFilterCallback = (text, selectedIndustries, selectedLocations) => {
     const searchterm = text.toLowerCase();
-    this.props.startups.forEach((startup) => {
-      const industries = startup.industries.map((industry) => industry.toLowerCase());
+    let startups = [];
+    // determining which set of startups are being searched on
+    if (this.props.user.role === 'admin') {
+      if (this.state.archive) { startups = this.state.archived; } else if (this.state.pending) { startups = this.state.pendingArr; } else { startups = this.state.approved; }
+    } else {
+      startups = this.state.approved;
+    }
+    startups.forEach((startup) => {
+      const industries = startup.industries.map((industry) => industry.name.toLowerCase());
+      const location = `${startup.city}, ${startup.state}`.toLowerCase();
       // Checks for search
       if (startup.name.toLowerCase().includes(searchterm)
       || startup.city.toLowerCase().includes(searchterm)
@@ -69,7 +101,8 @@ class Startups extends Component {
       || startup.description.toLowerCase().includes(searchterm)
       || industries.includes(searchterm) // array
       // Checks for filter
-      || selectedIndustries.some((industry) => industries.includes(industry))) {
+      || selectedIndustries.some((industry) => industries.includes(industry))
+      || selectedLocations.includes(location)) {
         this.setState((prevState) => ({
           results: [...prevState.results, startup],
         }));
@@ -81,7 +114,10 @@ class Startups extends Component {
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
       ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(text, industries);
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(text, industries, locations);
     this.setState({ search: true, searchterm: text });
   }
 
@@ -89,11 +125,11 @@ class Startups extends Component {
     return array.length === 1 && array.includes('emptytext');
   }
 
-  onFilter = (industries) => {
-    if (this.isFilterEmpty(industries)) {
+  onFilter = (industries, locations) => {
+    if (this.isFilterEmpty(industries) && (this.isFilterEmpty(locations))) {
       this.setState({ filter: false });
     } else this.setState({ filter: true });
-    this.searchAndFilter(this.state.searchterm, industries);
+    this.searchAndFilter(this.state.searchterm, industries, locations);
   }
 
   clear = () => {
@@ -101,53 +137,66 @@ class Startups extends Component {
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
       ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter('emptytext', industries);
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter('emptytext', industries, locations);
+  }
+
+  loadApproved() {
+    this.props.startups.forEach((startup) => {
+      if (startup.status === 'Approved') {
+        this.setState((prevState) => ({
+          approved: [...prevState.approved, startup],
+        }));
+      }
+    });
   }
 
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
-    this.setState({ results: [] });
+    this.setState({ archived: [] });
     if (checked) {
       this.props.startups.forEach((startup) => {
         if (startup.status === 'Archived') {
           this.setState((prevState) => ({
-            results: [...prevState.results, startup],
+            archived: [...prevState.archived, startup],
           }));
         }
       });
     }
-  }
-
-  handleApprovedChange(checked) {
-    this.setState({ approved: checked });
-    this.setState({ results: [] });
-    if (checked) {
-      this.props.startups.forEach((startup) => {
-        if (startup.status === 'Approved') {
-          this.setState((prevState) => ({
-            results: [...prevState.results, startup],
-          }));
-        }
-      });
-    }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, locations);
   }
 
   handlePendingChange(checked) {
     this.setState({ pending: checked });
-    this.setState({ results: [] });
+    this.setState({ pendingArr: [] });
     if (checked) {
       this.props.startups.forEach((startup) => {
         if (startup.status === 'Pending') {
           this.setState((prevState) => ({
-            results: [...prevState.results, startup],
+            pendingArr: [...prevState.pendingArr, startup],
           }));
         }
       });
     }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, locations);
   }
 
   renderStartups() {
-    if (this.state.search || this.state.filter || this.state.archive || this.state.approved || this.state.pending) {
+    if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
         return this.state.results.map((startup) => {
           return (
@@ -159,8 +208,20 @@ class Startups extends Component {
           <div> Sorry, no postings match that query</div>
         );
       }
+    } else if (this.state.archive) {
+      return this.state.archived.map((startup) => {
+        return (
+          <StartupListItem startup={startup} key={startup.id} />
+        );
+      });
+    } else if (this.state.pending) {
+      return this.state.pendingArr.map((startup) => {
+        return (
+          <StartupListItem startup={startup} key={startup.id} />
+        );
+      });
     } else {
-      return this.props.startups.map((startup) => {
+      return this.state.approved.map((startup) => {
         return (
           <StartupListItem startup={startup} key={startup.id} />
         );
@@ -172,8 +233,6 @@ class Startups extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          <h3>show approved startups: </h3>
-          <Switch id="approvedToggle" onChange={this.handleApprovedChange} checked={this.state.approved} />
           <h3>show pending startups:</h3>
           <Switch id="pendingToggle" onChange={this.handlePendingChange} checked={this.state.pending} />
           <h3>show archived startups:</h3>
@@ -210,7 +269,28 @@ class Startups extends Component {
                 const industries = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value.toLowerCase())
                   : ['emptytext'];
-                this.onFilter(industries);
+                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                  ? this.state.selectedLocationOptions.map((option) => option.value)
+                  : ['emptytext'];
+                this.onFilter(industries, locations);
+              }}
+            />
+            <Select
+              isMulti
+              styles={dropdownStyles}
+              name="location-filter"
+              placeholder="Filter by location"
+              options={this.state.locationOptions}
+              value={this.state.selectedLocationOptions}
+              onChange={(selectedOptions) => {
+                this.setState({ selectedLocationOptions: selectedOptions });
+                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                const locations = (selectedOptions && selectedOptions.length > 0)
+                  ? selectedOptions.map((option) => option.value)
+                  : ['emptytext'];
+                this.onFilter(industries, locations);
               }}
             />
             {this.renderToggles()}

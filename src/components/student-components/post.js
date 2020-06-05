@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-plusplus */
 /* eslint-disable react/no-access-state-in-setstate */
@@ -36,7 +37,7 @@ class Post extends Component {
   // }
 
   showApplyModal = (e) => {
-    this.props.fetchApplication(this.props.current.application_id);
+    this.props.fetchApplication(this.props.current?.application_id);
     this.setState({
       applyShow: true,
     });
@@ -63,11 +64,11 @@ class Post extends Component {
 
   requiredSkillsHelper= () => {
     const requiredSkills = [];
-    if (this.props.current.required_skills) {
+    if (this.props.current?.required_skills) {
       for (const [index, value] of this.props.current.required_skills.entries()) {
         requiredSkills.push(
           // eslint-disable-next-line no-loop-func
-          <li id="skill" key={index}>{value}</li>,
+          <li id="skill" key={index}>{value.name}</li>,
         );
       }
       return requiredSkills;
@@ -78,11 +79,11 @@ class Post extends Component {
 
   preferredSkillsHelper = () => {
     const preferredSkills = [];
-    if (this.props.current.preferred_skills) {
+    if (this.props.current?.preferred_skills) {
       for (const [index, value] of this.props.current.preferred_skills.entries()) {
         preferredSkills.push(
           // eslint-disable-next-line no-loop-func
-          <li id="skill" key={index}>{value}</li>,
+          <li id="skill" key={index}>{value.name}</li>,
         );
       }
       return preferredSkills;
@@ -93,9 +94,8 @@ class Post extends Component {
 
   responsibilitiesHelper = () => {
     const responsibilities = [];
-    if (this.props.current.responsibilities) {
+    if (this.props.current?.responsibilities) {
       for (let i = 0; i < this.props.current.responsibilities.length; i++) {
-        // console.log(this.props.current.responsibilities[i]);
         responsibilities.push(
           <li id="responsibility" key={this.props.current.responsibilities[i]}>{this.props.current.responsibilities[i]}</li>,
         );
@@ -132,7 +132,7 @@ class Post extends Component {
   }
 
   render() {
-    if (this.props.current.startup_id) {
+    if (this.props.current?.startup_id) {
       return (
         <div>
           <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
@@ -142,7 +142,7 @@ class Post extends Component {
             <img src={this.props.current.startup_id.logo} alt="no logo" />
             <h2 id="name">{this.props.current.startup_id.name}</h2>
             <img src={pin} alt="location" />
-            <h2 id="name">{this.props.current.location}</h2>
+            <h2 id="name">{`${this.props.current.city}, ${this.props.current.state}`}</h2>
           </div>
           <div className="top">
             <div id="project">

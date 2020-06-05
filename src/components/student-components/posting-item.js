@@ -39,7 +39,7 @@ const PostListItem = (props) => {
             <h1 id="startupName"> { props.post.startup_id.name} </h1>
             <div className="location">
               <span className="locationIcon" />
-              <h2> { props.post.location} </h2>
+              <h2> {`${props.post.city}, ${props.post.state}`} </h2>
             </div>
           </div>
         </div>

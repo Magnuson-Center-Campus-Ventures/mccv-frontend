@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import { fetchSubmittedApplication, fetchSubmittedApplications, fetchPosts } from '../../actions';
-import ToggleSwitch from './toggle-switch';
+import ToggleSwitch from '../toggle-switch';
 
 import '../../styles/applications.scss';
 
@@ -23,8 +23,8 @@ class SubmittedApplications extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchSubmittedApplications();
-    this.props.fetchPosts();
+    this.props.fetchStartupByUserID(this.props.userID);
+    this.props.fetchUser(this.props.userID);
   }
 
   mapResults() {
@@ -77,7 +77,7 @@ class SubmittedApplications extends Component {
           <Link to={route} key={application.id} className="listItem link">
             <div className="Status">
               <div>{post.title}</div>
-              <div>{post.location}</div>
+              <div>{`${post.city}, ${post.state}`}</div>
               <div>status: {application.status}</div>
             </div>
           </Link>
@@ -97,7 +97,7 @@ class SubmittedApplications extends Component {
           <Link to={route} key={application.id} className="listItem link">
             <div className="Status">
               <div>{post.title}</div>
-              <div>{post.location}</div>
+              <div>{`${post.city}, ${post.state}`}</div>
               <div>status: {application.status}</div>
             </div>
           </Link>
@@ -126,6 +126,8 @@ class SubmittedApplications extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
+  userID: reduxState.auth.userID,
+  startup: reduxState.startups.current,
   submittedApplications: reduxState.submittedApplications.all,
   posts: reduxState.posts.all,
 });

@@ -22,6 +22,8 @@ class StartupSignUp extends Component {
     this.props.fetchStartupByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
     this.props.fetchAllIndustries();
+    this.props.fetchAllClasses();
+    this.props.fetchAllSkills();
   }
 
   handlePageClick = (data) => {
@@ -35,13 +37,19 @@ class StartupSignUp extends Component {
   }
 
   renderSubmit() {
-    return (
-      <div className="buttonContainer">
-        <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-          Submit!
-        </button>
-      </div>
-    );
+    if (this.state.index === 3) {
+      return (
+        <div className="buttonContainer">
+          <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
+            Submit!
+          </button>
+        </div>
+      );
+    } else {
+      return (
+        <div className="empty" />
+      );
+    }
   }
 
   renderComponent() {
