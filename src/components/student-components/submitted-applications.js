@@ -27,7 +27,6 @@ class SubmittedApplications extends Component {
       filter: false,
       results: [],
     };
-    this.filterByCompany = this.filterByCompany.bind(this);
   }
 
   componentDidMount() {
@@ -39,7 +38,7 @@ class SubmittedApplications extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.submittedApplications.length > 0 && this.props.posts.length > 0
       && (prevProps.submittedApplications !== this.props.submittedApplications || prevProps.posts !== this.props.posts)) {
-      this.filterByCompany();
+      this.filterByStudent();
     }
   }
 
@@ -94,7 +93,7 @@ class SubmittedApplications extends Component {
     this.searchAndFilter('emptytext', statuses, titles);
   }
 
-  filterByCompany() {
+  filterByStudent() {
     const updatedStudentApplications = [];
     const studentPostIds = [];
     this.props.submittedApplications.map((application) => {
