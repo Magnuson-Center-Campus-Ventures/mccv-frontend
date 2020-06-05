@@ -4,7 +4,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { updatePost, updateStartup, updateStudent } from '../../actions';
+import CreateableSelect from 'react-select/creatable';
+import {
+  updatePost, updateStartup, updateStudent, fetchSubmittedApplications, fetchStudentByID,
+} from '../../actions';
 import close from '../../../static/img/close.png';
 import '../../styles/archive-modal.scss';
 
@@ -13,9 +16,30 @@ class Archive extends Component {
     super(props);
     this.state = {
       filled: false,
+      applicants: [],
+      applicantNames: [],
+      filledBy: '',
+      // searchterm: 'Search student name',
+      // students: [],
     };
     this.notFilled = this.notFilled.bind(this);
     this.filled = this.filled.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.fetchSubmittedApplications();
+    if (this.props.submittedAll.length > 0) {
+      const applicantIDs = [];
+      this.props.submittedAll.map((submitted) => {
+        if (submitted.post_id === this.props.post.id) {
+          console.log(submitted.student_id);
+          applicantIDs.push(submitted.student_id);
+        }
+      });
+      this.setState({ applicants: applicantIDs });
+      console.log('applicants');
+      console.log(this.state.applicants);
+    }
   }
 
   notFilled = (e) => {
@@ -24,6 +48,17 @@ class Archive extends Component {
 
   filled = (e) => {
     this.setState({ filled: true });
+    if (this.state.applicants.length > 0) {
+      const names = [];
+      this.state.applicants.map((studentID) => {
+        this.props.fetchStudentByID(studentID);
+        const name = `${this.props.currentStudent.first_name} ${this.props.currentStudent.last_name}`;
+        names.push(name);
+      });
+      this.setState({ filled: true, applicantNames: names });
+      console.log('names');
+      console.log(this.state.applicantNames);
+    }
   }
 
   onArchive = (e) => {
@@ -31,7 +66,21 @@ class Archive extends Component {
       const { post } = this.props;
       post.status = 'Archived';
       this.props.updatePost(post.id, post);
-      this.props.onClose(e);
+      /* this.props.fetchSubmittedApplications();
+      if (this.props.submittedAll.length > 0) {
+        const applicantIDs = [];
+        this.props.submittedAll.map((submitted) => {
+          if (submitted.post_id === this.props.post.id) {
+            console.log(submitted.student_id);
+            applicantIDs.push(submitted.student_id);
+          }
+        });
+        this.setState({ applicants: applicantIDs });
+        console.log('applicants');
+        console.log(this.state.applicants);
+      }
+      */
+      // this.props.onClose(e);
     }
     if (this.props.startup) {
       const { startup } = this.props;
@@ -52,10 +101,38 @@ class Archive extends Component {
     }
   }
 
+  addClass = () => {
+
+  }
+
   filledRender() {
+    const customStyles = { // from student-signup-classes
+      control: (base) => ({
+        ...base,
+        width: 200,
+      }),
+    };
     if (this.state.filled) {
       return (
-        <p>Select the student(s) who filled the position</p>
+        <div className="selectStudents">
+          <p>Select the student(s) who filled the position</p>
+
+          <CreateableSelect
+            className="select-dropdown"
+            styles={customStyles}
+            name="classes"
+            options={this.state.applicantNames}
+            onChange={(selectedOption) => {
+              this.state.filledBy = selectedOption.value;
+              this.addFilled();
+            }}
+            /* onCreateOption={(newOption) => {
+              this.state.class = newOption;
+              this.addClassDB();
+              this.addClass();
+            }} */
+          />
+        </div>
       );
     } else {
       return null;
@@ -141,4 +218,11 @@ class Archive extends Component {
   }
 }
 
-export default withRouter(connect(null, { updatePost, updateStartup, updateStudent })(Archive));
+const mapStateToProps = (reduxState) => ({
+  submittedAll: reduxState.submittedApplications.all,
+  currentStudent: reduxState.students.current_student,
+});
+
+export default withRouter(connect(mapStateToProps, {
+  updatePost, updateStartup, updateStudent, fetchSubmittedApplications, fetchStudentByID,
+})(Archive));
