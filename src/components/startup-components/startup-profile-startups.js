@@ -16,15 +16,17 @@ class StartupProfile extends Component {
     this.state = {
       show: false,
       startup: {},
+      selectedIndustries: [],
+      displayIndustries: [],
+      industry: '',
       isEditing: false,
     };
     // this.renderPostings = this.renderPostings.bind(this);
   }
 
   componentDidMount() {
-    console.log('didMount');
-    this.props.fetchStartupByUserID(localStorage.getItem('userID'));
     this.props.fetchAllIndustries();
+    this.props.fetchStartupByUserID(localStorage.getItem('userID'));
     // this.props.fetchPosts();
   }
 
@@ -32,54 +34,33 @@ class StartupProfile extends Component {
     if (this.props.startup !== {} && prevProps.startup !== this.props.startup) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ startup: this.props.startup });
-    }
-    if (prevProps.industries !== this.props.industries) {
-      const industries = this.props.industries.all.map((industry) => {
-        return { value: industry.name, label: industry.name, industry };
-      });
-      this.state.allIndustries = industries;
-      const displayIndustries = this.state.allIndustries.filter((value) => {
-        return !this.props.startup.industries.includes(this.getIndustry(value.value));
-      });
-      this.state.displayIndustries = displayIndustries;
+      this.popuateCurrentIndustries();
     }
   }
 
   getIndustry(name) {
-    const industryObject = this.props.industries.all.find((industry) => {
+    const industryObject = this.props.industries.find((industry) => {
       return (industry.name === name);
     });
     return industryObject;
-  }
-
-  addIndustryDB = () => {
-    if (!this.state.allIndustries.includes(this.state.industry)) {
-      this.props.createIndustry({ name: this.state.industry });
-    }
-    this.props.fetchAllIndustries();
   }
 
   addIndustry = () => {
     if (!this.props.startup.industries.includes(this.getIndustry(this.state.industry))) {
       this.props.startup.industries.push(this.getIndustry(this.state.industry));
     }
-    const displayIndustries = this.state.allIndustries.filter((value) => {
-      return !this.props.startup.industries.includes(this.getIndustry(value.value));
+    this.state.displayIndustries = this.state.displayIndustries.filter((value) => {
+      return (value.label !== this.state.industry);
     });
-    this.state.displayIndustries = displayIndustries;
     this.state.industry = '';
     this.forceUpdate();
   }
 
   deleteIndustry = (industry) => {
-    const industries = this.props.startup.industries.filter((value) => {
+    this.props.startup.industries = this.props.startup.industries.filter((value) => {
       return (value !== industry.industry);
     });
-    this.props.startup.industries = industries;
-    const displayIndustries = this.state.allIndustries.filter((value) => {
-      return !this.props.startup.industries.includes(this.getIndustry(value.value));
-    });
-    this.state.displayIndustries = displayIndustries;
+    this.state.displayIndustries.push({ label: industry.industry.name });
     this.forceUpdate();
   }
 
@@ -103,6 +84,104 @@ class StartupProfile extends Component {
       show: false,
     });
   };
+
+  popuateCurrentIndustries() {
+    this.props.startup.industries.forEach((value) => {
+      if (!this.state.selectedIndustries.includes(value.name)) {
+        this.state.selectedIndustries.push(value.name);
+      }
+    });
+    this.props.industries.forEach((value) => {
+      if (!this.state.selectedIndustries.includes(value.name)) {
+        this.state.displayIndustries.push({ label: value.name });
+      }
+    });
+  }
+
+  renderAddIndustry() {
+    const customStyles = {
+      control: (base) => ({
+        ...base,
+        width: 200,
+      }),
+    };
+    if (this.state.isEditing === true) {
+      return (
+        <div className="add-industries">
+          Add Industries:
+          <CreateableSelect
+            className="select-dropdown"
+            styles={customStyles}
+            name="industries"
+            value={this.state.industry}
+            options={this.state.displayIndustries}
+            onChange={(selectedOption) => {
+              this.state.industry = selectedOption.label;
+              this.addIndustry();
+            }}
+            onCreateOption={(newOption) => {
+              console.log(newOption);
+              this.state.industry = newOption;
+              this.props.createIndustryForStartup({ name: newOption }, this.props.startup);
+            }}
+          />
+        </div>
+      );
+    } else {
+      return (
+        'Indsutries:'
+      );
+    }
+  }
+
+  renderIndustries() {
+    if (this.props.startup?.industries) {
+      if (this.state.isEditing === true) {
+        return (
+          this.props.startup.industries.map((industry) => {
+            return (
+              <div className="industry" key={industry.name}>
+                {industry.name}
+                <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
+                  <i className="far fa-trash-alt" id="icon" />
+                </button>
+              </div>
+            );
+          })
+        );
+      } else {
+        return (
+          this.props.startup.industries.map((industry) => {
+            return (
+              <div className="industry" key={industry.name}>{industry.name}</div>
+            );
+          })
+        );
+      }
+    } else {
+      return (
+        <div>Loading</div>
+      );
+    }
+  }
+
+  renderStartup() {
+    if (typeof this.props.startup !== 'undefined') {
+      return (
+        <div className="startup-body">
+          <AddPosting onClose={this.hideModal} show={this.state.show} />
+          <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
+          <div className="startup-location">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
+          <div className="startup-industries">{this.renderAddIndustry()}{this.renderIndustries()}</div>
+          <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
+        </div>
+      );
+    } else {
+      return (
+        <div>Startup profile does not exist</div>
+      );
+    }
+  }
 
   // eslint-disable-next-line consistent-return
   renderDescription = (post) => {
@@ -189,102 +268,6 @@ class StartupProfile extends Component {
     }
   }
 
-  renderAddIndustry() {
-    console.log('here');
-    const customStyles = {
-      control: (base) => ({
-        ...base,
-        width: 200,
-      }),
-    };
-    if (this.state.isEditing === true) {
-      return (
-        <div className="add-industries">
-          Add Industries:
-          <CreateableSelect
-            className="select-dropdown"
-            styles={customStyles}
-            name="industries"
-            options={this.state.displayIndustries}
-            onChange={(selectedOption) => {
-              this.state.industry = selectedOption.value;
-              this.addIndustry();
-            }}
-            onCreateOption={(newOption) => {
-              this.state.industry = newOption;
-              this.addIndustryDB();
-              this.addIndustry();
-            }}
-          />
-        </div>
-      );
-    } else {
-      return (
-        'Indsutries:'
-      );
-    }
-  }
-
-  renderIndustries() {
-    console.log(this.props.startup.industries);
-    if (typeof this.props.startup.industries !== 'undefined') {
-<<<<<<< HEAD
-      if (this.state.isEditing === false) {
-        return (
-          this.props.startup.industries.map((industry) => {
-            return (
-              <div className="industry" key={industry}>{industry}</div>
-            );
-          })
-        );
-      } else {
-        this.renderAddIndustry();
-        return (
-          this.props.startup.industries.map((industry) => {
-            return (
-              <div className="industry" key={industry}>{industry}
-                <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
-                  <i className="far fa-trash-alt" id="icon" />
-                </button>
-              </div>
-            );
-          })
-        );
-      }
-=======
-      return (
-        this.props.startup.industries.map((industry) => {
-          return (
-            <div className="industry" key={industry.name}>{industry.name}</div>
-          );
-        })
-      );
->>>>>>> 7eb4568aeea2051984e625ef53918096d52cefc5
-    } else {
-      return (
-        <div>Loading</div>
-      );
-    }
-  }
-
-  renderStartup() {
-    if (typeof this.props.startup !== 'undefined') {
-      return (
-        <div className="startup-body">
-          <AddPosting onClose={this.hideModal} show={this.state.show} />
-          <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
-          <div className="startup-location">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
-          <div className="startup-industries">{this.renderAddIndustry()}{this.renderIndustries()}</div>
-          <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
-        </div>
-      );
-    } else {
-      return (
-        <div>Startup profile does not exist</div>
-      );
-    }
-  }
-
   render() {
     return (
       <div className="startup">
@@ -314,6 +297,7 @@ class StartupProfile extends Component {
 function mapStateToProps(reduxState) {
   return {
     startup: reduxState.startups.current,
+    industries: reduxState.industries.all,
     // posts: reduxState.posts.all,
   };
 }
