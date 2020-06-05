@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
 import Switch from 'react-switch';
+import moment from 'moment';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
@@ -24,6 +25,8 @@ class Posts extends Component {
       selectedSkillOptions: [],
       locationOptions: [],
       selectedLocationOptions: [],
+      dateOptions: [],
+      selectedDateOptions: [],
       searchterm: 'emptytext',
       recommend: false,
       search: false,
@@ -41,6 +44,17 @@ class Posts extends Component {
     this.props.fetchPosts();
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchUser(localStorage.getItem('userID'));
+
+    // Set up options for date dropdown
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+      'August', 'September', 'October', 'November', 'December'];
+    const dateOptions = [];
+    for (let i = 0; i < 13; i += 1) {
+      const newMonth = moment().add(i, 'months');
+      const monthName = months[newMonth.month()];
+      dateOptions.push({ value: newMonth, label: `${monthName}, ${newMonth.year()}` });
+    }
+    this.setState({ dateOptions });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -132,7 +146,7 @@ class Posts extends Component {
       }
       // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
       const postScores = {};
-      this.props.posts.forEach((post) => {
+      this.state.live.forEach((post) => {
         const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry.name)).length
         + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry.name)).length
         + post.desired_classes.filter((_class) => studentClasses.includes(_class.name)).length
@@ -143,22 +157,27 @@ class Posts extends Component {
       });
 
       // Sort the posts in descending order of score
-      const tempPosts = this.props.posts;
-      tempPosts.sort((post1, post2) => {
-        return postScores[post2._id] - postScores[post1._id];
+      this.setState((prevState) => {
+        const tempPosts = [...prevState.live];
+        tempPosts.sort((post1, post2) => {
+          return postScores[post2._id] - postScores[post1._id];
+        });
+        // tempPosts.forEach((post) => {
+        //   console.log(post.title, postScores[post._id]);
+        // });
+        return {
+          ...prevState,
+          sortedPosts: tempPosts.slice(0, 2),
+        };
       });
-      tempPosts.forEach((post) => {
-        // console.log(post.title, postScores[post._id]);
-      });
-      this.setState({ sortedPosts: tempPosts.slice(0, 3) });
     }
   }
 
-  searchAndFilter = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
-    this.setState({ results: [] }, () => this.searchAndFilterCallback(text, selectedInds, selectedSkills, selectedLocations, recommend));
+  searchAndFilter = (text, selectedInds, selectedSkills, selectedLocations, selectedDates, recommend) => {
+    this.setState({ results: [] }, () => this.searchAndFilterCallback(text, selectedInds, selectedSkills, selectedLocations, selectedDates, recommend));
   }
 
-  searchAndFilterCallback = (text, selectedInds, selectedSkills, selectedLocations, recommend) => {
+  searchAndFilterCallback = (text, selectedInds, selectedSkills, selectedLocations, selectedDates, recommend) => {
     const searchterm = text.toLowerCase();
     let posts = [];
     if (this.props.user.role === 'admin') {
@@ -174,7 +193,7 @@ class Posts extends Component {
       fetchIndustriesFromID(post.startup_id.industries, (industry) => { startupInd.push(industry.name.toLowerCase()); });
       const postLoc = `${post.city}, ${post.state}`;
       const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`.toLowerCase();
-      // console.log(startupLoc);
+      const startDate = moment(post.desired_start_date);
       // Checks for search
       if (post.title.toLowerCase().includes(searchterm)
       || postLoc.toLowerCase().includes(searchterm)
@@ -188,7 +207,8 @@ class Posts extends Component {
       || selectedInds.some((industry) => startupInd.includes(industry))
       || selectedSkills.some((skill) => skills.includes(skill))
       || selectedLocations.includes(postLoc)
-      || selectedLocations.includes(startupLoc)) {
+      || selectedLocations.includes(startupLoc)
+      || selectedDates.some((date) => date.month() === startDate.month() && date.year() === startDate.year())) {
         this.setState((prevState) => ({
           results: [...prevState.results, post],
         }));
@@ -206,19 +226,26 @@ class Posts extends Component {
     const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
       ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(text, industries, skills, locations, this.state.recommend);
+    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+      ? this.state.selectedDateOptions.map((option) => option.value)
+      : [moment('1111-11-11')];
+    this.searchAndFilter(text, industries, skills, locations, dates, this.state.recommend);
     this.setState({ search: true, searchterm: text });
   }
 
   isFilterEmpty = (array) => {
-    return array.length === 1 && array.includes('emptytext');
+    if (array.length === 1 && array.includes('emptytext')) return true;
+    else if (array.length === 1 && array[0]._isAMomentObject) {
+      return array[0].year() === 1111;
+    }
+    return false;
   }
 
-  onFilter = (industries, skills, locations) => {
-    if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills) && this.isFilterEmpty(locations)) {
+  onFilter = (industries, skills, locations, dates) => {
+    if (this.isFilterEmpty(industries) && this.isFilterEmpty(skills) && this.isFilterEmpty(locations) && this.isFilterEmpty(dates)) {
       this.setState({ filter: false });
     } else this.setState({ filter: true });
-    this.searchAndFilter(this.state.searchterm, industries, skills, locations, this.state.recommend);
+    this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, this.state.recommend);
   }
 
   onRecommendPress = () => {
@@ -228,7 +255,13 @@ class Posts extends Component {
     const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
       ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+      ? this.state.selectedDateOptions.map((option) => option.value)
+      : [moment('1111-11-11')];
+    this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, !this.state.recommend);
     this.setState((prevState) => ({ recommend: !prevState.recommend }));
   }
 
@@ -243,7 +276,10 @@ class Posts extends Component {
     const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
       ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter('emptytext', industries, skills, locations, this.state.recommend);
+    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+      ? this.state.selectedDateOptions.map((option) => option.value)
+      : [moment('1111-11-11')];
+    this.searchAndFilter('emptytext', industries, skills, locations, dates, this.state.recommend);
   }
 
   loadPosts() {
@@ -277,7 +313,10 @@ class Posts extends Component {
     const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
       ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
-    this.searchAndFilter(this.state.searchterm, industries, skills, locations, this.state.recommend);
+    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+      ? this.state.selectedDateOptions.map((option) => option.value)
+      : [moment('1111-11-11')];
+    this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, this.state.recommend);
   }
 
   renderPosts() {
@@ -360,7 +399,10 @@ class Posts extends Component {
                 const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
                   ? this.state.selectedLocationOptions.map((option) => option.value)
                   : ['emptytext'];
-                this.onFilter(industries, skills, locations);
+                const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+                  ? this.state.selectedDateOptions.map((option) => option.value)
+                  : [moment('1111-11-11')];
+                this.onFilter(industries, skills, locations, dates);
               }}
             />
             <Select
@@ -381,7 +423,10 @@ class Posts extends Component {
                 const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
                   ? this.state.selectedLocationOptions.map((option) => option.value)
                   : ['emptytext'];
-                this.onFilter(industries, skills, locations);
+                const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+                  ? this.state.selectedDateOptions.map((option) => option.value)
+                  : [moment('1111-11-11')];
+                this.onFilter(industries, skills, locations, dates);
               }}
             />
             <Select
@@ -402,7 +447,34 @@ class Posts extends Component {
                 const locations = (selectedOptions && selectedOptions.length > 0)
                   ? selectedOptions.map((option) => option.value)
                   : ['emptytext'];
-                this.onFilter(industries, skills, locations);
+                const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+                  ? this.state.selectedDateOptions.map((option) => option.value)
+                  : [moment('1111-11-11')];
+                this.onFilter(industries, skills, locations, dates);
+              }}
+            />
+            <Select
+              isMulti
+              styles={dropdownStyles}
+              name="start-date-filter"
+              placeholder="Filter by start date"
+              options={this.state.dateOptions}
+              value={this.state.selectedDateOptions}
+              onChange={(selectedOptions) => {
+                this.setState({ selectedDateOptions: selectedOptions });
+                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+                  ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+                  : ['emptytext'];
+                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                  ? this.state.selectedLocationOptions.map((option) => option.value)
+                  : ['emptytext'];
+                const dates = (selectedOptions && selectedOptions.length > 0)
+                  ? selectedOptions.map((option) => option.value)
+                  : [moment('1111-11-11')];
+                this.onFilter(industries, skills, locations, dates);
               }}
             />
             {this.renderButtons()}
