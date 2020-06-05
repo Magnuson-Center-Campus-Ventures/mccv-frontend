@@ -28,6 +28,7 @@ export const ActionTypes = {
   FETCH_QUESTION: 'FETCH_QUESTION',
   FETCH_SUBMITTED_APPLICATIONS: 'FETCH_SUBMITTED_APPLICATIONS',
   FETCH_SUBMITTED_APPLICATION: 'FETCH_SUBMITTED_APPLICATION',
+  UPDATE_SUBMITTED_APPLICATION: 'UPDATE_SUBMITTED_APPLICATION',
   FETCH_ALL_INDUSTRIES: 'FETCH_ALL_INDUSTRIES',
   FETCH_SOME_INDUSTRIES: 'FETCH_SOME_INDUSTRIES',
   ADD_INDUSTRY: 'ADD_INDUSTRY',
@@ -594,6 +595,17 @@ export function fetchSubmittedApplication(id) {
         console.log('broken');
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
+  };
+}
+
+export function updateSubmittedApplication(id, submittedApp) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/submittedapplications/${id}`, submittedApp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.UPDATE_SUBMITTED_APPLICATION, payload: response.data });
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
+    });
   };
 }
 
