@@ -138,7 +138,7 @@ class SubmittedApplications extends Component {
     if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
         return this.state.results.map((application) => {
-          const route = `/applications/${application._id}`;
+          const route = `/startupsubmittedapplications/${application._id}`;
           let post = '';
           for (const i in this.props.posts) {
             if (this.props.posts[i].id === application.post_id) {
@@ -147,7 +147,7 @@ class SubmittedApplications extends Component {
             }
           }
           return (
-            <Link to={route} key={application.id} className="listItem link">
+            <Link to={route} key={application._id} className="listItem link">
               <div className="Status">
                 <div>{post.title}</div>
                 <div>{post.location}</div>
@@ -164,7 +164,7 @@ class SubmittedApplications extends Component {
     } else {
       const { startupApplications } = this.state;
       return startupApplications.map((application) => {
-        const route = `/applications/${application._id}`;
+        const route = `/startupsubmittedapplications/${application._id}`;
         let post = '';
         for (const i in this.props.posts) {
           if (this.props.posts[i].id === application.post_id) {
