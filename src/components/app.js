@@ -17,7 +17,7 @@ import StudentsFAQ from './student-components/students-faq';
 import StartupsFAQ from './startup-components/startups-faq';
 import StartupsLanding from './startup-components/startups-landing';
 import SubmittedApplications from './student-components/submitted-applications';
-import SubmittedApplication from './student-components/submitted-application';
+import StartupApplicationListItem from './startup-components/startup-application-list-item';
 import StudentSignUp from './student-components/student-sign-up/student-signup';
 import StartupProfileStartups from './startup-components/startup-profile-startups';
 import StartupSignUpBio from './startup-components/startup-sign-up/startup-signup-bio';
@@ -25,7 +25,7 @@ import StartupSignUpDesc from './startup-components/startup-sign-up/startup-sign
 import StartupSignUpVideo from './startup-components/startup-sign-up/startup-signup-video';
 import StartupSignUpIndustries from './startup-components/startup-sign-up/startup-signup-industries';
 import StartupSignUp from './startup-components/startup-sign-up/startup-signup';
-import ApplicationListItem from './startup-components/application-list-item';
+import ApplicationListItem from './student-components/application-list-item';
 import StartupSubmittedApplications from './startup-components/startup-submitted-applications';
 
 const App = (props) => {
@@ -41,7 +41,7 @@ const App = (props) => {
           <Route path="/startups" component={Startups} />
           <Route path="/students/:studentID" component={StudentProfileStartup} />
           <Route path="/students" component={Students} />
-          <Route path="/applications/:applicationID" component={SubmittedApplication} />
+          <Route path="/applications/:applicationID" component={ApplicationListItem} />
           <Route path="/applications" component={SubmittedApplications} />
           <Route path="/profile" component={StudentProfile} />
           <Route path="/signin" component={Signin} />
@@ -49,7 +49,7 @@ const App = (props) => {
           <Route path="/studentsfaq" component={StudentsFAQ} />
           <Route path="/startupsfaq" component={StartupsFAQ} />
           <Route path="/startupslanding" component={StartupsLanding} />
-          <Route path="/startupsubmittedapplications/:applicationID" component={ApplicationListItem} />
+          <Route path="/startupsubmittedapplications/:applicationID" component={StartupApplicationListItem} />
           <Route path="/startupsubmittedapplications" component={StartupSubmittedApplications} />
           {/* <Route path="/student-signup-bio" component={StudentSignUpBio} />
           <Route path="/student-signup-timing" component={StudentSignUpTiming} />

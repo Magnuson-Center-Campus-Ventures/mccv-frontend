@@ -61,7 +61,6 @@ class Post extends Component {
     });
   }
 
-
   requiredSkillsHelper= () => {
     const requiredSkills = [];
     if (this.props.current?.required_skills) {
