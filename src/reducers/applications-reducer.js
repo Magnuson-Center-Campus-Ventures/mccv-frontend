@@ -11,6 +11,8 @@ const ApplicationsReducer = (state = initialState, action) => {
       return { ...state, all: action.payload };
     case ActionTypes.FETCH_APPLICATION:
       return { ...state, current: action.payload };
+    case ActionTypes.CLEAR_APPLICATION:
+      return { ...state, current: {} };
     case ActionTypes.ERROR_SET:
       return state;
     default:

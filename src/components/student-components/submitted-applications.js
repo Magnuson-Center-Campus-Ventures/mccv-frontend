@@ -8,7 +8,13 @@ import { withRouter, Link } from 'react-router-dom';
 import Select from 'react-select';
 import SearchBar from './search-bar';
 import {
-  fetchSubmittedApplication, fetchSubmittedApplications, fetchPosts, fetchStudentByUserID,
+  fetchSubmittedApplication,
+  fetchSubmittedApplications,
+  fetchPosts,
+  fetchStudentByUserID,
+  clearApplication,
+  clearPost,
+  clearStudent,
 } from '../../actions';
 import '../../styles/applications.scss';
 
@@ -251,4 +257,7 @@ export default withRouter(connect(mapStateToProps, {
   fetchSubmittedApplication,
   fetchSubmittedApplications,
   fetchStudentByUserID,
+  clearApplication,
+  clearPost,
+  clearStudent,
 })(SubmittedApplications));

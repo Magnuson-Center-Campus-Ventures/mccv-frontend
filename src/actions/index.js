@@ -7,11 +7,13 @@ const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 export const ActionTypes = {
   FETCH_USER: 'FETCH_USER',
   FETCH_POST: 'FETCH_POST',
+  CLEAR_POST: 'CLEAR_POST',
   FETCH_POSTS: 'FETCH_POSTS',
   UPDATE_POST: 'UPDATE_POST',
   FETCH_STARTUP: 'FETCH_STARTUP',
   FETCH_STARTUPS: 'FETCH_STARTUPS',
   FETCH_STUDENT: 'FETCH_STUDENT',
+  CLEAR_STUDENT: 'CLEAR_STUDENT',
   CREATE_STUDENT: 'CREATE_STUDENT',
   FETCH_STUDENTS: 'FETCH_STUDENTS',
   FETCH_STUDENT_USER: 'FETCH_STUDENT_USER',
@@ -30,6 +32,8 @@ export const ActionTypes = {
   FETCH_SUBMITTED_APPLICATIONS: 'FETCH_SUBMITTED_APPLICATIONS',
   FETCH_SUBMITTED_APPLICATION: 'FETCH_SUBMITTED_APPLICATION',
   UPDATE_SUBMITTED_APPLICATION: 'UPDATE_SUBMITTED_APPLICATION',
+  SUBMIT_APPLICATION: 'SUBMIT_APPLICATION',
+  CLEAR_APPLICATION: 'CLEAR_APPLICATION',
   FETCH_ALL_INDUSTRIES: 'FETCH_ALL_INDUSTRIES',
   FETCH_SOME_INDUSTRIES: 'FETCH_SOME_INDUSTRIES',
   ADD_INDUSTRY: 'ADD_INDUSTRY',
@@ -39,7 +43,6 @@ export const ActionTypes = {
   FETCH_ALL_CLASSES: 'FETCH_ALL_CLASSES',
   FETCH_SOME_CLASSES: 'FETCH_SOME_CLASSES',
   ADD_CLASS: 'ADD_CLASS',
-  SUBMIT_APPLICATION: 'SUBMIT_APPLICATION',
   ERROR_SET: 'ERROR_SET',
   AUTH_USER: 'AUTH_USER',
   DEAUTH_USER: 'DEAUTH_USER',
@@ -118,6 +121,12 @@ export function updatePost(id, post) {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
+  };
+}
+
+export function clearPost() {
+  return (dispatch) => {
+    dispatch({ type: ActionTypes.CLEAR_POST });
   };
 }
 
@@ -269,6 +278,12 @@ export function submitStudent(id, student, history) {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
+  };
+}
+
+export function clearStudent() {
+  return (dispatch) => {
+    dispatch({ type: ActionTypes.CLEAR_STUDENT });
   };
 }
 
@@ -555,6 +570,12 @@ export function submitApplication(newApplication) {
         console.log('broken');
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
+  };
+}
+
+export function clearApplication() {
+  return (dispatch) => {
+    dispatch({ type: ActionTypes.CLEAR_APPLICATION });
   };
 }
 
