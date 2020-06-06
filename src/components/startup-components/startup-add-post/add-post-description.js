@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../../styles/startup-add-post/add-post-title-location.scss';
+import '../../../styles/startup-add-post/add-post-description.scss';
 import {
   fetchPost, updatePost,
 } from '../../../actions';
