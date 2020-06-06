@@ -25,15 +25,12 @@ import StartupSignUpDesc from './startup-components/startup-sign-up/startup-sign
 import StartupSignUpVideo from './startup-components/startup-sign-up/startup-signup-video';
 import StartupSignUpIndustries from './startup-components/startup-sign-up/startup-signup-industries';
 import StartupSignUp from './startup-components/startup-sign-up/startup-signup';
-<<<<<<< HEAD
 import PrivateRoute from './private-route';
 import StudentRoute from './student-components/student-route';
 import StartupRoute from './startup-components/startup-route';
 // import AdminRoute from './admin-components/admin-route';
-=======
 import ApplicationListItem from './startup-components/application-list-item';
 import StartupSubmittedApplications from './startup-components/startup-submitted-applications';
->>>>>>> f8ef62dd6b989486dd1c54be0b2a4b61041504e6
 
 const App = (props) => {
   return (
@@ -46,6 +43,7 @@ const App = (props) => {
           <Route path="/signup" component={Signup} />
           <Route path="/studentsfaq" component={StudentsFAQ} />
           <Route path="/startupsfaq" component={StartupsFAQ} />
+          <Route render={() => (<div>post not found </div>)} />
           <PrivateRoute path="/posts/:postID" component={Post} />
           <PrivateRoute path="/posts" component={Postings} />
           <PrivateRoute path="/startups/:startupID" component={StartupProfile} />
@@ -63,7 +61,8 @@ const App = (props) => {
           <StartupRoute path="/startup-signup-industries" component={StartupSignUpIndustries} />
           <StartupRoute path="/startup-signup-video" component={StartupSignUpVideo} />
           <StartupRoute path="/startup-signup" component={StartupSignUp} />
-          <Route render={() => (<div>post not found </div>)} />
+          <StartupRoute path="/startupsubmittedapplications/:applicationID" component={ApplicationListItem} />
+          <StartupRoute path="/startupsubmittedapplications" component={StartupSubmittedApplications} />
         </Switch>
       </div>
     </Router>
