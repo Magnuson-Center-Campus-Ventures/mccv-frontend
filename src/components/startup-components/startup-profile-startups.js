@@ -5,7 +5,8 @@ import { Link, withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
 import TextareaAutosize from 'react-textarea-autosize';
 import {
-  createPost, fetchStartupByUserID, fetchPosts, fetchPost, updateStartup,
+  createPost, fetchPosts, fetchPost, updatePost,
+  fetchStartupByUserID, updateStartup,
   fetchAllIndustries, createIndustryForStartup,
 } from '../../actions';
 import '../../styles/startup-profile.scss';
@@ -111,6 +112,10 @@ class StartupProfile extends Component {
     };
     console.log(newPost);
     this.props.createPost(newPost, this.props.history);
+  }
+
+  archivePost (post) {
+    this.props.updatePost(post.id, { status : "Archived" });
   }
 
   populateCurrentIndustries() {
@@ -260,8 +265,8 @@ class StartupProfile extends Component {
           return (
             <li className="startup-posting" key={post._id}>
               <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
-                <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deletePost({ post }); }}>
-                  <i className="far fa-trash-alt" id="icon" />
+                <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.archivePost({ post }); }}>
+                  <i className="fas fa-archive" id="icon" />
                 </button>
                 <div className="startup-posting-title">{post.title}</div>
                 <br />
@@ -359,5 +364,5 @@ function mapStateToProps(reduxState) {
 }
 
 export default withRouter(connect(mapStateToProps, {
-  createPost, fetchStartupByUserID, fetchPosts, fetchPost, updateStartup, fetchAllIndustries, createIndustryForStartup,
+  createPost, fetchStartupByUserID, fetchPosts, fetchPost, updatePost, updateStartup, fetchAllIndustries, createIndustryForStartup,
 })(StartupProfile));
