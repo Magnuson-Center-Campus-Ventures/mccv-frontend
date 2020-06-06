@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -59,11 +59,12 @@ export function fetchPosts() {
   };
 }
 
-export function createPost(post) {
+export function createPost(post, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+        history.push('/add-post');
       })
       .catch((error) => {
         console.log('broken');
@@ -278,6 +279,19 @@ export function submitStartup(id, startup, history) {
       dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
       // eslint-disable-next-line no-restricted-globals
       history.push('/startupprofile');
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+export function submitPost(id, post, history) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      // eslint-disable-next-line no-restricted-globals
+      history.push(`/posts/${id}`);
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });

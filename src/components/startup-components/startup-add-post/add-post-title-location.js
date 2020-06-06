@@ -4,10 +4,10 @@ import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import '../../../styles/startup-add-post/add-post-title-location.scss';
 import {
-  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
+  fetchPost, updatePost,
 } from '../../../actions';
 
-class TitleLocation extends Component {
+class AddPostTitleLocation extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,87 +17,81 @@ class TitleLocation extends Component {
 
   // Get profile info
   componentDidMount() {
-    console.log(this.props.match.params.startupID);
-    this.props.fetchStartupByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
+    this.props.fetchPost(this.props.postID);
   }
 
-     // update startup field
-     changeStartupField = (field, event) => {
-       // eslint-disable-next-line prefer-destructuring
-       const value = event.target.value;
+  // update post field
+  changePostField = (field, event) => {
+    // eslint-disable-next-line prefer-destructuring
+    const value = event.target.value;
 
-       this.setState((prevState) => {
-         const startup = { ...prevState.startup };
-         startup[field] = value;
-         this.props.updateStartup(this.props.startup.id,
-           startup);
-         return {
-           ...prevState,
-           startup,
-         };
-       });
-       //  this.props.updateStartup(this.props.startup.id,
-       //    Object.assign(this.state.student, startup));
-       //  this.props.updateStartup(this.props.startup.id, this.state.startup);
-     }
+    this.setState((prevState) => {
+      const post = { ...prevState.post };
+      post[field] = value;
+      this.props.updatePost(this.props.post.id, post);
+      return {
+        ...prevState,
+        post,
+      };
+    });
+  }
 
-     // Send update to database
-     onSubmit = (e) => {
-       this.props.updateStartup(this.props.startup.id, this.state.startup);
-     };
+  // Send update to database
+  onSubmit = (e) => {
+    this.props.updatePost(this.props.post.id, this.state.post);
+  };
 
 
-     renderBioQuestions() {
-       return (
+  renderTitleQuestions() {
+    if (this.props.post) {
+      return (
+        <div className="PostTitleContainer">
+          <div className="PostTitleHeaderContainer">
+            <h1 className="PostTitleHeader">
+              Title and Location
+            </h1>
+          </div>
+          <div className="PostTitleDescContainer">
+            <p className="PostTitleDesc">
+              Add the title and location of this volunteer position
+            </p>
+            <i className="far fa-id-badge" id="icon" />
+          </div>
+          <div className="PostTitleQuestionsContainer">
+            <div className="PostTitleNameContainer">
+              <div className="PostTitleQuestionLabelContainer">
+                <p className="PostTitleLabel">
+                  Title
+                </p>
+                <TextareaAutosize onChange={(event) => this.changePostField('title', event)} defaultValue={this.props.post.title} />
+                <p className="PostTitleLabel">
+                  City
+                </p>
+                <TextareaAutosize onChange={(event) => this.changePostField('city', event)} defaultValue={this.props.post.city} />
+                <p className="PostTitleLabel">
+                  State
+                </p>
+                <TextareaAutosize onChange={(event) => this.changePostField('state', event)} defaultValue={this.props.post.state} />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return (<div>Loading...</div>);
+    }
+  }
 
-         <div className="StartupBioContainer">
-           <div className="StartupBioHeaderContainer">
-             <h1 className="StartupBioHeader">
-               Bio
-             </h1>
-           </div>
-           <div className="StartupBioDescContainer">
-             <p className="StartupBioDesc">
-               Add your startup’s name and location!
-             </p>
-             <i className="far fa-id-badge" id="icon" />
-           </div>
-           <div className="StartupBioQuestionsContainer">
-             <div className="nameContainer">
-               <div className="StartupBioQuestionLabelContainer">
-                 <p className="StartupBioLabel">
-                   Name
-                 </p>
-                 <TextareaAutosize onChange={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
-                 <p className="StartupBioLabel">
-                   City
-                 </p>
-                 <TextareaAutosize onChange={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
-                 <p className="StartupBioLabel">
-                   State
-                 </p>
-                 <TextareaAutosize onChange={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
-               </div>
-             </div>
-             <div className="StartupBioQuestionLabelContainer">
-               <div className="StartupBioQuestionLabelContainer" />
-             </div>
-           </div>
-         </div>
-       );
-     }
-
-     render() {
-       return this.renderBioQuestions();
-     }
+  render() {
+    return this.renderTitleQuestions();
+  }
 }
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
-  startup: reduxState.startups.current,
+  post: reduxState.posts.current,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
-})(TitleLocation));
+  fetchPost, updatePost,
+})(AddPostTitleLocation));
