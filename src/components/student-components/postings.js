@@ -37,7 +37,6 @@ class Posts extends Component {
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
-    // this.handleLiveChange = this.handleLiveChange.bind(this);
   }
 
   componentDidMount() {
@@ -63,8 +62,7 @@ class Posts extends Component {
           });
         }
         if (post.startup_id.industries && post.status === 'Approved') {
-          post.startup_id.industries.forEach((industry) => {
-            // Add option if it's not already in the array (not using sets because react-select expects an array)
+          fetchIndustriesFromID(post.startup_id.industries, (industry) => {
             if (industryOptions.filter((option) => option.value === industry.name).length === 0) {
               industryOptions.push({ value: industry.name, label: industry.name });
             }
