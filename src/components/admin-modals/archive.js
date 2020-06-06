@@ -24,7 +24,7 @@ class Archive extends Component {
   }
 
   componentDidMount() {
-    if (this.props.post.applicants.length > 0) {
+    if (this.props.post?.applicants?.length > 0 && this.props.post.applicants.length > 0) {
       const names = this.props.post.applicants.map((applicant) => {
         const name = `${applicant.first_name} ${applicant.last_name}`;
         return { value: applicant, label: name };
