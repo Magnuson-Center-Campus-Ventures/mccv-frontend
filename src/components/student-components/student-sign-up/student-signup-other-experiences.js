@@ -69,7 +69,6 @@ class StudentOtherExperiences extends Component {
 
      // Removes time from date
      convertDate=(date) => {
-       console.log(date);
        if (typeof date !== 'undefined') {
          const dateISO = date.slice(0, 10).split('-');
          return `${dateISO[1]}/${dateISO[2]}/${dateISO[0]}`;
@@ -79,8 +78,6 @@ class StudentOtherExperiences extends Component {
 
      renderOtherExperiences = () => {
        if (this.state.otherExps.length > 0) {
-         console.log('inrender');
-         console.log(this.state.otherExps);
          return this.state.otherExps.map((otherExp, index) => {
            return (
              <div key={index} className="work-exp">
