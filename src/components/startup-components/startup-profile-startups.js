@@ -121,20 +121,6 @@ class StartupProfile extends Component {
     this.props.createPost(newPost, this.props.history);
   }
 
-  approvePost(post) {
-    // eslint-disable-next-line no-param-reassign
-    post.post.status = 'Approved';
-    this.props.updatePost(post.post._id, post.post);
-    this.forceUpdate();
-  }
-
-  archivePost(post) {
-    // eslint-disable-next-line no-param-reassign
-    post.post.status = 'Archived';
-    this.props.updatePost(post.post._id, post.post);
-    this.forceUpdate();
-  }
-
   handleApprovedToggle(checked) {
     console.log(checked);
     this.state.approved = checked;
@@ -316,57 +302,19 @@ class StartupProfile extends Component {
   renderPostings = (e) => {
     if (this.props.startup.posts && this.props.startup.posts.length && typeof this.props.startup !== 'undefined') {
       const mappingPostings = this.state.posts.map((post) => {
-        if (this.state.isEditing === true) {
-          if (post.status === 'Approved') {
-            return (
-              <li className="startup-posting" key={post._id}>
-                <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.archivePost({ post }); }}>
-                  <i className="fas fa-archive" id="icon" />
-                </button>
-                <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
-                  <div className="startup-posting-title">{post.title}</div>
-                  <br />
-                  {this.renderDescription(post)}
-                  <br />
-                  <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
-                  <br />
-                  <div className="startup-posting-status">Status: {post.status}</div>
-                </Link>
-              </li>
-            );
-          } else {
-            return (
-              <li className="startup-posting" key={post._id}>
-                <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.approvePost({ post }); }}>
-                  <i className="fas fa-check" id="icon" />
-                </button>
-                <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
-                  <div className="startup-posting-title">{post.title}</div>
-                  <br />
-                  {this.renderDescription(post)}
-                  <br />
-                  <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
-                  <br />
-                  <div className="startup-posting-status">Status: {post.status}</div>
-                </Link>
-              </li>
-            );
-          }
-        } else {
-          return (
-            <li className="startup-posting" key={post._id}>
-              <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
-                <div className="startup-posting-title">{post.title}</div>
-                <br />
-                {this.renderDescription(post)}
-                <br />
-                <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
-                <br />
-                <div className="startup-posting-status">Status: {post.status}</div>
-              </Link>
-            </li>
-          );
-        }
+        return (
+          <li className="startup-posting" key={post._id}>
+            <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
+              <div className="startup-posting-title">{post.title}</div>
+              <br />
+              {this.renderDescription(post)}
+              <br />
+              <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
+              <br />
+              <div className="startup-posting-status">Status: {post.status}</div>
+            </Link>
+          </li>
+        );
       });
       return (
         this.props.startup.posts !== undefined
@@ -439,6 +387,7 @@ function mapStateToProps(reduxState) {
   return {
     startup: reduxState.startups.current,
     industries: reduxState.industries.all,
+    post: reduxState.posts.current,
   };
 }
 
