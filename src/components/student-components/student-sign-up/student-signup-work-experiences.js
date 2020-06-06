@@ -23,13 +23,10 @@ class StudentWorkExperiences extends Component {
   componentDidMount() {
     this.props.fetchStudentByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
-    console.log(this.state.student);
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
-      console.log('here');
-      console.log(this.state.student);
       // this.props.fetchWorkExperiences(this.props.student.work_exp);
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
@@ -72,7 +69,6 @@ class StudentWorkExperiences extends Component {
 
      // Removes time from date
      convertDate=(date) => {
-       console.log(date);
        if (typeof date !== 'undefined') {
          const dateISO = date.slice(0, 10).split('-');
          return `${dateISO[1]}/${dateISO[2]}/${dateISO[0]}`;

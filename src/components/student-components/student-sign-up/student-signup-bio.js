@@ -29,6 +29,8 @@ class StudentBio extends Component {
        this.setState((prevState) => {
          const student = { ...prevState.student };
          student[field] = value;
+         this.props.updateStudent(this.props.student.id,
+           student);
          return {
            ...prevState,
            student,
