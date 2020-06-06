@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/button-has-type */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -63,9 +64,12 @@ class WorkExperience extends Component {
               <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format YYYY-MM' : null}</div>
               <input className="short-input"
                 placeholder="YYYY-MM"
-                defaultValue={new Date(this.props.workExp.end_date).getMonth() + 1 < 10
-                  ? `${new Date(this.props.workExp.end_date).getFullYear()}-0${new Date(this.props.workExp.end_date).getMonth() + 1}`
-                  : `${new Date(this.props.workExp.end_date).getFullYear()}-${new Date(this.props.workExp.end_date).getMonth() + 1}`}
+                defaultValue={this.props.workExp.end_date
+                  ? (new Date(this.props.workExp.end_date).getMonth() + 1 < 10
+                    ? `${new Date(this.props.workExp.end_date).getFullYear()}-0${new Date(this.props.workExp.end_date).getMonth() + 1}`
+                    : `${new Date(this.props.workExp.end_date).getFullYear()}-${new Date(this.props.workExp.end_date).getMonth() + 1}`
+                  )
+                  : ''}
                 onBlur={(event) => {
                   if (!this.isValidDate(event.target.value)) {
                     this.setState({ badEndDate: true });
@@ -89,6 +93,7 @@ class WorkExperience extends Component {
               onChange={(event) => {
                 this.setState({ currentlyWorking: event.target.checked, badEndDate: false });
                 this.props.changeWorkExpField(this.props.index, 'currently_working', event.target.checked);
+                this.props.changeWorkExpField(this.props.index, 'end_date', null);
               }}
             />
           </label>
