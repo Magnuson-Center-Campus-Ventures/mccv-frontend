@@ -16,8 +16,8 @@ const PostListItem = (props) => {
   const industries = props.post.industries.map((industry, index) => {
     if (index === 0) {
       return (
-        <h2>
-          <div id="industryTitle" key={industry.id}>
+        <h2 key={industry.id}>
+          <div id="industryTitle">
             Industries: <div className="pill"> {industry.name} </div>
           </div>
         </h2>

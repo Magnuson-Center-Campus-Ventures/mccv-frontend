@@ -256,46 +256,54 @@ class Startups extends Component {
       this.props.startups && this.state.results
         ? (
           <div>
-            <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="industry-filter"
-              placeholder="Filter by industry"
-              options={this.state.industryOptions}
-              value={this.state.selectedIndustryOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedIndustryOptions: selectedOptions });
-                const industries = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
-                  ? this.state.selectedLocationOptions.map((option) => option.value)
-                  : ['emptytext'];
-                this.onFilter(industries, locations);
-              }}
-            />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="location-filter"
-              placeholder="Filter by location"
-              options={this.state.locationOptions}
-              value={this.state.selectedLocationOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedLocationOptions: selectedOptions });
-                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const locations = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value)
-                  : ['emptytext'];
-                this.onFilter(industries, locations);
-              }}
-            />
-            {this.renderToggles()}
-            <div className="list">
-              {this.renderStartups()}
+            <h1> All Startups </h1>
+            <div className="content">
+              <div className="sideFilterBar">
+                <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
+                <Select
+                  isMulti
+                  styles={dropdownStyles}
+                  name="industry-filter"
+                  placeholder="Filter by industry"
+                  options={this.state.industryOptions}
+                  value={this.state.selectedIndustryOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedIndustryOptions: selectedOptions });
+                    const industries = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                      ? this.state.selectedLocationOptions.map((option) => option.value)
+                      : ['emptytext'];
+                    this.onFilter(industries, locations);
+                  }}
+                />
+                <Select
+                  isMulti
+                  styles={dropdownStyles}
+                  name="location-filter"
+                  placeholder="Filter by location"
+                  options={this.state.locationOptions}
+                  value={this.state.selectedLocationOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedLocationOptions: selectedOptions });
+                    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const locations = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value)
+                      : ['emptytext'];
+                    this.onFilter(industries, locations);
+                  }}
+                />
+              </div>
+              <div className="rightSide">
+                {this.renderToggles()}
+                <div className="list">
+                  {this.renderStartups()}
+                </div>
+              </div>
+
             </div>
           </div>
         ) : (

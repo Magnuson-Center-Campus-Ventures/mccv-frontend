@@ -155,23 +155,10 @@
     margin-bottom: 1vh;
 }
 
-.skills > .pill{
-    margin-right: 2%;
-    margin-left: 2%;
-}
-
-#search-bar {
-    margin-bottom: 20px;
-  
-    input {
-      font-size: 1.5em;
-      border-radius: .25em;
-    }
-}
-
 .basicInfo{
     margin-left: 5px
 }
+
 .basicInfo > h1, h2{
     font-weight: normal;
     font-size: 130%;
@@ -183,3 +170,32 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+.skills > .pill{
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+.pageContent{
+    height: 100%
+}
+
+.content{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.sideFilterBar{
+    background-color: #EFEFF0;
+}
+
+#search-bar {
+    margin-bottom: 20px;
+  
+    input {
+      font-size: 1.5em;
+      border-radius: .25em;
+    }
+}
+
+
