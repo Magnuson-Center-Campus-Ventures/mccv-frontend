@@ -68,7 +68,7 @@
 .postInfo{
     height: 60%;
     margin-right: 5px;
-    margin-left: 5px;
+    margin-left: 15px;
 }
 
 .listItem:hover{
@@ -79,19 +79,13 @@
 #postTitle{ 
     font-weight: normal;
     text-align: center;
-    font-size: 120%;
-}
-
-#matched{
-    font-weight: normal;
-    border-bottom: 0;
-    font-size: 100%;
+    font-size: 140%;
 }
 
 .extraInfo {
     height: 60%;
     margin-right: 5px;
-    margin-left: 5px;
+    margin-left: 15px;
 }
 
 .extraInfo > h1{
@@ -106,7 +100,7 @@
     font-size: 100%;
 }
 
-.startupIndustries > h1{
+.industriesList > h1{
     margin-block-end: 0;
     margin-block-start: 0;
     font-weight: normal;
@@ -120,9 +114,27 @@
     font-size: 90%
 }
 
-.startupIndustries{
+.industriesList{
     display: flex;
     flex-wrap: wrap;
+}
+
+.industriesList > h2 {
+    font-size: 100%;
+}
+
+#notFirstInd{
+    margin-left: 38%;
+}
+
+.pill#notFirstInd{
+    margin-left: 0;
+    margin-bottom: 1vh;
+    margin-right: 1vw;
+}
+
+#industryTitle{
+    display: flex;
 }
 
 .postings > h2{
@@ -137,7 +149,7 @@
     flex-wrap: wrap;
 }
 
-.postingPill{
+.pill{
     background-color:rgba(69, 185, 144, 0.5);
     border-radius: 10px;
     width: fit-content;

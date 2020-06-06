@@ -7,34 +7,33 @@ import '../../styles/postings.scss';
 const PostListItem = (props) => {
   const route = `/posts/${props.post._id}`;
 
-  let archiveShow = false;
+  const logo = props.post.startup_id.logo ? (
+    <img src={props.post.startup_id.logo} alt="  " />
+  ) : (
+    <div />
+  );
 
-  const showArchiveModal = (e) => {
-    archiveShow = true;
-  };
-
-  const hideArchiveModal = (e) => {
-    archiveShow = false;
-  };
-
-  const buttons = props.user.role === 'admin' ? (
-    <button
-      type="submit"
-      onClick={(e) => {
-        showArchiveModal();
-      }}
-    >
-      Archive
-    </button>
-  ) : <div />;
-
+  const industries = props.post.industries.map((industry, index) => {
+    if (index === 0) {
+      return (
+        <h2>
+          <div id="industryTitle" key={industry.id}>
+            Industries: <div className="pill"> {industry.name} </div>
+          </div>
+        </h2>
+      );
+    }
+    return (
+      <h2 key={industry.id} className="pill" id="notFirstInd">
+        {industry.name}
+      </h2>
+    );
+  });
 
   return (
     <div>
       <Link to={route} key={props.post.id} className="listItem link">
-        <Archive post={props.post} onClose={hideArchiveModal} show={archiveShow} />
         <div className="companyInfo">
-          <img src={props.post.startup_id.logo} alt="no logo" />
           <div className="companyText">
             <h1 id="startupName"> { props.post.startup_id.name} </h1>
             <div className="location">
@@ -42,11 +41,14 @@ const PostListItem = (props) => {
               <h2> {`${props.post.city}, ${props.post.state}`} </h2>
             </div>
           </div>
+          {logo}
+          {/* <img src={props.post.startup_id.logo} alt="no logo" /> */}
         </div>
         <div className="postInfo">
           <h1 id="postTitle">{ props.post.title}</h1>
-          {/* <h2 id="matched">Matched on: </h2> */}
-          {/* {buttons} */}
+          <div className="industriesList">
+            {industries}
+          </div>
         </div>
       </Link>
 

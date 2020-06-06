@@ -12,9 +12,16 @@ const StartupListItem = (props) => {
     <div />
   );
 
-  const industries = props.startup.industries.map((industry) => {
+  const industries = props.startup.industries.map((industry, index) => {
+    if (index === 0) {
+      return (
+        <h1 key={industry.id}>
+          Industries: {industry.name}
+        </h1>
+      );
+    }
     return (
-      <h1 key={industry.id}>
+      <h1 key={industry.id} id="notFirstInd">
         {industry.name}
       </h1>
     );
@@ -23,7 +30,7 @@ const StartupListItem = (props) => {
   const postNames = props.startup.posts.map((post) => {
     console.log(post);
     return (
-      <div className="postingPill" key={post.id}>
+      <div className="pill" key={post.id}>
         {post.title}
       </div>
     );
@@ -51,11 +58,9 @@ const StartupListItem = (props) => {
         {logo}
       </div>
       <div className="extraInfo">
-        <div className="startupIndustries">
-          <h1> Industries: </h1>
+        <div className="industriesList postIndustries">
           {industries}
         </div>
-        {/* <h2> {posts} </h2> */}
         {posts}
       </div>
     </Link>
