@@ -21,6 +21,15 @@ const StudentsReducer = (state = initialState, action) => {
       return { ...state, current_email: action.payload.email };
     case ActionTypes.FETCH_WORK_EXPS:
       return { ...state, current_work_exps: action.payload };
+    case ActionTypes.CLEAR_STUDENT:
+      return {
+        ...state,
+        current_work_exps: {},
+        current_email: '',
+        current_other_exps: [],
+        studentID: '',
+        current_student: {},
+      };
     case ActionTypes.ADD_WORK_EXP:
       return {
         ...state,

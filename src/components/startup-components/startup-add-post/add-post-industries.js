@@ -1,4 +1,4 @@
-/* import React, { Component } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -8,7 +8,7 @@ import {
   fetchPost, updatePost,
 } from '../../../actions';
 
-class AddPostDescription extends Component {
+class AddPostIndustries extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -87,5 +87,4 @@ const mapStateToProps = (reduxState) => ({
 
 export default withRouter(connect(mapStateToProps, {
   fetchPost, updatePost,
-})(AddPostDescription));
-*/
+})(AddPostIndustries));

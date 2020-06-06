@@ -16,29 +16,20 @@ class Archive extends Component {
     super(props);
     this.state = {
       filled: false,
-      applicants: [],
-      applicantNames: [],
-      filledBy: '',
-      // searchterm: 'Search student name',
-      // students: [],
+      applicantOptions: [],
+      studentsSelected: [],
     };
     this.notFilled = this.notFilled.bind(this);
     this.filled = this.filled.bind(this);
   }
 
   componentDidMount() {
-    this.props.fetchSubmittedApplications();
-    if (this.props.submittedAll.length > 0) {
-      const applicantIDs = [];
-      this.props.submittedAll.map((submitted) => {
-        if (submitted.post_id === this.props.post.id) {
-          console.log(submitted.student_id);
-          applicantIDs.push(submitted.student_id);
-        }
+    if (this.props.post.applicants.length > 0) {
+      const names = this.props.post.applicants.map((applicant) => {
+        const name = `${applicant.first_name} ${applicant.last_name}`;
+        return { value: applicant, label: name };
       });
-      this.setState({ applicants: applicantIDs });
-      console.log('applicants');
-      console.log(this.state.applicants);
+      this.setState({ applicantOptions: names });
     }
   }
 
@@ -48,39 +39,15 @@ class Archive extends Component {
 
   filled = (e) => {
     this.setState({ filled: true });
-    if (this.state.applicants.length > 0) {
-      const names = [];
-      this.state.applicants.map((studentID) => {
-        this.props.fetchStudentByID(studentID);
-        const name = `${this.props.currentStudent.first_name} ${this.props.currentStudent.last_name}`;
-        names.push(name);
-      });
-      this.setState({ filled: true, applicantNames: names });
-      console.log('names');
-      console.log(this.state.applicantNames);
-    }
   }
 
   onArchive = (e) => {
     if (this.props.post) {
       const { post } = this.props;
       post.status = 'Archived';
+      post.students_selected = this.state.studentsSelected;
       this.props.updatePost(post.id, post);
-      /* this.props.fetchSubmittedApplications();
-      if (this.props.submittedAll.length > 0) {
-        const applicantIDs = [];
-        this.props.submittedAll.map((submitted) => {
-          if (submitted.post_id === this.props.post.id) {
-            console.log(submitted.student_id);
-            applicantIDs.push(submitted.student_id);
-          }
-        });
-        this.setState({ applicants: applicantIDs });
-        console.log('applicants');
-        console.log(this.state.applicants);
-      }
-      */
-      // this.props.onClose(e);
+      this.props.onClose(e);
     }
     if (this.props.startup) {
       const { startup } = this.props;
@@ -101,8 +68,14 @@ class Archive extends Component {
     }
   }
 
-  addClass = () => {
-
+  // add student who filled position to selected array
+  addFilled = (student) => {
+    console.log(student);
+    const selected = this.state.studentsSelected.map((selectedStudent) => {
+      return { selectedStudent };
+    });
+    selected.push(student.value);
+    this.state.studentsSelected = selected;
   }
 
   filledRender() {
@@ -121,16 +94,10 @@ class Archive extends Component {
             className="select-dropdown"
             styles={customStyles}
             name="classes"
-            options={this.state.applicantNames}
+            options={this.state.applicantOptions}
             onChange={(selectedOption) => {
-              this.state.filledBy = selectedOption.value;
-              this.addFilled();
+              this.addFilled(selectedOption);
             }}
-            /* onCreateOption={(newOption) => {
-              this.state.class = newOption;
-              this.addClassDB();
-              this.addClass();
-            }} */
           />
         </div>
       );
@@ -144,7 +111,7 @@ class Archive extends Component {
     if (this.props.post) {
       return (
         <div className="archiveQuestions">
-          <p> Has this position been filled?</p>
+          <p> Has this position been filled by a student on this platform?</p>
           <div className="archiveOptions">
             <button type="submit"
               id="noarchive"
@@ -188,6 +155,7 @@ class Archive extends Component {
                 this.props.onClose(e);
               }}
             />
+            {this.postArchive()}
             <p> Are you sure you want to archive this?</p>
             <div className="archiveOptions">
               <button type="submit"
@@ -208,9 +176,7 @@ class Archive extends Component {
               >
                 Yes
               </button>
-              {this.postArchive()}
             </div>
-
           </div>
         </div>
       );
@@ -219,7 +185,7 @@ class Archive extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  submittedAll: reduxState.submittedApplications.all,
+  // submittedAll: reduxState.submittedApplications.all,
   currentStudent: reduxState.students.current_student,
 });
 

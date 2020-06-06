@@ -8,7 +8,7 @@ import moment from 'moment';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
-  fetchPosts, fetchStudentByUserID, fetchUser,
+  fetchPosts, fetchStudentByUserID, fetchUser, clearPost,
 } from '../../actions';
 import { fetchIndustriesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
@@ -41,6 +41,7 @@ class Posts extends Component {
   }
 
   componentDidMount() {
+    this.props.clearPost();
     this.props.fetchPosts();
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchUser(localStorage.getItem('userID'));
@@ -501,4 +502,5 @@ export default withRouter(connect(mapStateToProps, {
   fetchPosts,
   fetchStudentByUserID,
   fetchUser,
+  clearPost,
 })(Posts));

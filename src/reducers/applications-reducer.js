@@ -5,12 +5,14 @@ const initialState = {
   current: {},
 };
 
-const ApplicationReducer = (state = initialState, action) => {
+const ApplicationsReducer = (state = initialState, action) => {
   switch (action.type) {
     case ActionTypes.FETCH_APPLICATIONS:
       return { ...state, all: action.payload };
     case ActionTypes.FETCH_APPLICATION:
       return { ...state, current: action.payload };
+    case ActionTypes.CLEAR_APPLICATION:
+      return { ...state, current: {} };
     case ActionTypes.ERROR_SET:
       return state;
     default:
@@ -18,4 +20,4 @@ const ApplicationReducer = (state = initialState, action) => {
   }
 };
 
-export default ApplicationReducer;
+export default ApplicationsReducer;
