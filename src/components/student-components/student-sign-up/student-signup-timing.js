@@ -64,13 +64,13 @@ class StudentTiming extends Component {
            <div className="StudentTimingQuestionsContainer">
              <div className="StudentTimingQuestionLabelContainer">
                <p className="StudentTimingLabel">
-                 Start Date (--/--/----)
+                 Start Date (mm/dd/yyyy)
                </p>
                <TextareaAutosize onBlur={(event) => this.changeStudentField('desired_start_date', event)} defaultValue={this.convertDate(this.props.student.desired_start_date)} />
              </div>
              <div className="StudentTimingQuestionLabelContainer">
                <p className="StudentTimingLabel">
-                 End Date (--/--/----)
+                 End Date (mm/dd/yyyy)
                </p>
                <TextareaAutosize onBlur={(event) => this.changeStudentField('desired_end_date', event)} defaultValue={this.convertDate(this.props.student.desired_end_date)} />
              </div>

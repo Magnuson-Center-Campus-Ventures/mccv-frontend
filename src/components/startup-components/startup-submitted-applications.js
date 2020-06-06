@@ -226,7 +226,7 @@ class SubmittedApplications extends Component {
               isMulti
               styles={dropdownStyles}
               name="title-filter"
-              placeholder="Filter by Title"
+              placeholder="Filter by Position"
               options={this.state.titleOptions}
               value={this.state.selectedTitleOptions}
               onChange={(selectedOptions) => {

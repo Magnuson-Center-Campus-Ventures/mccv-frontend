@@ -25,6 +25,14 @@ import StartupSignUpDesc from './startup-components/startup-sign-up/startup-sign
 import StartupSignUpVideo from './startup-components/startup-sign-up/startup-signup-video';
 import StartupSignUpIndustries from './startup-components/startup-sign-up/startup-signup-industries';
 import StartupSignUp from './startup-components/startup-sign-up/startup-signup';
+import AddPost from './startup-components/startup-add-post/add-post';
+import AddPostTitleLocation from './startup-components/startup-add-post/add-post-title-location';
+import AddPostTiming from './startup-components/startup-add-post/add-post-timing';
+import AddPostRequiredSkills from './startup-components/startup-add-post/add-post-req-skills';
+import AddPostPreferredSkills from './startup-components/startup-add-post/add-post-pref-skills';
+import AddPostIndustries from './startup-components/startup-add-post/add-post-industries';
+import AddPostDesiredClasses from './startup-components/startup-add-post/add-post-desired-classes';
+import AddPostDescription from './startup-components/startup-add-post/add-post-description';
 import ApplicationListItem from './student-components/application-list-item';
 import StartupSubmittedApplications from './startup-components/startup-submitted-applications';
 
@@ -66,6 +74,14 @@ const App = (props) => {
           <Route path="/startup-signup-industries" component={StartupSignUpIndustries} />
           <Route path="/startup-signup-video" component={StartupSignUpVideo} />
           <Route path="/startup-signup" component={StartupSignUp} />
+          <Route path="/add-post" component={AddPost} />
+          <Route path="/add-post-title-location" component={AddPostTitleLocation} />
+          <Route path="/add-post-timing" component={AddPostTiming} />
+          <Route path="/add-post-req-skills" component={AddPostRequiredSkills} />
+          <Route path="/add-post-pref-skills" component={AddPostPreferredSkills} />
+          <Route path="/add-post-industries" component={AddPostIndustries} />
+          <Route path="/add-post-desired-classes" component={AddPostDesiredClasses} />
+          <Route path="/add-post-description" component={AddPostDescription} />
           <Route render={() => (<div>page not found </div>)} />
         </Switch>
       </div>

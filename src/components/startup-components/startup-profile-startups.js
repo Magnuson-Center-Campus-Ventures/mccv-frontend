@@ -1,21 +1,19 @@
 /* eslint-disable react/button-has-type */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
 import TextareaAutosize from 'react-textarea-autosize';
 import {
-  fetchStartupByUserID, fetchPosts, fetchPost, updateStartup,
+  createPost, fetchStartupByUserID, fetchPosts, fetchPost, updateStartup,
   fetchAllIndustries, createIndustryForStartup,
 } from '../../actions';
-import AddPosting from './startups-modals/startup-add-posting';
 import '../../styles/startup-profile.scss';
 
 class StartupProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: false,
       startup: {},
       selectedIndustries: [],
       displayIndustries: [],
@@ -35,7 +33,7 @@ class StartupProfile extends Component {
     if (this.props.startup !== {} && prevProps.startup !== this.props.startup) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ startup: this.props.startup });
-      this.popuateCurrentIndustries();
+      this.populateCurrentIndustries();
     }
   }
 
@@ -88,19 +86,34 @@ class StartupProfile extends Component {
     });
   }
 
-  showModal = () => {
-    this.setState({
-      show: true,
-    });
-  };
+  addPosting = () => {
+    console.log('in addPosting');
+    const newPost = {
+      startup_id: this.props.startup._id,
+      title: '',
+      description: '',
+      industries: [],
+      required_skills: [],
+      preferred_skills: [],
+      responsibilities: [],
+      time_commitment: 0,
+      desired_start_date: '',
+      desired_end_date: '',
+      desired_classes: [],
+      available_until: '',
+      status: '',
+      applicants: [],
+      application_id: '',
+      students_selected: [],
+      city: '',
+      state: '',
+      remote: false,
+    };
+    console.log(newPost);
+    this.props.createPost(newPost, this.props.history);
+  }
 
-  hideModal = () => {
-    this.setState({
-      show: false,
-    });
-  };
-
-  popuateCurrentIndustries() {
+  populateCurrentIndustries() {
     this.props.startup.industries.forEach((value) => {
       if (!this.state.selectedIndustries.includes(value.name)) {
         this.state.selectedIndustries.push(value.name);
@@ -144,7 +157,7 @@ class StartupProfile extends Component {
       );
     } else {
       return (
-        'Indsutries:'
+        'Industries:'
       );
     }
   }
@@ -185,7 +198,6 @@ class StartupProfile extends Component {
       if (this.state.isEditing === false) {
         return (
           <div className="startup-body">
-            <AddPosting onClose={this.hideModal} show={this.state.show} />
             <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
             <div className="startup-location">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
             <div className="startup-industries">{this.renderAddIndustry()}{this.renderIndustries()}</div>
@@ -247,24 +259,28 @@ class StartupProfile extends Component {
         if (this.state.isEditing === true) {
           return (
             <li className="startup-posting" key={post._id}>
-              <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deletePost({ post }); }}>
-                <i className="far fa-trash-alt" id="icon" />
-              </button>
-              <div className="startup-posting-title">{post.title}</div>
-              <br />
-              {this.renderDescription(post)}
-              <br />
-              <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
+              <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
+                <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deletePost({ post }); }}>
+                  <i className="far fa-trash-alt" id="icon" />
+                </button>
+                <div className="startup-posting-title">{post.title}</div>
+                <br />
+                {this.renderDescription(post)}
+                <br />
+                <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
+              </Link>
             </li>
           );
         } else {
           return (
             <li className="startup-posting" key={post._id}>
-              <div className="startup-posting-title">{post.title}</div>
-              <br />
-              {this.renderDescription(post)}
-              <br />
-              <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
+              <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
+                <div className="startup-posting-title">{post.title}</div>
+                <br />
+                {this.renderDescription(post)}
+                <br />
+                <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
+              </Link>
             </li>
           );
         }
@@ -278,7 +294,7 @@ class StartupProfile extends Component {
                 <button type="button"
                   className="startup-add-posting-btn"
                   onClick={() => {
-                    this.showModal();
+                    this.addPosting();
                   }}
                 >
                   <i className="fas fa-plus" />
@@ -298,7 +314,7 @@ class StartupProfile extends Component {
             <button type="button"
               className="startup-add-posting-btn"
               onClick={() => {
-                this.showModal();
+                this.addPosting();
               }}
             >
               <i className="fas fa-plus" />
@@ -343,5 +359,5 @@ function mapStateToProps(reduxState) {
 }
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStartupByUserID, fetchPosts, fetchPost, updateStartup, fetchAllIndustries, createIndustryForStartup,
+  createPost, fetchStartupByUserID, fetchPosts, fetchPost, updateStartup, fetchAllIndustries, createIndustryForStartup,
 })(StartupProfile));
