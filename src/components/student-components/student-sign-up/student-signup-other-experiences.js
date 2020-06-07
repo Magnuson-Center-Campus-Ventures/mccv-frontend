@@ -27,7 +27,6 @@ class StudentOtherExperiences extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
-      this.props.fetchOtherExperiences(this.props.student.other_exp);
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
     }
@@ -48,7 +47,7 @@ class StudentOtherExperiences extends Component {
        show: false,
      });
      this.state.otherExps.forEach((otherExp) => {
-       this.props.updateWorkExperience(otherExp._id, otherExp);
+       this.props.updateOtherExperience(otherExp._id, otherExp);
      });
    }
 
@@ -69,7 +68,6 @@ class StudentOtherExperiences extends Component {
 
      // Removes time from date
      convertDate=(date) => {
-       console.log(date);
        if (typeof date !== 'undefined') {
          const dateISO = date.slice(0, 10).split('-');
          return `${dateISO[1]}/${dateISO[2]}/${dateISO[0]}`;
@@ -78,10 +76,8 @@ class StudentOtherExperiences extends Component {
      }
 
      renderOtherExperiences = () => {
-       if (this.state.otherExps.length > 0) {
-         console.log('inrender');
-         console.log(this.state.otherExps);
-         return this.state.otherExps.map((otherExp, index) => {
+       if (this.props.otherExps !== []) {
+         return this.props.otherExps.map((otherExp, index) => {
            return (
              <div key={index} className="work-exp">
                <div>{otherExp.name}</div>
@@ -97,8 +93,8 @@ class StudentOtherExperiences extends Component {
        return (
          <div className="StudentWorkExperienceContainer">
            <OtherExperience onClose={this.hideModal} show={this.state.show} />
-           <div className="StudentWorkExperienceHeaderContainer">
-             <h1 className="StudentWorkExperienceHeader">
+           <div className="StudentOtherExperienceHeaderContainer">
+             <h1 className="StudentOtherExperienceHeader">
                Personal Projects And Other Experiences
              </h1>
            </div>
@@ -120,7 +116,7 @@ class StudentOtherExperiences extends Component {
              />
            </div>
            <div id="work-exps">
-             {this.renderOtherExperiences()};
+             {this.renderOtherExperiences()}
            </div>
          </div>
        );
