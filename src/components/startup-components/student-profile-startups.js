@@ -57,6 +57,7 @@ class StudentProfileStartup extends Component {
     if (this.props.user?.role === 'admin' && this.props.student?.status === 'Approved') {
       return (
         <button
+          className="edit-button"
           type="submit"
           onClick={(e) => {
             this.showArchiveModal();
