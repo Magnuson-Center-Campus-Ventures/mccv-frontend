@@ -66,6 +66,9 @@
     "react-textarea-autosize": "^8.0.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-react": "^0.88.2"
-  }
+    "@stardust-ui/docs-components": "latest",
+    "faker": "latest",
+    "lodash": "latest",
+    "semantic-ui-react": "latest",
+    "react-scripts": "latest"  }
 }

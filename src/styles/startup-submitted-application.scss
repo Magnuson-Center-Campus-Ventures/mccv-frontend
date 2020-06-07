@@ -96,6 +96,18 @@
     flex-direction: column;
     margin: 20px;
   }
+  #confirmation-background{
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: black;
+    opacity: 50%;
+  }
+  div.content{
+    margin: 10px;
+  }
 
   #action-btns{
     display: flex;
@@ -103,7 +115,7 @@
     justify-content: center;
     
   }
-  #action-btns *{
+  #action-btns button{
     color: white;
     background-color: #45B990;
     border: none;
@@ -115,6 +127,8 @@
   }
 
   #confirmation-popup{
+    border-radius: 10px;
+    z-index: 3;
     position: fixed;
     background-color: white;
     margin: 20px;
@@ -217,4 +231,5 @@
   .tall-input {
     margin-bottom: 5px;
   }
+
   

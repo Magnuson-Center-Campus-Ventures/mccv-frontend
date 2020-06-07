@@ -154,11 +154,20 @@ class StartupApplicationListItem extends Component {
     this.setState({ openConfirmDecline: false, openConfirmApprove: false });
   }
 
+  toggleClass = () => {
+    const oldClassName = document.getElementById('page-wrap').className;
+    const newClassName = oldClassName === 'dialogIsOpen' ? 'dialogIsClosed' : 'dialogIsOpen';
+    document.getElementById('page-wrap').className = newClassName;
+  }
+
+
   showConfirmApprove = () => {
     this.setState({ openConfirmApprove: true });
   }
 
-  showConfirmDecline = () => this.setState({ openConfirmDecline: true })
+  showConfirmDecline = () => {
+    this.setState({ openConfirmDecline: true });
+  }
 
   renderActionBtns = () => {
     if (this.props.current.status === 'pending') {
@@ -180,6 +189,9 @@ class StartupApplicationListItem extends Component {
             onCancel={this.handleCancel}
             onConfirm={this.handleDecline}
           />
+          {(this.state.openConfirmApprove || this.state.openConfirmDecline) && (
+            <div id="confirmation-background" />
+          )}
         </div>
       );
     } else {
@@ -228,16 +240,18 @@ class StartupApplicationListItem extends Component {
     if (this.props.post != null && !isEmpty(this.props.post) && this.props.student != null && !isEmpty(this.props.student)) {
       return (
         <div>
-          {this.renderBody()}
-          <div id="work-exps">
-            <h2>Work Experience</h2>
-            {this.renderWorkExperiences()}
-            <h2>Other Experience</h2>
-            {this.renderOtherExperiences()}
-          </div>
-          <div id="questions">
-            <h2>Questions</h2>
-            {this.renderQuestions()}
+          <div id="page-wrap">
+            {this.renderBody()}
+            <div id="work-exps">
+              <h2>Work Experience</h2>
+              {this.renderWorkExperiences()}
+              <h2>Other Experience</h2>
+              {this.renderOtherExperiences()}
+            </div>
+            <div id="questions">
+              <h2>Questions</h2>
+              {this.renderQuestions()}
+            </div>
           </div>
           {this.renderActionBtns()}
         </div>
