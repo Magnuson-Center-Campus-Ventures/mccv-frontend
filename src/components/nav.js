@@ -51,7 +51,7 @@ class Nav extends Component {
         </ul>
       );
     } else if (this.props.user.role === 'startup') { // if logged in user is a startup
-      console.log('here ');
+      // console.log('here ');
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>

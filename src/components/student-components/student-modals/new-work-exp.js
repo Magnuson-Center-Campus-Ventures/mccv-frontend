@@ -3,6 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import TextareaAutosize from 'react-textarea-autosize';
 import { createWorkExperience } from '../../../actions';
 import close from '../../../../static/img/close.png';
 import '../../../styles/student-profile.scss';
@@ -91,7 +92,7 @@ class NewWorkExp extends React.Component {
               </label>
             </form>
             <div className="input-title">Description</div>
-            <textarea className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
+            <TextareaAutosize className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
             <button className="modal-add-button"
               onClick={() => {
                 if (!this.isValidDate(this.state.start_date) || (!this.state.currently_working && !this.isValidDate(this.state.end_date))) {
