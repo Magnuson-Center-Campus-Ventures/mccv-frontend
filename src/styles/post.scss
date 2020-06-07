@@ -15,14 +15,11 @@ ul {
     font-size: 1.5vw;
 }
 #title {
-    padding: 1rem;
+    margin-top:20px;
     font-family: Avenir Next;
     font-style: normal;
     font-weight: 600;
     font-size: 3vw;
-}
-#project, #skills-section{
-    margin: 2vw;
 }
 #project {
     width: 70%;
@@ -64,6 +61,16 @@ ul {
     flex-direction: row;
     height: 2vw;
 }
+#post-description{
+    font-size: 15px;
+}
+#title {
+    font-size: 24px;
+}
+#wrap-content div{
+    padding-left:10px;
+    padding-right:10px;
+}
 .bar *{
     font-size: 1.5vw;
     margin-left: 1vw;
@@ -97,7 +104,7 @@ ul {
     width: 15vw;
     height: 5vw;
     background: #45B990;
-    border: 1px solid #000000;
+    border: none;
     box-sizing: border-box;
     border-radius: 5px;
     color: white;

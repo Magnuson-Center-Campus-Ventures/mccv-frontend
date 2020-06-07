@@ -197,7 +197,7 @@ class StartupApplicationListItem extends Component {
     } else {
       return (
         <div id="action-btns">
-          <div>{this.props.current.status[0].toUpperCase() + this.props.current.status.slice(1)}</div>
+          <div id="static-status">{this.props.current.status[0].toUpperCase() + this.props.current.status.slice(1)}</div>
         </div>
       );
     }

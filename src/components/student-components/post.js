@@ -164,7 +164,7 @@ class Post extends Component {
   render() {
     if (this.props.current?.startup_id) {
       return (
-        <div>
+        <div id="wrap-content">
           <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
           <Archive post={this.props.current} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
           <h1 id="title">{this.props.current.title}</h1>
@@ -176,8 +176,8 @@ class Post extends Component {
           </div>
           <div className="top">
             <div id="project">
-              <h2>Project Description</h2>
-              <h3 id="post-description">{this.props.current.description}</h3>
+              <h3>Project Description</h3>
+              <h2 id="post-description">{this.props.current.description}</h2>
             </div>
             <div id="skills-section">
               <h2>Required Skills</h2>
@@ -187,7 +187,7 @@ class Post extends Component {
             </div>
           </div>
           <div className="bottom">
-            <h2>Responsibilities</h2>
+            <h3>Responsibilities</h3>
             <ul id="skills">{this.responsibilitiesHelper()}</ul>
           </div>
           {this.renderButtons()}
