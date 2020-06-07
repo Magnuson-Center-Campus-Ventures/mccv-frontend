@@ -23,14 +23,20 @@ class AddPost extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchPost(this.props.post._id);
+    console.log('add-post');
+    console.log(this.props.post.id);
+    this.props.fetchPost(this.props.post.id);
     this.props.fetchAllIndustries();
     this.props.fetchAllClasses();
     this.props.fetchAllSkills();
   }
 
   handlePageClick = (data) => {
+    console.log('handle click');
+    /* this.props.fetchPost(this.props.post.id);
+    console.log(this.props.post);
     this.props.updatePost(this.props.post.id, this.props.post);
+    */
     this.setState({ index: data.selected });
     this.forceUpdate();
   };
@@ -40,7 +46,7 @@ class AddPost extends Component {
   }
 
   renderSubmit() {
-    if (this.state.index === 3) {
+    if (this.state.index === 2) {
       return (
         <div className="buttonContainer">
           <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>

@@ -1,90 +1,167 @@
+/* eslint-disable react/no-unused-state */
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import TextareaAutosize from 'react-textarea-autosize';
-// import CreateableSelect from 'react-select/creatable';
+import CreateableSelect from 'react-select/creatable';
 import '../../../styles/startup-add-post/add-post-industries.scss';
 import {
-  fetchPost, updatePost,
+  fetchPost, updatePost, fetchAllSkills, fetchCertainSkills, createSkillForStudent,
 } from '../../../actions';
 
-class AddPostPreferredSkills extends Component {
+class AddPostPrefSkills extends Component {
   constructor(props) {
     super(props);
     this.state = {
       post: {},
+      skill: '',
+      selectedSkills: [],
+      displaySkills: [],
     };
   }
 
   // Get profile info
   componentDidMount() {
-    this.props.fetchPost(this.props.postID);
+    console.log('skills did mount');
+    console.log(this.props.post.id);
+    this.props.fetchPost(this.props.post.id);
+    // this.props.fetchPost(localStorage.getItem('postID'));
+    this.props.fetchAllSkills();
   }
 
-  // update post field
-  changePostField = (field, event) => {
-    // eslint-disable-next-line prefer-destructuring
-    const value = event.target.value;
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.post !== {} && prevProps.post !== this.props.post) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ post: this.props.post });
+      this.populateCurrentSkills();
+    }
+  }
 
-    this.setState((prevState) => {
-      const post = { ...prevState.post };
-      post[field] = value;
-      this.props.updatePost(this.props.post.id, post);
-      return {
-        ...prevState,
-        post,
-      };
+  getSkill(name) {
+    const skillObject = this.props.skills.find((skill) => {
+      return (skill.name === name);
+    });
+    return skillObject;
+  }
+
+  addSkill = () => {
+    if (!this.props.post.preferred_skills.includes(this.getSkill(this.state.skill))) {
+      this.props.post.preferred_skills.push(this.getSkill(this.state.skill));
+    }
+    this.state.displaySkills = this.state.displaySkills.filter((value) => {
+      return (value.label !== this.state.skill);
+    });
+    this.state.skill = '';
+    this.forceUpdate();
+  }
+
+  deleteSkill = (skill) => {
+    this.props.post.preferred_skills = this.props.post.preferred_skills.filter((value) => {
+      return (value !== skill.skill);
+    });
+    this.state.displaySkills.push({ label: skill.skill.name });
+    this.forceUpdate();
+  }
+
+  populateCurrentSkills() {
+    this.props.post.preferred_skills.forEach((value) => {
+      if (!this.state.selectedSkills.includes(value.name)) {
+        this.state.selectedSkills.push(value.name);
+      }
+    });
+    this.props.post.preferred_skills.forEach((value) => {
+      if (!this.state.selectedSkills.includes(value.name)) {
+        this.state.displaySkills.push({ label: value.name });
+      }
     });
   }
 
-  // Send update to database
-  onSubmit = (e) => {
-    this.props.updatePost(this.props.post.id, this.state.post);
-  };
+  renderAddSkill() {
+    const customStyles = {
+      control: (base) => ({
+        ...base,
+        width: 200,
+      }),
+    };
+    return (
+      <div className="add-skills">
+        <CreateableSelect
+          className="select-dropdown"
+          styles={customStyles}
+          name="skills"
+          value={this.state.skill}
+          options={this.state.displaySkills}
+          onChange={(selectedOption) => {
+            this.state.skill = selectedOption.label;
+            this.addSkill();
+          }}
+          onCreateOption={(newOption) => {
+            this.state.skill = newOption;
+            this.state.skill = newOption;
+            this.props.createSkillForStudent({ name: newOption }, this.props.post.preferred_skills);
+          }}
+        />
+      </div>
+    );
+  }
 
-
-  renderDescQuestions() {
-    if (this.props.post) {
+  renderSkills() {
+    if (this.props.post?.preferred_skills) {
       return (
-        <div className="PostDescContainer">
-          <div className="PostDescHeaderContainer">
-            <h1 className="PostDescHeader">
-              About
-            </h1>
-          </div>
-          <div className="PostDescDescContainer">
-            <p className="PostDescDesc">
-              Tell us more about the volunteer position
-            </p>
-            <i className="far fa-id-badge" id="icon" />
-          </div>
-          <div className="PostDescQuestionsContainer">
-            <div className="PostDescNameContainer">
-              <div className="PostDescQuestionLabelContainer">
-                <p className="PostDescLabel">
-                  Description
-                </p>
-                <TextareaAutosize onChange={(event) => this.changePostField('description', event)} defaultValue={this.props.post.description} />
-              </div>
+        this.props.post.preferred_skills.map((skill) => {
+          return (
+            <div className="skill" key={skill.name}>
+              {skill.name}
+              <button type="submit" className="delete-btn-student-skills" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
+                <i className="far fa-trash-alt" id="icon" />
+              </button>
             </div>
-          </div>
-        </div>
+          );
+        })
       );
     } else {
-      return (<div>Loading...</div>);
+      return (
+        <div>Loading</div>
+      );
     }
   }
 
   render() {
-    return this.renderDescQuestions();
+    if (this.state.post.preferred_skills !== undefined && this.props.skills !== []) {
+      return (
+        <div className="AddPostPrefSkillsContainer">
+          <div className="AddPostPrefSkillsHeaderContainer">
+            <h1 className="AddPostPrefSkillsHeader">
+              Skills
+            </h1>
+          </div>
+          <div className="AddPostPrefSkillsDescContainer">
+            <p className="AddPostPrefSkillsDesc">
+              Add the skills you have!
+            </p>
+            <i className="fas fa-brain" id="icon" />
+          </div>
+          <div id="skills">
+            <div className="AddPostPrefSkillsListHeader">Skills</div>
+            {this.renderAddSkill()}
+            {this.renderSkills()}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div>loading</div>
+      );
+    }
   }
 }
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
   post: reduxState.posts.current,
+  skills: reduxState.skills.all,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPost, updatePost,
-})(AddPostPreferredSkills));
+  fetchPost, updatePost, fetchAllSkills, fetchCertainSkills, createSkillForStudent,
+})(AddPostPrefSkills));

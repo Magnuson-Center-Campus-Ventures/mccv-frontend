@@ -65,8 +65,9 @@ export function createPost(post, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
-        history.push('/add-post');
+        dispatch({ type: ActionTypes.FETCH_POST, payload: response.data.postResult });
+        // localStorage.setItem('postID', response.data.id);
+        history.push('/add-post/');
       }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
@@ -111,6 +112,8 @@ export function fetchPost(id) {
 export function updatePost(id, post) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      console.log('update post');
+      console.log(response.data);
       dispatch({ type: ActionTypes.UPDATE_POST, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });

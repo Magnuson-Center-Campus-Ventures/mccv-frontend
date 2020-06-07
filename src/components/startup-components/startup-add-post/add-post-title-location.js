@@ -17,7 +17,10 @@ class AddPostTitleLocation extends Component {
 
   // Get profile info
   componentDidMount() {
-    this.props.fetchPost(this.props.postID);
+    console.log('title did mount');
+    console.log(this.props.post.id);
+    this.props.fetchPost(this.props.post.id);
+    // this.props.fetchPost(localStorage.getItem('postID'));
   }
 
   // update post field
@@ -35,12 +38,6 @@ class AddPostTitleLocation extends Component {
       };
     });
   }
-
-  // Send update to database
-  onSubmit = (e) => {
-    this.props.updatePost(this.props.post.id, this.state.post);
-  };
-
 
   renderTitleQuestions() {
     if (this.props.post) {

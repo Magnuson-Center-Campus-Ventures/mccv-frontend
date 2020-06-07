@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -12,6 +13,7 @@ class AddPostIndustries extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // eslint-disable-next-line react/no-unused-state
       post: {},
       industry: '',
       nameIndustries: [],
@@ -21,7 +23,10 @@ class AddPostIndustries extends Component {
 
   // Get profile info
   componentDidMount() {
-    this.props.fetchPost(this.props.postID);
+    console.log('industries did mount');
+    console.log(this.props.post.id);
+    this.props.fetchPost(this.props.post.id);
+    // this.props.fetchPost(localStorage.getItem('postID'));
     this.props.fetchAllIndustries();
   }
 
@@ -77,11 +82,6 @@ class AddPostIndustries extends Component {
     this.forceUpdate();
   }
 
-  // Send update to database
-  onSubmit = (e) => {
-    this.props.updatePost(this.props.post.id, this.state.post);
-  };
-
   renderAddIndustry() {
     const customStyles = {
       control: (base) => ({
@@ -128,29 +128,24 @@ class AddPostIndustries extends Component {
 
   render() {
     // still have occasioanl rendering issue for industries.all
-    if (this.state.startup.industries !== undefined && this.props.industries.all !== []) {
+    if (this.state.post.industries !== undefined && this.props.industries.all !== []) {
       return (
-        <div className="StartupIndustryContainer">
-          <div className="StartupIndustryHeaderContainer">
-            <h1 className="StartupIndustryHeader">
+        <div className="AddPostIndustryContainer">
+          <div className="AddPostIndustryHeaderContainer">
+            <h1 className="AddPostIndustryHeader">
               Industries
             </h1>
           </div>
-          <div className="StartupIndustryDescContainer">
-            <p className="StartupIndustryDesc">
+          <div className="AddPostIndustryDescContainer">
+            <p className="AddPostIndustryDesc">
               What industries characterize your volunteer position?
             </p>
             <i className="fas fa-building" id="icon" />
           </div>
           <div id="industries">
-            <div className="StartupIndustryListHeader">Industries</div>
+            <div className="AddPostIndustryListHeader">Industries</div>
             {this.renderAddIndustry()}
             {this.renderIndustries()}
-          </div>
-          <div className="buttonContainer">
-            <button type="submit" className="submit-btn-startup-timing" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
-              Submit!
-            </button>
           </div>
         </div>
       );

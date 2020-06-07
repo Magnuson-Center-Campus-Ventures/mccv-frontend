@@ -18,7 +18,10 @@ class AddPostDescription extends Component {
 
   // Get profile info
   componentDidMount() {
-    this.props.fetchPost(this.props.postID);
+    console.log('desc did mount');
+    console.log(this.props.post.id);
+    this.props.fetchPost(this.props.post.id);
+    // this.props.fetchPost(localStorage.getItem('postID'));
   }
 
   // update post field
@@ -36,11 +39,6 @@ class AddPostDescription extends Component {
       };
     });
   }
-
-  // Send update to database
-  onSubmit = (e) => {
-    this.props.updatePost(this.props.post.id, this.state.post);
-  };
 
   // handleRespChange = (e) => {
   //   const responsibilities = [...this.state.responsibilities];
@@ -78,8 +76,8 @@ class AddPostDescription extends Component {
                 <TextareaAutosize onChange={(event) => this.changePostField('description', event)} defaultValue={this.props.post.description} />
               </div>
             </div>
-            <div className="PostDescNameContainer">
-              {/* <div className="PostDescQuestionLabelContainer">
+            {/* <div className="PostDescNameContainer">
+              <div className="PostDescQuestionLabelContainer">
                 <p className="PostDescLabel">
                   Responsibilities
                 </p>
@@ -99,8 +97,8 @@ class AddPostDescription extends Component {
                   </button>
                 </div>
 
-                  </div> */}
-            </div>
+              </div>
+            </div> */}
           </div>
         </div>
       );

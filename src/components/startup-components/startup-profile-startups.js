@@ -95,7 +95,6 @@ class StartupProfile extends Component {
   }
 
   addPosting = () => {
-    console.log('in addPosting');
     const newPost = {
       startup_id: this.props.startup._id,
       title: '',
@@ -117,7 +116,6 @@ class StartupProfile extends Component {
       state: '',
       remote: false,
     };
-    console.log(newPost);
     this.props.createPost(newPost, this.props.history);
   }
 
