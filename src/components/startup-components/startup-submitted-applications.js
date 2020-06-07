@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable array-callback-return */
@@ -14,6 +15,7 @@ import {
   fetchStartupByUserID,
   clearApplication,
   clearPost,
+  fetchStudents,
 } from '../../actions';
 import '../../styles/applications.scss';
 
@@ -36,6 +38,7 @@ class SubmittedApplications extends Component {
   }
 
   componentDidMount() {
+    this.props.fetchStudents();
     this.props.clearPost();
     this.props.clearApplication();
     this.props.fetchStartupByUserID(localStorage.getItem('userID'));
@@ -139,28 +142,45 @@ class SubmittedApplications extends Component {
     }
   }
 
+  renderApplicationItem(application) {
+    const route = `/startupsubmittedapplications/${application._id}`;
+    const post = this.props.posts.filter((e) => { return (e.id === application.post_id); })[0];
+    const student = this.props.students.filter((e) => { return (e.id === application.student_id); })[0];
+    const majors = student.majors.length > 1
+      ? (
+        student.majors.map((major, index) => {
+          return (
+            <div key={index}>
+              {major}
+            </div>
+          );
+        })
+      ) : (
+        <div>
+          Major: {student.majors[0]}
+        </div>
+      );
+    return (
+      <Link to={route} key={application.id} className="listItem link">
+        <div className="basicInfo">
+          <h1 className="studentName">{`${student.first_name} ${student.last_name}`} </h1>
+          <h2 className="gradYear">Class of {student.grad_year} </h2>
+          <h2 className="major"> {majors} </h2>
+        </div>
+        <div className="Status">
+          <div>{post.title}</div>
+          <div>{post.location}</div>
+          <div>status: {application.status}</div>
+        </div>
+      </Link>
+    );
+  }
 
   renderApplications() {
     if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
         return this.state.results.map((application) => {
-          const route = `/startupsubmittedapplications/${application._id}`;
-          let post = '';
-          for (const i in this.props.posts) {
-            if (this.props.posts[i].id === application.post_id) {
-              post = this.props.posts[i];
-              break;
-            }
-          }
-          return (
-            <Link to={route} key={application._id} className="listItem link">
-              <div className="Status">
-                <div>{post.title}</div>
-                <div>{post.location}</div>
-                <div>status: {application.status}</div>
-              </div>
-            </Link>
-          );
+          return this.renderApplicationItem(application);
         });
       } else {
         return (
@@ -170,23 +190,7 @@ class SubmittedApplications extends Component {
     } else {
       const { startupApplications } = this.state;
       return startupApplications.map((application) => {
-        const route = `/startupsubmittedapplications/${application._id}`;
-        let post = '';
-        for (const i in this.props.posts) {
-          if (this.props.posts[i].id === application.post_id) {
-            post = this.props.posts[i];
-            break;
-          }
-        }
-        return (
-          <Link to={route} key={application.id} className="listItem link">
-            <div className="Status">
-              <div>{post.title}</div>
-              <div>{post.location}</div>
-              <div>status: {application.status}</div>
-            </div>
-          </Link>
-        );
+        return this.renderApplicationItem(application);
       });
     }
   }
@@ -200,7 +204,7 @@ class SubmittedApplications extends Component {
       }),
     };
     return (
-      (this.state.startupApplications !== undefined || null) && (this.state.results !== null || undefined)
+      (this.state.startupApplications !== undefined || null) && (this.state.results !== null || undefined) && (this.props.students !== null || undefined) && (this.state.posts !== null || undefined)
         ? (
           <div>
             <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
@@ -252,6 +256,7 @@ class SubmittedApplications extends Component {
   }
 }
 const mapStateToProps = (reduxState) => ({
+  students: reduxState.students.all_students,
   userID: reduxState.auth.userID,
   startup: reduxState.startups.current,
   submittedApplications: reduxState.submittedApplications.all,
@@ -259,6 +264,7 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
+  fetchStudents,
   fetchPosts,
   fetchSubmittedApplication,
   fetchSubmittedApplications,

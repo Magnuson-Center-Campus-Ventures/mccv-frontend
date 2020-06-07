@@ -55,11 +55,17 @@ class ApplicationListItem extends Component {
     if (this.props.post != null && !isEmpty(this.props.post) && this.props.questions != null && !isEmpty(this.props.questions)) {
       return (
         <div>
-          <h1>{this.props.post.title}</h1>
-          <div>{`${this.props.post.city}, ${this.props.post.state}`}</div>
-          <h2 id="title">{this.props.current.status}</h2>
+          <div className="job-info">
+            <h1>{this.props.post.title}</h1>
+            <h2 id="startupName"> { this.props.post.startup_id.name} </h2>
+            <div className="location">
+              <span className="locationIcon" />
+              <h2> {`${this.props.post.city}, ${this.props.post.state}`} </h2>
+            </div>
+            <h2 id="status">Status: {this.props.current.status}</h2>
+            <h1>Questions</h1>
+          </div>
           <div id="questions">
-            <h2>Questions</h2>
             {this.renderQuestions()}
           </div>
         </div>
