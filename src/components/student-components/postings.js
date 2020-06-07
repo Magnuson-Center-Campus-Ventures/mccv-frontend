@@ -37,6 +37,7 @@ class Posts extends Component {
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
+    this.handleRecommendChange = this.handleRecommendChange.bind(this);
   }
 
   componentDidMount() {
@@ -248,22 +249,23 @@ class Posts extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, this.state.recommend);
   }
 
-  onRecommendPress = () => {
-    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
-      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
-      ? this.state.selectedDateOptions.map((option) => option.value)
-      : [moment('1111-11-11')];
-    this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, !this.state.recommend);
-    this.setState((prevState) => ({ recommend: !prevState.recommend }));
-  }
+  // implemented with toggle, so content of the function has been moved to onRecommendedChange
+  // onRecommendPress = () => {
+  //   const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+  //     ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+  //     : ['emptytext'];
+  //   const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+  //     ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+  //     : ['emptytext'];
+  //   const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+  //     ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+  //     : ['emptytext'];
+  //   const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+  //     ? this.state.selectedDateOptions.map((option) => option.value)
+  //     : [moment('1111-11-11')];
+  //   this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, !this.state.recommend);
+  //   this.setState((prevState) => ({ recommend: !prevState.recommend }));
+  // }
 
   clear = () => {
     this.setState({ search: false, searchterm: 'emptytext' });
@@ -319,6 +321,24 @@ class Posts extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, this.state.recommend);
   }
 
+  handleRecommendChange(checked) {
+    console.log(this.state.recommend);
+    this.setState({ recommend: checked });
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+      ? this.state.selectedDateOptions.map((option) => option.value)
+      : [moment('1111-11-11')];
+    this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, !this.state.recommend);
+  }
+
   renderPosts() {
     if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
@@ -361,10 +381,16 @@ class Posts extends Component {
       );
     } else {
       return (
-        <button type="button"
-          onClick={this.onRecommendPress}
-        >{this.state.recommend ? 'Show All Posts' : 'Show Recommended Posts'}
-        </button>
+        <div id="filters">
+          <h3>Show Recommended Postings: </h3>
+          <div id="archiveToggle">
+            <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
+          </div>
+        </div>
+      // <button type="button"
+      //   onClick={this.onRecommendPress}
+      // >{this.state.recommend ? 'Show All Posts' : 'Show Recommended Posts'}
+      // </button>
       );
     }
   }
