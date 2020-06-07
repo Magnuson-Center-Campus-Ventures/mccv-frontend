@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import TextareaAutosize from 'react-textarea-autosize';
 import { createOtherExperience } from '../../../actions';
 import close from '../../../../static/img/close.png';
 import '../../../styles/student-profile.scss';
@@ -33,7 +34,7 @@ class NewOtherExp extends React.Component {
             <div className="input-title">Name</div>
             <input className="short-input" onBlur={(event) => this.setState({ name: event.target.value })} />
             <div className="input-title">Description</div>
-            <textarea className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
+            <TextareaAutosize className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
             <button className="modal-add-button"
               onClick={() => {
                 this.props.createOtherExperience(this.state);
