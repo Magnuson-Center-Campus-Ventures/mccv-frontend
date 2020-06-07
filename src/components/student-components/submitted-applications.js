@@ -159,8 +159,14 @@ class SubmittedApplications extends Component {
                 </div>
               </div>
               <div className="postInfo">
-                <h1 id="postTitle">{ post.title}</h1>
-                <h2 id="status">status: {post.status}</h2>
+                <div id="info title">
+                  <h1>Applied to: </h1>
+                  <div id="pill title">{post.title}</div>
+                </div>
+                <div id="info status">
+                  <h1>Status: </h1>
+                  <div id="pill status">{post.status}</div>
+                </div>
               </div>
             </Link>
           );

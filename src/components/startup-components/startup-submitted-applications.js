@@ -19,6 +19,10 @@ import {
 } from '../../actions';
 import '../../styles/applications.scss';
 
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
 class SubmittedApplications extends Component {
   constructor(props) {
     super(props);
@@ -38,17 +42,17 @@ class SubmittedApplications extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchStudents();
     this.props.clearPost();
     this.props.clearApplication();
     this.props.fetchStartupByUserID(localStorage.getItem('userID'));
+    this.props.fetchStudents();
     this.props.fetchSubmittedApplications();
     this.props.fetchPosts();
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.submittedApplications.length > 0 && this.props.posts.length > 0
-      && (prevProps.submittedApplications !== this.props.submittedApplications || prevProps.posts !== this.props.posts)) {
+      && (prevProps.submittedApplications !== this.props.submittedApplications || prevProps.posts !== this.props.posts || this.state.startupApplications.length === 0)) {
       this.filterByCompany();
     }
   }
@@ -107,9 +111,16 @@ class SubmittedApplications extends Component {
   filterByCompany() {
     const startupPostIds = [];
     const updatedStartupApplications = [];
+    const newStatusOptions = [];
+    const newTitleOptions = [];
+    const newApplicationToTitle = {};
     this.props.posts.map((post) => {
       if (post.startup_id._id === this.props.startup._id) {
         startupPostIds.push(post._id);
+        if (newTitleOptions.filter((option) => option.value === post.title).length === 0) {
+          newTitleOptions.push({ label: post.title, value: post.title });
+        }
+        newApplicationToTitle[post._id] = post.title;
       }
     });
     this.props.submittedApplications.map((application) => {
@@ -118,24 +129,13 @@ class SubmittedApplications extends Component {
       }
     });
     if (updatedStartupApplications.length > 0) {
-      const newStatusOptions = [];
-      const newTitleOptions = [];
-      const newApplicationToTitle = {};
       updatedStartupApplications.forEach((application) => {
         // Add option if it's not already in the array (not using sets because react-select expects an array)
         if (newStatusOptions.filter((option) => option.value === application.status).length === 0) {
           newStatusOptions.push({ label: application.status, value: application.status });
         }
       });
-      this.props.posts.forEach((post) => {
-        if (startupPostIds.includes(post._id)) {
-          // Add option if it's not already in the array (not using sets because react-select expects an array)
-          if (newTitleOptions.filter((option) => option.value === post.title).length === 0) {
-            newTitleOptions.push({ label: post.title, value: post.title });
-          }
-          newApplicationToTitle[post._id] = post.title;
-        }
-      });
+
       this.setState({
         startupApplications: updatedStartupApplications, statusOptions: newStatusOptions, titleOptions: newTitleOptions, applicationToTitle: newApplicationToTitle,
       });
@@ -150,27 +150,32 @@ class SubmittedApplications extends Component {
       ? (
         student.majors.map((major, index) => {
           return (
-            <div key={index}>
+            <div id="pill major" key={index}>
               {major}
             </div>
           );
         })
       ) : (
-        <div>
+        <div id="pill major">
           Major: {student.majors[0]}
         </div>
       );
     return (
       <Link to={route} key={application.id} className="listItem link">
-        <div className="basicInfo">
+        <div className="basic-info">
           <h1 className="studentName">{`${student.first_name} ${student.last_name}`} </h1>
           <h2 className="gradYear">Class of {student.grad_year} </h2>
           <h2 className="major"> {majors} </h2>
         </div>
-        <div className="Status">
-          <div>{post.title}</div>
-          <div>{post.location}</div>
-          <div>status: {application.status}</div>
+        <div className="post-info">
+          <div id="info">
+            <div id="applied">Applied to: </div>
+            <div id="pill-title">{post.title}</div>
+          </div>
+          <div id="info">
+            <div id="status">Status: </div>
+            <div id="pill-status">{application.status}</div>
+          </div>
         </div>
       </Link>
     );
@@ -204,7 +209,10 @@ class SubmittedApplications extends Component {
       }),
     };
     return (
-      (this.state.startupApplications !== undefined || null) && (this.state.results !== null || undefined) && (this.props.students !== null || undefined) && (this.state.posts !== null || undefined)
+      (this.state.startupApplications !== undefined || null)
+      && (this.state.results !== null || undefined)
+      && ((this.props.students !== null || undefined) && !isEmpty(this.props.students))
+      && ((this.props.posts !== null || undefined) && !isEmpty(this.props.students))
         ? (
           <div>
             <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
