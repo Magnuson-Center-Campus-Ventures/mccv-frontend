@@ -54,7 +54,7 @@ class StudentProfileStartup extends Component {
   }
 
   renderButtons() {
-    if (this.props.user.role === 'admin' && this.props.student.status === 'Approved') {
+    if (this.props.user?.role === 'admin' && this.props.student?.status === 'Approved') {
       return (
         <button
           type="submit"
@@ -87,7 +87,7 @@ class StudentProfileStartup extends Component {
   renderPills = (pillsArray) => {
     if (pillsArray && pillsArray.length > 0) {
       return pillsArray.map((elem, index) => {
-        return <div key={index} className="profile-pill">{elem.name}</div>;
+        return <div key={index} className="student-profile-pill">{elem.name}</div>;
       });
     } else return <div>None</div>;
   }
@@ -97,15 +97,18 @@ class StudentProfileStartup extends Component {
       <div className="profile-fixed">
         <div id="profile-header">
           <h1>{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
-          <div>{`Class of ${this.props.student?.grad_year}`}</div>
+          <div id="class-year">{`Class of ${this.props.student?.grad_year}`}</div>
           <div id="major-row">
+            <div>Major in</div>
             {this.renderMajMin(this.props.student?.majors)}
           </div>
           <div id="minor-row">
+            <div>Minor in</div>
             {this.renderMajMin(this.props.student?.minors)}
           </div>
-          <div>{this.props.email}</div>
-          <div>{this.props.student?.phone_number ? this.props.student?.phone_number : null}</div>
+          <div className="student-contact">{this.props.email}</div>
+          <div className="student-contact">{this.props.student?.phone_number ? this.props.student?.phone_number : null}</div>
+          <hr className="profile-divider" />
           <div id="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
@@ -158,7 +161,6 @@ class StudentProfileStartup extends Component {
   }
 
   render() {
-    // console.log('student: ', this.props.student);
     return (
       <div className="student-profile">
         <Archive
@@ -167,9 +169,13 @@ class StudentProfileStartup extends Component {
           show={this.state.archiveShow}
         />
         {this.renderBody()}
-        <div id="work-exps">
+        <hr className="profile-divider" />
+        <div className="exps-fixed">
           <h2>Work Experience</h2>
           {this.renderWorkExperiences()}
+        </div>
+        <hr className="profile-divider" />
+        <div className="exps-fixed">
           <h2>Other Experience</h2>
           {this.renderOtherExperiences()}
         </div>
