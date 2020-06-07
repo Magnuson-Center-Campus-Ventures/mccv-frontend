@@ -7,7 +7,7 @@ import { fetchUser } from '../../actions';
 const StartupRoute = ({ component: Child, ...props }) => {
   return (
     <Route {...props}
-      render={(routeProps) => (props.authenticated && props.role === 'startup' ? (<Child {...routeProps} />) : (<Redirect to="/startuplanding" />))}
+      render={(routeProps) => (props.authenticated && (props.role === 'startup' || props.role === 'admin') ? (<Child {...routeProps} />) : (<Redirect to="/" />))}
     />
   );
 };

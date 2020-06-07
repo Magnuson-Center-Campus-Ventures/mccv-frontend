@@ -7,7 +7,7 @@ import { fetchUser } from '../../actions';
 const StudentRoute = ({ component: Child, ...props }) => {
   return (
     <Route {...props}
-      render={(routeProps) => (props.authenticated && props.role === 'student' ? (<Child {...routeProps} />) : (<Redirect to="/" />))}
+      render={(routeProps) => (props.authenticated && (props.role === 'student' || props.role === 'admin') ? (<Child {...routeProps} />) : (<Redirect to="/startupslanding" />))}
     />
   );
 };
