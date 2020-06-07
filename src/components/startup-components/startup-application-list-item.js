@@ -75,7 +75,7 @@ class StartupApplicationListItem extends Component {
   renderPills = (pillsArray) => {
     if (pillsArray && pillsArray.length > 0) {
       return pillsArray.map((elem, index) => {
-        return <div key={index} className="profile-pill">{elem.name}</div>;
+        return <div key={index} id="profile-pill">{elem.name}</div>;
       });
     } else return <div>None</div>;
   }
@@ -84,15 +84,17 @@ class StartupApplicationListItem extends Component {
     if (this.props.workExps !== []) {
       return this.props.workExps.map((workExp, index) => {
         return (
-          <div key={index} className="work-exp">
-            <div>{workExp.role}</div>
+          <div key={index} id="work-exp">
+            <h3>{workExp.role}</h3>
             <div>{workExp.employer}</div>
-            <div>{`${workExp.city}, ${workExp.state}`}</div>
-            <div className="date-row">
-              {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
-              {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}
+            <div id="work-info">
+              <div>{`${workExp.city}, ${workExp.state}`}</div>
+              <div className="date-row">
+                {`${new Date(workExp.start_date).getMonth() + 1}/${new Date(workExp.start_date).getFullYear()} - `}
+                {workExp.currently_working ? 'present' : `${new Date(workExp.end_date).getMonth() + 1}/${new Date(workExp.end_date).getFullYear()}`}
+              </div>
             </div>
-            <div>{workExp.description}</div>
+            <div id="work-description">{workExp.description}</div>
           </div>
         );
       });
@@ -103,8 +105,8 @@ class StartupApplicationListItem extends Component {
     if (this.props.otherExps !== []) {
       return this.props.otherExps.map((otherExp, index) => {
         return (
-          <div key={index} className="work-exp">
-            <div>{otherExp.name}</div>
+          <div key={index} id="work-exp">
+            <h3>{otherExp.name}</h3>
             <div>{otherExp.description}</div>
           </div>
         );
@@ -118,8 +120,8 @@ class StartupApplicationListItem extends Component {
       this.props.questions.map((question) => {
         if (this.props.current.responses[question._id]) {
           items.push(
-            <div key={question._id} className="question">
-              <h3 id="question">{question.question}</h3>
+            <div key={question._id} id="question">
+              <h3 id="question-title">{question.question}</h3>
               <h2 id="answer">{this.props.current.responses[question._id]}</h2>
             </div>,
           );
@@ -204,15 +206,15 @@ class StartupApplicationListItem extends Component {
           <div>{this.props.email}</div>
           <div>{this.props.student?.phone_number ? this.props.student?.phone_number : null}</div>
           <div id="lists-row">
-            <div className="list-section">
+            <div className="list-section" id="list-industries">
               <h2>Industries</h2>
               {this.renderPills(this.props.student?.interested_industries)}
             </div>
-            <div className="list-section">
+            <div className="list-section" id="list-classes">
               <h2>Classes</h2>
               {this.renderPills(this.props.student?.relevant_classes)}
             </div>
-            <div className="list-section">
+            <div className="list-section" id="list-skills">
               <h2>Skills</h2>
               {this.renderPills(this.props.student?.skills)}
             </div>

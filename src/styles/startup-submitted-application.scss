@@ -1,18 +1,6 @@
 .job-info{
   text-align: center;
 }
-.question {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    background-color: #EDEBEB;
-    padding: 10px;
-    margin-left: 10vw;
-    margin-right: 10vw;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-  }
   #profile-header {
     text-align: center;
     align-items: center;
@@ -32,25 +20,35 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    margin-top: 20px;
   }
-  
-  .profile-pill {
-    background-color: #EDEBEB;
-    padding: 5px;
+  #list-industries > #profile-pill{
+    background-color: rgba(252, 215, 85, 0.57);;
+  }
+  #list-classes > #profile-pill{
+    background-color: rgba(185, 90, 69, 0.57);;
+  }
+  #list-skills > #profile-pill{
+    background-color: rgba(69, 185, 144, 0.57);
+  }
+  #profile-pill {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     border-radius: 20px;
     margin: 5px;
   }
-  
   #work-exps, #questions {
     text-align: center;
     margin-top: 30px;
   }
   
-  .work-exp, .question {
+  #work-exp, #question {
     display: flex;
     flex-direction: column;
     text-align: left;
-    background-color: #EDEBEB;
+    background-color: #F8F5F5;
     padding: 10px;
     margin-left: 10vw;
     margin-right: 10vw;
@@ -58,21 +56,26 @@
     margin-bottom: 20px;
     border-radius: 10px;
   }
-  
   .date-row {
     display: flex;
     flex-direction: row;
+  }
+  #work-description{
+    margin-top:10px;
+  }
+  #work-info{
+    color: rgba($color: #000000, $alpha: 0.6);
   }
   
   .new-work-exp-container{
     width: 100%;
     display: flex;
     justify-content: center;
-    background-color: #EDEBEB;
+    background-color: #F8F5F5;
   }
   .new-work-exp {
     z-index: 100;
-    border: 3px solid #EDEBEB;
+    border: 3px solid #F8F5F5;
     box-sizing: border-box;
     border-radius: 35px;
     width: 70%;
