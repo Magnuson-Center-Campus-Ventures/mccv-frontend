@@ -41,16 +41,6 @@ class StudentIndustries extends Component {
     return industryObject;
   }
 
-<<<<<<< HEAD
-  addIndustryDB = () => {
-    if (!this.state.allIndustries.includes(this.state.industry)) {
-      this.props.createIndustryForStudent({ name: this.state.industry });
-    }
-    this.props.fetchAllIndustries();
-  }
-
-=======
->>>>>>> f6c1bbe2decf17a3dd494618bca53f30fc6078a7
   addIndustry = () => {
     if (!this.props.student.interested_industries.includes(this.getIndustry(this.state.industry))) {
       this.props.student.interested_industries.push(this.getIndustry(this.state.industry));

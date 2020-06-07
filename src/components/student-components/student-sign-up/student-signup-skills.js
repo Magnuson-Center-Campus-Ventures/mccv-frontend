@@ -41,16 +41,6 @@ class StudentSkills extends Component {
     return skillObject;
   }
 
-<<<<<<< HEAD
-  addSkillDB = () => {
-    if (!this.state.allSkills.includes(this.state.skill)) {
-      this.props.createSkillForStudent({ name: this.state.skill });
-    }
-    this.props.fetchAllSkills();
-  }
-
-=======
->>>>>>> f6c1bbe2decf17a3dd494618bca53f30fc6078a7
   addSkill = () => {
     if (!this.props.student.skills.includes(this.getSkill(this.state.skill))) {
       this.props.student.skills.push(this.getSkill(this.state.skill));

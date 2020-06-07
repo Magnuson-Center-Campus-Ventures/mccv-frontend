@@ -41,16 +41,6 @@ class StudentClasses extends Component {
     return classObject;
   }
 
-<<<<<<< HEAD
-  addClassDB = () => {
-    if (!this.state.allClasses.includes(this.state.class)) {
-      this.props.createClassForStudent({ name: this.state.class });
-    }
-    this.props.fetchAllClasses();
-  }
-
-=======
->>>>>>> f6c1bbe2decf17a3dd494618bca53f30fc6078a7
   addClass = () => {
     if (!this.props.student.relevant_classes.includes(this.getClass(this.state.class))) {
       this.props.student.relevant_classes.push(this.getClass(this.state.class));
