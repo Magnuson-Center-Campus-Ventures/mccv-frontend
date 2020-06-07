@@ -14,6 +14,12 @@ class SearchBar extends Component {
     }
   }
 
+  keyPressed = (event) => {
+    if (event.key === 'Enter') {
+      this.onSearch();
+    }
+  }
+
   onSearch = (event) => {
     this.props.onSearchChange(this.state.searchterm);
   }
@@ -25,6 +31,7 @@ class SearchBar extends Component {
           placeholder="Search..."
           onChange={this.onInputChange}
           value={this.state.searchterm}
+          onKeyPress={this.keyPressed}
         />
         <i className="fas fa-search"
           onClick={this.onSearch}
