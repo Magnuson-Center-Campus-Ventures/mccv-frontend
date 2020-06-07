@@ -355,8 +355,10 @@ class Posts extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          <h3>show archived: </h3>
-          <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
+          <h3>Show Archived Postings: </h3>
+          <div id="archiveToggle">
+            <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+          </div>
         </div>
       );
     } else {
@@ -388,6 +390,7 @@ class Posts extends Component {
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
                 <Select
                   isMulti
+                  className="filter"
                   styles={dropdownStyles}
                   name="industry-filter"
                   placeholder="Filter by industry"
@@ -412,6 +415,7 @@ class Posts extends Component {
                 />
                 <Select
                   isMulti
+                  className="filter"
                   styles={dropdownStyles}
                   name="skill-filter"
                   placeholder="Filter by skill"
@@ -436,6 +440,7 @@ class Posts extends Component {
                 />
                 <Select
                   isMulti
+                  className="filter"
                   styles={dropdownStyles}
                   name="location-filter"
                   placeholder="Filter by location"
@@ -460,6 +465,7 @@ class Posts extends Component {
                 />
                 <Select
                   isMulti
+                  className="filter"
                   styles={dropdownStyles}
                   name="start-date-filter"
                   placeholder="Filter by start date"

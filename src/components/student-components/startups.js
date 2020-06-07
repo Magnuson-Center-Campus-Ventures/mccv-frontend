@@ -233,10 +233,14 @@ class Startups extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          <h3>show pending startups:</h3>
-          <Switch id="pendingToggle" onChange={this.handlePendingChange} checked={this.state.pending} />
-          <h3>show archived startups:</h3>
-          <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
+          <h3>Show Pending Startups:</h3>
+          <div id="pendingToggle">
+            <Switch onChange={this.handlePendingChange} checked={this.state.pending} />
+          </div>
+          <h3>Show Archived Startups:</h3>
+          <div id="archiveToggle">
+            <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+          </div>
         </div>
       );
     } else {
@@ -262,6 +266,7 @@ class Startups extends Component {
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
                 <Select
                   isMulti
+                  className="filter"
                   styles={dropdownStyles}
                   name="industry-filter"
                   placeholder="Filter by industry"
@@ -280,6 +285,7 @@ class Startups extends Component {
                 />
                 <Select
                   isMulti
+                  className="filter"
                   styles={dropdownStyles}
                   name="location-filter"
                   placeholder="Filter by location"
