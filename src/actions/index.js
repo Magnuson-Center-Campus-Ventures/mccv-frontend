@@ -65,7 +65,7 @@ export function createPost(post, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_POST, payload: response.data.postResult });
+        dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
         // localStorage.setItem('postID', response.data.id);
         history.push('/add-post/');
       }).catch((error) => {
