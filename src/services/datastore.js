@@ -14,3 +14,26 @@ export const fetchIndustriesFromID = (idArray, callback) => {
     return (error);
   });
 };
+
+export const fetchSkillsFromID = (idArray) => {
+  axios.get(`${ROOT_URL}/skills/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+    return response.data;
+    // response.data.forEach((skill) => {
+    //   callback(skill);
+    // });
+  }).catch((error) => {
+    // console.log(error);
+    return (error);
+  });
+};
+
+export const fetchClassesFromID = (idArray, callback) => {
+  axios.get(`${ROOT_URL}/classes/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+    response.data.forEach((_class) => {
+      callback(_class);
+    });
+  }).catch((error) => {
+    // console.log(error);
+    return (error);
+  });
+};

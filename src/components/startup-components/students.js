@@ -8,6 +8,7 @@ import Select from 'react-select';
 import Switch from 'react-switch';
 import SearchBar from '../student-components/search-bar';
 import { fetchStudents, fetchStartupByUserID } from '../../actions';
+import { fetchSkillsFromID, fetchClassesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
 import StudentListItem from './student-item';
 
@@ -40,6 +41,14 @@ class Students extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.students.length > 0) {
+      // Load in students who have not been archived
+      const { live } = prevState;
+      nextProps.students.forEach((student) => {
+        if (live.filter((liveStudent) => liveStudent._id === student._id).length === 0
+            && student.status === 'Approved') {
+          live.push(student);
+        }
+      });
       const industryOptions = [];
       const skillOptions = [];
       nextProps.students.forEach((student) => {
@@ -60,9 +69,11 @@ class Students extends Component {
           });
         }
       });
-      if (industryOptions.length > prevState.industryOptions.length || skillOptions.length > prevState.skillOptions.length) {
+      if (industryOptions.length > prevState.industryOptions.length
+        || skillOptions.length > prevState.skillOptions.length
+        || live.lengh > prevState.live.length) {
         return {
-          industryOptions, skillOptions,
+          industryOptions, skillOptions, live,
         };
       }
     }
@@ -71,14 +82,14 @@ class Students extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.students.length > 0 && this.props.startup !== {}
+    if (this.state.live.length > 0 && this.props.startup !== {} && this.props.user !== {}
       && (prevProps.students !== this.props.students || prevProps.startup !== this.props.startup)) {
       // Score students
       this.scoreStudents();
-      // Load in approved students
-      if (prevProps.students !== this.props.students) {
-        this.loadStudents();
-      }
+      // // Load in approved students
+      // if (prevProps.students !== this.props.students) {
+      //   this.loadStudents();
+      // }
     }
   }
 
@@ -87,28 +98,43 @@ class Students extends Component {
     const postsReqSkills = [];
     const postsPrefSkills = [];
     const postsClasses = [];
-    if (this.props.user.role === 'student') {
+    if (this.props.user.role === 'startup') {
       if (this.props.startup.industries) {
         this.props.startup.industries.forEach((industry) => {
-          startupIndustries.push(industry);
+          startupIndustries.push(industry.name);
         });
       }
       if (this.props.startup.posts) {
         this.props.startup.posts.forEach((post) => {
-          post.required_skills.forEach((skill) => {
-            postsReqSkills.push(skill);
+          const reqSkillsProm = new Promise((resolve, reject) => {
+            fetchSkillsFromID(post.required_skills, (result) => {
+              if (result) resolve(result);
+              else reject(Error('Error'));
+            });
           });
-          post.preferred_skills.forEach((skill) => {
-            postsPrefSkills.push(skill);
-          });
-          post.desired_classes.forEach((_class) => {
-            postsClasses.push(_class);
-          });
+          Promise.all([reqSkillsProm]).then((result) => console.log(result));
+          // fetchSkillsFromID(post.required_skills, (skill) => {
+          //   postsReqSkills.push(skill.name.toLowerCase());
+          // });
+          // post.required_skills.forEach((skill) => {
+          //   postsReqSkills.push(skill);
+          // });
+          fetchSkillsFromID(post.preferred_skills, (skill) => { postsPrefSkills.push(skill.name.toLowerCase()); });
+          // post.preferred_skills.forEach((skill) => {
+          //   postsPrefSkills.push(skill);
+          // });
+          fetchClassesFromID(post.desired_classes, (_class) => { postsClasses.push(_class.name.toLowerCase()); });
+          // post.desired_classes.forEach((_class) => {
+          //   postsClasses.push(_class);
+          // });
         });
       }
+      // console.log(postsReqSkills);
+      // console.log(postsPrefSkills);
+      // console.log(postsClasses);
       // Score each student by the number of common elements between the student's and startup's industry arrays
       const studentScores = {};
-      this.props.students.forEach((student) => {
+      this.state.live.forEach((student) => {
         const numMatches = student.interested_industries.filter((industry) => startupIndustries.includes(industry.name)).length
           + student.skills.filter((skill) => postsReqSkills.includes(skill.name)).length
           // Preferred skills get half the weight of required skills
@@ -118,14 +144,19 @@ class Students extends Component {
       });
 
       // Sort the posts in descending order of score
-      const tempStudents = this.props.students;
-      tempStudents.sort((student1, student2) => {
-        return studentScores[student2._id] - studentScores[student1._id];
+      this.setState((prevState) => {
+        const tempStudents = [...prevState.live];
+        tempStudents.sort((student1, student2) => {
+          return studentScores[student2._id] - studentScores[student1._id];
+        });
+        tempStudents.forEach((student) => {
+          console.log(student.first_name, studentScores[student._id]);
+        });
+        return {
+          ...prevState,
+          sortedStudents: tempStudents.slice(0, 1),
+        };
       });
-      tempStudents.forEach((student) => {
-        console.log(student.first_name, studentScores[student._id]);
-      });
-      this.setState({ sortedStudents: tempStudents.slice(0, 1) });
     }
   }
 
@@ -213,15 +244,16 @@ class Students extends Component {
     this.searchAndFilter('emptytext', industries, skills, this.state.recommend);
   }
 
-  loadStudents() {
-    this.props.students.forEach((student) => {
-      if (student.status === 'Approved') {
-        this.setState((prevState) => ({
-          live: [...prevState.live, student],
-        }));
-      }
-    });
-  }
+  // Now doing this in getDerivedStateFromProps to have live students accessible in scoreStudents
+  // loadStudents() {
+  //   this.props.students.forEach((student) => {
+  //     if (student.status === 'Approved') {
+  //       this.setState((prevState) => ({
+  //         live: [...prevState.live, student],
+  //       }));
+  //     }
+  //   });
+  // }
 
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
