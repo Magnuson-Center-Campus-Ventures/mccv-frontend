@@ -285,7 +285,6 @@ class Students extends Component {
 
   renderRecButton() {
     if (this.props.user.role === 'startup') {
-      console.log('here');
       return (
         // <button type="button"
         //   onClick={this.onRecommendPress}

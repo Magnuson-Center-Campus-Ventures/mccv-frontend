@@ -322,7 +322,7 @@ class Posts extends Component {
   }
 
   handleRecommendChange(checked) {
-    console.log(this.state.recommend);
+    // console.log(this.state.recommend);
     this.setState({ recommend: checked });
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
       ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
