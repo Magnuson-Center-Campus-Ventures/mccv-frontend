@@ -1,3 +1,17 @@
+#main{
+    height: 100%
+}
+
+#main-div{
+    height: 100%
+}
+
+.content{
+    display: flex;
+    justify-content: flex-start;
+    height: 100%;
+}
+
 .list{
     display: flex; 
     flex-direction: row;
@@ -8,10 +22,8 @@
 
 .listItem{
     background-color: #EFEFF0;
-    margin-top: 3%;
+    margin-top: 4%;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    // height: 40vh;
-    // width: 30vw;
     height: 275px;
     width: 275px;
     display: flex;
@@ -68,30 +80,23 @@
 .postInfo{
     height: 60%;
     margin-right: 5px;
-    margin-left: 5px;
+    margin-left: 15px;
 }
 
 .listItem:hover{
     box-shadow: 1px 8px 8px  rgba(0, 0, 0, 0.25);
 }
 
-// going to have to fix font sizing, esp for long names, edge cases, etc. need to get font-size to match window size & div size
 #postTitle{ 
     font-weight: normal;
     text-align: center;
-    font-size: 120%;
-}
-
-#matched{
-    font-weight: normal;
-    border-bottom: 0;
-    font-size: 100%;
+    font-size: 140%;
 }
 
 .extraInfo {
     height: 60%;
     margin-right: 5px;
-    margin-left: 5px;
+    margin-left: 15px;
 }
 
 .extraInfo > h1{
@@ -106,26 +111,146 @@
     font-size: 100%;
 }
 
+.industriesList > h1{
+    margin-block-end: 0;
+    margin-block-start: 0;
+    font-weight: normal;
+    border-bottom: 0;
+    font-size: 120%;
+    margin-right: 2vw;
+}
+
 .extraInfo > h3 {
     font-weight: normal;
     font-size: 90%
 }
 
-#search-bar {
-    margin-bottom: 20px;
-  
-    input {
-      font-size: 1.5em;
-      border-radius: .25em;
-    }
+.industriesList{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.industriesList > h2 {
+    font-size: 100%;
+}
+
+#notFirstInd{
+    margin-left: 38%;
+}
+
+.pill#notFirstInd{
+    margin-left: 0;
+    margin-bottom: 1vh;
+    margin-right: 1vw;
+}
+
+#industryTitle{
+    display: flex;
+}
+
+.postings > h2{
+    font-weight: normal;
+    border-bottom: 0;
+    font-size: 100%;
+    padding-right: 1vw;
+}
+
+.postings{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.pill{
+    background-color:rgba(69, 185, 144, 0.5);
+    border-radius: 10px;
+    width: fit-content;
+    padding-right: 1vw;
+    padding-left: 1vw;
+    margin-bottom: 1vh;
 }
 
 .basicInfo{
     margin-left: 5px
 }
+
 .basicInfo > h1, h2{
     font-weight: normal;
     font-size: 130%;
     margin-block-start: 0;
     margin-block-end: 0;
 }
+
+.skills{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.skills > .pill{
+    margin-right: 2%;
+    margin-left: 2%;
+}
+
+.pageContent{
+    height: 100%
+}
+
+.pageContent > h1{
+    font-weight: normal;
+    font-size: 220%;
+    margin-left: 5%;
+}
+
+.sideFilterBar{
+    background-color: #EFEFF0;
+    padding-left: 1.5%;
+    padding-right: 1.5%;
+}
+
+.rightSide{
+    width: 100%
+}
+
+#searchBar {
+    margin-bottom: 2vh;
+    margin-top: 3vh;
+    display: flex;
+  
+    input {
+      width: 190px;
+      font-size: 1.1em;
+      border-radius: .25em;
+      font-family: Avenir Next;
+    }
+}
+
+#searchButton{
+    position: absolute;
+    margin-left: 170px;
+    margin-top: 5px;
+}
+
+#filters{
+    background-color: #EFEFF0;
+    display: flex;
+    justify-content: center;
+}
+
+#filters > h3{
+    font-weight: normal; 
+}
+
+.filter{
+    margin-top: 4%;
+}
+
+#pendingToggle{
+    margin-top: 2vh;
+    margin-left: 2vw;
+    margin-right: 2vw;
+}
+
+#archiveToggle{
+    margin-top: 2vh;
+    margin-left: 2vw;
+}
+

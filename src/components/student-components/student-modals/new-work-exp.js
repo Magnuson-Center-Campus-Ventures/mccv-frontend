@@ -86,7 +86,7 @@ class NewWorkExp extends React.Component {
                   id="currentlyWorking"
                   type="checkbox"
                   checked={this.state.currently_working}
-                  onChange={(event) => this.setState({ currently_working: event.target.checked })}
+                  onChange={(event) => this.setState({ currently_working: event.target.checked, end_date: null })}
                 />
               </label>
             </form>
@@ -94,11 +94,11 @@ class NewWorkExp extends React.Component {
             <textarea className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
             <button className="modal-add-button"
               onClick={() => {
-                if (!this.isValidDate(this.state.start_date) || !this.isValidDate(this.state.end_date)) {
+                if (!this.isValidDate(this.state.start_date) || (!this.state.currently_working && !this.isValidDate(this.state.end_date))) {
                   if (!this.isValidDate(this.state.start_date)) {
                     this.setState({ badStartDate: true });
                   }
-                  if (!this.isValidDate(this.state.end_date)) {
+                  if (!this.state.currently_working && !this.isValidDate(this.state.end_date)) {
                     this.setState({ badEndDate: true });
                   }
                 } else {
@@ -114,7 +114,9 @@ class NewWorkExp extends React.Component {
                     currently_working: this.state.currently_working,
                   };
                   workExperience.start_date += '-15';
-                  workExperience.end_date += '-15';
+                  if (workExperience.end_date !== null) {
+                    workExperience.end_date += '-15';
+                  }
                   this.props.createWorkExperience(workExperience);
                   this.props.onClose();
                 }

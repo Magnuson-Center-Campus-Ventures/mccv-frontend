@@ -55,9 +55,9 @@ const StudentListItem = (props) => {
         <h2 className="major"> {majors} </h2>
       </div>
       <div className="extraInfo">
-        <h3> Interests: {industries} </h3>
-        <h3>Classes: {classes} </h3>
-        <h3> Skills: {skills} </h3>
+        {/* <h3> Interests: {industries} </h3> */}
+        {/* <h3>Classes: {classes} </h3> */}
+        <h3 className="skills"> Skills: {skills} </h3>
       </div>
     </Link>
   );
