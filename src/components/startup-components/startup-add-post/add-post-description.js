@@ -12,6 +12,7 @@ class AddPostDescription extends Component {
     super(props);
     this.state = {
       post: {},
+      // responsibilities: [],
     };
   }
 
@@ -41,6 +42,17 @@ class AddPostDescription extends Component {
     this.props.updatePost(this.props.post.id, this.state.post);
   };
 
+  // handleRespChange = (e) => {
+  //   const responsibilities = [...this.state.responsibilities];
+  //   responsibilities[e.target.dataset.id] = e.target.value;
+  //   this.setState({ responsibilities }, () => console.log(this.state.responsibilities));
+  // }
+
+  // addRespInput = (e) => {
+  //   this.setState((prevState) => ({
+  //     responsibilities: [...prevState.responsibilities, {}],
+  //   }));
+  // }
 
   renderDescQuestions() {
     if (this.props.post) {
@@ -53,7 +65,7 @@ class AddPostDescription extends Component {
           </div>
           <div className="PostDescDescContainer">
             <p className="PostDescDesc">
-              Tell us more about the volunteer position
+              Tell us more about the volunteer position and responsibilities
             </p>
             <i className="far fa-id-badge" id="icon" />
           </div>
@@ -65,6 +77,29 @@ class AddPostDescription extends Component {
                 </p>
                 <TextareaAutosize onChange={(event) => this.changePostField('description', event)} defaultValue={this.props.post.description} />
               </div>
+            </div>
+            <div className="PostDescNameContainer">
+              {/* <div className="PostDescQuestionLabelContainer">
+                <p className="PostDescLabel">
+                  Responsibilities
+                </p>
+
+                <div>
+                  <TextareaAutosize id="respInput" onChange={(event) => this.changePostField('description', event)} defaultValue="" />
+                </div>
+
+                <div className="startup-add-posting-box">
+                  <button type="button"
+                    className="startup-add-posting-btn"
+                    onClick={() => {
+                      this.addRespInput();
+                    }}
+                  >
+                    <i className="fas fa-plus" />
+                  </button>
+                </div>
+
+                  </div> */}
             </div>
           </div>
         </div>

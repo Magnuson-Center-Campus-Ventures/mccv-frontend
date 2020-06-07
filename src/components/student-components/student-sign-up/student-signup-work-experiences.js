@@ -28,8 +28,6 @@ class StudentWorkExperiences extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
-      console.log('here');
-      console.log(this.state.student);
       // this.props.fetchWorkExperiences(this.props.student.work_exp);
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });

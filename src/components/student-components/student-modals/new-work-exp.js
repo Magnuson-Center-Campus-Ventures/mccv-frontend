@@ -115,7 +115,6 @@ class NewWorkExp extends React.Component {
                   };
                   workExperience.start_date += '-15';
                   workExperience.end_date += '-15';
-                  console.log('here');
                   this.props.createWorkExperience(workExperience);
                   this.props.onClose();
                 }
