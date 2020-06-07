@@ -1,3 +1,17 @@
+#main{
+    height: 100%
+}
+
+#main-div{
+    height: 100%
+}
+
+.content{
+    display: flex;
+    justify-content: flex-start;
+    height: 100%;
+}
+
 .list{
     display: flex; 
     flex-direction: row;
@@ -178,11 +192,6 @@
 
 .pageContent{
     height: 100%
-}
-
-.content{
-    display: flex;
-    justify-content: flex-start;
 }
 
 .sideFilterBar{

@@ -255,7 +255,7 @@ class Startups extends Component {
     return (
       this.props.startups && this.state.results
         ? (
-          <div>
+          <div className="pageContent">
             <h1> All Startups </h1>
             <div className="content">
               <div className="sideFilterBar">

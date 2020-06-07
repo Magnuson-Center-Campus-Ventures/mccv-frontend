@@ -28,7 +28,6 @@ const StartupListItem = (props) => {
   });
 
   const postNames = props.startup.posts.map((post) => {
-    console.log(post);
     return (
       <div className="pill" key={post.id}>
         {post.title}
