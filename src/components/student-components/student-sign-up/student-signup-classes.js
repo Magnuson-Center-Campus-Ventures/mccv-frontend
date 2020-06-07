@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -14,8 +15,8 @@ class StudentClasses extends Component {
     this.state = {
       student: {},
       class: '',
+      selectedClasses: [],
       displayClasses: [],
-      allClasses: [],
     };
   }
 
@@ -29,26 +30,18 @@ class StudentClasses extends Component {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
-    }
-    if (prevProps.classes !== this.props.classes) {
-      const classes = this.props.classes.all.map((course) => {
-        return { value: course.name, label: course.name, course };
-      });
-      this.state.allClasses = classes;
-      const displayClasses = this.state.allClasses.filter((value) => {
-        return !this.props.student.relevant_classes.includes(this.getClass(value.value));
-      });
-      this.state.displayClasses = displayClasses;
+      this.populateCurrentClasses();
     }
   }
 
   getClass(name) {
-    const classObject = this.props.classes.all.find((course) => {
+    const classObject = this.props.classes.find((course) => {
       return (course.name === name);
     });
     return classObject;
   }
 
+<<<<<<< HEAD
   addClassDB = () => {
     if (!this.state.allClasses.includes(this.state.class)) {
       this.props.createClassForStudent({ name: this.state.class });
@@ -56,28 +49,39 @@ class StudentClasses extends Component {
     this.props.fetchAllClasses();
   }
 
+=======
+>>>>>>> f6c1bbe2decf17a3dd494618bca53f30fc6078a7
   addClass = () => {
     if (!this.props.student.relevant_classes.includes(this.getClass(this.state.class))) {
       this.props.student.relevant_classes.push(this.getClass(this.state.class));
     }
-    const displayClasses = this.state.allClasses.filter((value) => {
-      return !this.props.student.relevant_classes.includes(this.getClass(value.value));
+    this.state.displayClasses = this.state.displayClasses.filter((value) => {
+      return (value.label !== this.state.class);
     });
-    this.state.displayClasses = displayClasses;
     this.state.class = '';
     this.forceUpdate();
   }
 
   deleteClass = (course) => {
-    const classes = this.props.student.relevant_classes.filter((value) => {
+    console.log(course);
+    this.props.student.relevant_classes = this.props.student.relevant_classes.filter((value) => {
       return (value !== course.course);
     });
-    this.props.student.relevant_classes = classes;
-    const displayClasses = this.state.allClasses.filter((value) => {
-      return !this.props.student.relevant_classes.includes(this.getClass(value.value));
-    });
-    this.state.displayClasses = displayClasses;
+    this.state.displayClasses.push({ label: course.course.name });
     this.forceUpdate();
+  }
+
+  populateCurrentClasses() {
+    this.props.student.relevant_classes.forEach((value) => {
+      if (!this.state.selectedClasses.includes(value.name)) {
+        this.state.selectedClasses.push(value.name);
+      }
+    });
+    this.props.classes.forEach((value) => {
+      if (!this.state.selectedClasses.includes(value.name)) {
+        this.state.displayClasses.push({ label: value.name });
+      }
+    });
   }
 
   renderAddClass() {
@@ -93,15 +97,16 @@ class StudentClasses extends Component {
           className="select-dropdown"
           styles={customStyles}
           name="classes"
+          value={this.state.class}
           options={this.state.displayClasses}
           onChange={(selectedOption) => {
-            this.state.class = selectedOption.value;
+            this.state.class = selectedOption.label;
             this.addClass();
           }}
           onCreateOption={(newOption) => {
             this.state.class = newOption;
-            this.addClassDB();
-            this.addClass();
+            this.state.class = newOption;
+            this.props.createClassForStudent({ name: newOption }, this.props.student);
           }}
         />
       </div>
@@ -109,24 +114,28 @@ class StudentClasses extends Component {
   }
 
   renderClasses() {
-    return (
-      this.props.student.relevant_classes.map((course) => {
-        return (
-          <div className="class" key={course.id}>
-            <div className="text">
+    if (this.props.student?.relevant_classes) {
+      return (
+        this.props.student.relevant_classes.map((course) => {
+          return (
+            <div className="class" key={course.name}>
               {course.name}
+              <button type="submit" className="delete-btn-student-classes" style={{ cursor: 'pointer' }} onClick={() => { this.deleteClass({ course }); }}>
+                <i className="far fa-trash-alt" id="icon" />
+              </button>
             </div>
-            <button type="submit" className="delete-btn-student-classes" style={{ cursor: 'pointer' }} onClick={() => { this.deleteClass({ course }); }}>
-              <i className="far fa-trash-alt" id="icon" />
-            </button>
-          </div>
-        );
-      })
-    );
+          );
+        })
+      );
+    } else {
+      return (
+        <div>Loading</div>
+      );
+    }
   }
 
   render() {
-    if (this.state.student.relevant_classes !== undefined && this.props.classes.all !== []) {
+    if (this.state.student.relevant_classes !== undefined && this.props.classes !== []) {
       return (
         <div className="StudentClassContainer">
           <div className="StudentClassHeaderContainer">
@@ -158,7 +167,7 @@ class StudentClasses extends Component {
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
   student: reduxState.students.current_student,
-  classes: reduxState.classes,
+  classes: reduxState.classes.all,
 });
 
 export default withRouter(connect(mapStateToProps, {

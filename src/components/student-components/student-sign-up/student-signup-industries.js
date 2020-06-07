@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -14,8 +15,8 @@ class StudentIndustries extends Component {
     this.state = {
       student: {},
       industry: '',
+      selectedIndustries: [],
       displayIndustries: [],
-      allIndustries: [],
     };
   }
 
@@ -29,26 +30,18 @@ class StudentIndustries extends Component {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
-    }
-    if (prevProps.industries !== this.props.industries) {
-      const industries = this.props.industries.all.map((industry) => {
-        return { value: industry.name, label: industry.name, industry };
-      });
-      this.state.allIndustries = industries;
-      const displayIndustries = this.state.allIndustries.filter((value) => {
-        return !this.props.student.interested_industries.includes(this.getIndustry(value.value));
-      });
-      this.state.displayIndustries = displayIndustries;
+      this.populateCurrentIndustries();
     }
   }
 
   getIndustry(name) {
-    const industryObject = this.props.industries.all.find((industry) => {
+    const industryObject = this.props.industries.find((industry) => {
       return (industry.name === name);
     });
     return industryObject;
   }
 
+<<<<<<< HEAD
   addIndustryDB = () => {
     if (!this.state.allIndustries.includes(this.state.industry)) {
       this.props.createIndustryForStudent({ name: this.state.industry });
@@ -56,28 +49,38 @@ class StudentIndustries extends Component {
     this.props.fetchAllIndustries();
   }
 
+=======
+>>>>>>> f6c1bbe2decf17a3dd494618bca53f30fc6078a7
   addIndustry = () => {
     if (!this.props.student.interested_industries.includes(this.getIndustry(this.state.industry))) {
       this.props.student.interested_industries.push(this.getIndustry(this.state.industry));
     }
-    const displayIndustries = this.state.allIndustries.filter((value) => {
-      return !this.props.student.interested_industries.includes(this.getIndustry(value.value));
+    this.state.displayIndustries = this.state.displayIndustries.filter((value) => {
+      return (value.label !== this.state.industry);
     });
-    this.state.displayIndustries = displayIndustries;
     this.state.industry = '';
     this.forceUpdate();
   }
 
   deleteIndustry = (industry) => {
-    const industries = this.props.student.interested_industries.filter((value) => {
+    this.props.student.interested_industries = this.props.student.interested_industries.filter((value) => {
       return (value !== industry.industry);
     });
-    this.props.student.interested_industries = industries;
-    const displayIndustries = this.state.allIndustries.filter((value) => {
-      return !this.props.student.interested_industries.includes(this.getIndustry(value.value));
-    });
-    this.state.displayIndustries = displayIndustries;
+    this.state.displayIndustries.push({ label: industry.industry.name });
     this.forceUpdate();
+  }
+
+  populateCurrentIndustries() {
+    this.props.student.interested_industries.forEach((value) => {
+      if (!this.state.selectedIndustries.includes(value.name)) {
+        this.state.selectedIndustries.push(value.name);
+      }
+    });
+    this.props.industries.forEach((value) => {
+      if (!this.state.selectedIndustries.includes(value.name)) {
+        this.state.displayIndustries.push({ label: value.name });
+      }
+    });
   }
 
   renderAddIndustry() {
@@ -93,15 +96,16 @@ class StudentIndustries extends Component {
           className="select-dropdown"
           styles={customStyles}
           name="industries"
+          value={this.state.industry}
           options={this.state.displayIndustries}
           onChange={(selectedOption) => {
-            this.state.industry = selectedOption.value;
+            this.state.industry = selectedOption.label;
             this.addIndustry();
           }}
           onCreateOption={(newOption) => {
             this.state.industry = newOption;
-            this.addIndustryDB();
-            this.addIndustry();
+            this.state.industry = newOption;
+            this.props.createIndustryForStudent({ name: newOption }, this.props.student);
           }}
         />
       </div>
@@ -109,24 +113,28 @@ class StudentIndustries extends Component {
   }
 
   renderIndustries() {
-    return (
-      this.props.student.interested_industries.map((industry) => {
-        return (
-          <div className="industry" key={industry.id}>
-            <div className="text">
+    if (this.props.student?.interested_industries) {
+      return (
+        this.props.student.interested_industries.map((industry) => {
+          return (
+            <div className="industry" key={industry.name}>
               {industry.name}
+              <button type="submit" className="delete-btn-student-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
+                <i className="far fa-trash-alt" id="icon" />
+              </button>
             </div>
-            <button type="submit" className="delete-btn-student-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
-              <i className="far fa-trash-alt" id="icon" />
-            </button>
-          </div>
-        );
-      })
-    );
+          );
+        })
+      );
+    } else {
+      return (
+        <div>Loading</div>
+      );
+    }
   }
 
   render() {
-    if (this.state.student.interested_industries !== undefined && this.props.industries.all !== []) {
+    if (this.state.student.interested_industries !== undefined && this.props.industries !== []) {
       return (
         <div className="StudentIndustryContainer">
           <div className="StudentIndustryHeaderContainer">
@@ -158,7 +166,7 @@ class StudentIndustries extends Component {
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
   student: reduxState.students.current_student,
-  industries: reduxState.industries,
+  industries: reduxState.industries.all,
 });
 
 export default withRouter(connect(mapStateToProps, {

@@ -280,9 +280,11 @@ class Students extends Component {
       );
     } else if (this.props.user.role === 'admin') {
       return (
-        <div id="toggles">
-          <h3>show archived: </h3>
-          <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
+        <div id="filters">
+          <h3>Show Archived Students: </h3>
+          <div id="archiveToggle">
+            <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+          </div>
         </div>
       );
     }
@@ -299,47 +301,56 @@ class Students extends Component {
     return (
       (this.props.students !== undefined || null) && (this.state.results !== null || undefined)
         ? (
-          <div>
-            <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="industry-filter"
-              placeholder="Filter by industry"
-              options={this.state.industryOptions}
-              value={this.state.selectedIndustryOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedIndustryOptions: selectedOptions });
-                const industries = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-                  ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                this.onFilter(industries, skills);
-              }}
-            />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="skill-filter"
-              placeholder="Filter by skill"
-              options={this.state.skillOptions}
-              value={this.state.selectedSkillOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedSkillOptions: selectedOptions });
-                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const skills = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                this.onFilter(industries, skills);
-              }}
-            />
-            {this.renderRecButton()}
-            <div className="list">
-              {this.renderStudents()}
+          <div className="pageContent">
+            <h1> All Students</h1>
+            <div className="content">
+              <div className="sideFilterBar">
+                <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
+                <Select
+                  isMulti
+                  className="filter"
+                  styles={dropdownStyles}
+                  name="industry-filter"
+                  placeholder="Filter by industry"
+                  options={this.state.industryOptions}
+                  value={this.state.selectedIndustryOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedIndustryOptions: selectedOptions });
+                    const industries = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+                      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    this.onFilter(industries, skills);
+                  }}
+                />
+                <Select
+                  isMulti
+                  className="filter"
+                  styles={dropdownStyles}
+                  name="skill-filter"
+                  placeholder="Filter by skill"
+                  options={this.state.skillOptions}
+                  value={this.state.selectedSkillOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedSkillOptions: selectedOptions });
+                    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const skills = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    this.onFilter(industries, skills);
+                  }}
+                />
+              </div>
+              <div className="rightSide">
+                {this.renderRecButton()}
+                <div className="list">
+                  {this.renderStudents()}
+                </div>
+              </div>
             </div>
           </div>
 

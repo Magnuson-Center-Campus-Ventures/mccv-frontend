@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -14,8 +15,8 @@ class StudentSkills extends Component {
     this.state = {
       student: {},
       skill: '',
+      selectedSkills: [],
       displaySkills: [],
-      allSkills: [],
     };
   }
 
@@ -29,26 +30,18 @@ class StudentSkills extends Component {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
-    }
-    if (prevProps.skills !== this.props.skills) {
-      const skills = this.props.skills.all.map((skill) => {
-        return { value: skill.name, label: skill.name, skill };
-      });
-      this.state.allSkills = skills;
-      const displaySkills = this.state.allSkills.filter((value) => {
-        return !this.props.student.skills.includes(this.getSkill(value.value));
-      });
-      this.state.displaySkills = displaySkills;
+      this.populateCurrentSkills();
     }
   }
 
   getSkill(name) {
-    const skillObject = this.props.skills.all.find((skill) => {
+    const skillObject = this.props.skills.find((skill) => {
       return (skill.name === name);
     });
     return skillObject;
   }
 
+<<<<<<< HEAD
   addSkillDB = () => {
     if (!this.state.allSkills.includes(this.state.skill)) {
       this.props.createSkillForStudent({ name: this.state.skill });
@@ -56,28 +49,38 @@ class StudentSkills extends Component {
     this.props.fetchAllSkills();
   }
 
+=======
+>>>>>>> f6c1bbe2decf17a3dd494618bca53f30fc6078a7
   addSkill = () => {
     if (!this.props.student.skills.includes(this.getSkill(this.state.skill))) {
       this.props.student.skills.push(this.getSkill(this.state.skill));
     }
-    const displaySkills = this.state.allSkills.filter((value) => {
-      return !this.props.student.skills.includes(this.getSkill(value.value));
+    this.state.displaySkills = this.state.displaySkills.filter((value) => {
+      return (value.label !== this.state.skill);
     });
-    this.state.displaySkills = displaySkills;
     this.state.skill = '';
     this.forceUpdate();
   }
 
   deleteSkill = (skill) => {
-    const skills = this.props.student.skills.filter((value) => {
+    this.props.student.skills = this.props.student.skills.filter((value) => {
       return (value !== skill.skill);
     });
-    this.props.student.skills = skills;
-    const displaySkills = this.state.allSkills.filter((value) => {
-      return !this.props.student.skills.includes(this.getSkill(value.value));
-    });
-    this.state.displaySkills = displaySkills;
+    this.state.displaySkills.push({ label: skill.skill.name });
     this.forceUpdate();
+  }
+
+  populateCurrentSkills() {
+    this.props.student.skills.forEach((value) => {
+      if (!this.state.selectedSkills.includes(value.name)) {
+        this.state.selectedSkills.push(value.name);
+      }
+    });
+    this.props.skills.forEach((value) => {
+      if (!this.state.selectedSkills.includes(value.name)) {
+        this.state.displaySkills.push({ label: value.name });
+      }
+    });
   }
 
   renderAddSkill() {
@@ -93,15 +96,16 @@ class StudentSkills extends Component {
           className="select-dropdown"
           styles={customStyles}
           name="skills"
+          value={this.state.skill}
           options={this.state.displaySkills}
           onChange={(selectedOption) => {
-            this.state.skill = selectedOption.value;
+            this.state.skill = selectedOption.label;
             this.addSkill();
           }}
           onCreateOption={(newOption) => {
             this.state.skill = newOption;
-            this.addSkillDB();
-            this.addSkill();
+            this.state.skill = newOption;
+            this.props.createSkillForStudent({ name: newOption }, this.props.student);
           }}
         />
       </div>
@@ -109,24 +113,28 @@ class StudentSkills extends Component {
   }
 
   renderSkills() {
-    return (
-      this.props.student.skills.map((skill) => {
-        return (
-          <div className="skill" key={skill.id}>
-            <div className="text">
+    if (this.props.student?.skills) {
+      return (
+        this.props.student.skills.map((skill) => {
+          return (
+            <div className="skill" key={skill.name}>
               {skill.name}
+              <button type="submit" className="delete-btn-student-skills" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
+                <i className="far fa-trash-alt" id="icon" />
+              </button>
             </div>
-            <button type="submit" className="delete-btn-student-skills" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
-              <i className="far fa-trash-alt" id="icon" />
-            </button>
-          </div>
-        );
-      })
-    );
+          );
+        })
+      );
+    } else {
+      return (
+        <div>Loading</div>
+      );
+    }
   }
 
   render() {
-    if (this.state.student.skills !== undefined && this.props.skills.all !== []) {
+    if (this.state.student.skills !== undefined && this.props.skills !== []) {
       return (
         <div className="StudentSkillContainer">
           <div className="StudentSkillHeaderContainer">
@@ -158,7 +166,7 @@ class StudentSkills extends Component {
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
   student: reduxState.students.current_student,
-  skills: reduxState.skills,
+  skills: reduxState.skills.all,
 });
 
 export default withRouter(connect(mapStateToProps, {

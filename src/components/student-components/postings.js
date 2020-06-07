@@ -8,7 +8,7 @@ import moment from 'moment';
 import PostListItem from './posting-item';
 import SearchBar from './search-bar';
 import {
-  fetchPosts, fetchStudentByUserID, fetchUser,
+  fetchPosts, fetchStudentByUserID, fetchUser, clearPost,
 } from '../../actions';
 import { fetchIndustriesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
@@ -37,10 +37,10 @@ class Posts extends Component {
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
-    // this.handleLiveChange = this.handleLiveChange.bind(this);
   }
 
   componentDidMount() {
+    this.props.clearPost();
     this.props.fetchPosts();
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchUser(localStorage.getItem('userID'));
@@ -62,8 +62,7 @@ class Posts extends Component {
           });
         }
         if (post.startup_id.industries && post.status === 'Approved') {
-          post.startup_id.industries.forEach((industry) => {
-            // Add option if it's not already in the array (not using sets because react-select expects an array)
+          fetchIndustriesFromID(post.startup_id.industries, (industry) => {
             if (industryOptions.filter((option) => option.value === industry.name).length === 0) {
               industryOptions.push({ value: industry.name, label: industry.name });
             }
@@ -354,8 +353,10 @@ class Posts extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          <h3>show archived: </h3>
-          <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
+          <h3>Show Archived Postings: </h3>
+          <div id="archiveToggle">
+            <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+          </div>
         </div>
       );
     } else {
@@ -380,109 +381,121 @@ class Posts extends Component {
     return (
       this.props.posts && this.state.results
         ? (
-          <div>
-            <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="industry-filter"
-              placeholder="Filter by industry"
-              options={this.state.industryOptions}
-              value={this.state.selectedIndustryOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedIndustryOptions: selectedOptions });
-                const industries = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-                  ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
-                  ? this.state.selectedLocationOptions.map((option) => option.value)
-                  : ['emptytext'];
-                const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
-                  ? this.state.selectedDateOptions.map((option) => option.value)
-                  : [moment('1111-11-11')];
-                this.onFilter(industries, skills, locations, dates);
-              }}
-            />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="skill-filter"
-              placeholder="Filter by skill"
-              options={this.state.skillOptions}
-              value={this.state.selectedSkillOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedSkillOptions: selectedOptions });
-                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const skills = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
-                  ? this.state.selectedLocationOptions.map((option) => option.value)
-                  : ['emptytext'];
-                const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
-                  ? this.state.selectedDateOptions.map((option) => option.value)
-                  : [moment('1111-11-11')];
-                this.onFilter(industries, skills, locations, dates);
-              }}
-            />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="location-filter"
-              placeholder="Filter by location"
-              options={this.state.locationOptions}
-              value={this.state.selectedLocationOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedLocationOptions: selectedOptions });
-                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-                  ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const locations = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value)
-                  : ['emptytext'];
-                const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
-                  ? this.state.selectedDateOptions.map((option) => option.value)
-                  : [moment('1111-11-11')];
-                this.onFilter(industries, skills, locations, dates);
-              }}
-            />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="start-date-filter"
-              placeholder="Filter by start date"
-              options={this.state.dateOptions}
-              value={this.state.selectedDateOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedDateOptions: selectedOptions });
-                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-                  ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
-                  ? this.state.selectedLocationOptions.map((option) => option.value)
-                  : ['emptytext'];
-                const dates = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value)
-                  : [moment('1111-11-11')];
-                this.onFilter(industries, skills, locations, dates);
-              }}
-            />
-            {this.renderButtons()}
-            <div className="list">
-              {this.renderPosts()}
+          <div className="pageContent">
+            <h1> All Postings</h1>
+            <div className="content">
+              <div className="sideFilterBar">
+                <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
+                <Select
+                  isMulti
+                  className="filter"
+                  styles={dropdownStyles}
+                  name="industry-filter"
+                  placeholder="Filter by industry"
+                  options={this.state.industryOptions}
+                  value={this.state.selectedIndustryOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedIndustryOptions: selectedOptions });
+                    const industries = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+                      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                      ? this.state.selectedLocationOptions.map((option) => option.value)
+                      : ['emptytext'];
+                    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+                      ? this.state.selectedDateOptions.map((option) => option.value)
+                      : [moment('1111-11-11')];
+                    this.onFilter(industries, skills, locations, dates);
+                  }}
+                />
+                <Select
+                  isMulti
+                  className="filter"
+                  styles={dropdownStyles}
+                  name="skill-filter"
+                  placeholder="Filter by skill"
+                  options={this.state.skillOptions}
+                  value={this.state.selectedSkillOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedSkillOptions: selectedOptions });
+                    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const skills = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                      ? this.state.selectedLocationOptions.map((option) => option.value)
+                      : ['emptytext'];
+                    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+                      ? this.state.selectedDateOptions.map((option) => option.value)
+                      : [moment('1111-11-11')];
+                    this.onFilter(industries, skills, locations, dates);
+                  }}
+                />
+                <Select
+                  isMulti
+                  className="filter"
+                  styles={dropdownStyles}
+                  name="location-filter"
+                  placeholder="Filter by location"
+                  options={this.state.locationOptions}
+                  value={this.state.selectedLocationOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedLocationOptions: selectedOptions });
+                    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+                      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const locations = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value)
+                      : ['emptytext'];
+                    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+                      ? this.state.selectedDateOptions.map((option) => option.value)
+                      : [moment('1111-11-11')];
+                    this.onFilter(industries, skills, locations, dates);
+                  }}
+                />
+                <Select
+                  isMulti
+                  className="filter"
+                  styles={dropdownStyles}
+                  name="start-date-filter"
+                  placeholder="Filter by start date"
+                  options={this.state.dateOptions}
+                  value={this.state.selectedDateOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedDateOptions: selectedOptions });
+                    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+                      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+                      ? this.state.selectedLocationOptions.map((option) => option.value)
+                      : ['emptytext'];
+                    const dates = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value)
+                      : [moment('1111-11-11')];
+                    this.onFilter(industries, skills, locations, dates);
+                  }}
+                />
+              </div>
+              <div className="rightSide">
+                {this.renderButtons()}
+                <div className="list">
+                  {this.renderPosts()}
+                </div>
+              </div>
             </div>
           </div>
+
         ) : (
           <div> </div>
         )
@@ -501,4 +514,5 @@ export default withRouter(connect(mapStateToProps, {
   fetchPosts,
   fetchStudentByUserID,
   fetchUser,
+  clearPost,
 })(Posts));

@@ -88,7 +88,6 @@ class Startup extends Component {
               <br />
               <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
             </Link>
-
           </li>
         );
       });

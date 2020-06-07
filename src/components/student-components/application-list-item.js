@@ -1,0 +1,89 @@
+/* eslint-disable camelcase */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable array-callback-return */
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable react/prefer-stateless-function */
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import {
+  fetchSubmittedApplication,
+  fetchQuestions,
+  fetchPost,
+  fetchStudentByID,
+  fetchUserByStudentID,
+  fetchUser,
+} from '../../actions';
+import '../../styles/startup-submitted-application.scss';
+
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
+class ApplicationListItem extends Component {
+  componentDidMount() {
+    this.props.fetchSubmittedApplication(this.props.match.params.applicationID);
+    this.props.fetchQuestions();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.current !== null && !isEmpty(this.props.current) && (prevProps.current !== this.props.current)) {
+      this.props.fetchPost(this.props.current.post_id);
+    }
+  }
+
+  renderQuestions= () => {
+    const items = [];
+    if (this.props.current.responses && this.props.questions.length > 0) {
+      this.props.questions.map((question) => {
+        if (this.props.current.responses[question._id]) {
+          items.push(
+            <div key={question._id} className="question">
+              <h3 id="question">{question.question}</h3>
+              <h2 id="answer">{this.props.current.responses[question._id]}</h2>
+            </div>,
+          );
+        }
+      });
+      return items;
+    } else {
+      return <div />;
+    }
+  }
+
+  render() {
+    if (this.props.post != null && !isEmpty(this.props.post) && this.props.questions != null && !isEmpty(this.props.questions)) {
+      return (
+        <div>
+          <h1>{this.props.post.title}</h1>
+          <div>{`${this.props.post.city}, ${this.props.post.state}`}</div>
+          <h2 id="title">{this.props.current.status}</h2>
+          <div id="questions">
+            <h2>Questions</h2>
+            {this.renderQuestions()}
+          </div>
+        </div>
+      );
+    } else {
+      return <div />;
+    }
+  }
+}
+
+const mapStateToProps = (reduxState) => ({
+  student: reduxState.students.current_student,
+  user: reduxState.user.current,
+  userID: reduxState.auth.userID,
+  current: reduxState.submittedApplications.current,
+  post: reduxState.posts.current,
+  questions: reduxState.questions.all,
+});
+
+export default withRouter(connect(mapStateToProps, {
+  fetchStudentByID,
+  fetchUserByStudentID,
+  fetchUser,
+  fetchSubmittedApplication,
+  fetchQuestions,
+  fetchPost,
+})(ApplicationListItem));

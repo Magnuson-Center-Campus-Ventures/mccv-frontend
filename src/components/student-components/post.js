@@ -20,6 +20,7 @@ class Post extends Component {
     this.state = {
       applyShow: false,
       archiveShow: false,
+      isEditing: false,
     };
     this.showApplyModal = this.showApplyModal.bind(this);
     this.hideApplyModal = this.hideApplyModal.bind(this);
@@ -59,6 +60,13 @@ class Post extends Component {
     this.setState({
       archiveShow: false,
     });
+  }
+
+  editMode = (e) => {
+    this.setState({
+      isEditing: true,
+    });
+    console.log(this.state.isEditing);
   }
 
 
@@ -106,6 +114,7 @@ class Post extends Component {
     }
   }
 
+  // eslint-disable-next-line consistent-return
   renderButtons() {
     if (this.props.user.role === 'admin') {
       return (
@@ -115,10 +124,31 @@ class Post extends Component {
             this.showArchiveModal();
           }}
         >
-          Archive
+          Archive Position
         </button>
       );
-    } else {
+    } else if (this.props.user.role === 'startup') {
+      return (
+        <div className="post-startup-buttons">
+          <button
+            type="submit"
+            onClick={(e) => {
+              this.showArchiveModal();
+            }}
+          >
+            Archive Position
+          </button>
+
+          <button id="edit-post"
+            type="submit"
+            onClick={(e) => {
+              this.editMode();
+            }}
+          >Edit Position
+          </button>
+        </div>
+      );
+    } else if (this.props.user.role === 'student') {
       return (
         <button id="submit-app"
           type="submit"

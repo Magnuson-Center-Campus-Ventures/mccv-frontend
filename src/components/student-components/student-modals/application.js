@@ -1,15 +1,27 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable array-callback-return */
 /* eslint-disable react/no-access-state-in-setstate */
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable no-unused-expressions */
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { submitApplication, fetchQuestions } from '../../../actions';
+import {
+  submitApplication,
+  fetchQuestions,
+  fetchPost,
+  fetchStudentByUserID,
+  fetchUserByStudentID,
+  fetchUser,
+  fetchApplication,
+  updatePost,
+} from '../../../actions';
 import close from '../../../../static/img/close.png';
 import '../../../styles/application.scss';
+
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
 
 class Application extends React.Component {
   constructor(props) {
@@ -21,17 +33,28 @@ class Application extends React.Component {
   }
 
   componentDidMount() {
+    this.props.fetchStudentByUserID(localStorage.getItem('userID'));
+    this.props.fetchPost(this.props.match.params.postID);
     this.props.fetchQuestions();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.post !== null && !isEmpty(this.props.post) && prevProps.post !== this.props.post) {
+      this.props.fetchApplication(this.props.post?.application_id);
+    }
   }
 
   onSubmit = (e) => {
     const newApplication = {
-      student_id: '5ec989b5b73b4100389ff681',
-      post_id: this.props.current.id,
+      student_id: this.props.student._id,
+      post_id: this.props.post.id,
       responses: this.state.questionToAnswer,
       status: 'pending',
     };
+    const newPost = this.props.post;
+    newPost.applicants.push(this.props.student);
     this.props.submitApplication(newApplication);
+    this.props.updatePost(this.props.post._id, newPost);
     this.props.onClose && this.props.onClose(e);
   };
 
@@ -71,7 +94,7 @@ class Application extends React.Component {
     return (
       <div className="application-container">
         <div id="application" className="application">
-          <div className="application-title">{this.props.current.title}<img id="close-app"
+          <div className="application-title">{this.props.post.title}<img id="close-app"
             src={close}
             alt="close"
             style={{ cursor: 'pointer' }}
@@ -102,9 +125,21 @@ class Application extends React.Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  current: reduxState.posts.current,
-  application: reduxState.application.current,
+  user: reduxState.user.current,
+  student: reduxState.students.current_student,
+  userID: reduxState.auth.userID,
+  post: reduxState.posts.current,
   questions: reduxState.questions.all,
+  application: reduxState.applications.current,
 });
 
-export default withRouter(connect(mapStateToProps, { submitApplication, fetchQuestions })(Application));
+export default withRouter(connect(mapStateToProps, {
+  submitApplication,
+  fetchQuestions,
+  fetchPost,
+  fetchStudentByUserID,
+  fetchUserByStudentID,
+  fetchUser,
+  fetchApplication,
+  updatePost,
+})(Application));

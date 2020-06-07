@@ -7,10 +7,13 @@ const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 export const ActionTypes = {
   FETCH_USER: 'FETCH_USER',
   FETCH_POST: 'FETCH_POST',
+  CLEAR_POST: 'CLEAR_POST',
   FETCH_POSTS: 'FETCH_POSTS',
+  UPDATE_POST: 'UPDATE_POST',
   FETCH_STARTUP: 'FETCH_STARTUP',
   FETCH_STARTUPS: 'FETCH_STARTUPS',
   FETCH_STUDENT: 'FETCH_STUDENT',
+  CLEAR_STUDENT: 'CLEAR_STUDENT',
   CREATE_STUDENT: 'CREATE_STUDENT',
   FETCH_STUDENTS: 'FETCH_STUDENTS',
   FETCH_STUDENT_USER: 'FETCH_STUDENT_USER',
@@ -29,6 +32,8 @@ export const ActionTypes = {
   FETCH_SUBMITTED_APPLICATIONS: 'FETCH_SUBMITTED_APPLICATIONS',
   FETCH_SUBMITTED_APPLICATION: 'FETCH_SUBMITTED_APPLICATION',
   UPDATE_SUBMITTED_APPLICATION: 'UPDATE_SUBMITTED_APPLICATION',
+  SUBMIT_APPLICATION: 'SUBMIT_APPLICATION',
+  CLEAR_APPLICATION: 'CLEAR_APPLICATION',
   FETCH_ALL_INDUSTRIES: 'FETCH_ALL_INDUSTRIES',
   FETCH_SOME_INDUSTRIES: 'FETCH_SOME_INDUSTRIES',
   ADD_INDUSTRY: 'ADD_INDUSTRY',
@@ -38,7 +43,6 @@ export const ActionTypes = {
   FETCH_ALL_CLASSES: 'FETCH_ALL_CLASSES',
   FETCH_SOME_CLASSES: 'FETCH_SOME_CLASSES',
   ADD_CLASS: 'ADD_CLASS',
-  SUBMIT_APPLICATION: 'SUBMIT_APPLICATION',
   ERROR_SET: 'ERROR_SET',
   AUTH_USER: 'AUTH_USER',
   DEAUTH_USER: 'DEAUTH_USER',
@@ -59,11 +63,12 @@ export function fetchPosts() {
   };
 }
 
-export function createPost(post) {
+export function createPost(post, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+        history.push('/add-post');
       })
       .catch((error) => {
         console.log('broken');
@@ -112,11 +117,17 @@ export function fetchPost(id) {
 export function updatePost(id, post) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      dispatch({ type: ActionTypes.UPDATE_POST, payload: response.data });
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
+  };
+}
+
+export function clearPost() {
+  return (dispatch) => {
+    dispatch({ type: ActionTypes.CLEAR_POST });
   };
 }
 
@@ -215,6 +226,7 @@ export function fetchStudents() {
 export function fetchStudentByID(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/students/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      console.log(response.data);
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
     }).catch((error) => {
       console.log(error);
@@ -271,12 +283,31 @@ export function submitStudent(id, student, history) {
   };
 }
 
+export function clearStudent() {
+  return (dispatch) => {
+    dispatch({ type: ActionTypes.CLEAR_STUDENT });
+  };
+}
+
 export function submitStartup(id, startup, history) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/startups/${id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
       // eslint-disable-next-line no-restricted-globals
       history.push('/startupprofile');
+    }).catch((error) => {
+      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+export function submitPost(id, post, history) {
+  return (dispatch) => {
+    axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      // eslint-disable-next-line no-restricted-globals
+      history.push(`/posts/${id}`);
     }).catch((error) => {
       console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
@@ -554,6 +585,12 @@ export function submitApplication(newApplication) {
         console.log('broken');
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
+  };
+}
+
+export function clearApplication() {
+  return (dispatch) => {
+    dispatch({ type: ActionTypes.CLEAR_APPLICATION });
   };
 }
 

@@ -1,28 +1,33 @@
 /* eslint-disable react/button-has-type */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
+import Switch from 'react-switch';
 import TextareaAutosize from 'react-textarea-autosize';
 import {
-  fetchStartupByUserID, fetchPosts, fetchPost, updateStartup,
+  createPost, fetchPosts, fetchPost, updatePost,
+  fetchStartupByUserID, updateStartup,
   fetchAllIndustries, createIndustryForStartup,
 } from '../../actions';
-import AddPosting from './startups-modals/startup-add-posting';
 import '../../styles/startup-profile.scss';
 
 class StartupProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: false,
       startup: {},
       selectedIndustries: [],
       displayIndustries: [],
       industry: '',
+      posts: [],
+      approved: true,
+      archived: true,
       isEditing: false,
     };
     // this.renderPostings = this.renderPostings.bind(this);
+    this.handleApprovedToggle = this.handleApprovedToggle.bind(this);
+    this.handleArchivedToggle = this.handleArchivedToggle.bind(this);
   }
 
   componentDidMount() {
@@ -35,7 +40,8 @@ class StartupProfile extends Component {
     if (this.props.startup !== {} && prevProps.startup !== this.props.startup) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ startup: this.props.startup });
-      this.popuateCurrentIndustries();
+      this.populateCurrentIndustries();
+      this.populateCurrentPosts();
     }
   }
 
@@ -88,19 +94,48 @@ class StartupProfile extends Component {
     });
   }
 
-  showModal = () => {
-    this.setState({
-      show: true,
-    });
-  };
+  addPosting = () => {
+    console.log('in addPosting');
+    const newPost = {
+      startup_id: this.props.startup._id,
+      title: '',
+      description: '',
+      industries: [],
+      required_skills: [],
+      preferred_skills: [],
+      responsibilities: [],
+      time_commitment: 0,
+      desired_start_date: '',
+      desired_end_date: '',
+      desired_classes: [],
+      available_until: '',
+      status: '',
+      applicants: [],
+      application_id: '',
+      students_selected: [],
+      city: '',
+      state: '',
+      remote: false,
+    };
+    console.log(newPost);
+    this.props.createPost(newPost, this.props.history);
+  }
 
-  hideModal = () => {
-    this.setState({
-      show: false,
-    });
-  };
+  handleApprovedToggle(checked) {
+    console.log(checked);
+    this.state.approved = checked;
+    this.populateCurrentPosts();
+    this.forceUpdate();
+  }
 
-  popuateCurrentIndustries() {
+  handleArchivedToggle(checked) {
+    console.log(checked);
+    this.state.archived = checked;
+    this.populateCurrentPosts();
+    this.forceUpdate();
+  }
+
+  populateCurrentIndustries() {
     this.props.startup.industries.forEach((value) => {
       if (!this.state.selectedIndustries.includes(value.name)) {
         this.state.selectedIndustries.push(value.name);
@@ -109,6 +144,19 @@ class StartupProfile extends Component {
     this.props.industries.forEach((value) => {
       if (!this.state.selectedIndustries.includes(value.name)) {
         this.state.displayIndustries.push({ label: value.name });
+      }
+    });
+  }
+
+  populateCurrentPosts() {
+    this.state.posts = this.props.startup.posts.filter((value) => {
+      console.log(value.status);
+      if (this.state.approved === this.state.archived) {
+        return (value.status === 'Approved' || value.status === 'Archived');
+      } else if (this.state.approved) {
+        return (value.status === 'Approved');
+      } else {
+        return (value.status === 'Archived');
       }
     });
   }
@@ -135,7 +183,6 @@ class StartupProfile extends Component {
               this.addIndustry();
             }}
             onCreateOption={(newOption) => {
-              console.log(newOption);
               this.state.industry = newOption;
               this.props.createIndustryForStartup({ name: newOption }, this.props.startup);
             }}
@@ -144,7 +191,7 @@ class StartupProfile extends Component {
       );
     } else {
       return (
-        'Indsutries:'
+        'Industries:'
       );
     }
   }
@@ -185,7 +232,6 @@ class StartupProfile extends Component {
       if (this.state.isEditing === false) {
         return (
           <div className="startup-body">
-            <AddPosting onClose={this.hideModal} show={this.state.show} />
             <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
             <div className="startup-location">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
             <div className="startup-industries">{this.renderAddIndustry()}{this.renderIndustries()}</div>
@@ -241,33 +287,33 @@ class StartupProfile extends Component {
     }
   }
 
+  renderToggles() {
+    return (
+      <div id="filters">
+        <span className="startup-postings-h1">Show Active:</span>
+        <Switch id="approveToggle" handleDiameter={0} onChange={this.handleApprovedToggle} checked={this.state.approved} />
+        <span className="startup-postings-h1">Show Archived:</span>
+        <Switch id="archiveToggle" handleDiameter={0} onChange={this.handleArchivedToggle} checked={this.state.archived} />
+      </div>
+    );
+  }
+
   renderPostings = (e) => {
     if (this.props.startup.posts && this.props.startup.posts.length && typeof this.props.startup !== 'undefined') {
-      const mappingPostings = this.props.startup.posts.map((post) => {
-        if (this.state.isEditing === true) {
-          return (
-            <li className="startup-posting" key={post._id}>
-              <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deletePost({ post }); }}>
-                <i className="far fa-trash-alt" id="icon" />
-              </button>
+      const mappingPostings = this.state.posts.map((post) => {
+        return (
+          <li className="startup-posting" key={post._id}>
+            <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
               <div className="startup-posting-title">{post.title}</div>
               <br />
               {this.renderDescription(post)}
               <br />
               <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
-            </li>
-          );
-        } else {
-          return (
-            <li className="startup-posting" key={post._id}>
-              <div className="startup-posting-title">{post.title}</div>
               <br />
-              {this.renderDescription(post)}
-              <br />
-              <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
-            </li>
-          );
-        }
+              <div className="startup-posting-status">Status: {post.status}</div>
+            </Link>
+          </li>
+        );
       });
       return (
         this.props.startup.posts !== undefined
@@ -278,12 +324,13 @@ class StartupProfile extends Component {
                 <button type="button"
                   className="startup-add-posting-btn"
                   onClick={() => {
-                    this.showModal();
+                    this.addPosting();
                   }}
                 >
                   <i className="fas fa-plus" />
                 </button>
               </div>
+              { this.renderToggles() }
               <ul className="startup-postings-list">
                 {mappingPostings}
               </ul>
@@ -298,7 +345,7 @@ class StartupProfile extends Component {
             <button type="button"
               className="startup-add-posting-btn"
               onClick={() => {
-                this.showModal();
+                this.addPosting();
               }}
             >
               <i className="fas fa-plus" />
@@ -339,9 +386,10 @@ function mapStateToProps(reduxState) {
   return {
     startup: reduxState.startups.current,
     industries: reduxState.industries.all,
+    post: reduxState.posts.current,
   };
 }
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStartupByUserID, fetchPosts, fetchPost, updateStartup, fetchAllIndustries, createIndustryForStartup,
+  createPost, fetchStartupByUserID, fetchPosts, fetchPost, updatePost, updateStartup, fetchAllIndustries, createIndustryForStartup,
 })(StartupProfile));

@@ -8,7 +8,12 @@ import { withRouter, Link } from 'react-router-dom';
 import Select from 'react-select';
 import SearchBar from '../student-components/search-bar';
 import {
-  fetchSubmittedApplication, fetchSubmittedApplications, fetchPosts, fetchStartupByUserID,
+  fetchSubmittedApplication,
+  fetchSubmittedApplications,
+  fetchPosts,
+  fetchStartupByUserID,
+  clearApplication,
+  clearPost,
 } from '../../actions';
 import '../../styles/applications.scss';
 
@@ -31,6 +36,8 @@ class SubmittedApplications extends Component {
   }
 
   componentDidMount() {
+    this.props.clearPost();
+    this.props.clearApplication();
     this.props.fetchStartupByUserID(localStorage.getItem('userID'));
     this.props.fetchSubmittedApplications();
     this.props.fetchPosts();
@@ -219,7 +226,7 @@ class SubmittedApplications extends Component {
               isMulti
               styles={dropdownStyles}
               name="title-filter"
-              placeholder="Filter by Title"
+              placeholder="Filter by Position"
               options={this.state.titleOptions}
               value={this.state.selectedTitleOptions}
               onChange={(selectedOptions) => {
@@ -252,5 +259,10 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPosts, fetchSubmittedApplication, fetchSubmittedApplications, fetchStartupByUserID,
+  fetchPosts,
+  fetchSubmittedApplication,
+  fetchSubmittedApplications,
+  fetchStartupByUserID,
+  clearApplication,
+  clearPost,
 })(SubmittedApplications));

@@ -1,82 +1,195 @@
 /* eslint-disable array-callback-return */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-unused-expressions */
-
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { updatePost, updateStartup, updateStudent } from '../../actions';
-import close from '../../../static/img/close.png';
-import '../../styles/archive-modal.scss';
+import CreateableSelect from 'react-select/creatable';
+import {
+  updatePost, updateStartup, updateStudent, fetchSubmittedApplications, fetchStudentByID,
+} from '../../actions';
+import '../../styles/modal.scss';
 
-const Archive = (props) => {
-  if (!props.show) {
-    return null;
+class Archive extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filled: false,
+      applicantOptions: [],
+      studentsSelected: [],
+    };
+    this.notFilled = this.notFilled.bind(this);
+    this.filled = this.filled.bind(this);
   }
 
-  const onArchive = (e) => {
-    if (props.post) {
-      const { post } = props;
-      post.status = 'Archived';
-      props.updatePost(post.id, post);
-      props.onClose(e);
+  componentDidMount() {
+    if (this.props.post?.applicants.length > 0) {
+      const names = this.props.post.applicants.map((applicant) => {
+        const name = `${applicant.first_name} ${applicant.last_name}`;
+        return { value: applicant, label: name };
+      });
+      this.setState({ applicantOptions: names });
     }
-    if (props.startup) {
-      const { startup } = props;
+  }
+
+  notFilled = (e) => {
+    this.setState({ filled: false });
+  }
+
+  filled = (e) => {
+    this.setState({ filled: true });
+  }
+
+  onArchive = (e) => {
+    if (this.props.post) {
+      const { post } = this.props;
+      post.status = 'Archived';
+      post.students_selected = this.state.studentsSelected;
+      this.props.updatePost(post.id, post);
+      this.props.onClose(e);
+    }
+    if (this.props.startup) {
+      const { startup } = this.props;
       startup.status = 'Archived';
-      props.updateStartup(startup.id, startup);
+      this.props.updateStartup(startup.id, startup);
       startup.posts.map((post) => {
         const postCopy = post;
         postCopy.status = 'Archived';
-        props.updatePost(post.id, postCopy);
+        this.props.updatePost(post.id, postCopy);
       });
-      props.onClose(e);
+      this.props.onClose(e);
     }
-    if (props.student) {
-      const { student } = props;
+    if (this.props.student) {
+      const { student } = this.props;
       student.status = 'Archived';
-      props.updateStudent(student.id, student);
-      props.onClose(e);
+      this.props.updateStudent(student.id, student);
+      this.props.onClose(e);
     }
-  };
+  }
 
+  // add student who filled position to selected array
+  addFilled = (student) => {
+    console.log(student);
+    const selected = this.state.studentsSelected.map((selectedStudent) => {
+      return { selectedStudent };
+    });
+    selected.push(student.value);
+    this.state.studentsSelected = selected;
+  }
 
-  return (
-    <div className="archiveContainer">
-      <div className="archiveModal" id="archiveModal">
-        <img id="close-app"
-          src={close}
-          alt="close"
-          style={{ cursor: 'pointer' }}
-          onClick={(e) => {
-            props.onClose(e);
-          }}
-        />
-        <p> Are you sure you want to archive this?</p>
-        <div className="archiveOptions">
-          <button type="submit"
-            id="noarchive"
-            style={{ cursor: 'pointer' }}
-            onClick={(e) => {
-              props.onClose(e);
+  filledRender() {
+    const customStyles = { // from student-signup-classes
+      control: (base) => ({
+        ...base,
+        width: 200,
+      }),
+    };
+    if (this.state.filled) {
+      return (
+        <div className="selectStudents">
+          <p>Select the student(s) who filled the position</p>
+
+          <CreateableSelect
+            className="select-dropdown"
+            styles={customStyles}
+            name="classes"
+            options={this.state.applicantOptions}
+            onChange={(selectedOption) => {
+              this.addFilled(selectedOption);
             }}
-          >
-            No
-          </button>
-          <button type="submit"
-            id="archive"
-            style={{ cursor: 'pointer' }}
-            onClick={(e) => {
-              onArchive(e);
-            }}
-          >
-            Yes
-          </button>
+          />
         </div>
+      );
+    } else {
+      return null;
+    }
+  }
 
-      </div>
-    </div>
-  );
-};
+  // eslint-disable-next-line consistent-return
+  postArchive() {
+    if (this.props.post) {
+      return (
+        <div className="archiveQuestions">
+          <p> Has this position been filled by a student on this platform?</p>
+          <div className="archiveOptions">
+            <button type="submit"
+              id="noarchive"
+              style={{ cursor: 'pointer' }}
+              onClick={(e) => {
+                this.notFilled();
+              }}
+            >
+              No
+            </button>
+            <button type="submit"
+              id="archive"
+              style={{ cursor: 'pointer' }}
+              onClick={(e) => {
+                this.filled();
+              }}
+            >
+              Yes
+            </button>
+          </div>
+          {this.filledRender()}
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
 
-export default withRouter(connect(null, { updatePost, updateStartup, updateStudent })(Archive));
+  render() {
+    if (!this.props.show) {
+      return null;
+    } else {
+      return (
+        <div className="archiveContainer">
+          <div className="archiveModal" id="archiveModal">
+            <i className="fas fa-times"
+              aria-label="close modal"
+              role="button"
+              tabIndex={0}
+              id="close-modal"
+              onClick={(e) => {
+                this.props.onClose(e);
+              }}
+            />
+            {this.postArchive()}
+            <div className="modalContent">
+              <p> Are you sure you want to archive this?</p>
+              <div className="archiveOptions">
+                <button type="submit"
+                  id="noarchive"
+                  style={{ cursor: 'pointer' }}
+                  onClick={(e) => {
+                    this.props.onClose(e);
+                  }}
+                >
+                  No
+                </button>
+                <button type="submit"
+                  id="archive"
+                  style={{ cursor: 'pointer' }}
+                  onClick={(e) => {
+                    this.onArchive(e);
+                  }}
+                >
+                  Yes
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+  }
+}
+
+const mapStateToProps = (reduxState) => ({
+  // submittedAll: reduxState.submittedApplications.all,
+  currentStudent: reduxState.students.current_student,
+});
+
+export default withRouter(connect(mapStateToProps, {
+  updatePost, updateStartup, updateStudent, fetchSubmittedApplications, fetchStudentByID,
+})(Archive));
