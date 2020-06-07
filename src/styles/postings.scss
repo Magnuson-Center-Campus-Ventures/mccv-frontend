@@ -210,13 +210,23 @@
     width: 100%
 }
 
-#search-bar {
-    margin-bottom: 20px;
+#searchBar {
+    margin-bottom: 2vh;
+    margin-top: 3vh;
+    display: flex;
   
     input {
-      font-size: 1.5em;
+      width: 190px;
+      font-size: 1.1em;
       border-radius: .25em;
+      font-family: Avenir Next;
     }
+}
+
+#searchButton{
+    position: absolute;
+    margin-left: 170px;
+    margin-top: 5px;
 }
 
 #filters{

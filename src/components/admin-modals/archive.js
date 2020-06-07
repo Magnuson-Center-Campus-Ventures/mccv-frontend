@@ -8,8 +8,8 @@ import CreateableSelect from 'react-select/creatable';
 import {
   updatePost, updateStartup, updateStudent, fetchSubmittedApplications, fetchStudentByID,
 } from '../../actions';
-import close from '../../../static/img/close.png';
-import '../../styles/archive-modal.scss';
+// import close from '../../../static/img/close.png';
+import '../../styles/modal.scss';
 
 class Archive extends Component {
   constructor(props) {
@@ -147,10 +147,19 @@ class Archive extends Component {
       return (
         <div className="archiveContainer">
           <div className="archiveModal" id="archiveModal">
-            <img id="close-app"
+            {/* <img id="close-app"
               src={close}
               alt="close"
               style={{ cursor: 'pointer' }}
+              onClick={(e) => {
+                this.props.onClose(e);
+              }}
+            /> */}
+            <i className="fas fa-times"
+              aria-label="close modal"
+              role="button"
+              tabIndex={0}
+              id="close-app"
               onClick={(e) => {
                 this.props.onClose(e);
               }}

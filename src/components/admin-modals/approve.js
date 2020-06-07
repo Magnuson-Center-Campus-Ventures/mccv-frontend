@@ -1,11 +1,10 @@
 /* eslint-disable array-callback-return */
-
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { updateStartup, updatePost } from '../../actions';
-import close from '../../../static/img/close.png';
-import '../../styles/archive-modal.scss';
+// import close from '../../../static/img/close.png';
+import '../../styles/modal.scss';
 
 const Approve = (props) => {
   if (!props.show) {
@@ -29,10 +28,19 @@ const Approve = (props) => {
   return (
     <div className="archiveContainer">
       <div className="archiveModal" id="archiveModal">
-        <img id="close-app"
+        {/* <img id="close-app"
           src={close}
           alt="close"
           style={{ cursor: 'pointer' }}
+          onClick={(e) => {
+            props.onClose(e);
+          }}
+        /> */}
+        <i className="fas fa-times"
+          aria-label="close modal"
+          role="button"
+          tabIndex={0}
+          id="close-app"
           onClick={(e) => {
             props.onClose(e);
           }}
