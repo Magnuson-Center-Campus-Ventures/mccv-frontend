@@ -6,80 +6,68 @@ import CreateableSelect from 'react-select/creatable';
 // import CreateableSelect from 'react-select/creatable';
 import '../../../styles/startup-add-post/add-post-industries.scss';
 import {
-  fetchPost, updatePost, fetchAllIndustries,
+  fetchPost, createIndustryForPost, updatePost, fetchAllIndustries,
 } from '../../../actions';
 
 class AddPostIndustries extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // eslint-disable-next-line react/no-unused-state
-      post: {},
       industry: '',
-      nameIndustries: [],
-      allIndustryOptions: [],
+      selectedIndustries: [],
+      displayIndustries: [],
     };
   }
 
   // Get profile info
   componentDidMount() {
-    console.log('industries did mount');
-    console.log(this.props.post.id);
-    this.props.fetchPost(this.props.post.id);
-    // this.props.fetchPost(localStorage.getItem('postID'));
     this.props.fetchAllIndustries();
+    this.props.fetchPost(this.props.post.id);
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.post !== {} && prevProps.post !== this.props.post) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ post: this.props.post });
-    }
-    if (prevProps.post.industries !== this.props.post.industries) {
-      this.props.post.industries.forEach((industryID) => {
-        const name = this.getIndustryName(industryID);
-        if (!this.state.nameIndustries.includes(name)) {
-          this.state.nameIndustries.push(name);
-        }
-      });
-    }
-    if (prevProps.post.industries !== this.props.post.industries) {
-      // Set up options for dropdown
-      const allIndustryOptions = this.props.industries.all.map((industry) => {
-        return { value: industry.name, label: industry.name, industry };
-      });
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ allIndustryOptions });
+      this.populateCurrentIndustries();
     }
   }
 
-  onIndustryChange(event) {
-    this.setState({
-      industry: event.target.value,
+  getIndustry(name) {
+    const industryObject = this.props.industries.find((industry) => {
+      return (industry.name === name);
     });
-  }
-
-  getIndustryName(id) {
-    const industryObject = this.props.industries.all.find((industry) => {
-      return (industry.id === id);
-    });
-    return industryObject.name;
+    return industryObject;
   }
 
   addIndustry = () => {
-    if (!this.state.nameIndustries.includes(this.state.industry)) {
-      this.state.nameIndustries.push(this.state.industry);
+    if (!this.props.post.industries.includes(this.getIndustry(this.state.industry))) {
+      this.props.post.industries.push(this.getIndustry(this.state.industry));
     }
+    this.state.displayIndustries = this.state.displayIndustries.filter((value) => {
+      return (value.label !== this.state.industry);
+    });
     this.state.industry = '';
     this.forceUpdate();
   }
 
   deleteIndustry = (industry) => {
-    const industries = this.state.nameIndustries.filter((value) => {
+    this.props.post.industries = this.props.post.industries.filter((value) => {
       return (value !== industry.industry);
     });
-    this.state.nameIndustries = industries;
+    this.state.displayIndustries.push({ label: industry.industry.name });
     this.forceUpdate();
+  }
+
+  populateCurrentIndustries() {
+    this.props.post.industries.forEach((value) => {
+      if (!this.state.selectedIndustries.includes(value.name)) {
+        this.state.selectedIndustries.push(value.name);
+      }
+    });
+    this.props.industries.forEach((value) => {
+      if (!this.state.selectedIndustries.includes(value.name)) {
+        this.state.displayIndustries.push({ label: value.name });
+      }
+    });
   }
 
   renderAddIndustry() {
@@ -95,14 +83,15 @@ class AddPostIndustries extends Component {
           className="select-dropdown"
           styles={customStyles}
           name="industries"
-          options={this.state.allIndustryOptions}
+          value={this.state.industry}
+          options={this.state.displayIndustries}
           onChange={(selectedOption) => {
-            this.state.industry = selectedOption.value;
+            this.state.industry = selectedOption.label;
             this.addIndustry();
           }}
           onCreateOption={(newOption) => {
             this.state.industry = newOption;
-            this.addIndustry();
+            this.props.createIndustryForPost({ name: newOption }, this.props.post);
           }}
         />
       </div>
@@ -110,25 +99,29 @@ class AddPostIndustries extends Component {
   }
 
   renderIndustries() {
-    return (
-      this.state.nameIndustries.map((industry) => {
-        return (
-          <div className="industry" key={industry}>
-            <div className="text">
-              {industry}
+    if (this.props.post?.industries) {
+      return (
+        this.props.post.industries.map((industry) => {
+          return (
+            <div className="industry" key={industry.name}>
+              {industry.name}
+              <button type="submit" className="delete-btn-post-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
+                <i className="far fa-trash-alt" id="icon" />
+              </button>
             </div>
-            <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
-              <i className="far fa-trash-alt" id="icon" />
-            </button>
-          </div>
-        );
-      })
-    );
+          );
+        })
+      );
+    } else {
+      return (
+        <div>Loading</div>
+      );
+    }
   }
 
   render() {
     // still have occasioanl rendering issue for industries.all
-    if (this.state.post.industries !== undefined && this.props.industries.all !== []) {
+    if (this.props.post.industries !== undefined && this.props.industries.all !== []) {
       return (
         <div className="AddPostIndustryContainer">
           <div className="AddPostIndustryHeaderContainer">
@@ -160,9 +153,9 @@ class AddPostIndustries extends Component {
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
   post: reduxState.posts.current,
-  industries: reduxState.industries,
+  industries: reduxState.industries.all,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPost, updatePost, fetchAllIndustries,
+  fetchPost, createIndustryForPost, updatePost, fetchAllIndustries,
 })(AddPostIndustries));

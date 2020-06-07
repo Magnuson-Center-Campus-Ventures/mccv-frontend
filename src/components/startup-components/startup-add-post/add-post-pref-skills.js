@@ -1,19 +1,18 @@
 /* eslint-disable react/no-unused-state */
-/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
+// import CreateableSelect from 'react-select/creatable';
 import '../../../styles/startup-add-post/add-post-industries.scss';
 import {
-  fetchPost, updatePost, fetchAllSkills, fetchCertainSkills, createSkillForStudent,
+  fetchPost, createSkillForPost, updatePost, fetchAllSkills,
 } from '../../../actions';
 
-class AddPostPrefSkills extends Component {
+class AddPostSkills extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      post: {},
       skill: '',
       selectedSkills: [],
       displaySkills: [],
@@ -22,17 +21,12 @@ class AddPostPrefSkills extends Component {
 
   // Get profile info
   componentDidMount() {
-    console.log('skills did mount');
-    console.log(this.props.post.id);
-    this.props.fetchPost(this.props.post.id);
-    // this.props.fetchPost(localStorage.getItem('postID'));
     this.props.fetchAllSkills();
+    this.props.fetchPost(this.props.post.id);
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.post !== {} && prevProps.post !== this.props.post) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ post: this.props.post });
       this.populateCurrentSkills();
     }
   }
@@ -69,7 +63,7 @@ class AddPostPrefSkills extends Component {
         this.state.selectedSkills.push(value.name);
       }
     });
-    this.props.post.preferred_skills.forEach((value) => {
+    this.props.skills.forEach((value) => {
       if (!this.state.selectedSkills.includes(value.name)) {
         this.state.displaySkills.push({ label: value.name });
       }
@@ -97,8 +91,7 @@ class AddPostPrefSkills extends Component {
           }}
           onCreateOption={(newOption) => {
             this.state.skill = newOption;
-            this.state.skill = newOption;
-            this.props.createSkillForStudent({ name: newOption }, this.props.post.preferred_skills);
+            this.props.createSkillForPost({ name: newOption }, this.props.post);
           }}
         />
       </div>
@@ -106,13 +99,14 @@ class AddPostPrefSkills extends Component {
   }
 
   renderSkills() {
+    // eslint-disable-next-line camelcase
     if (this.props.post?.preferred_skills) {
       return (
         this.props.post.preferred_skills.map((skill) => {
           return (
             <div className="skill" key={skill.name}>
               {skill.name}
-              <button type="submit" className="delete-btn-student-skills" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
+              <button type="submit" className="delete-btn-post-skills" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>
@@ -127,22 +121,23 @@ class AddPostPrefSkills extends Component {
   }
 
   render() {
-    if (this.state.post.preferred_skills !== undefined && this.props.skills !== []) {
+    // still have occasioanl rendering issue for skills.all
+    if (this.props.post.preferred_skills !== undefined && this.props.skills.all !== []) {
       return (
-        <div className="AddPostPrefSkillsContainer">
-          <div className="AddPostPrefSkillsHeaderContainer">
-            <h1 className="AddPostPrefSkillsHeader">
+        <div className="AddPostSkillContainer">
+          <div className="AddPostSkillHeaderContainer">
+            <h1 className="AddPostSkillHeader">
               Skills
             </h1>
           </div>
-          <div className="AddPostPrefSkillsDescContainer">
-            <p className="AddPostPrefSkillsDesc">
-              Add the skills you have!
+          <div className="AddPostSkillDescContainer">
+            <p className="AddPostSkillDesc">
+              What skills characterize your volunteer position?
             </p>
-            <i className="fas fa-brain" id="icon" />
+            <i className="fas fa-building" id="icon" />
           </div>
           <div id="skills">
-            <div className="AddPostPrefSkillsListHeader">Skills</div>
+            <div className="AddPostSkillListHeader">Skills</div>
             {this.renderAddSkill()}
             {this.renderSkills()}
           </div>
@@ -150,7 +145,7 @@ class AddPostPrefSkills extends Component {
       );
     } else {
       return (
-        <div>loading</div>
+        <div>Loading...</div>
       );
     }
   }
@@ -163,5 +158,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPost, updatePost, fetchAllSkills, fetchCertainSkills, createSkillForStudent,
-})(AddPostPrefSkills));
+  fetchPost, createSkillForPost, updatePost, fetchAllSkills,
+})(AddPostSkills));

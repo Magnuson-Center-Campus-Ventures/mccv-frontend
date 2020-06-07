@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const ROOT_URL = 'http://localhost:9090/api';
-// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+// const ROOT_URL = 'http://localhost:9090/api';
+const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -401,6 +401,23 @@ export function createIndustryForStartup(industry, startup) {
   };
 }
 
+export function createIndustryForPost(industry, post) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/industries`, industry, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
+      // Update the student with the newly created industry
+      post.industries.push(response.data);
+      axios.put(`${ROOT_URL}/posts/${post._id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_POST, payload: response2.data });
+      }).catch((error2) => {
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // skills functions
 export function fetchAllSkills() {
   return (dispatch) => {
@@ -440,6 +457,23 @@ export function createSkillForStudent(skill, student) {
       // Update the student with the newly created skill
       student.skills.push(response.data);
       axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
+      }).catch((error2) => {
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+export function createSkillForPost(skill, post) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
+      // Update the student with the newly created skill
+      post.skills.push(response.data);
+      axios.put(`${ROOT_URL}/students/${post._id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
         dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
       }).catch((error2) => {
         dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
