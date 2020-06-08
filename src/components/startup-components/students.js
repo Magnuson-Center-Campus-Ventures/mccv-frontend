@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
 import Switch from 'react-switch';
 import SearchBar from '../student-components/search-bar';
-import { fetchStudents, fetchStartupByUserID } from '../../actions';
+import { fetchStudents, fetchStartupByUserID, fetchUser } from '../../actions';
 import { fetchSkillsFromID, fetchClassesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
 import StudentListItem from './student-item';
@@ -36,6 +36,7 @@ class Students extends Component {
 
   componentDidMount() {
     this.props.fetchStudents();
+    this.props.fetchUser(localStorage.getItem('userID'));
     this.props.fetchStartupByUserID(localStorage.getItem('userID'));
   }
 
@@ -418,4 +419,4 @@ const mapStateToProps = (reduxState) => ({
   user: reduxState.user.current,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStudents, fetchStartupByUserID })(Students));
+export default withRouter(connect(mapStateToProps, { fetchStudents, fetchStartupByUserID, fetchUser })(Students));
