@@ -118,7 +118,6 @@ class NewWorkExp extends React.Component {
                   if (workExperience.end_date !== null) {
                     workExperience.end_date += '-15';
                   }
-                  console.log('here');
                   this.props.createWorkExperience(workExperience);
                   this.props.onClose();
                 }

@@ -86,14 +86,10 @@ class StudentSignUp extends Component {
           previousLabel="previous"
           nextLabel="next"
           breakLabel="..."
-          // breakClassName="break-me"
           pageCount={8}
           marginPagesDisplayed={2}
           pageRangeDisplayed={4}
           onPageChange={this.handlePageClick}
-          // containerClassName="pagination"
-          // subContainerClassName="pages pagination"
-          // activeClassName="active"
         />
         {this.renderComponent()}
         {this.renderSubmit()}

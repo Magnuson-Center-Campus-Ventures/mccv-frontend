@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  fetchPost, fetchApplication, fetchUser, clearApplication, clearPost,
+  fetchPost, updatePost, fetchApplication, fetchUser, clearApplication, clearPost,
 } from '../../actions';
 import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
@@ -26,6 +26,7 @@ class Post extends Component {
     this.hideApplyModal = this.hideApplyModal.bind(this);
     this.showArchiveModal = this.showArchiveModal.bind(this);
     this.hideArchiveModal = this.hideArchiveModal.bind(this);
+    this.approvePost = this.approvePost.bind(this);
   }
 
   componentDidMount() {
@@ -68,7 +69,6 @@ class Post extends Component {
     });
     console.log(this.state.isEditing);
   }
-
 
   requiredSkillsHelper= () => {
     const requiredSkills = [];
@@ -114,6 +114,12 @@ class Post extends Component {
     }
   }
 
+  approvePost() {
+    this.props.current.status = 'Approved';
+    this.props.updatePost(this.props.current.id, this.props.current);
+    this.forceUpdate();
+  }
+
   // eslint-disable-next-line consistent-return
   renderButtons() {
     if (this.props.user.role === 'admin') {
@@ -137,6 +143,13 @@ class Post extends Component {
             }}
           >
             Archive Position
+          </button>
+
+          <button
+            type="submit"
+            onClick={this.approvePost}
+          >
+            Approve Posting
           </button>
 
           <button id="edit-post"
@@ -208,5 +221,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPost, fetchUser, fetchApplication,
+  fetchPost, updatePost, fetchUser, fetchApplication,
 })(Post));

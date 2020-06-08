@@ -68,25 +68,31 @@ export function fetchPosts() {
     axios.get(`${ROOT_URL}/posts`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
 }
 
-export function createPost(post, history) {
+export function createPost(post, startup, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
-        history.push('/add-post');
-      })
-      .catch((error) => {
+        // Update the student with the newly created post
+        startup.posts.push(response.data);
+        axios.put(`${ROOT_URL}/startups/${startup._id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+          dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response2.data });
+        }).catch((error2) => {
+          dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+        });
+        history.push('/add-post/');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
 }
+
 // Moved to front-end implementation of search and filter, as per Thomas' advice
 
 // export function fetchPostSearch(searchterm) {
@@ -108,7 +114,6 @@ export function createPost(post, history) {
 //         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
 //       })
 //       .catch((error) => {
-//         console.log('broken');
 //       });
 //   };
 // };
@@ -118,8 +123,7 @@ export function fetchPost(id) {
     axios.get(`${ROOT_URL}/posts/${id}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -129,7 +133,7 @@ export function fetchPost(id) {
 export function updatePost(id, post) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.UPDATE_POST, payload: response.data });
+      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
@@ -148,8 +152,7 @@ export function fetchStartup(id) {
     axios.get(`${ROOT_URL}/startups/${id}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -218,8 +221,7 @@ export function fetchStudents() {
     axios.get(`${ROOT_URL}/students`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_STUDENTS, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -357,8 +359,7 @@ export function fetchAllIndustries() {
     axios.get(`${ROOT_URL}/industries`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_ALL_INDUSTRIES, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -419,14 +420,30 @@ export function createIndustryForStartup(industry, startup) {
   };
 }
 
+export function createIndustryForPost(industry, post) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/industries`, industry, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
+      // Update the student with the newly created industry
+      post.industries.push(response.data);
+      axios.put(`${ROOT_URL}/posts/${post._id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_POST, payload: response2.data });
+      }).catch((error2) => {
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // skills functions
 export function fetchAllSkills() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/skills`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_ALL_SKILLS, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -469,14 +486,30 @@ export function createSkillForStudent(skill, student) {
   };
 }
 
+export function createSkillForPost(skill, post) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
+      // Update the student with the newly created skill
+      post.skills.push(response.data);
+      axios.put(`${ROOT_URL}/students/${post._id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
+      }).catch((error2) => {
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // classes functions
 export function fetchAllClasses() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/classes`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_ALL_CLASSES, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -519,14 +552,30 @@ export function createClassForStudent(_class, student) {
   };
 }
 
+export function createClassForPost(_class, post) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/classes`, _class, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
+      // Update the student with the newly created class
+      post.classes.push(response.data);
+      axios.put(`${ROOT_URL}/posts/${post._id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_POST, payload: response2.data });
+      }).catch((error2) => {
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
 // applications functions
 export function fetchApplications() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/applications`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_APPLICATIONS, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -537,8 +586,7 @@ export function fetchApplication(id) {
     axios.get(`${ROOT_URL}/applications/${id}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_APPLICATION, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -549,8 +597,7 @@ export function submitApplication(newApplication) {
     axios.post(`${ROOT_URL}/submittedapplications`, newApplication, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.SUBMIT_APPLICATION, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -567,8 +614,7 @@ export function fetchQuestions() {
     axios.get(`${ROOT_URL}/questions`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_QUESTIONS, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -580,8 +626,7 @@ export function fetchSubmittedApplications() {
     axios.get(`${ROOT_URL}/submittedapplications`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_SUBMITTED_APPLICATIONS, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -592,8 +637,7 @@ export function fetchSubmittedApplication(id) {
     axios.get(`${ROOT_URL}/submittedapplications/${id}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_SUBMITTED_APPLICATION, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -707,7 +751,7 @@ export function signupUser({
         history.push('/student-signup');
       } else if (response.data.user.role === 'startup') {
         history.push('/startup-signup');
-      } else if (response.data.user.role === 'admin') {
+      } else if (response.data.user.role === 'admin') { // likely not to reach here as no option to determine role of admin
         history.push('/posts');
       }
     }).catch((error) => {

@@ -23,11 +23,13 @@ class StartupProfile extends Component {
       posts: [],
       approved: true,
       archived: true,
+      pending: true,
       isEditing: false,
     };
     // this.renderPostings = this.renderPostings.bind(this);
     this.handleApprovedToggle = this.handleApprovedToggle.bind(this);
     this.handleArchivedToggle = this.handleArchivedToggle.bind(this);
+    this.handlePendingToggle = this.handlePendingToggle.bind(this);
   }
 
   componentDidMount() {
@@ -95,7 +97,6 @@ class StartupProfile extends Component {
   }
 
   addPosting = () => {
-    console.log('in addPosting');
     const newPost = {
       startup_id: this.props.startup._id,
       title: '',
@@ -109,7 +110,7 @@ class StartupProfile extends Component {
       desired_end_date: '',
       desired_classes: [],
       available_until: '',
-      status: '',
+      status: 'Pending',
       applicants: [],
       application_id: '',
       students_selected: [],
@@ -117,20 +118,23 @@ class StartupProfile extends Component {
       state: '',
       remote: false,
     };
-    console.log(newPost);
-    this.props.createPost(newPost, this.props.history);
+    this.props.createPost(newPost, this.props.startup, this.props.history);
   }
 
   handleApprovedToggle(checked) {
-    console.log(checked);
     this.state.approved = checked;
     this.populateCurrentPosts();
     this.forceUpdate();
   }
 
   handleArchivedToggle(checked) {
-    console.log(checked);
     this.state.archived = checked;
+    this.populateCurrentPosts();
+    this.forceUpdate();
+  }
+
+  handlePendingToggle(checked) {
+    this.state.pending = checked;
     this.populateCurrentPosts();
     this.forceUpdate();
   }
@@ -150,13 +154,16 @@ class StartupProfile extends Component {
 
   populateCurrentPosts() {
     this.state.posts = this.props.startup.posts.filter((value) => {
-      console.log(value.status);
-      if (this.state.approved === this.state.archived) {
-        return (value.status === 'Approved' || value.status === 'Archived');
-      } else if (this.state.approved) {
-        return (value.status === 'Approved');
+      if (this.state.approved === this.state.archived && this.state.approved === this.state.pending) {
+        return (value.status === 'Approved' || value.status === 'Archived' || value.status === 'Pending');
+      } else if (value.status === 'Archived') {
+        return (this.state.archived);
+      } else if (value.status === 'Pending') {
+        return (this.state.pending);
+      } else if (value.status === 'Approved') {
+        return (this.state.approved);
       } else {
-        return (value.status === 'Archived');
+        return false;
       }
     });
   }
@@ -274,7 +281,6 @@ class StartupProfile extends Component {
   // eslint-disable-next-line consistent-return
   renderDescription = (post) => {
     if (post.description !== undefined) {
-      // console.log(post.description);
       if (post.description.length > 100) {
         const description = `${post.description.substring(0, 99)}...`;
         return (
@@ -290,11 +296,19 @@ class StartupProfile extends Component {
 
   renderToggles() {
     return (
-      <div id="filters">
-        <span className="startup-postings-h1">Show Active:</span>
-        <Switch id="approveToggle" handleDiameter={0} onChange={this.handleApprovedToggle} checked={this.state.approved} />
-        <span className="startup-postings-h1">Show Archived:</span>
-        <Switch id="archiveToggle" handleDiameter={0} onChange={this.handleArchivedToggle} checked={this.state.archived} />
+      <div className="startup-filters">
+        <div className="startup-toggles">
+          <span className="startup-postings-h1">Approved:</span>
+          <Switch id="approveToggle" handleDiameter={0} onChange={this.handleApprovedToggle} checked={this.state.approved} />
+        </div>
+        <div className="startup-toggles">
+          <span className="startup-postings-h1">Pending:</span>
+          <Switch id="pendingToggle" handleDiameter={0} onChange={this.handlePendingToggle} checked={this.state.pending} />
+        </div>
+        <div className="startup-toggles">
+          <span className="startup-postings-h1">Archived:</span>
+          <Switch id="archiveToggle" handleDiameter={0} onChange={this.handleArchivedToggle} checked={this.state.archived} />
+        </div>
       </div>
     );
   }
