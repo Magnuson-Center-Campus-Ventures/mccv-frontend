@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  fetchPost, fetchApplication, fetchUser,
+  fetchPost, fetchApplication, fetchUser, clearApplication, clearPost,
 } from '../../actions';
 import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
@@ -164,20 +164,23 @@ class Post extends Component {
   render() {
     if (this.props.current?.startup_id) {
       return (
-        <div>
+        <div id="wrap-content">
           <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
+          {(this.state.applyShow) && (
+            <div id="confirmation-background" />
+          )}
           <Archive post={this.props.current} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
           <h1 id="title">{this.props.current.title}</h1>
           <div className="bar">
             <img src={this.props.current.startup_id.logo} alt="no logo" />
             <h2 id="name">{this.props.current.startup_id.name}</h2>
             <img src={pin} alt="location" />
-            <h2 id="name">{`${this.props.current.city}, ${this.props.current.state}`}</h2>
+            <h2 id="state">{`${this.props.current.city}, ${this.props.current.state}`}</h2>
           </div>
           <div className="top">
             <div id="project">
-              <h2>Project Description</h2>
-              <h3 id="post-description">{this.props.current.description}</h3>
+              <h3>Project Description</h3>
+              <h2 id="post-description">{this.props.current.description}</h2>
             </div>
             <div id="skills-section">
               <h2>Required Skills</h2>
@@ -187,7 +190,7 @@ class Post extends Component {
             </div>
           </div>
           <div className="bottom">
-            <h2>Responsibilities</h2>
+            <h3>Responsibilities</h3>
             <ul id="skills">{this.responsibilitiesHelper()}</ul>
           </div>
           {this.renderButtons()}
