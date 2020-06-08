@@ -1,89 +1,160 @@
+/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import TextareaAutosize from 'react-textarea-autosize';
-import '../../../styles/startup-add-post/add-post-description.scss';
+import CreateableSelect from 'react-select/creatable';
+import '../../../styles/startup-add-post/add-post-industries.scss';
 import {
-  fetchPost, updatePost,
+  fetchPost, createClassForPost, updatePost, fetchAllClasses,
 } from '../../../actions';
 
-class AddPostDesiredClasses extends Component {
+class AddPostClasses extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      post: {},
+      class: '',
+      selectedClasses: [],
+      displayClasses: [],
     };
   }
 
   // Get profile info
   componentDidMount() {
-    this.props.fetchPost(this.props.postID);
+    this.props.fetchAllClasses();
+    this.props.fetchPost(this.props.post.id);
   }
 
-  // update post field
-  changePostField = (field, event) => {
-    // eslint-disable-next-line prefer-destructuring
-    const value = event.target.value;
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.post !== {} && prevProps.post !== this.props.post) {
+      this.populateCurrentClasses();
+    }
+  }
 
-    this.setState((prevState) => {
-      const post = { ...prevState.post };
-      post[field] = value;
-      this.props.updatePost(this.props.post.id, post);
-      return {
-        ...prevState,
-        post,
-      };
+  getClass(name) {
+    const classObject = this.props.classes.find((_class) => {
+      return (_class.name === name);
+    });
+    return classObject;
+  }
+
+  addClass = () => {
+    if (!this.props.post.desired_classes.includes(this.getClass(this.state.class))) {
+      this.props.post.desired_classes.push(this.getClass(this.state.class));
+    }
+    this.state.displayClasses = this.state.displayClasses.filter((value) => {
+      return (value.label !== this.state.class);
+    });
+    this.state.class = '';
+    this.forceUpdate();
+  }
+
+  deleteClass = (_class) => {
+    this.props.post.desired_classes = this.props.post.desired_classes.filter((value) => {
+      return (value !== _class._class);
+    });
+    this.state.displayClasses.push({ label: _class._class.name });
+    this.forceUpdate();
+  }
+
+  populateCurrentClasses() {
+    this.props.post.desired_classes.forEach((value) => {
+      if (!this.state.selectedClasses.includes(value.name)) {
+        this.state.selectedClasses.push(value.name);
+      }
+    });
+    this.props.classes.forEach((value) => {
+      if (!this.state.selectedClasses.includes(value.name)) {
+        this.state.displayClasses.push({ label: value.name });
+      }
     });
   }
 
-  // Send update to database
-  onSubmit = (e) => {
-    this.props.updatePost(this.props.post.id, this.state.post);
-  };
+  renderAddClass() {
+    const customStyles = {
+      control: (base) => ({
+        ...base,
+        width: 200,
+      }),
+    };
+    return (
+      <div className="add-classes">
+        <CreateableSelect
+          className="select-dropdown"
+          styles={customStyles}
+          name="classes"
+          value={this.state.class}
+          options={this.state.displayClasses}
+          onChange={(selectedOption) => {
+            this.state.class = selectedOption.label;
+            this.addClass();
+          }}
+          onCreateOption={(newOption) => {
+            this.state.class = newOption;
+            this.props.createClassForPost({ name: newOption }, this.props.post);
+          }}
+        />
+      </div>
+    );
+  }
 
-
-  renderDescQuestions() {
-    if (this.props.post) {
+  renderClasses() {
+    // eslint-disable-next-line camelcase
+    if (this.props.post?.desired_classes) {
       return (
-        <div className="PostDescContainer">
-          <div className="PostDescHeaderContainer">
-            <h1 className="PostDescHeader">
-              About
-            </h1>
-          </div>
-          <div className="PostDescDescContainer">
-            <p className="PostDescDesc">
-              Tell us more about the volunteer position
-            </p>
-            <i className="far fa-id-badge" id="icon" />
-          </div>
-          <div className="PostDescQuestionsContainer">
-            <div className="PostDescNameContainer">
-              <div className="PostDescQuestionLabelContainer">
-                <p className="PostDescLabel">
-                  Description
-                </p>
-                <TextareaAutosize onChange={(event) => this.changePostField('description', event)} defaultValue={this.props.post.description} />
-              </div>
+        this.props.post.desired_classes.map((_class) => {
+          return (
+            <div className="class" key={_class.name}>
+              {_class.name}
+              <button type="submit" className="delete-btn-post-classes" style={{ cursor: 'pointer' }} onClick={() => { this.deleteClass({ _class }); }}>
+                <i className="far fa-trash-alt" id="icon" />
+              </button>
             </div>
-          </div>
-        </div>
+          );
+        })
       );
     } else {
-      return (<div>Loading...</div>);
+      return (
+        <div>Loading</div>
+      );
     }
   }
 
   render() {
-    return this.renderDescQuestions();
+    if (this.props.post.desired_classes !== undefined && this.props.classes !== []) {
+      return (
+        <div className="AddPostClassContainer">
+          <div className="AddPostClassHeaderContainer">
+            <h1 className="AddPostClassHeader">
+              Classes
+            </h1>
+          </div>
+          <div className="AddPostClassDescContainer">
+            <p className="AddPostClassDesc">
+              What classes characterize your volunteer position?
+            </p>
+            <i className="fas fa-building" id="icon" />
+          </div>
+          <div id="classes">
+            <div className="AddPostClassListHeader">Classes</div>
+            {this.renderAddClass()}
+            {this.renderClasses()}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div>Loading...</div>
+      );
+    }
   }
 }
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.auth.userID,
   post: reduxState.posts.current,
+  classes: reduxState.classes.all,
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPost, updatePost,
-})(AddPostDesiredClasses));
+  fetchPost, createClassForPost, updatePost, fetchAllClasses,
+})(AddPostClasses));

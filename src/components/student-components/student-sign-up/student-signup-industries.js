@@ -134,7 +134,7 @@ class StudentIndustries extends Component {
           </div>
           <div className="StudentIndustryDescContainer">
             <p className="StudentIndustryDesc">
-              Add the industries you have!
+              Add the industries you have an interest in!
             </p>
             <i className="fas fa-brain" id="icon" />
           </div>

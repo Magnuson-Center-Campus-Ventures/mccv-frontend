@@ -17,7 +17,7 @@ class AddPostTitleLocation extends Component {
 
   // Get profile info
   componentDidMount() {
-    this.props.fetchPost(this.props.postID);
+    this.props.fetchPost(this.props.post.id);
   }
 
   // update post field
@@ -35,12 +35,6 @@ class AddPostTitleLocation extends Component {
       };
     });
   }
-
-  // Send update to database
-  onSubmit = (e) => {
-    this.props.updatePost(this.props.post.id, this.state.post);
-  };
-
 
   renderTitleQuestions() {
     if (this.props.post) {
