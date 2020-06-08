@@ -1,15 +1,17 @@
 body, html {
     font-family: Avenir Next;
     font-style: normal;
-    height: 100%;
-    padding: 0;
+    min-height: 100%;
     margin: 0;
+    margin-bottom: 4rem;
+    padding: 0;
 }
+
 #nav-bar{
     background: #2D7D61;
     margin:0;
     padding: 0;
-    height: 3.5em;
+    height: 4rem;
     align-items: center;
     width: 100%;
     display: flex;
@@ -22,7 +24,6 @@ a:link {
 }
 
 #nav-bar li{
-    //padding-right: 4vw;
     padding-right: 2em;
     padding-left: 2em;
     list-style: none;
@@ -41,7 +42,6 @@ a:link {
 }
 
 #navbar li:first-child {
-  // margin-right: auto;
   flex-grow: 1;
 }
 
