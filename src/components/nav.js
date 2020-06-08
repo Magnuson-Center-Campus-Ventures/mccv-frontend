@@ -3,7 +3,8 @@
 import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { signoutUser, fetchUser } from '../actions';
+import { signoutUser, fetchUser, fetchStudentByID } from '../actions';
+import '../styles/nav.scss';
 
 class Nav extends Component {
   _isMounted = false;
@@ -20,6 +21,9 @@ class Nav extends Component {
     if (localStorage.getItem('userID')) {
       this.props.fetchUser(localStorage.getItem('userID'));
     }
+    if (this.state.usertype === 'student') {
+      this.props.fetchStudentByID(this.props.user.student_profile_id);
+    }
     this._isMounted = true;
   }
 
@@ -29,8 +33,43 @@ class Nav extends Component {
   }
 
 
-  usertypeRender() {
-    if (this.props.user.role === 'student') { // if logged in user is a student
+  // eslint-disable-next-line consistent-return
+  navRender() {
+    if (this.props.authenticated && this.props.user.role === 'admin') { // if logged in user is an admin
+      return (
+        <ul id="nav-bar">
+          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
+          <li><NavLink to="/posts">Positions</NavLink></li>
+          <li><NavLink to="/startups">Startups</NavLink></li>
+          <li><NavLink to="/students">Students</NavLink></li>
+          <li>
+            <button type="button" className="navNameBtn">
+              <span className="navNameCta">Admin</span>
+            </button>
+          </li>
+          <div className="userDropdown">
+            <div className="dropdownOptions">
+              <NavLink to="/profile">My Profile</NavLink>
+              <button type="button" className="navLogoutBtn" onClick={this.signout}>
+                <span className="navLogoutCta">Logout</span>
+              </button>
+            </div>
+          </div>
+        </ul>
+      );
+    } else if (this.props.authenticated && this.props.user.role === 'startup') { // if logged in user is a startup
+      return (
+        <ul id="nav-bar">
+          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
+          <li><NavLink to="/students">Students</NavLink></li>
+          <li><NavLink to="/startupsubmittedapplications">Applications</NavLink></li>
+          <li><NavLink to="/startupprofile">My Profile</NavLink></li>
+          <button type="button" className="navLogoutBtn" onClick={this.signout}>
+            <span className="navLogoutCta">Logout</span>
+          </button>
+        </ul>
+      );
+    } else if (this.props.authenticated && this.props.user.role === 'student') { // if logged in user is a student
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
@@ -38,68 +77,21 @@ class Nav extends Component {
           <li><NavLink to="/startups">Startups</NavLink></li>
           <li><NavLink to="/applications">Applications</NavLink></li>
           <li>
-            <div className="userDropdown">
-              <button type="button" className="navNameBtn">
-                <span className="navNameCta">Name</span>
-              </button>
-              <div className="dropdownOptions">
-                <NavLink to="/profile">Profile</NavLink>
-                <button type="button" className="signoutBtn" onClick={this.signout}>
-                  <span className="signoutCta">Logout</span>
-                </button>
-              </div>
-            </div>
+            <button type="button" className="navNameBtn">
+              <span className="navNameCta">{this.props.student.first_name}</span>
+            </button>
           </li>
+          <div className="userDropdown">
+            <div className="dropdownOptions">
+              <NavLink to="/profile">My Profile</NavLink>
+              <button type="button" className="navLogoutBtn" onClick={this.signout}>
+                <span className="navLogoutCta">Logout</span>
+              </button>
+            </div>
+          </div>
         </ul>
       );
-    } else if (this.props.user.role === 'startup') { // if logged in user is a startup
-      // console.log('here ');
-      return (
-        <ul id="nav-bar">
-          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/students">Students</NavLink></li>
-          <li><NavLink to="/startupsubmittedapplications">Applications</NavLink></li>
-          <li>
-            <div className="userDropdown">
-              <button type="button" className="navNameBtn">
-                <span className="navNameCta">Name</span>
-              </button>
-              <div className="dropdownOptions">
-                <NavLink to="/startupprofile">Profile</NavLink>
-                <button type="button" className="signoutBtn" onClick={this.signout}>
-                  <span className="signoutCta">Logout</span>
-                </button>
-              </div>
-            </div>
-          </li>
-        </ul>
-      );
-    } else { // if logged in user is an admin
-      return (
-        <ul id="nav-bar">
-          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/posts">Positions</NavLink></li>
-          <li><NavLink to="/startups">Startups</NavLink></li>
-          <li><NavLink to="/students">Students</NavLink></li>
-          <li>
-            <div className="userDropdown">
-              <button type="button" className="navNameBtn">
-                <span className="navNameCta">Name</span>
-              </button>
-              <div className="dropdownOptions">
-                <button type="button" className="signoutBtn" onClick={this.signout}>
-                  <span className="signoutCta">Logout</span>
-                </button>
-              </div>
-            </div>
-          </li>
-        </ul>
-      );
-    }
-  }
-
-  authRender() {
-    if (!this.props.authenticated) { // if not signed in
+    } else { // if not signed in
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
@@ -114,15 +106,13 @@ class Nav extends Component {
           </li>
         </ul>
       );
-    } else { // if signed in
-      return this.usertypeRender();
     }
   }
 
   render() {
     return this._isMounted ? (
       <nav>
-        {this.authRender()}
+        {this.navRender()}
       </nav>
     )
       : (<nav />);
@@ -132,7 +122,8 @@ class Nav extends Component {
 const mapStateToProps = (reduxState) => ({
   user: reduxState.user.current,
   authenticated: reduxState.user.authenticated,
+  student: reduxState.students.current_student,
 });
 
 
-export default withRouter(connect(mapStateToProps, { signoutUser, fetchUser })(Nav));
+export default withRouter(connect(mapStateToProps, { signoutUser, fetchUser, fetchStudentByID })(Nav));

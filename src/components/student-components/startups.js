@@ -205,7 +205,7 @@ class Startups extends Component {
         });
       } else {
         return (
-          <div> Sorry, no postings match that query</div>
+          <div> Sorry, no positions match that query</div>
         );
       }
     } else if (this.state.archive) {

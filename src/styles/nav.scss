@@ -10,7 +10,6 @@ body, html {
     margin:0;
     padding: 0;
     height: 3.5em;
-    align-items: center;
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -45,7 +44,7 @@ a:link {
   flex-grow: 1;
 }
 
-.navLoginBtn {
+.navLoginBtn, .navLogoutBtn{
   background-color: #EFEFF0;
   color: black;
   border: 0px solid #C2C8CB; // 3px on white
@@ -60,6 +59,14 @@ a:link {
   font-family: Avenir Next;
 }
 
-.navLoginBtn:hover {
+.navLoginBtn:hover, .navLogoutBtn:hover{
   background-color: #C2C8CB;
+}
+
+.dropdownOptions {
+  // visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
