@@ -22,7 +22,7 @@ class StudentRoute extends Component {
   routeCallback = (e) => {
     return (
       <Route {...this.props}
-        render={(routeProps) => (this.props.authenticated && this.props.role === 'startup' ? (<Route {...routeProps} />) : (<Redirect to="/startupslanding" />))}
+        render={(routeProps) => (this.props.authenticated && (this.props.role === 'student' || this.props.role === 'admin') ? (<Route {...routeProps} />) : (<Redirect to="/startupslanding" />))}
       />
     );
   }

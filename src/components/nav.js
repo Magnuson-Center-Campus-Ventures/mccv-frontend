@@ -7,11 +7,10 @@ import { signoutUser, fetchUser, fetchStudentByID } from '../actions';
 import '../styles/nav.scss';
 
 class Nav extends Component {
-  _isMounted = false;
-
   constructor(props) {
     super(props);
     this.state = {
+      isMounted: false,
     };
   }
 
@@ -19,10 +18,10 @@ class Nav extends Component {
     if (localStorage.getItem('userID')) {
       this.props.fetchUser(localStorage.getItem('userID'));
     }
-    /* if (this.props.role === 'student') {
+    if (this.props.role === 'student') {
       this.props.fetchStudentByID(this.props.user.student_profile_id);
-    } */
-    this._isMounted = true;
+    }
+    this.setState({ isMounted: true });
   }
 
   signout = (event) => {
@@ -33,7 +32,22 @@ class Nav extends Component {
 
   // eslint-disable-next-line consistent-return
   navRender() {
-    if (this.props.authenticated && this.props.role === 'admin') { // if logged in user is an admin
+    if (!this.props.authenticated) { // if not signed in
+      return (
+        <ul id="nav-bar">
+          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
+          <li><NavLink to="/">Students</NavLink></li>
+          <li><NavLink to="/startupslanding">Startups</NavLink></li>
+          <li>
+            <NavLink to="/signin">
+              <button type="button" className="navLoginBtn">
+                <span className="navLoginCta">Login</span>
+              </button>
+            </NavLink>
+          </li>
+        </ul>
+      );
+    } else if (this.props.authenticated && this.props.role === 'admin') { // if logged in user is an admin
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
@@ -89,26 +103,11 @@ class Nav extends Component {
           </div>
         </ul>
       );
-    } else { // if not signed in
-      return (
-        <ul id="nav-bar">
-          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/">Students</NavLink></li>
-          <li><NavLink to="/startupslanding">Startups</NavLink></li>
-          <li>
-            <NavLink to="/signin">
-              <button type="button" className="navLoginBtn">
-                <span className="navLoginCta">Login</span>
-              </button>
-            </NavLink>
-          </li>
-        </ul>
-      );
     }
   }
 
   render() {
-    return this._isMounted ? (
+    return this.state.isMounted ? (
       <nav>
         {this.navRender()}
       </nav>

@@ -22,7 +22,7 @@ class StartupRoute extends Component {
   routeCallback = (e) => {
     return (
       <Route {...this.props}
-        render={(routeProps) => (this.props.authenticated && this.props.role !== 'student' ? (<Route {...routeProps} />) : (<Redirect to="/" />))}
+        render={(routeProps) => (this.props.authenticated && (this.props.role === 'startup' || this.props.role === 'admin') ? (<Route {...routeProps} />) : (<Redirect to="/" />))}
       />
     );
   }
