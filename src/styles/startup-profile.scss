@@ -1,13 +1,13 @@
 .startup {
   display: flex;
   flex-direction: row;
+  height: 100%;
 }
 
 .startup-postings {
   width: 45vw;
   justify-content: center;
   background-color: #EDEDED;
-  height: 100vh;
 }
 
 .startup-postings > h1{
@@ -114,7 +114,7 @@
 
 .startup-description{
   text-align: left;
-  margin-bottom: 10vh;
+  margin-bottom: 5vh;
 }
 
 .startup-description > p{
@@ -139,6 +139,11 @@ br{
   height: 2em;
   margin-left: 1em;
   font-family: Avenir Next;
+}
+
+.startup-add-posting-btn > i{
+  margin: 0;
+  padding: 0;
 }
 
 .startup-add-posting-btn:hover {
