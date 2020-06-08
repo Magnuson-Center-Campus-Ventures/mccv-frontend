@@ -19,7 +19,7 @@ const UserReducer = (state = initialState, action) => {
         authenticated: true,
         error: '',
       };
-    case ActionTypes.LOGOUT_USER:
+    /* case ActionTypes.LOGOUT_USER:
       return {
         ...state,
         current: {},
@@ -27,7 +27,7 @@ const UserReducer = (state = initialState, action) => {
         userID: '',
         authenticated: false,
         error: '',
-      };
+      }; */
     case ActionTypes.AUTH_ERROR:
       return {
         ...state,

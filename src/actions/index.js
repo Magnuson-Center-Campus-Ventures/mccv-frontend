@@ -739,14 +739,6 @@ export function fetchUser(id) {
   };
 }
 
-export function clearUserState() {
-  // console.log('clear called');
-  return (dispatch) => {
-    dispatch({ type: ActionTypes.LOGOUT_USER });
-  };
-}
-
-
 export function updateUser(id, user) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/users/${id}`, user, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {

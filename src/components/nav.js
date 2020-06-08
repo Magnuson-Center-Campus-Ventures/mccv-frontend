@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { signoutUser, clearUserState, fetchUser } from '../actions';
+import { signoutUser, fetchUser } from '../actions';
 
 class Nav extends Component {
   _isMounted = false;
@@ -26,7 +26,6 @@ class Nav extends Component {
   signout = (event) => {
     localStorage.clear();
     this.props.signoutUser(this.props.history);
-    this.props.clearUserState();
   }
 
 
@@ -136,4 +135,4 @@ const mapStateToProps = (reduxState) => ({
 });
 
 
-export default withRouter(connect(mapStateToProps, { signoutUser, clearUserState, fetchUser })(Nav));
+export default withRouter(connect(mapStateToProps, { signoutUser, fetchUser })(Nav));
