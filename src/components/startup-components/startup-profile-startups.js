@@ -168,8 +168,8 @@ class StartupProfile extends Component {
     };
     if (this.state.isEditing === true) {
       return (
-        <div className="add-industries">
-          Add Industries:
+        <div className="startup-header">
+          <p>Add Industries:</p>
           <CreateableSelect
             className="select-dropdown"
             styles={customStyles}
@@ -189,7 +189,7 @@ class StartupProfile extends Component {
       );
     } else {
       return (
-        'Industries:'
+        <div className="startup-header">Industries:</div>
       );
     }
   }
@@ -200,7 +200,7 @@ class StartupProfile extends Component {
         return (
           this.props.startup.industries.map((industry) => {
             return (
-              <div className="industry" key={industry.name}>
+              <div className="startup-industry" key={industry.name}>
                 {industry.name}
                 <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
                   <i className="far fa-trash-alt" id="icon" />
@@ -213,7 +213,7 @@ class StartupProfile extends Component {
         return (
           this.props.startup.industries.map((industry) => {
             return (
-              <div className="industry" key={industry.name}>{industry.name}</div>
+              <div className="startup-industry" key={industry.name}>{industry.name}</div>
             );
           })
         );
@@ -230,32 +230,33 @@ class StartupProfile extends Component {
       if (this.state.isEditing === false) {
         return (
           <div className="startup-body">
-            <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
-            <div className="startup-location">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
-            <div className="startup-industries">{this.renderAddIndustry()}{this.renderIndustries()}</div>
-            <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
+            <h1 className="startup-header">{`${this.props.startup.name}`}</h1>
+            <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
+            {this.renderAddIndustry()}
+            <div className="startup-industries">{this.renderIndustries()}</div>
+            <div className="startup-description">
+              <p>About {`${this.props.startup.name}`}:</p>
+              <div className="startup-description">{`${this.props.startup.description}`}</div>
+            </div>
           </div>
         );
       } else {
         return (
-          <div className="nameContainer">
-            <div className="StartupBioQuestionLabelContainer">
-              <p className="StartupBioLabel">
-                Name
-              </p>
+          <div className="startup-body">
+            <div className="startup-header">
+              <p>Name</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
-              <p className="StartupBioLabel">
-                City
-              </p>
+            </div>
+            <div className="startup-location startup-header">
+              <p>City</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
-              <p className="StartupBioLabel">
-                State
-              </p>
+              <p>State</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
-              <div className="startup-industries">{this.renderAddIndustry()}{this.renderIndustries()}</div>
-              <p className="StartupDescLabel">
-                Description
-              </p>
+            </div>
+            {this.renderAddIndustry()}
+            <div className="startup-industries">{this.renderIndustries()}</div>
+            <div className="startup-description">
+              <p>Description</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
             </div>
           </div>
@@ -339,7 +340,7 @@ class StartupProfile extends Component {
       return (
         <div className="startup-postings">
           <div className="startup-add-posting-box">
-            <span className="startup-postings-h1">Volunteer Positions:</span>
+            <h1>Volunteer Positions:</h1>
             <button type="button"
               className="startup-add-posting-btn"
               onClick={() => {
