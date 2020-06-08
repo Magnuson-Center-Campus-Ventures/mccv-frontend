@@ -87,10 +87,6 @@ class Students extends Component {
       && (prevProps.students !== this.props.students || prevProps.startup !== this.props.startup)) {
       // Score students
       this.scoreStudents();
-      // // Load in approved students
-      // if (prevProps.students !== this.props.students) {
-      //   this.loadStudents();
-      // }
     }
   }
 
@@ -107,58 +103,88 @@ class Students extends Component {
       }
       if (this.props.startup.posts) {
         this.props.startup.posts.forEach((post) => {
-          const reqSkillsProm = new Promise((resolve, reject) => {
-            fetchSkillsFromID(post.required_skills, (result) => {
-              if (result) resolve(result);
-              else reject(Error('Error'));
+          // Wrap datastore requests in promises,
+          // then when they all resolve (all the necessary arrays are populated),
+          // use those arrays to score the students
+          this.reqSkillsProm = () => {
+            return new Promise((resolve, reject) => {
+              fetchSkillsFromID(post.required_skills, (skillArray) => {
+                if (skillArray) {
+                  skillArray.forEach((skill) => {
+                    postsReqSkills.push(skill.name);
+                  });
+                  resolve(skillArray);
+                } else {
+                  reject(Error('Error'));
+                }
+              });
             });
-          });
-          Promise.all([reqSkillsProm]).then((result) => console.log(result));
-          // fetchSkillsFromID(post.required_skills, (skill) => {
-          //   postsReqSkills.push(skill.name.toLowerCase());
-          // });
-          // post.required_skills.forEach((skill) => {
-          //   postsReqSkills.push(skill);
-          // });
-          fetchSkillsFromID(post.preferred_skills, (skill) => { postsPrefSkills.push(skill.name.toLowerCase()); });
-          // post.preferred_skills.forEach((skill) => {
-          //   postsPrefSkills.push(skill);
-          // });
-          fetchClassesFromID(post.desired_classes, (_class) => { postsClasses.push(_class.name.toLowerCase()); });
-          // post.desired_classes.forEach((_class) => {
-          //   postsClasses.push(_class);
-          // });
+          };
+          this.prefSkillsProm = () => {
+            return new Promise((resolve, reject) => {
+              fetchSkillsFromID(post.preferred_skills, (skillArray) => {
+                if (skillArray) {
+                  skillArray.forEach((skill) => {
+                    postsPrefSkills.push(skill.name);
+                  });
+                  resolve(skillArray);
+                } else {
+                  reject(Error('Error'));
+                }
+              });
+            });
+          };
+          this.classesProm = () => {
+            return new Promise((resolve, reject) => {
+              fetchClassesFromID(post.desired_classes, (classArray) => {
+                if (classArray) {
+                  classArray.forEach((_class) => {
+                    postsClasses.push(_class.name);
+                  });
+                  resolve(classArray);
+                } else {
+                  reject(Error('Error'));
+                }
+              });
+            });
+          };
         });
+        // Score each student by the number of common elements between the student's and startup's industry arrays
+        Promise.all([this.reqSkillsProm(), this.prefSkillsProm(), this.classesProm()])
+          .then((result) => {
+            this.calculateScores(startupIndustries, postsReqSkills, postsPrefSkills, postsClasses);
+          });
+      } else {
+        this.calculateScores(startupIndustries, postsReqSkills, postsPrefSkills, postsClasses);
       }
-      // console.log(postsReqSkills);
-      // console.log(postsPrefSkills);
-      // console.log(postsClasses);
-      // Score each student by the number of common elements between the student's and startup's industry arrays
-      const studentScores = {};
-      this.state.live.forEach((student) => {
-        const numMatches = student.interested_industries.filter((industry) => startupIndustries.includes(industry.name)).length
+    }
+  }
+
+  calculateScores = (startupIndustries, postsReqSkills, postsPrefSkills, postsClasses) => {
+    const studentScores = {};
+    this.state.live.forEach((student) => {
+      const numMatches = student.interested_industries.filter((industry) => startupIndustries.includes(industry.name)).length
           + student.skills.filter((skill) => postsReqSkills.includes(skill.name)).length
           // Preferred skills get half the weight of required skills
           + 0.5 * (student.skills.filter((skill) => postsPrefSkills.includes(skill.name)).length)
           + student.relevant_classes.filter((_class) => postsClasses.includes(_class.name)).length;
-        studentScores[student._id] = numMatches;
-      });
+      studentScores[student._id] = numMatches;
+    });
 
-      // Sort the posts in descending order of score
-      this.setState((prevState) => {
-        const tempStudents = [...prevState.live];
-        tempStudents.sort((student1, student2) => {
-          return studentScores[student2._id] - studentScores[student1._id];
-        });
-        tempStudents.forEach((student) => {
-          console.log(student.first_name, studentScores[student._id]);
-        });
-        return {
-          ...prevState,
-          sortedStudents: tempStudents.slice(0, 1),
-        };
+    // Sort the posts in descending order of score
+    this.setState((prevState) => {
+      const tempStudents = [...prevState.live];
+      tempStudents.sort((student1, student2) => {
+        return studentScores[student2._id] - studentScores[student1._id];
       });
-    }
+      tempStudents.forEach((student) => {
+        console.log(student.first_name, studentScores[student._id]);
+      });
+      return {
+        ...prevState,
+        sortedStudents: tempStudents.slice(0, 1),
+      };
+    });
   }
 
   searchAndFilter = (text, selectedInds, selectedSkills, recommend) => {
@@ -222,18 +248,6 @@ class Students extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
   }
 
-  // implemented with toggle, so content of the function has been moved to onRecommendedChange
-  // onRecommendPress = () => {
-  //   const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-  //     ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-  //     : ['emptytext'];
-  //   const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-  //     ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-  //     : ['emptytext'];
-  //   this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
-  //   this.setState((prevState) => ({ recommend: !prevState.recommend }));
-  // }
-
   clear = () => {
     this.setState({ search: false, searchterm: 'emptytext' });
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
@@ -244,17 +258,6 @@ class Students extends Component {
       : ['emptytext'];
     this.searchAndFilter('emptytext', industries, skills, this.state.recommend);
   }
-
-  // Now doing this in getDerivedStateFromProps to have live students accessible in scoreStudents
-  // loadStudents() {
-  //   this.props.students.forEach((student) => {
-  //     if (student.status === 'Approved') {
-  //       this.setState((prevState) => ({
-  //         live: [...prevState.live, student],
-  //       }));
-  //     }
-  //   });
-  // }
 
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
@@ -319,10 +322,6 @@ class Students extends Component {
   renderRecButton() {
     if (this.props.user.role === 'startup') {
       return (
-        // <button type="button"
-        //   onClick={this.onRecommendPress}
-        // >{this.state.recommend ? 'Show All Students' : 'Show Recommended Students'}
-        // </button>
         <div id="filters">
           <h3>Show Recommended Students: </h3>
           <div id="archiveToggle">
