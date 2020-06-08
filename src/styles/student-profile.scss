@@ -59,10 +59,12 @@
   margin-top: 30px;
 }
 .exps-edit {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-left: -5vw;
+  text-align: center;
+  margin-top: 30px;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: flex-start;
+  // margin-left: -5vw;
 }
 .work-exp {
   display: flex;
@@ -112,15 +114,10 @@
 }
 
 #student-profile-edit {
-  margin-left: 2vw;
+  text-align: center;
   margin-top: 20px;
 }
-#student-edit-info {
-  margin-left: 2vw;
-}
-#student-edit-majmin {
-  margin-left: 2vw;
-}
+
 .majmin-header {
   display: flex;
   flex-direction: row;
@@ -163,7 +160,7 @@
   flex-direction: row;
   align-items: center;
   margin-bottom: 5px;
-  margin-left: 7vw;
+  justify-content: center;
 }
 .new-work-exp-container{
   width: 100%;
