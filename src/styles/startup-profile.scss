@@ -8,6 +8,8 @@
   width: 45vw;
   justify-content: center;
   background-color: #EDEDED;
+  overflow-y: auto;
+  margin-bottom: 5vh;
 }
 
 .startup-postings > h1{
@@ -92,6 +94,8 @@
   padding-right: 10vw;
   width: 70vw;
   text-align: center;
+  overflow-y: auto;
+  margin-bottom: 5vh;
 }
 
 .startup-location{
