@@ -13,10 +13,10 @@ const PrivateRoute = ({ component: Child, ...props }) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (reduxState) => {
   return {
-    authenticated: state.auth.authenticated,
-    role: state.user.current.role,
+    authenticated: reduxState.user.authenticated,
+    role: reduxState.user.current.role,
   };
 };
 

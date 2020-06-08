@@ -185,7 +185,7 @@ class StudentOtherExperiences extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
+  userID: reduxState.user.userID,
   student: reduxState.students.current_student,
   otherExps: reduxState.students.current_other_exps,
 });

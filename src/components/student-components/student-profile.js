@@ -580,7 +580,6 @@ class StudentProfile extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  // userID: reduxState.auth.userID,
   student: reduxState.students.current_student,
   email: reduxState.user.email,
   workExps: reduxState.students.current_work_exps,

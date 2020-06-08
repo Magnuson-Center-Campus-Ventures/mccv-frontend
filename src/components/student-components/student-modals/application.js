@@ -127,7 +127,6 @@ class Application extends React.Component {
 const mapStateToProps = (reduxState) => ({
   user: reduxState.user.current,
   student: reduxState.students.current_student,
-  userID: reduxState.auth.userID,
   post: reduxState.posts.current,
   questions: reduxState.questions.all,
   application: reduxState.applications.current,

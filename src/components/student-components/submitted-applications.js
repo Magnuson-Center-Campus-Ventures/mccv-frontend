@@ -275,7 +275,6 @@ class SubmittedApplications extends Component {
   }
 }
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
   student: reduxState.students.current_student,
   submittedApplications: reduxState.submittedApplications.all,
   posts: reduxState.posts.all,

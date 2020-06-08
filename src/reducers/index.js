@@ -10,7 +10,7 @@ import SkillsReducer from './skills-reducer';
 import ClassesReducer from './classes-reducer';
 import ApplicationsReducer from './applications-reducer';
 import UserReducer from './user-reducer';
-import AuthReducer from './auth-reducer';
+// import AuthReducer from './auth-reducer';
 import SubmittedApplicationsReducer from './submitted-applications-reducer';
 import QuestionsReducer from './questions-reducer';
 
@@ -25,7 +25,7 @@ const rootReducer = combineReducers({
   questions: QuestionsReducer,
   submittedApplications: SubmittedApplicationsReducer,
   user: UserReducer,
-  auth: AuthReducer,
+  // auth: AuthReducer,
 });
 
 export default rootReducer;

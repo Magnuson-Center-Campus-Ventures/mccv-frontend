@@ -163,7 +163,7 @@ class StartupIndustries extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
+  userID: reduxState.user.userID,
   startup: reduxState.startups.current,
   industries: reduxState.industries,
 });

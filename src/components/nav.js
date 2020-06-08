@@ -20,7 +20,6 @@ class Nav extends Component {
     if (localStorage.getItem('userID')) {
       this.props.fetchUser(localStorage.getItem('userID'));
     }
-    // console.log(localStorage.getItem('userID'));
     this._isMounted = true;
   }
 
@@ -132,10 +131,8 @@ class Nav extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  authenticated: reduxState.auth.authenticated,
-  userID: reduxState.auth.userID,
-  error: reduxState.auth.error,
   user: reduxState.user.current,
+  authenticated: reduxState.user.authenticated,
 });
 
 
