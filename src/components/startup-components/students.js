@@ -101,7 +101,7 @@ class Students extends Component {
           startupIndustries.push(industry.name);
         });
       }
-      if (this.props.startup.posts) {
+      if (this.props.startup.posts && this.props.startup.posts.length > 0) {
         this.props.startup.posts.forEach((post) => {
           // Wrap datastore requests in promises,
           // then when they all resolve (all the necessary arrays are populated),
