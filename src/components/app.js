@@ -11,8 +11,10 @@ import StudentProfileStartup from './startup-components/student-profile-startups
 import Students from './startup-components/students';
 import Post from './student-components/post';
 import Nav from './nav';
+import Footer from './footer';
 import Signin from './signin';
 import Signup from './signup';
+import Credits from './credits';
 import StudentsFAQ from './student-components/students-faq';
 import StartupsFAQ from './startup-components/startups-faq';
 import StartupsLanding from './startup-components/startups-landing';
@@ -50,6 +52,7 @@ const App = (props) => {
           <Route path="/startupslanding" component={StartupsLanding} />
           <Route path="/signin" component={Signin} />
           <Route path="/signup" component={Signup} />
+          <Route path="/credits" component={Credits} />
           {/* Private route */}
           <PrivateRoute path="/posts/:postID" component={Post} />
           <PrivateRoute path="/posts" component={Postings} />
@@ -84,6 +87,7 @@ const App = (props) => {
           {/* error route */}
           <Route render={() => (<div>page not found </div>)} />
         </Switch>
+        <Footer />
       </div>
     </Router>
   );
