@@ -4,15 +4,6 @@ import { connect } from 'react-redux';
 import { withRouter, Route, Redirect } from 'react-router-dom';
 import { fetchUser } from '../actions';
 
-/* const PrivateRoute = ({ component: Child, ...props }) => {
-  props.fetchUser(localStorage.getItem('userID'));
-  return (
-    <Route {...props}
-      render={(routeProps) => (props.authenticated ? (<Child {...routeProps} />) : (<Redirect to="/" />))}
-    />
-  );
-}; */
-
 class PrivateRoute extends Component {
   constructor(props) {
     super(props);
@@ -21,11 +12,15 @@ class PrivateRoute extends Component {
   }
 
   routeCallback = (e) => {
-    return (
-      <Route {...this.props}
-        render={(routeProps) => (this.props.authenticated ? (<Route {...routeProps} />) : (<Redirect to="/" />))}
-      />
-    );
+    if (this.props.authenticated) {
+      return (
+        <Route {...this.props} />
+      );
+    } else {
+      return (
+        <Redirect to="/" />
+      );
+    }
   }
 
   render() {

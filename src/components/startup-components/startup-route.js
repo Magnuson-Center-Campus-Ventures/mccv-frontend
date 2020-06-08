@@ -4,14 +4,6 @@ import { connect } from 'react-redux';
 import { withRouter, Route, Redirect } from 'react-router-dom';
 import { fetchUser } from '../../actions';
 
-/* const StartupRoute = ({ component: Child, ...props }) => {
-  return (
-    <Route {...props}
-      render={(routeProps) => (props.authenticated && props.role !== 'student' ? (<Child {...routeProps} />) : (<Redirect to="/" />))}
-    />
-  );
-}; */
-
 class StartupRoute extends Component {
   constructor(props) {
     super(props);
@@ -20,11 +12,15 @@ class StartupRoute extends Component {
   }
 
   routeCallback = (e) => {
-    return (
-      <Route {...this.props}
-        render={(routeProps) => (this.props.authenticated && (this.props.role === 'startup' || this.props.role === 'admin') ? (<Route {...routeProps} />) : (<Redirect to="/" />))}
-      />
-    );
+    if (this.props.authenticated && (this.props.role === 'startup' || this.props.role === 'admin')) {
+      return (
+        <Route {...this.props} />
+      );
+    } else {
+      return (
+        <Redirect to="/" />
+      );
+    }
   }
 
   render() {
