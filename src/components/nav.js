@@ -17,7 +17,10 @@ class Nav extends Component {
 
   componentDidMount() {
     this.setState({ usertype: this.props.user.role });
-    this.props.fetchUser(localStorage.getItem('userID'));
+    if (localStorage.getItem('userID')) {
+      this.props.fetchUser(localStorage.getItem('userID'));
+    }
+    // console.log(localStorage.getItem('userID'));
     this._isMounted = true;
   }
 
