@@ -177,9 +177,9 @@ class Students extends Component {
       tempStudents.sort((student1, student2) => {
         return studentScores[student2._id] - studentScores[student1._id];
       });
-      tempStudents.forEach((student) => {
-        console.log(student.first_name, studentScores[student._id]);
-      });
+      // tempStudents.forEach((student) => {
+      //   console.log(student.first_name, studentScores[student._id]);
+      // });
       return {
         ...prevState,
         sortedStudents: tempStudents.slice(0, 1),
