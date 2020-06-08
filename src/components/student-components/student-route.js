@@ -11,6 +11,13 @@ class StudentRoute extends Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.user === {} || prevProps.user !== this.props.user) {
+      console.log('private didUpdate');
+      this.props.fetchUser(localStorage.getItem('userID'));
+    }
+  }
+
   routeCallback = (e) => {
     if (this.props.authenticated && (this.props.role === 'student' || this.props.role === 'admin')) {
       return (
@@ -24,7 +31,7 @@ class StudentRoute extends Component {
   }
 
   render() {
-    this.props.fetchUser(localStorage.getItem('userID'));
+    // this.props.fetchUser(localStorage.getItem('userID'));
     return (
       this.routeCallback()
     );

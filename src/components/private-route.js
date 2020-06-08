@@ -11,6 +11,13 @@ class PrivateRoute extends Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.user === {} || prevProps.user !== this.props.user) {
+      console.log('private didUpdate');
+      this.props.fetchUser(localStorage.getItem('userID'));
+    }
+  }
+
   routeCallback = (e) => {
     if (this.props.authenticated) {
       return (
@@ -24,7 +31,7 @@ class PrivateRoute extends Component {
   }
 
   render() {
-    this.props.fetchUser(localStorage.getItem('userID'));
+    // this.props.fetchUser(localStorage.getItem('userID'));
     return (
       this.routeCallback()
     );
