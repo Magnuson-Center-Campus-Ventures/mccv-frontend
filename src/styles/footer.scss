@@ -1,0 +1,49 @@
+// body, html {
+//   font-family: Avenir Next;
+//   font-style: normal;
+//   height: 100%;
+//   padding: 0;
+//   margin: 0;
+// }
+
+#footer {
+  background: black;
+  margin:0;
+  padding: 0;
+  height: 3.5em;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+#footer li{
+  padding-right: 2em;
+  padding-left: 2em;
+  list-style: none;
+}
+
+#footer a{
+  color: white;
+}
+
+#footer .active {
+  color: white;
+}
+
+.mccv {
+color: white;
+font-weight: 550;
+}
+
+#booter li:first-child {
+// margin-right: auto;
+flex-grow: 1;
+}
