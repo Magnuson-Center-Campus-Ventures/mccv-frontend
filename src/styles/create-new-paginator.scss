@@ -1,4 +1,121 @@
 .paginator{
   margin: 10vw;
-  margin-top: 5vh;
+  margin-top: 10vh;
+}
+
+.paginator > ul{
+  text-align: center;
+  list-style: none;
+  position: fixed;
+  bottom: 5em;
+  width: 80vw;
+}
+
+.paginator > ul > li{
+  padding: 2em;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+  display: inline;
+  background-color: #C6CED2;
+  transition: color .25s, background-color 0;
+}
+
+.paginator > ul > li.previous{
+  color: white;
+  background-color: #45B990;
+  margin-right: 2em;
+}
+
+.paginator > ul > li.next{
+  color: white;
+  background-color: #45B990;
+  padding-right: 3em;
+  padding-left: 3em;
+  margin-left: 2em;
+}
+
+.paginator > ul > li.selected{
+  color: white;
+  background-color: #45B990;
+  transition: color .25s, background-color .5s;
+}
+
+.question{
+  margin-bottom: 10em;
+}
+
+.question-header{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.question-header-prompt > h1{
+  margin: 0;
+}
+
+.question-header-icon{
+  font-size: 15vh;
+}
+
+.question-fields{
+  height: 50vh;
+}
+
+.question-fields-title{
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 2vw;
+  align-self: center;
+}
+.question-fields-text{
+  width: 30%;
+}
+
+.question-fields-button{
+  margin-left: 1vw;
+}
+
+.question-fields-list{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 40vh;
+}
+
+.question-fields-resp{
+  margin-left: 1.25em;
+}
+
+.question-fields-items-header{
+  display: flex;
+  margin-bottom: 4vh;
+}
+
+.question-fields-items{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.question-fields-item{
+  font-size: small;
+  color: white;
+  width: fit-content;
+  border-radius: 20px;
+  background-color: #4cb184;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  box-shadow: 0px 10px;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  margin-top: 2vh;
+}
+
+.question-submit{
+  position: fixed;
+  bottom: 10em;
+  right: 10vw;
 }

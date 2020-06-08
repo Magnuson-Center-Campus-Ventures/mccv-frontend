@@ -43,7 +43,7 @@ class AddPost extends Component {
   renderSubmit() {
     if (this.state.index === 6) {
       return (
-        <div className="buttonContainer">
+        <div className="question-submit">
           <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
             Submit!
           </button>
@@ -83,8 +83,9 @@ class AddPost extends Component {
         {this.renderComponent()}
         {this.renderSubmit()}
         <ReactPaginate
-          previousLabel="previous"
-          nextLabel="next"
+          className="pagintor-options"
+          previousLabel="Previous"
+          nextLabel="Next"
           breakLabel="..."
           pageCount={7}
           marginPagesDisplayed={2}
