@@ -33,7 +33,8 @@ class AddPost extends Component {
 
   handlePageClick = (data) => {
     console.log('handle click');
-    this.props.updatePost(this.props.post.id, this.props.post);
+    // console.log(this.props.post);
+    // this.props.updatePost(this.props.post.id, this.props.post);
     this.setState({ index: data.selected });
     this.forceUpdate();
   };

@@ -20,7 +20,6 @@ class AddPostTitleLocation extends Component {
     console.log('title did mount');
     console.log(this.props.post.id);
     this.props.fetchPost(this.props.post.id);
-    // this.props.fetchPost(localStorage.getItem('postID'));
   }
 
   // update post field

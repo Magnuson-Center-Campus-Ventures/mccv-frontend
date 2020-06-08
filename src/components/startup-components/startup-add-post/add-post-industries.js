@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
-// import CreateableSelect from 'react-select/creatable';
 import '../../../styles/startup-add-post/add-post-industries.scss';
 import {
   fetchPost, createIndustryForPost, updatePost, fetchAllIndustries,
