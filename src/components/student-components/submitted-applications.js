@@ -36,6 +36,8 @@ class SubmittedApplications extends Component {
   }
 
   componentDidMount() {
+    this.props.clearPost();
+    this.props.clearApplication();
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchSubmittedApplications();
     this.props.fetchPosts();
@@ -128,7 +130,10 @@ class SubmittedApplications extends Component {
         }
       });
       this.setState({
-        studentApplications: updatedStudentApplications, statusOptions: newStatusOptions, titleOptions: newTitleOptions, applicationToTitle: newApplicationToTitle,
+        studentApplications: updatedStudentApplications,
+        statusOptions: newStatusOptions,
+        titleOptions: newTitleOptions,
+        applicationToTitle: newApplicationToTitle,
       });
     }
   }
@@ -159,11 +164,11 @@ class SubmittedApplications extends Component {
                 </div>
               </div>
               <div className="postInfo">
-                <div id="info title">
+                <div id="info-title">
                   <h1>Applied to: </h1>
                   <div id="pill title">{post.title}</div>
                 </div>
-                <div id="info status">
+                <div id="info-status">
                   <h1>Status: </h1>
                   <div id="pill status">{post.status}</div>
                 </div>

@@ -39,8 +39,10 @@ class ApplicationListItem extends Component {
         if (this.props.current.responses[question._id]) {
           items.push(
             <div key={question._id} className="question">
-              <h3 id="question">{question.question}</h3>
-              <h2 id="answer">{this.props.current.responses[question._id]}</h2>
+              <div id="question">
+                <h3>{question.question}</h3>
+                <h2 id="answer">{this.props.current.responses[question._id]}</h2>
+              </div>
             </div>,
           );
         }
@@ -62,7 +64,9 @@ class ApplicationListItem extends Component {
               <span className="locationIcon" />
               <h2> {`${this.props.post.city}, ${this.props.post.state}`} </h2>
             </div>
-            <h2 id="status">Status: {this.props.current.status}</h2>
+            <div className="app-status">
+              <h2>Status: {this.props.current.status}</h2>
+            </div>
             <h1>Questions</h1>
           </div>
           <div id="questions">

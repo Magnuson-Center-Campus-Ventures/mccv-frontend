@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  fetchPost, fetchApplication, fetchUser,
+  fetchPost, fetchApplication, fetchUser, clearApplication, clearPost,
 } from '../../actions';
 import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
@@ -166,6 +166,9 @@ class Post extends Component {
       return (
         <div id="wrap-content">
           <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
+          {(this.state.applyShow) && (
+            <div id="confirmation-background" />
+          )}
           <Archive post={this.props.current} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
           <h1 id="title">{this.props.current.title}</h1>
           <div className="bar">

@@ -96,6 +96,17 @@ ul {
     flex-direction: column;
     margin-left: 3vw;
 }
+#confirmation-background{
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    height: 100%;
+    background-color: black;
+    opacity: 50%;
+  }
+
 #submit-app {
     font-family: Roboto;
     font-style: normal;

@@ -75,8 +75,8 @@ class Application extends React.Component {
         if (this.props.application.questions.includes(question._id)) {
           items.push(
             <div key={question._id}>
-              <h3 id="question" key={question._id}>{question.question}</h3>
-              <input name={question._id} onChange={this.onAnswerChange} value={this.state.questionToAnswer[question._id]} />
+              <h3 id="question-title" key={question._id}>{question.question}</h3>
+              <textarea name={question._id} onChange={this.onAnswerChange} value={this.state.questionToAnswer[question._id]} />
             </div>,
           );
         }
