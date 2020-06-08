@@ -23,7 +23,7 @@ class AddPost extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchPost(this.props.post._id);
+    this.props.fetchPost(this.props.post.id);
     this.props.fetchAllIndustries();
     this.props.fetchAllClasses();
     this.props.fetchAllSkills();
@@ -40,7 +40,7 @@ class AddPost extends Component {
   }
 
   renderSubmit() {
-    if (this.state.index === 3) {
+    if (this.state.index === 6) {
       return (
         <div className="buttonContainer">
           <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
@@ -62,15 +62,15 @@ class AddPost extends Component {
       case 1:
         return <AddPostDescription />;
       case 2:
-        return <AddPostIndustries />;
-      case 3:
-        return <AddPostRequiredSkills />;
-      case 4:
-        return <AddPostPreferredSkills />;
-      case 5:
-        return <AddPostDesiredClasses />;
-      case 6:
         return <AddPostTiming />;
+      case 3:
+        return <AddPostIndustries />;
+      case 4:
+        return <AddPostRequiredSkills />;
+      case 5:
+        return <AddPostPreferredSkills />;
+      case 6:
+        return <AddPostDesiredClasses />;
       default:
         return <div>Out of pages!</div>;
     }
@@ -85,7 +85,7 @@ class AddPost extends Component {
           breakLabel="..."
           pageCount={7}
           marginPagesDisplayed={2}
-          pageRangeDisplayed={8}
+          pageRangeDisplayed={7}
           onPageChange={this.handlePageClick}
         />
         {this.renderComponent()}
@@ -103,3 +103,7 @@ const mapStateToProps = (reduxState) => ({
 export default withRouter(connect(mapStateToProps, {
   fetchPost, updatePost, submitPost, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 })(AddPost));
+
+// add timing
+//   set to noon
+// test from student view all postings

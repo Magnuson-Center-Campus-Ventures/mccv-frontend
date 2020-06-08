@@ -76,7 +76,7 @@ class Startup extends Component {
   }
 
   renderPostings() {
-    if (this.props.startup?.posts) {
+    if (this.props.startup.posts && this.props.startup.posts.length && typeof this.props.startup !== 'undefined') {
       const mappingPostings = this.props.startup.posts.map((post) => {
         const route = `/posts/${post._id}`;
         return (
@@ -92,7 +92,7 @@ class Startup extends Component {
         );
       });
       return (
-        this.props.startup.posts
+        this.props.startup.posts !== undefined
           ? (
             <div className="startup-postings">
               <h1>Volunteer Positions:</h1>
@@ -104,7 +104,9 @@ class Startup extends Component {
       );
     } else {
       return (
-        <div>posts are undefined</div>
+        <div className="startup-postings">
+          <h1>Volunteer Positions:</h1>
+        </div>
       );
     }
   }
@@ -114,7 +116,7 @@ class Startup extends Component {
       return (
         this.props.startup.industries.map((industry) => {
           return (
-            <div className="industry" key={industry.name}>{industry.name}</div>
+            <div className="startup-industry" key={industry.name}>{industry.name}</div>
           );
         })
       );
@@ -125,18 +127,20 @@ class Startup extends Component {
     if (this.props.user.role === 'admin') {
       if (this.props.startup?.status === 'Approved') {
         return (
-          <button
-            type="submit"
-            onClick={(e) => {
-              this.showArchiveModal();
-            }}
-          >
-            Archive
-          </button>
+          <div className="startup-profile-admin-buttons">
+            <button
+              type="submit"
+              onClick={(e) => {
+                this.showArchiveModal();
+              }}
+            >
+              Archive
+            </button>
+          </div>
         );
       } else if (this.props.startup?.status === 'Pending') {
         return (
-          <div>
+          <div className="startup-profile-admin-buttons">
             <button
               type="submit"
               onClick={(e) => {
@@ -166,10 +170,14 @@ class Startup extends Component {
     if (this.props.startup) {
       return (
         <div className="startup-body">
-          <h1 className="startup-name">{`${this.props.startup.name}`}</h1>
-          <div className="startup-location">Location: {`${this.props.startup.city}, ${this.props.startup.state}`}</div>
-          <div className="startup-industries"><div>Industry: </div>{this.renderIndustries()}</div>
-          <div className="startup-description">About {`${this.props.startup.name}`}:<br /><br />{`${this.props.startup.description}`}</div>
+          <h1 className="startup-header">{`${this.props.startup.name}`}</h1>
+          <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
+          <div className="startup-header">Industries:</div>
+          <div className="startup-industries">{this.renderIndustries()}</div>
+          <div className="startup-description">
+            <p>About {`${this.props.startup.name}`}:</p>
+            <div className="startup-description">{`${this.props.startup.description}`}</div>
+          </div>
           {this.renderButtons()}
         </div>
       );

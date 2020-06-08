@@ -55,27 +55,31 @@ export function fetchPosts() {
     axios.get(`${ROOT_URL}/posts`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
 }
 
-export function createPost(post, history) {
+export function createPost(post, startup, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
-        history.push('/add-post');
-      })
-      .catch((error) => {
-        console.log('broken');
+        // Update the student with the newly created post
+        startup.posts.push(response.data);
+        axios.put(`${ROOT_URL}/startups/${startup._id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+          dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response2.data });
+        }).catch((error2) => {
+          dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+        });
+        history.push('/add-post/');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
 }
+
 // Moved to front-end implementation of search and filter, as per Thomas' advice
 
 // export function fetchPostSearch(searchterm) {
@@ -97,7 +101,6 @@ export function createPost(post, history) {
 //         dispatch({ type: ActionTypes.FETCH_POSTS, payload: response.data });
 //       })
 //       .catch((error) => {
-//         console.log('broken');
 //       });
 //   };
 // };
@@ -107,8 +110,7 @@ export function fetchPost(id) {
     axios.get(`${ROOT_URL}/posts/${id}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -117,9 +119,8 @@ export function fetchPost(id) {
 export function updatePost(id, post) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.UPDATE_POST, payload: response.data });
+      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -137,8 +138,7 @@ export function fetchStartup(id) {
     axios.get(`${ROOT_URL}/startups/${id}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -150,7 +150,6 @@ export function fetchStartupByUserID(userID) {
     axios.get(`${ROOT_URL}/startupprofile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
   };
@@ -161,9 +160,7 @@ export function fetchStartups() {
     axios.get(`${ROOT_URL}/startups`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -174,7 +171,6 @@ export function updateStartup(id, startup) {
     axios.put(`${ROOT_URL}/startups/${id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
   };
@@ -186,12 +182,8 @@ export function createStudent(newStudent) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/students`, newStudent, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        console.log(response.data);
         dispatch({ type: ActionTypes.CREATE_STUDENT, payload: response.data });
-        console.log('student profile created');
-      })
-      .catch((error) => {
-        console.log(error.response.data);
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -215,8 +207,7 @@ export function fetchStudents() {
     axios.get(`${ROOT_URL}/students`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_STUDENTS, payload: response.data });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -226,10 +217,8 @@ export function fetchStudents() {
 export function fetchStudentByID(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/students/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      console.log(response.data);
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
   };
@@ -241,7 +230,6 @@ export function fetchStudentByUserID(userID) {
     axios.get(`${ROOT_URL}/profile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
   };
@@ -253,7 +241,6 @@ export function fetchUserByStudentID(studentID) {
     axios.get(`${ROOT_URL}/studentuser/${studentID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_STUDENT_USER, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
   };
@@ -264,7 +251,6 @@ export function updateStudent(id, student) {
     axios.put(`${ROOT_URL}/students/${id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -277,7 +263,6 @@ export function submitStudent(id, student, history) {
       // eslint-disable-next-line no-restricted-globals
       history.push('/profile');
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -296,7 +281,6 @@ export function submitStartup(id, startup, history) {
       // eslint-disable-next-line no-restricted-globals
       history.push('/startupprofile');
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -309,7 +293,6 @@ export function submitPost(id, post, history) {
       // eslint-disable-next-line no-restricted-globals
       history.push(`/posts/${id}`);
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -321,7 +304,6 @@ export function fetchWorkExperiences(idArray) {
     axios.get(`${ROOT_URL}/workexperiences/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_WORK_EXPS, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
   };
@@ -332,7 +314,6 @@ export function createWorkExperience(workExp) {
     axios.post(`${ROOT_URL}/workexperiences`, workExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.ADD_WORK_EXP, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -343,7 +324,6 @@ export function updateWorkExperience(id, workExp) {
     axios.put(`${ROOT_URL}/workexperiences/${id}`, workExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.UPDATE_WORK_EXP, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -354,7 +334,6 @@ export function deleteWorkExperience(id) {
     axios.delete(`${ROOT_URL}/workexperiences/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.DELETE_WORK_EXP, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -366,9 +345,7 @@ export function fetchAllIndustries() {
     axios.get(`${ROOT_URL}/industries`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_ALL_INDUSTRIES, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -379,7 +356,6 @@ export function fetchCertainIndustries(idArray) {
     axios.get(`${ROOT_URL}/industries/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_SOME_INDUSTRIES, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
   };
@@ -390,7 +366,6 @@ export function createIndustry(industry) {
     axios.post(`${ROOT_URL}/industries`, industry, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -405,11 +380,9 @@ export function createIndustryForStudent(industry, student) {
       axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
         dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
       }).catch((error2) => {
-        console.log(error2);
         dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
       });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -425,11 +398,26 @@ export function createIndustryForStartup(industry, startup) {
       axios.put(`${ROOT_URL}/startups/${startup._id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
         dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response2.data });
       }).catch((error2) => {
-        console.log(error2);
         dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
       });
     }).catch((error) => {
-      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+export function createIndustryForPost(industry, post) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/industries`, industry, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
+      // Update the student with the newly created industry
+      post.industries.push(response.data);
+      axios.put(`${ROOT_URL}/posts/${post._id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_POST, payload: response2.data });
+      }).catch((error2) => {
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -441,9 +429,7 @@ export function fetchAllSkills() {
     axios.get(`${ROOT_URL}/skills`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_ALL_SKILLS, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -454,20 +440,16 @@ export function fetchCertainSkills(idArray) {
     axios.get(`${ROOT_URL}/skills/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_SOME_SKILLS, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
   };
 }
 
 export function createSkill(skill) {
-  console.log(skill);
   return (dispatch) => {
     axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      console.log(response.data);
       dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -482,11 +464,26 @@ export function createSkillForStudent(skill, student) {
       axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
         dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
       }).catch((error2) => {
-        console.log(error2);
         dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
       });
     }).catch((error) => {
-      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+export function createSkillForPost(skill, post) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/skills`, skill, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_SKILL, payload: response.data });
+      // Update the student with the newly created skill
+      post.skills.push(response.data);
+      axios.put(`${ROOT_URL}/students/${post._id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
+      }).catch((error2) => {
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -498,9 +495,7 @@ export function fetchAllClasses() {
     axios.get(`${ROOT_URL}/classes`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_ALL_CLASSES, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -511,7 +506,6 @@ export function fetchCertainClasses(idArray) {
     axios.get(`${ROOT_URL}/classes/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_SOME_CLASSES, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
   };
@@ -522,7 +516,6 @@ export function createClass(_class) {
     axios.post(`${ROOT_URL}/classes`, _class, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.ADD_CLASS, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -537,11 +530,26 @@ export function createClassForStudent(_class, student) {
       axios.put(`${ROOT_URL}/students/${student._id}`, student, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
         dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response2.data });
       }).catch((error2) => {
-        console.log(error2);
         dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
       });
     }).catch((error) => {
-      console.log(error);
+      dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+export function createClassForPost(_class, post) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/classes`, _class, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.ADD_INDUSTRY, payload: response.data });
+      // Update the student with the newly created class
+      post.classes.push(response.data);
+      axios.put(`${ROOT_URL}/posts/${post._id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+        dispatch({ type: ActionTypes.FETCH_POST, payload: response2.data });
+      }).catch((error2) => {
+        dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+      });
+    }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -553,9 +561,7 @@ export function fetchApplications() {
     axios.get(`${ROOT_URL}/applications`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_APPLICATIONS, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -566,9 +572,7 @@ export function fetchApplication(id) {
     axios.get(`${ROOT_URL}/applications/${id}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_APPLICATION, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -578,11 +582,8 @@ export function submitApplication(newApplication) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/submittedapplications`, newApplication, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        console.log(response);
         dispatch({ type: ActionTypes.SUBMIT_APPLICATION, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -599,9 +600,7 @@ export function fetchQuestions() {
     axios.get(`${ROOT_URL}/questions`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_QUESTIONS, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -613,9 +612,7 @@ export function fetchSubmittedApplications() {
     axios.get(`${ROOT_URL}/submittedapplications`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_SUBMITTED_APPLICATIONS, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -626,9 +623,7 @@ export function fetchSubmittedApplication(id) {
     axios.get(`${ROOT_URL}/submittedapplications/${id}`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_SUBMITTED_APPLICATION, payload: response.data });
-      })
-      .catch((error) => {
-        console.log('broken');
+      }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
@@ -639,7 +634,6 @@ export function updateSubmittedApplication(id, submittedApp) {
     axios.put(`${ROOT_URL}/submittedapplications/${id}`, submittedApp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.UPDATE_SUBMITTED_APPLICATION, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
   };
@@ -651,7 +645,6 @@ export function createOtherExperience(otherExp) {
     axios.post(`${ROOT_URL}/otherexperiences`, otherExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.ADD_OTHER_EXP, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
   };
@@ -662,7 +655,6 @@ export function updateOtherExperience(id, otherExp) {
     axios.put(`${ROOT_URL}/otherexperiences/${id}`, otherExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.UPDATE_OTHER_EXP, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
   };
@@ -673,7 +665,6 @@ export function deleteOtherExperience(id) {
     axios.delete(`${ROOT_URL}/otherexperiences/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.DELETE_OTHER_EXP, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
   };
@@ -684,7 +675,6 @@ export function fetchOtherExperiences(idArray) {
     axios.get(`${ROOT_URL}/otherexperiences/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_OTHER_EXPS, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
   };
@@ -724,11 +714,9 @@ export function signinUser({ email, password }, history) {
         }
         dispatch({ type: ActionTypes.FETCH_USER, payload: userResp.data });
       }).catch((error) => {
-        console.log(error);
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
     }).catch((error) => {
-      console.log(error.response.data);
       dispatch(authError(`Sign In Failed: ${error.response.data}`));
     });
   };
@@ -758,10 +746,8 @@ export function signupUser({
       } else if (role === 'startup') {
         history.push('/startup-signup');
       } // and maybe add admin as well
-      console.log('signed up succesfully');
     }).catch((error) => {
       // eslint-disable-next-line no-alert
-      console.log(error.response.data);
       dispatch(authError(`Sign Up Failed: ${error.response.data}`));
     });
   };
@@ -783,14 +769,12 @@ export function fetchUser(id) {
     axios.get(`${ROOT_URL}/users/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
   };
 }
 
 export function clearUserState() {
-  // console.log('clear called');
   return (dispatch) => {
     dispatch({ type: ActionTypes.LOGOUT_USER });
   };
@@ -802,7 +786,6 @@ export function updateUser(id, user) {
     axios.put(`${ROOT_URL}/users/${id}`, user, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
