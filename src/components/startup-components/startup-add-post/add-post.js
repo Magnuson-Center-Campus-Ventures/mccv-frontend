@@ -10,6 +10,7 @@ import AddPostPreferredSkills from './add-post-pref-skills';
 import AddPostIndustries from './add-post-industries';
 import AddPostDesiredClasses from './add-post-desired-classes';
 import AddPostDescription from './add-post-description';
+import AddPostResponsibilities from './add-post-responsibilities';
 import {
   fetchPost, updatePost, submitPost, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 } from '../../../actions';
@@ -23,8 +24,6 @@ class AddPost extends Component {
   }
 
   componentDidMount() {
-    console.log('add-post');
-    console.log(this.props.post.id);
     this.props.fetchPost(this.props.post.id);
     this.props.fetchAllIndustries();
     this.props.fetchAllClasses();
@@ -32,13 +31,9 @@ class AddPost extends Component {
   }
 
   handlePageClick = (data) => {
-    console.log('handle click');
-    // new
-    console.log(this.props.post.id);
-    this.props.fetchPost(this.props.post.id);
+    console.log(data);
     console.log(this.props.post);
-    // end new
-    // this.props.updatePost(this.props.post.id, this.props.post); // wipes out db post
+    this.props.updatePost(this.props.post.id, this.props.post); // wipes out db post
     this.setState({ index: data.selected });
     this.forceUpdate();
   };
@@ -48,7 +43,7 @@ class AddPost extends Component {
   }
 
   renderSubmit() {
-    if (this.state.index === 4) {
+    if (this.state.index === 7) {
       return (
         <div className="buttonContainer">
           <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
@@ -70,14 +65,16 @@ class AddPost extends Component {
       case 1:
         return <AddPostDescription />;
       case 2:
-        return <AddPostIndustries />;
+        return <AddPostResponsibilities />;
       case 3:
-        return <AddPostRequiredSkills />;
+        return <AddPostIndustries />;
       case 4:
-        return <AddPostPreferredSkills />;
+        return <AddPostRequiredSkills />;
       case 5:
-        return <AddPostDesiredClasses />;
+        return <AddPostPreferredSkills />;
       case 6:
+        return <AddPostDesiredClasses />;
+      case 7:
         return <AddPostTiming />;
       default:
         return <div>Out of pages!</div>;
@@ -111,3 +108,12 @@ const mapStateToProps = (reduxState) => ({
 export default withRouter(connect(mapStateToProps, {
   fetchPost, updatePost, submitPost, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 })(AddPost));
+
+
+// add pending filter to startup profile view
+//   change the language to active instead of approved
+// add activate button to postings
+// add timing
+//   set to noon
+// add responsibilities
+// test from student

@@ -108,7 +108,7 @@ class StartupProfile extends Component {
       desired_end_date: '',
       desired_classes: [],
       available_until: '',
-      status: '',
+      status: 'Pending',
       applicants: [],
       application_id: '',
       students_selected: [],
