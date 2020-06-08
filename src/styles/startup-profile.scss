@@ -24,8 +24,26 @@
   margin: 0px;
 }
 
-.startup-postings > #filters{
+.startup-filters{
+  display: flex;
+  // justify-content: space-between;
+  justify-content: center;
+  flex-wrap: wrap;
   margin: 2vw;
+  margin-top: 0;
+}
+
+.startup-toggles{
+  display: flex;
+  align-content: center;
+  margin-left: 1vw;
+  margin-right: 1vw;
+  margin-top: 1vh;
+}
+
+.startup-toggles > span{
+  margin-right: 1vw;
+  align-self: center;
 }
 
 .startup-postings-list {

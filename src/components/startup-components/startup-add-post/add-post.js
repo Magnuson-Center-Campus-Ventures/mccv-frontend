@@ -31,9 +31,7 @@ class AddPost extends Component {
   }
 
   handlePageClick = (data) => {
-    console.log(data);
-    console.log(this.props.post);
-    this.props.updatePost(this.props.post.id, this.props.post); // wipes out db post
+    this.props.updatePost(this.props.post.id, this.props.post);
     this.setState({ index: data.selected });
     this.forceUpdate();
   };
@@ -109,11 +107,8 @@ export default withRouter(connect(mapStateToProps, {
   fetchPost, updatePost, submitPost, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 })(AddPost));
 
-
-// add pending filter to startup profile view
-//   change the language to active instead of approved
 // add activate button to postings
 // add timing
 //   set to noon
 // add responsibilities
-// test from student
+// test from student view all postings
