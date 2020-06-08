@@ -13,6 +13,7 @@ import AddPostDescription from './add-post-description';
 import {
   fetchPost, updatePost, submitPost, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 } from '../../../actions';
+import '../../../styles/create-new-paginator.scss';
 
 class AddPost extends Component {
   constructor(props) {
@@ -79,6 +80,8 @@ class AddPost extends Component {
   render() {
     return (
       <div className="paginator">
+        {this.renderComponent()}
+        {this.renderSubmit()}
         <ReactPaginate
           previousLabel="previous"
           nextLabel="next"
@@ -88,8 +91,6 @@ class AddPost extends Component {
           pageRangeDisplayed={7}
           onPageChange={this.handlePageClick}
         />
-        {this.renderComponent()}
-        {this.renderSubmit()}
       </div>
     );
   }

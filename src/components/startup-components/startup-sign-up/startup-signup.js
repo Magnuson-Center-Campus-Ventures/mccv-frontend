@@ -9,6 +9,7 @@ import StartupSignUpVideo from './startup-signup-video';
 import {
   fetchStartupByUserID, fetchUser, updateStartup, submitStartup, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 } from '../../../actions';
+import '../../../styles/create-new-paginator.scss';
 
 class StartupSignUp extends Component {
   constructor(props) {
@@ -70,6 +71,8 @@ class StartupSignUp extends Component {
   render() {
     return (
       <div className="paginator">
+        {this.renderComponent()}
+        {this.renderSubmit()}
         <ReactPaginate
           previousLabel="previous"
           nextLabel="next"
@@ -83,8 +86,6 @@ class StartupSignUp extends Component {
           // subContainerClassName="pages pagination"
           // activeClassName="active"
         />
-        {this.renderComponent()}
-        {this.renderSubmit()}
       </div>
     );
   }
