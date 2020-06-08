@@ -6,7 +6,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-// import TextareaAutosize from 'react-textarea-autosize';
 import CreateableSelect from 'react-select/creatable';
 import {
   fetchStudentByUserID, updateStudent, fetchUser,
@@ -228,7 +227,7 @@ class StudentProfile extends Component {
               });
             }}
           />
-          <button className="del-maj-button"
+          <button className="del-button"
             onClick={() => {
               this.setState((prevState) => {
                 const majors = [...prevState.majors];
@@ -239,7 +238,7 @@ class StudentProfile extends Component {
                 };
               });
             }}
-          >Delete Major
+          ><i className="far fa-trash-alt delete-icon" />
           </button>
         </div>
       );
@@ -264,7 +263,7 @@ class StudentProfile extends Component {
               });
             }}
           />
-          <button className="del-maj-button"
+          <button className="del-button"
             onClick={() => {
               this.setState((prevState) => {
                 const minors = [...prevState.minors];
@@ -275,7 +274,7 @@ class StudentProfile extends Component {
                 };
               });
             }}
-          >Delete Minor
+          ><i className="far fa-trash-alt delete-icon" />
           </button>
         </div>
       );
@@ -285,7 +284,7 @@ class StudentProfile extends Component {
   renderPills = (pillsArray) => {
     if (pillsArray && pillsArray.length > 0) {
       return pillsArray.map((elem, index) => {
-        return <div key={index} className="profile-pill">{elem.name}</div>;
+        return <div key={index} className="student-profile-pill">{elem.name}</div>;
       });
     } else return <div>None</div>;
   }
@@ -299,47 +298,65 @@ class StudentProfile extends Component {
         }),
       };
       return (
-        <div className="profile-edit">
-          <div className="input-title">First Name</div>
-          <input className="short-input" defaultValue={this.props.student?.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
-          <div className="input-title">Last Name</div>
-          <input className="short-input" defaultValue={this.props.student?.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
-          <div className="input-title">Phone Number</div>
-          <input className="short-input"
-            defaultValue={this.props.student?.phone_number ? this.props.student?.phone_number : null}
-            onBlur={(event) => this.changeStudentField('phone_number', event)}
-          />
-          <div className="input-title">Majors</div>
-          {this.renderEditMajors()}
-          <button className="add-maj-button"
-            onClick={() => {
-              this.setState((prevState) => {
-                const majors = [...prevState.majors];
-                majors.push('');
-                return {
-                  ...prevState,
-                  majors,
-                };
-              });
-            }}
-          >Add Major
-          </button>
-          <div className="input-title">Minors</div>
-          {this.renderEditMinors()}
-          <button className="add-maj-button"
-            onClick={() => {
-              this.setState((prevState) => {
-                const minors = [...prevState.minors];
-                minors.push('');
-                return {
-                  ...prevState,
-                  minors,
-                };
-              });
-            }}
-          >Add Minor
-          </button>
-          <div id="lists-row">
+        <div id="student-profile-edit">
+          <div id="student-edit-info">
+            <h2>Personal Information</h2>
+            <div className="input-title" id="first-student-input">First Name</div>
+            <input className="short-input" defaultValue={this.props.student?.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
+            <div className="input-title">Last Name</div>
+            <input className="short-input" defaultValue={this.props.student?.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
+            <div className="input-title">Phone Number</div>
+            <input className="short-input"
+              defaultValue={this.props.student?.phone_number ? this.props.student?.phone_number : null}
+              onBlur={(event) => this.changeStudentField('phone_number', event)}
+            />
+          </div>
+          <hr className="profile-divider" />
+          <div id="student-edit-majmin">
+            <h2>Academic Information</h2>
+            <div className="lists-row">
+              <div className="majmin-section">
+                <div className="majmin-header">
+                  <div className="input-title">Majors</div>
+                  <button className="add-button"
+                    onClick={() => {
+                      this.setState((prevState) => {
+                        const majors = [...prevState.majors];
+                        majors.push('');
+                        return {
+                          ...prevState,
+                          majors,
+                        };
+                      });
+                    }}
+                  ><i className="fa fa-plus add-icon" aria-hidden="true" />
+                  </button>
+                </div>
+                {this.renderEditMajors()}
+              </div>
+              <div className="majmin-section">
+                <div className="majmin-header">
+                  <div className="input-title">Minors</div>
+                  <button className="add-button"
+                    onClick={() => {
+                      this.setState((prevState) => {
+                        const minors = [...prevState.minors];
+                        minors.push('');
+                        return {
+                          ...prevState,
+                          minors,
+                        };
+                      });
+                    }}
+                  ><i className="fa fa-plus add-icon" aria-hidden="true" />
+                  </button>
+                </div>
+                {this.renderEditMinors()}
+              </div>
+            </div>
+          </div>
+          <hr className="profile-divider" />
+          <div className="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
               <CreateableSelect
@@ -435,15 +452,18 @@ class StudentProfile extends Component {
         <div className="profile-fixed">
           <div id="profile-header">
             <h1>{`${this.state.student.first_name} ${this.state.student.last_name}`}</h1>
-            <div>{`Class of ${this.props.student?.grad_year}`}</div>
+            <div id="class-year">{`Class of ${this.props.student?.grad_year}`}</div>
             <div id="major-row">
-              {this.renderMajMin(this.props.student?.majors)}
+              <div>Major in</div>
+              {this.renderMajMin(this.state.majors)}
             </div>
             <div id="minor-row">
-              {this.renderMajMin(this.props.student?.minors)}
+              <div>Minor in</div>
+              {this.renderMajMin(this.state.minors)}
             </div>
-            <div>{this.props.email}</div>
-            <div>{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
+            <div className="student-contact">{this.props.email}</div>
+            <div className="student-contact">{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
+            <hr className="profile-divider" />
             <div id="lists-row">
               <div className="list-section">
                 <h2>Industries</h2>
@@ -508,30 +528,48 @@ class StudentProfile extends Component {
           show={this.state.showOtherExpModal}
         />
         {this.renderBody()}
-        <div id="work-exps">
-          <h2>Work Experience</h2>
-          {this.state.isEditing ? (
-            <button
-              onClick={() => {
-                this.setState({ showWorkExpModal: true });
-                window.scrollTo(0, 0);
-              }}
-            >Add Work Experience
-            </button>
-          ) : null}
-          {this.renderWorkExperiences()}
-          <h2>Other Experience</h2>
-          {this.state.isEditing ? (
-            <button
-              onClick={() => {
-                this.setState({ showOtherExpModal: true });
-                window.scrollTo(0, 0);
-              }}
-            >Add Other Experience
-            </button>
-          ) : null}
-          {this.renderOtherExperiences()}
-        </div>
+        <hr className="profile-divider" />
+        {this.state.isEditing ? (
+          <div className="exps-edit">
+            <div className="exp-header">
+              <h2>Work Experience</h2>
+              <button className="add-button"
+                onClick={() => {
+                  this.setState({ showWorkExpModal: true });
+                  window.scrollTo(0, 0);
+                }}
+              ><i className="fa fa-plus add-icon" aria-hidden="true" />
+              </button>
+            </div>
+            {this.renderWorkExperiences()}
+          </div>
+        ) : (
+          <div className="exps-fixed">
+            <h2>Work Experience</h2>
+            {this.renderWorkExperiences()}
+          </div>
+        )}
+        <hr className="profile-divider" />
+        {this.state.isEditing ? (
+          <div className="exps-edit">
+            <div className="exp-header">
+              <h2>Other Experience</h2>
+              <button className="add-button"
+                onClick={() => {
+                  this.setState({ showOtherExpModal: true });
+                  window.scrollTo(0, 0);
+                }}
+              ><i className="fa fa-plus add-icon" aria-hidden="true" />
+              </button>
+            </div>
+            {this.renderOtherExperiences()}
+          </div>
+        ) : (
+          <div className="exps-fixed">
+            <h2>Other Experience</h2>
+            {this.renderOtherExperiences()}
+          </div>
+        )}
         <button className="edit-button"
           onClick={this.submit}
         >{this.state.isEditing ? 'Save Changes' : 'Edit Profile'}

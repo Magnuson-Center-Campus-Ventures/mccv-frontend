@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/button-has-type */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -31,8 +32,15 @@ class WorkExperience extends Component {
   render() {
     return this.props.isEditing ? (
       <div className="work-exp">
-        <div className="input-title">Role</div>
-        <input className="short-input" defaultValue={this.props.workExp.role} onBlur={(event) => this.props.changeWorkExpField(this.props.index, 'role', event.target.value)} />
+        <div className="exp-button-row">
+          <div>
+            <div className="input-title">Role</div>
+            <input className="short-input" defaultValue={this.props.workExp.role} onBlur={(event) => this.props.changeWorkExpField(this.props.index, 'role', event.target.value)} />
+          </div>
+          <button className="del-button" onClick={() => this.props.deleteWorkExperience(this.props.workExp._id)}>
+            <i className="far fa-trash-alt delete-icon" />
+          </button>
+        </div>
         <div className="input-title">Employer</div>
         <input className="short-input" defaultValue={this.props.workExp.employer} onBlur={(event) => this.props.changeWorkExpField(this.props.index, 'employer', event.target.value)} />
         <div className="input-title">City</div>
@@ -63,9 +71,12 @@ class WorkExperience extends Component {
               <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format YYYY-MM' : null}</div>
               <input className="short-input"
                 placeholder="YYYY-MM"
-                defaultValue={new Date(this.props.workExp.end_date).getMonth() + 1 < 10
-                  ? `${new Date(this.props.workExp.end_date).getFullYear()}-0${new Date(this.props.workExp.end_date).getMonth() + 1}`
-                  : `${new Date(this.props.workExp.end_date).getFullYear()}-${new Date(this.props.workExp.end_date).getMonth() + 1}`}
+                defaultValue={this.props.workExp.end_date
+                  ? (new Date(this.props.workExp.end_date).getMonth() + 1 < 10
+                    ? `${new Date(this.props.workExp.end_date).getFullYear()}-0${new Date(this.props.workExp.end_date).getMonth() + 1}`
+                    : `${new Date(this.props.workExp.end_date).getFullYear()}-${new Date(this.props.workExp.end_date).getMonth() + 1}`
+                  )
+                  : ''}
                 onBlur={(event) => {
                   if (!this.isValidDate(event.target.value)) {
                     this.setState({ badEndDate: true });
@@ -89,25 +100,25 @@ class WorkExperience extends Component {
               onChange={(event) => {
                 this.setState({ currentlyWorking: event.target.checked, badEndDate: false });
                 this.props.changeWorkExpField(this.props.index, 'currently_working', event.target.checked);
+                this.props.changeWorkExpField(this.props.index, 'end_date', null);
               }}
             />
           </label>
         </form>
         <div className="input-title">Description</div>
         <TextareaAutosize className="tall-input" defaultValue={this.props.workExp.description} onBlur={(event) => this.changeWorkExpField(this.props.index, 'description', event.target.value)} />
-        <button onClick={() => this.props.deleteWorkExperience(this.props.workExp._id)}>Delete Work Experience</button>
       </div>
     )
       : (
         <div key={this.props.index} className="work-exp">
-          <div>{this.props.workExp.role}</div>
-          <div>{this.props.workExp.employer}</div>
+          <div className="exp-title">{this.props.workExp.employer}</div>
+          <div className="work-exp-role">{this.props.workExp.role}</div>
           <div>{`${this.props.workExp.city}, ${this.props.workExp.state}`}</div>
           <div className="date-row">
             {`${new Date(this.props.workExp.start_date).getMonth() + 1}/${new Date(this.props.workExp.start_date).getFullYear()} - `}
             {this.props.workExp.currently_working ? 'present' : `${new Date(this.props.workExp.end_date).getMonth() + 1}/${new Date(this.props.workExp.end_date).getFullYear()}`}
           </div>
-          <div>{this.props.workExp.description}</div>
+          <div className="exp-text">{this.props.workExp.description}</div>
         </div>
       );
   }

@@ -3,6 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import TextareaAutosize from 'react-textarea-autosize';
 import { createWorkExperience } from '../../../actions';
 import close from '../../../../static/img/close.png';
 import '../../../styles/student-profile.scss';
@@ -86,19 +87,19 @@ class NewWorkExp extends React.Component {
                   id="currentlyWorking"
                   type="checkbox"
                   checked={this.state.currently_working}
-                  onChange={(event) => this.setState({ currently_working: event.target.checked })}
+                  onChange={(event) => this.setState({ currently_working: event.target.checked, end_date: null })}
                 />
               </label>
             </form>
             <div className="input-title">Description</div>
-            <textarea className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
+            <TextareaAutosize className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
             <button className="modal-add-button"
               onClick={() => {
-                if (!this.isValidDate(this.state.start_date) || !this.isValidDate(this.state.end_date)) {
+                if (!this.isValidDate(this.state.start_date) || (!this.state.currently_working && !this.isValidDate(this.state.end_date))) {
                   if (!this.isValidDate(this.state.start_date)) {
                     this.setState({ badStartDate: true });
                   }
-                  if (!this.isValidDate(this.state.end_date)) {
+                  if (!this.state.currently_working && !this.isValidDate(this.state.end_date)) {
                     this.setState({ badEndDate: true });
                   }
                 } else {
@@ -114,7 +115,9 @@ class NewWorkExp extends React.Component {
                     currently_working: this.state.currently_working,
                   };
                   workExperience.start_date += '-15';
-                  workExperience.end_date += '-15';
+                  if (workExperience.end_date !== null) {
+                    workExperience.end_date += '-15';
+                  }
                   console.log('here');
                   this.props.createWorkExperience(workExperience);
                   this.props.onClose();

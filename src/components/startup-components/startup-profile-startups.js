@@ -183,7 +183,6 @@ class StartupProfile extends Component {
               this.addIndustry();
             }}
             onCreateOption={(newOption) => {
-              console.log(newOption);
               this.state.industry = newOption;
               this.props.createIndustryForStartup({ name: newOption }, this.props.startup);
             }}

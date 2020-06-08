@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
 import Switch from 'react-switch';
 import SearchBar from '../student-components/search-bar';
-import { fetchStudents, fetchStartupByUserID } from '../../actions';
+import { fetchStudents, fetchStartupByUserID, fetchUser } from '../../actions';
 import '../../styles/postings.scss';
 import StudentListItem from './student-item';
 
@@ -30,10 +30,12 @@ class Students extends Component {
       live: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
+    this.handleRecommendChange = this.handleRecommendChange.bind(this);
   }
 
   componentDidMount() {
     this.props.fetchStudents();
+    this.props.fetchUser(localStorage.getItem('userID'));
     this.props.fetchStartupByUserID(localStorage.getItem('userID'));
   }
 
@@ -189,16 +191,17 @@ class Students extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
   }
 
-  onRecommendPress = () => {
-    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
-    this.setState((prevState) => ({ recommend: !prevState.recommend }));
-  }
+  // implemented with toggle, so content of the function has been moved to onRecommendedChange
+  // onRecommendPress = () => {
+  //   const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+  //     ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+  //     : ['emptytext'];
+  //   const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+  //     ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+  //     : ['emptytext'];
+  //   this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
+  //   this.setState((prevState) => ({ recommend: !prevState.recommend }));
+  // }
 
   clear = () => {
     this.setState({ search: false, searchterm: 'emptytext' });
@@ -242,6 +245,17 @@ class Students extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
   }
 
+  handleRecommendChange(checked) {
+    this.setState({ recommend: checked });
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
+  }
+
   renderStudents() {
     if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
@@ -271,18 +285,26 @@ class Students extends Component {
   }
 
   renderRecButton() {
-    if (this.props.user.role === 'student') {
+    if (this.props.user.role === 'startup') {
       return (
-        <button type="button"
-          onClick={this.onRecommendPress}
-        >{this.state.recommend ? 'Show All Students' : 'Show Recommended Students'}
-        </button>
+        // <button type="button"
+        //   onClick={this.onRecommendPress}
+        // >{this.state.recommend ? 'Show All Students' : 'Show Recommended Students'}
+        // </button>
+        <div id="filters">
+          <h3>Show Recommended Students: </h3>
+          <div id="archiveToggle">
+            <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
+          </div>
+        </div>
       );
     } else if (this.props.user.role === 'admin') {
       return (
-        <div id="toggles">
-          <h3>show archived: </h3>
-          <Switch id="archiveToggle" onChange={this.handleArchiveChange} checked={this.state.archive} />
+        <div id="filters">
+          <h3>Show Archived Students: </h3>
+          <div id="archiveToggle">
+            <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+          </div>
         </div>
       );
     }
@@ -299,47 +321,56 @@ class Students extends Component {
     return (
       (this.props.students !== undefined || null) && (this.state.results !== null || undefined)
         ? (
-          <div>
-            <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="industry-filter"
-              placeholder="Filter by industry"
-              options={this.state.industryOptions}
-              value={this.state.selectedIndustryOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedIndustryOptions: selectedOptions });
-                const industries = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-                  ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                this.onFilter(industries, skills);
-              }}
-            />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="skill-filter"
-              placeholder="Filter by skill"
-              options={this.state.skillOptions}
-              value={this.state.selectedSkillOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedSkillOptions: selectedOptions });
-                const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-                  ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const skills = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                this.onFilter(industries, skills);
-              }}
-            />
-            {this.renderRecButton()}
-            <div className="list">
-              {this.renderStudents()}
+          <div className="pageContent">
+            <h1> All Students</h1>
+            <div className="content">
+              <div className="sideFilterBar">
+                <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
+                <Select
+                  isMulti
+                  className="filter"
+                  styles={dropdownStyles}
+                  name="industry-filter"
+                  placeholder="Filter by industry"
+                  options={this.state.industryOptions}
+                  value={this.state.selectedIndustryOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedIndustryOptions: selectedOptions });
+                    const industries = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+                      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    this.onFilter(industries, skills);
+                  }}
+                />
+                <Select
+                  isMulti
+                  className="filter"
+                  styles={dropdownStyles}
+                  name="skill-filter"
+                  placeholder="Filter by skill"
+                  options={this.state.skillOptions}
+                  value={this.state.selectedSkillOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedSkillOptions: selectedOptions });
+                    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+                      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const skills = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    this.onFilter(industries, skills);
+                  }}
+                />
+              </div>
+              <div className="rightSide">
+                {this.renderRecButton()}
+                <div className="list">
+                  {this.renderStudents()}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -356,4 +387,4 @@ const mapStateToProps = (reduxState) => ({
   user: reduxState.user.current,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStudents, fetchStartupByUserID })(Students));
+export default withRouter(connect(mapStateToProps, { fetchStudents, fetchStartupByUserID, fetchUser })(Students));

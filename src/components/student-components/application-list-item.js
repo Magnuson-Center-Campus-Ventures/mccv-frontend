@@ -39,8 +39,10 @@ class ApplicationListItem extends Component {
         if (this.props.current.responses[question._id]) {
           items.push(
             <div key={question._id} className="question">
-              <h3 id="question">{question.question}</h3>
-              <h2 id="answer">{this.props.current.responses[question._id]}</h2>
+              <div id="question">
+                <h3>{question.question}</h3>
+                <h2 id="answer">{this.props.current.responses[question._id]}</h2>
+              </div>
             </div>,
           );
         }
@@ -55,11 +57,19 @@ class ApplicationListItem extends Component {
     if (this.props.post != null && !isEmpty(this.props.post) && this.props.questions != null && !isEmpty(this.props.questions)) {
       return (
         <div>
-          <h1>{this.props.post.title}</h1>
-          <div>{`${this.props.post.city}, ${this.props.post.state}`}</div>
-          <h2 id="title">{this.props.current.status}</h2>
+          <div className="job-info">
+            <h1>{this.props.post.title}</h1>
+            <h2 id="startupName"> { this.props.post.startup_id.name} </h2>
+            <div className="location">
+              <span className="locationIcon" />
+              <h2> {`${this.props.post.city}, ${this.props.post.state}`} </h2>
+            </div>
+            <div className="app-status">
+              <h2>Status: {this.props.current.status}</h2>
+            </div>
+            <h1>Questions</h1>
+          </div>
           <div id="questions">
-            <h2>Questions</h2>
             {this.renderQuestions()}
           </div>
         </div>
