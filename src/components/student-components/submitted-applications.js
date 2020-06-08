@@ -36,6 +36,8 @@ class SubmittedApplications extends Component {
   }
 
   componentDidMount() {
+    this.props.clearPost();
+    this.props.clearApplication();
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchSubmittedApplications();
     this.props.fetchPosts();
@@ -128,7 +130,10 @@ class SubmittedApplications extends Component {
         }
       });
       this.setState({
-        studentApplications: updatedStudentApplications, statusOptions: newStatusOptions, titleOptions: newTitleOptions, applicationToTitle: newApplicationToTitle,
+        studentApplications: updatedStudentApplications,
+        statusOptions: newStatusOptions,
+        titleOptions: newTitleOptions,
+        applicationToTitle: newApplicationToTitle,
       });
     }
   }
@@ -147,11 +152,26 @@ class SubmittedApplications extends Component {
             }
           }
           return (
-            <Link to={route} key={application.id} className="listItem link">
-              <div className="Status">
-                <div>{post.title}</div>
-                <div>{post.location}</div>
-                <div>status: {application.status}</div>
+            <Link to={route} key={application.id} className="listItem">
+              <div className="companyInfo">
+                <img src={post.startup_id.logo} alt="no logo" />
+                <div className="companyText">
+                  <h1 id="startupName"> { post.startup_id.name} </h1>
+                  <div className="location">
+                    <span className="locationIcon" />
+                    <h2> {`${post.city}, ${post.state}`} </h2>
+                  </div>
+                </div>
+              </div>
+              <div className="postInfo">
+                <div id="info-title">
+                  <h1>Applied to: </h1>
+                  <div id="pill title">{post.title}</div>
+                </div>
+                <div id="info-status">
+                  <h1>Status: </h1>
+                  <div id="pill status">{post.status}</div>
+                </div>
               </div>
             </Link>
           );
@@ -173,11 +193,20 @@ class SubmittedApplications extends Component {
           }
         }
         return (
-          <Link to={route} key={application.id} className="listItem link">
-            <div className="Status">
-              <div>{post.title}</div>
-              <div>{post.location}</div>
-              <div>status: {application.status}</div>
+          <Link to={route} key={application.id} className="listItem">
+            <div className="companyInfo">
+              <img src={post.startup_id.logo} alt="no logo" />
+              <div className="companyText">
+                <h1 id="startupName"> { post.startup_id.name} </h1>
+                <div className="location">
+                  <span className="locationIcon" />
+                  <h2> {`${post.city}, ${post.state}`} </h2>
+                </div>
+              </div>
+            </div>
+            <div className="postInfo">
+              <h1 id="postTitle">{post.title}</h1>
+              <h2 id="status">status: {post.status}</h2>
             </div>
           </Link>
         );
@@ -196,7 +225,7 @@ class SubmittedApplications extends Component {
     return (
       (this.state.studentApplications !== undefined || null) && (this.state.results !== null || undefined)
         ? (
-          <div>
+          <div className="filter-container">
             <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
             <Select
               isMulti
