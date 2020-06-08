@@ -12,18 +12,16 @@ class Nav extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      usertype: '',
     };
   }
 
   componentDidMount() {
-    this.setState({ usertype: this.props.user.role });
     if (localStorage.getItem('userID')) {
       this.props.fetchUser(localStorage.getItem('userID'));
     }
-    if (this.state.usertype === 'student') {
+    /* if (this.props.role === 'student') {
       this.props.fetchStudentByID(this.props.user.student_profile_id);
-    }
+    } */
     this._isMounted = true;
   }
 
@@ -35,7 +33,7 @@ class Nav extends Component {
 
   // eslint-disable-next-line consistent-return
   navRender() {
-    if (this.props.authenticated && this.props.user.role === 'admin') { // if logged in user is an admin
+    if (this.props.authenticated && this.props.role === 'admin') { // if logged in user is an admin
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
@@ -57,7 +55,7 @@ class Nav extends Component {
           </div>
         </ul>
       );
-    } else if (this.props.authenticated && this.props.user.role === 'startup') { // if logged in user is a startup
+    } else if (this.props.authenticated && this.props.role === 'startup') { // if logged in user is a startup
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
@@ -69,7 +67,7 @@ class Nav extends Component {
           </button>
         </ul>
       );
-    } else if (this.props.authenticated && this.props.user.role === 'student') { // if logged in user is a student
+    } else if (this.props.authenticated && this.props.role === 'student') { // if logged in user is a student
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
@@ -78,7 +76,7 @@ class Nav extends Component {
           <li><NavLink to="/applications">Applications</NavLink></li>
           <li>
             <button type="button" className="navNameBtn">
-              <span className="navNameCta">{this.props.student.first_name}</span>
+              <span className="navNameCta">{this.props.name}</span>
             </button>
           </li>
           <div className="userDropdown">
@@ -120,9 +118,11 @@ class Nav extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
+  role: reduxState.user.current.role,
   user: reduxState.user.current,
   authenticated: reduxState.user.authenticated,
   student: reduxState.students.current_student,
+  name: reduxState.students.current_student.first_name,
 });
 
 
