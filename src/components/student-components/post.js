@@ -124,7 +124,7 @@ class Post extends Component {
   renderButtons() {
     if (this.props.user.role === 'admin') {
       return (
-        <button
+        <button className="post-btn"
           type="submit"
           onClick={(e) => {
             this.showArchiveModal();
@@ -136,7 +136,7 @@ class Post extends Component {
     } else if (this.props.user.role === 'startup') {
       return (
         <div className="post-startup-buttons">
-          <button
+          <button className="post-btn"
             type="submit"
             onClick={(e) => {
               this.showArchiveModal();
@@ -145,7 +145,7 @@ class Post extends Component {
             Archive Position
           </button>
 
-          <button
+          <button className="post-btn"
             type="submit"
             onClick={this.approvePost}
           >
@@ -153,6 +153,7 @@ class Post extends Component {
           </button>
 
           <button id="edit-post"
+            className="post-btn"
             type="submit"
             onClick={() => this.setState((prevState) => ({ isEditing: !prevState.isEditing }))}
           >{this.state.isEditing ? 'Save Changes' : 'Edit Position'}
@@ -161,7 +162,7 @@ class Post extends Component {
       );
     } else if (this.props.user.role === 'student') {
       return (
-        <button id="submit-app"
+        <button className="post-btn"
           type="submit"
           onClick={(e) => {
             this.showApplyModal();
