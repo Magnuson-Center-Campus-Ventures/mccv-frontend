@@ -37,6 +37,7 @@ class Posts extends Component {
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
+    this.handleRecommendChange = this.handleRecommendChange.bind(this);
   }
 
   componentDidMount() {
@@ -48,6 +49,15 @@ class Posts extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.posts.length > 0) {
+      // Load in approved posts
+      const { live } = prevState;
+      nextProps.posts.forEach((post) => {
+        if (live.filter((livePost) => livePost._id === post._id).length === 0
+            && post.status === 'Approved') {
+          live.push(post);
+        }
+      });
+      // Set up dropdown options
       const industryOptions = [];
       const skillOptions = [];
       const locationOptions = [];
@@ -102,9 +112,10 @@ class Posts extends Component {
       if (industryOptions.length > prevState.industryOptions.length
         || skillOptions.length > prevState.skillOptions.length
         || locationOptions.length > prevState.locationOptions.length
-        || dateOptions.length > prevState.dateOptions.length) {
+        || dateOptions.length > prevState.dateOptions.length
+        || live.length > prevState.live.length) {
         return {
-          industryOptions, skillOptions, locationOptions, dateOptions,
+          industryOptions, skillOptions, locationOptions, dateOptions, live,
         };
       }
     }
@@ -113,14 +124,14 @@ class Posts extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.posts.length > 0 && this.props.student !== {}
+    if (this.state.live.length > 0 && this.props.student !== {} && this.props.user !== {}
       && (prevProps.posts !== this.props.posts || prevProps.student !== this.props.student)) {
       // Score posts
       this.scorePosts();
-      // Load in approved posts
-      if (prevProps.posts !== this.props.posts) {
-        this.loadPosts();
-      }
+      // // Load in approved posts
+      // if (prevProps.posts !== this.props.posts) {
+      //   this.loadPosts();
+      // }
     }
   }
 
@@ -248,23 +259,6 @@ class Posts extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, this.state.recommend);
   }
 
-  onRecommendPress = () => {
-    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
-      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
-      ? this.state.selectedDateOptions.map((option) => option.value)
-      : [moment('1111-11-11')];
-    this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, !this.state.recommend);
-    this.setState((prevState) => ({ recommend: !prevState.recommend }));
-  }
-
   clear = () => {
     this.setState({ search: false, searchterm: 'emptytext' });
     const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
@@ -282,15 +276,16 @@ class Posts extends Component {
     this.searchAndFilter('emptytext', industries, skills, locations, dates, this.state.recommend);
   }
 
-  loadPosts() {
-    this.props.posts.forEach((post) => {
-      if (post.status === 'Approved') {
-        this.setState((prevState) => ({
-          live: [...prevState.live, post],
-        }));
-      }
-    });
-  }
+  // Now doing this in getDerivedStateFromProps to have live posts accessible in scorePosts
+  // loadPosts() {
+  //   this.props.posts.forEach((post) => {
+  //     if (post.status === 'Approved') {
+  //       this.setState((prevState) => ({
+  //         live: [...prevState.live, post],
+  //       }));
+  //     }
+  //   });
+  // }
 
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
@@ -317,6 +312,23 @@ class Posts extends Component {
       ? this.state.selectedDateOptions.map((option) => option.value)
       : [moment('1111-11-11')];
     this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, this.state.recommend);
+  }
+
+  handleRecommendChange(checked) {
+    this.setState({ recommend: checked });
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+      ? this.state.selectedDateOptions.map((option) => option.value)
+      : [moment('1111-11-11')];
+    this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, !this.state.recommend);
   }
 
   renderPosts() {
@@ -361,10 +373,12 @@ class Posts extends Component {
       );
     } else {
       return (
-        <button type="button"
-          onClick={this.onRecommendPress}
-        >{this.state.recommend ? 'Show All Posts' : 'Show Recommended Posts'}
-        </button>
+        <div id="filters">
+          <h3>Show Recommended Postings: </h3>
+          <div id="archiveToggle">
+            <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
+          </div>
+        </div>
       );
     }
   }

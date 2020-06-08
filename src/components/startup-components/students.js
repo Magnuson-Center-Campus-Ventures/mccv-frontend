@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom';
 import Select from 'react-select';
 import Switch from 'react-switch';
 import SearchBar from '../student-components/search-bar';
-import { fetchStudents, fetchStartupByUserID } from '../../actions';
+import { fetchStudents, fetchStartupByUserID, fetchUser } from '../../actions';
 import '../../styles/postings.scss';
 import StudentListItem from './student-item';
 
@@ -30,10 +30,12 @@ class Students extends Component {
       live: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
+    this.handleRecommendChange = this.handleRecommendChange.bind(this);
   }
 
   componentDidMount() {
     this.props.fetchStudents();
+    this.props.fetchUser(localStorage.getItem('userID'));
     this.props.fetchStartupByUserID(localStorage.getItem('userID'));
   }
 
@@ -189,16 +191,17 @@ class Students extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
   }
 
-  onRecommendPress = () => {
-    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
-    this.setState((prevState) => ({ recommend: !prevState.recommend }));
-  }
+  // implemented with toggle, so content of the function has been moved to onRecommendedChange
+  // onRecommendPress = () => {
+  //   const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+  //     ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+  //     : ['emptytext'];
+  //   const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+  //     ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+  //     : ['emptytext'];
+  //   this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
+  //   this.setState((prevState) => ({ recommend: !prevState.recommend }));
+  // }
 
   clear = () => {
     this.setState({ search: false, searchterm: 'emptytext' });
@@ -242,6 +245,17 @@ class Students extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
   }
 
+  handleRecommendChange(checked) {
+    this.setState({ recommend: checked });
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
+  }
+
   renderStudents() {
     if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
@@ -271,12 +285,18 @@ class Students extends Component {
   }
 
   renderRecButton() {
-    if (this.props.user.role === 'student') {
+    if (this.props.user.role === 'startup') {
       return (
-        <button type="button"
-          onClick={this.onRecommendPress}
-        >{this.state.recommend ? 'Show All Students' : 'Show Recommended Students'}
-        </button>
+        // <button type="button"
+        //   onClick={this.onRecommendPress}
+        // >{this.state.recommend ? 'Show All Students' : 'Show Recommended Students'}
+        // </button>
+        <div id="filters">
+          <h3>Show Recommended Students: </h3>
+          <div id="archiveToggle">
+            <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
+          </div>
+        </div>
       );
     } else if (this.props.user.role === 'admin') {
       return (
@@ -367,4 +387,4 @@ const mapStateToProps = (reduxState) => ({
   user: reduxState.user.current,
 });
 
-export default withRouter(connect(mapStateToProps, { fetchStudents, fetchStartupByUserID })(Students));
+export default withRouter(connect(mapStateToProps, { fetchStudents, fetchStartupByUserID, fetchUser })(Students));
