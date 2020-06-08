@@ -10,7 +10,6 @@ import AddPostPreferredSkills from './add-post-pref-skills';
 import AddPostIndustries from './add-post-industries';
 import AddPostDesiredClasses from './add-post-desired-classes';
 import AddPostDescription from './add-post-description';
-import AddPostResponsibilities from './add-post-responsibilities';
 import {
   fetchPost, updatePost, submitPost, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 } from '../../../actions';
@@ -41,7 +40,7 @@ class AddPost extends Component {
   }
 
   renderSubmit() {
-    if (this.state.index === 7) {
+    if (this.state.index === 6) {
       return (
         <div className="buttonContainer">
           <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
@@ -63,7 +62,7 @@ class AddPost extends Component {
       case 1:
         return <AddPostDescription />;
       case 2:
-        return <AddPostResponsibilities />;
+        return <AddPostTiming />;
       case 3:
         return <AddPostIndustries />;
       case 4:
@@ -72,8 +71,6 @@ class AddPost extends Component {
         return <AddPostPreferredSkills />;
       case 6:
         return <AddPostDesiredClasses />;
-      case 7:
-        return <AddPostTiming />;
       default:
         return <div>Out of pages!</div>;
     }
@@ -88,7 +85,7 @@ class AddPost extends Component {
           breakLabel="..."
           pageCount={7}
           marginPagesDisplayed={2}
-          pageRangeDisplayed={8}
+          pageRangeDisplayed={7}
           onPageChange={this.handlePageClick}
         />
         {this.renderComponent()}
@@ -107,8 +104,6 @@ export default withRouter(connect(mapStateToProps, {
   fetchPost, updatePost, submitPost, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 })(AddPost));
 
-// add activate button to postings
 // add timing
 //   set to noon
-// add responsibilities
 // test from student view all postings

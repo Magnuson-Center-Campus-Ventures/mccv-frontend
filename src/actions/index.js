@@ -61,18 +61,25 @@ export function fetchPosts() {
   };
 }
 
-export function createPost(post, history) {
+export function createPost(post, startup, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
-        // localStorage.setItem('postID', response.data.id);
+        // Update the student with the newly created post
+        startup.posts.push(response.data);
+        axios.put(`${ROOT_URL}/startups/${startup._id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
+          dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response2.data });
+        }).catch((error2) => {
+          dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
+        });
         history.push('/add-post/');
       }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
   };
 }
+
 // Moved to front-end implementation of search and filter, as per Thomas' advice
 
 // export function fetchPostSearch(searchterm) {
@@ -112,8 +119,6 @@ export function fetchPost(id) {
 export function updatePost(id, post) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      console.log('update post');
-      console.log(response.data);
       dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });

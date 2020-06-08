@@ -12,16 +12,24 @@ class AddPostDescription extends Component {
     super(props);
     this.state = {
       post: {},
-      // responsibilities: [],
+      resp: '',
+      responsibilities: [],
     };
+
+    this.onRespChange = this.onRespChange.bind(this);
+    this.addResp = this.addResp.bind(this);
+    this.deleteResp = this.deleteResp.bind(this);
   }
 
   // Get profile info
   componentDidMount() {
-    console.log('desc did mount');
-    console.log(this.props.post.id);
     this.props.fetchPost(this.props.post.id);
-    // this.props.fetchPost(localStorage.getItem('postID'));
+  }
+
+  onRespChange(event) {
+    console.log(event);
+    this.state.resp = event.target.value;
+    this.forceUpdate();
   }
 
   // update post field
@@ -40,17 +48,39 @@ class AddPostDescription extends Component {
     });
   }
 
-  // handleRespChange = (e) => {
-  //   const responsibilities = [...this.state.responsibilities];
-  //   responsibilities[e.target.dataset.id] = e.target.value;
-  //   this.setState({ responsibilities }, () => console.log(this.state.responsibilities));
-  // }
+  addResp = () => {
+    if (!this.props.post.responsibilities.includes(this.state.resp)) {
+      this.props.post.responsibilities.push(this.state.resp);
+    }
+    this.state.resp = '';
+    this.forceUpdate();
+  }
 
-  // addRespInput = (e) => {
-  //   this.setState((prevState) => ({
-  //     responsibilities: [...prevState.responsibilities, {}],
-  //   }));
-  // }
+  deleteResp = (resp) => {
+    console.log(resp);
+    this.props.post.responsibilities = this.props.post.responsibilities.filter((value) => {
+      console.log(value);
+      return (value !== resp.value);
+    });
+    this.forceUpdate();
+  }
+
+  renderResps() {
+    return (
+      this.props.post.responsibilities.map((value) => {
+        return (
+          <div className="post-add-resp" key={value}>
+            <div className="post-add-resp-text">
+              {value}
+            </div>
+            <button type="submit" className="delete-btn-post-resp" style={{ cursor: 'pointer' }} onClick={() => { this.deleteResp({ value }); }}>
+              <i className="far fa-trash-alt" id="icon" />
+            </button>
+          </div>
+        );
+      })
+    );
+  }
 
   renderDescQuestions() {
     if (this.props.post) {
@@ -75,30 +105,15 @@ class AddPostDescription extends Component {
                 </p>
                 <TextareaAutosize onChange={(event) => this.changePostField('description', event)} defaultValue={this.props.post.description} />
               </div>
-            </div>
-            {/* <div className="PostDescNameContainer">
-              <div className="PostDescQuestionLabelContainer">
-                <p className="PostDescLabel">
-                  Responsibilities
-                </p>
-
-                <div>
-                  <TextareaAutosize id="respInput" onChange={(event) => this.changePostField('description', event)} defaultValue="" />
-                </div>
-
-                <div className="startup-add-posting-box">
-                  <button type="button"
-                    className="startup-add-posting-btn"
-                    onClick={() => {
-                      this.addRespInput();
-                    }}
-                  >
-                    <i className="fas fa-plus" />
-                  </button>
-                </div>
-
+              <div id="PostResps">
+                <div className="StudentRespMinorListHeader">Responsibilities</div>
+                <input onChange={this.onRespChange} value={this.state.resp} />
+                <button type="submit" className="delete-btn-post-resp-minor" style={{ cursor: 'pointer' }} onClick={this.addResp} value={this.resp}>
+                  <i className="far fa-plus-square" id="icon" />
+                </button>
+                {this.renderResps()}
               </div>
-            </div> */}
+            </div>
           </div>
         </div>
       );

@@ -120,9 +120,6 @@ class AddPostClasses extends Component {
   }
 
   render() {
-    // still have occasioanl rendering issue for classes.all
-    console.log(this.props.post.desired_classes);
-    console.log(this.props.classes);
     if (this.props.post.desired_classes !== undefined && this.props.classes !== []) {
       return (
         <div className="AddPostClassContainer">

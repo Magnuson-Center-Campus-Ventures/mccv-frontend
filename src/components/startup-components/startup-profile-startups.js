@@ -118,7 +118,7 @@ class StartupProfile extends Component {
       state: '',
       remote: false,
     };
-    this.props.createPost(newPost, this.props.history);
+    this.props.createPost(newPost, this.props.startup, this.props.history);
   }
 
   handleApprovedToggle(checked) {
@@ -154,7 +154,6 @@ class StartupProfile extends Component {
 
   populateCurrentPosts() {
     this.state.posts = this.props.startup.posts.filter((value) => {
-      console.log(value.status);
       if (this.state.approved === this.state.archived && this.state.approved === this.state.pending) {
         return (value.status === 'Approved' || value.status === 'Archived' || value.status === 'Pending');
       } else if (value.status === 'Archived') {
@@ -282,7 +281,6 @@ class StartupProfile extends Component {
   // eslint-disable-next-line consistent-return
   renderDescription = (post) => {
     if (post.description !== undefined) {
-      // console.log(post.description);
       if (post.description.length > 100) {
         const description = `${post.description.substring(0, 99)}...`;
         return (

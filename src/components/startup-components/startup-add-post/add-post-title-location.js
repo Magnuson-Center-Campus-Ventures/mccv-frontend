@@ -17,8 +17,6 @@ class AddPostTitleLocation extends Component {
 
   // Get profile info
   componentDidMount() {
-    console.log('title did mount');
-    console.log(this.props.post.id);
     this.props.fetchPost(this.props.post.id);
   }
 
@@ -30,8 +28,6 @@ class AddPostTitleLocation extends Component {
     this.setState((prevState) => {
       const post = { ...prevState.post };
       post[field] = value;
-      console.log(this.props.post.id);
-      console.log(post);
       this.props.updatePost(this.props.post.id, post);
       return {
         ...prevState,
