@@ -63,12 +63,12 @@ class Post extends Component {
     });
   }
 
-  editMode = (e) => {
-    this.setState({
-      isEditing: true,
-    });
-    console.log(this.state.isEditing);
-  }
+  // editMode = (e) => {
+  //   this.setState({
+  //     isEditing: true,
+  //   });
+  //   console.log(this.state.isEditing);
+  // }
 
   requiredSkillsHelper= () => {
     const requiredSkills = [];
@@ -154,10 +154,8 @@ class Post extends Component {
 
           <button id="edit-post"
             type="submit"
-            onClick={(e) => {
-              this.editMode();
-            }}
-          >Edit Position
+            onClick={() => this.setState((prevState) => ({ isEditing: !prevState.isEditing }))}
+          >{this.state.isEditing ? 'Save Changes' : 'Edit Position'}
           </button>
         </div>
       );
