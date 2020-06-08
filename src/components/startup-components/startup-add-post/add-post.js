@@ -33,8 +33,12 @@ class AddPost extends Component {
 
   handlePageClick = (data) => {
     console.log('handle click');
-    // console.log(this.props.post);
-    // this.props.updatePost(this.props.post.id, this.props.post);
+    // new
+    console.log(this.props.post.id);
+    this.props.fetchPost(this.props.post.id);
+    console.log(this.props.post);
+    // end new
+    // this.props.updatePost(this.props.post.id, this.props.post); // wipes out db post
     this.setState({ index: data.selected });
     this.forceUpdate();
   };
@@ -44,7 +48,7 @@ class AddPost extends Component {
   }
 
   renderSubmit() {
-    if (this.state.index === 2) {
+    if (this.state.index === 4) {
       return (
         <div className="buttonContainer">
           <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>

@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
 // import CreateableSelect from 'react-select/creatable';
-import '../../../styles/startup-add-post/add-post-industries.scss';
+import '../../../styles/startup-add-post/add-post-req-skills.scss';
 import {
   fetchPost, createSkillForPost, updatePost, fetchAllSkills,
 } from '../../../actions';
 
-class AddPostSkills extends Component {
+class AddPostReqSkills extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -124,20 +124,20 @@ class AddPostSkills extends Component {
     // still have occasioanl rendering issue for skills.all
     if (this.props.post.required_skills !== undefined && this.props.skills.all !== []) {
       return (
-        <div className="AddPostSkillContainer">
-          <div className="AddPostSkillHeaderContainer">
-            <h1 className="AddPostSkillHeader">
-              Skills
+        <div className="AddPostReqSkillsContainer">
+          <div className="AddPostReqSkillsHeaderContainer">
+            <h1 className="AddPostReqSkillsHeader">
+              Required Skills
             </h1>
           </div>
-          <div className="AddPostSkillDescContainer">
-            <p className="AddPostSkillDesc">
-              What skills characterize your volunteer position?
+          <div className="AddPostReqSkillsDescContainer">
+            <p className="AddPostReqSkillsDesc">
+              What skills are required for your volunteer position?
             </p>
             <i className="fas fa-building" id="icon" />
           </div>
           <div id="skills">
-            <div className="AddPostSkillListHeader">Skills</div>
+            <div className="AddPostReqSkillsListHeader">Skills</div>
             {this.renderAddSkill()}
             {this.renderSkills()}
           </div>
@@ -159,4 +159,4 @@ const mapStateToProps = (reduxState) => ({
 
 export default withRouter(connect(mapStateToProps, {
   fetchPost, createSkillForPost, updatePost, fetchAllSkills,
-})(AddPostSkills));
+})(AddPostReqSkills));
