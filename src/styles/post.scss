@@ -107,22 +107,6 @@ ul {
     opacity: 50%;
 }
 
-.post-btn {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 2vw;
-    width: 15vw;
-    height: 5vw;
-    background: #45B990;
-    border: none;
-    box-sizing: border-box;
-    border-radius: 5px;
-    color: white;
-    position: fixed;
-    right: 2vw;
-    bottom: 7vw;
-}
 .post-btn:hover{
     background-color: #2D7D61;
 }
@@ -137,7 +121,7 @@ ul {
     padding-left: 12px;
     padding-right: 12px;
     border-radius: 20px;
-    margin-left: 2%;
+    margin-left: 20px;
 }
 .post-btn:hover {
     background-color: #015E36;

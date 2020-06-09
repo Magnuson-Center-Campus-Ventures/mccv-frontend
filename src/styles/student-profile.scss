@@ -57,14 +57,16 @@
 .exps-fixed {
   text-align: center;
   margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .exps-edit {
   text-align: center;
   margin-top: 30px;
-  // display: flex;
-  // flex-direction: column;
-  // align-items: flex-start;
-  // margin-left: -5vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .work-exp {
   display: flex;
