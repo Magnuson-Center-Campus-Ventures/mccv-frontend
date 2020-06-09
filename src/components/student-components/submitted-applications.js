@@ -225,7 +225,7 @@ class SubmittedApplications extends Component {
     return (
       (this.state.studentApplications !== undefined || null) && (this.state.results !== null || undefined)
         ? (
-          <div className="filter-container">
+          <div className="pageContent">
             <h1> View All Submitted Applications</h1>
             <div className="listContent">
               <div className="sideFilterBar">
@@ -267,9 +267,10 @@ class SubmittedApplications extends Component {
                   }}
                 />
               </div>
-
-              <div className="list">
-                {this.renderApplications()}
+              <div className="rightSide">
+                <div className="list">
+                  {this.renderApplications()}
+                </div>
               </div>
             </div>
 
