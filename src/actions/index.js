@@ -765,8 +765,9 @@ export function signupUser({
 // and deauths
 export function signoutUser(history) {
   return (dispatch) => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userID');
+    // localStorage.removeItem('token');
+    // localStorage.removeItem('userID');
+    localStorage.clear();
     dispatch({ type: ActionTypes.LOGOUT_USER });
     history.push('/signin');
   };

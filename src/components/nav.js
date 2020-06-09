@@ -25,7 +25,7 @@ class Nav extends Component {
   }
 
   signout = (event) => {
-    localStorage.clear();
+    // localStorage.clear(); put this in signoutUser function
     this.props.signoutUser(this.props.history);
   }
 
@@ -36,10 +36,10 @@ class Nav extends Component {
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/">Students</NavLink></li>
-          <li><NavLink to="/startupslanding">Startups</NavLink></li>
+          <li><NavLink exact to="/" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
+          <li><NavLink to="/startupslanding" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
           <li>
-            <NavLink to="/signin">
+            <NavLink to="/signin" activeClassName="noBorder">
               <button type="button" className="navLoginBtn">
                 <span className="navLoginCta">Login</span>
               </button>
@@ -51,31 +51,23 @@ class Nav extends Component {
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/posts">Positions</NavLink></li>
-          <li><NavLink to="/startups">Startups</NavLink></li>
-          <li><NavLink to="/students">Students</NavLink></li>
+          <li><NavLink to="/posts" className="navlink" activeClassName="activeBorder">Positions</NavLink></li>
+          <li><NavLink to="/startups" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
+          <li><NavLink to="/students" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
           <li>
-            <button type="button" className="navNameBtn">
-              <span className="navNameCta">Admin</span>
+            <button type="button" className="navLogoutBtn" onClick={this.signout}>
+              <span className="navLogoutCta">Logout</span>
             </button>
           </li>
-          <div className="userDropdown">
-            <div className="dropdownOptions">
-              <NavLink to="/profile">My Profile</NavLink>
-              <button type="button" className="navLogoutBtn" onClick={this.signout}>
-                <span className="navLogoutCta">Logout</span>
-              </button>
-            </div>
-          </div>
         </ul>
       );
     } else if (this.props.authenticated && this.props.role === 'startup') { // if logged in user is a startup
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/students">Students</NavLink></li>
-          <li><NavLink to="/startupsubmittedapplications">Applications</NavLink></li>
-          <li><NavLink to="/startupprofile">My Profile</NavLink></li>
+          <li><NavLink to="/students" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
+          <li><NavLink to="/startupsubmittedapplications" className="navlink" activeClassName="activeBorder">Applications</NavLink></li>
+          <li><NavLink to="/startupprofile" className="navlink" activeClassName="activeBorder">My Profile</NavLink></li>
           <button type="button" className="navLogoutBtn" onClick={this.signout}>
             <span className="navLogoutCta">Logout</span>
           </button>
@@ -85,9 +77,9 @@ class Nav extends Component {
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/posts">Positions</NavLink></li>
-          <li><NavLink to="/startups">Startups</NavLink></li>
-          <li><NavLink to="/applications">Applications</NavLink></li>
+          <li><NavLink to="/posts" className="navlink" activeClassName="activeBorder">Positions</NavLink></li>
+          <li><NavLink to="/startups" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
+          <li><NavLink to="/applications" className="navlink" activeClassName="activeBorder">Applications</NavLink></li>
           <li>
             <button type="button" className="navNameBtn">
               <span className="navNameCta">{this.props.name}</span>
@@ -95,7 +87,7 @@ class Nav extends Component {
           </li>
           <div className="userDropdown">
             <div className="dropdownOptions">
-              <NavLink to="/profile">My Profile</NavLink>
+              <NavLink to="/profile" className="navlink" activeClassName="activeBorder">My Profile</NavLink>
               <button type="button" className="navLogoutBtn" onClick={this.signout}>
                 <span className="navLogoutCta">Logout</span>
               </button>

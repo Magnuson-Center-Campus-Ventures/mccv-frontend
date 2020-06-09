@@ -101,7 +101,7 @@ class Students extends Component {
           startupIndustries.push(industry.name);
         });
       }
-      if (this.props.startup.posts) {
+      if (this.props.startup.posts && this.props.startup.posts.length > 0) {
         this.props.startup.posts.forEach((post) => {
           // Wrap datastore requests in promises,
           // then when they all resolve (all the necessary arrays are populated),
@@ -323,7 +323,7 @@ class Students extends Component {
     if (this.props.user.role === 'startup') {
       return (
         <div id="filters">
-          <h3>Show Recommended Students: </h3>
+          <h3>View Recommended Students: </h3>
           <div id="archiveToggle">
             <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
           </div>
@@ -353,7 +353,7 @@ class Students extends Component {
       (this.props.students !== undefined || null) && (this.state.results !== null || undefined)
         ? (
           <div className="pageContent">
-            <h1> All Students</h1>
+            <h1> View All Students</h1>
             <div className="content">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />

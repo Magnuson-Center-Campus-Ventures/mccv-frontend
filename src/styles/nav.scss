@@ -1,37 +1,63 @@
 body, html {
-    font-family: Avenir Next;
-    font-style: normal;
-    height: 100%;
-    padding: 0;
-    margin: 0;
+  font-family: Avenir Next;
+  font-style: normal;
+  min-height: 100%;
+  padding: 0;
+  margin: 0;
+  margin-top: 2.5rem;
+  margin-bottom: 3.5rem;
 }
+
 #nav-bar{
-    background: #2D7D61;
-    margin:0;
-    padding: 0;
-    height: 3.5em;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-a:link {
-    text-decoration: none;
+  background: #2D7D61;
+  margin:0;
+  padding: 0;
+  height: 4em;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  z-index: 1;
 }
 
 #nav-bar li{
-    //padding-right: 4vw;
-    padding-right: 2em;
-    padding-left: 2em;
-    list-style: none;
-}
-#nav-bar a{
-    color: white;
+  padding-left: 1em;
+  padding-right: 1em;
+  line-height: 3.5em;
+  font-size: 1em;
+  height: 100%;
+  width: 100%;
+  list-style: none;
+  border-bottom: .5em solid transparent;
+  color: white;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-#nav-bar .active {
-    color: white;
+#nav-bar a{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#nav-bar .navlink:visited{
+  color: white;
+  text-decoration: none;
+}
+
+#nav-bar .navlink:hover {
+  border-bottom: .5em solid #EFEFF0;
+}
+
+#nav-bar .navlink.activeBorder {
+  border-bottom: .5em solid #EFEFF0;
 }
 
 .mccv {
@@ -40,7 +66,6 @@ a:link {
 }
 
 #navbar li:first-child {
-  // margin-right: auto;
   flex-grow: 1;
 }
 
@@ -53,8 +78,6 @@ a:link {
   border-radius: .85em;
   width: 5.5em;
   height: 2.25em;
-  transition: width .25s, height .25s, font-size .25s;
-  transition-timing-function: linear;
   margin: 1.5em;
   font-family: Avenir Next;
 }
