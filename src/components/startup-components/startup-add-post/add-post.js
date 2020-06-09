@@ -37,7 +37,7 @@ class AddPost extends Component {
   };
 
   onSubmit = () => {
-    this.props.post.status = 'Approved';
+    this.props.post.status = this.props.currStatus;
     this.props.submitPost(this.props.post.id, this.props.post, this.props.history);
   }
 
@@ -99,6 +99,7 @@ class AddPost extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
+  currStatus: reduxState.startups.current.status,
   post: reduxState.posts.current,
 });
 
