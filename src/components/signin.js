@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { authError, signinUser } from '../actions/index';
+import { NavLink, withRouter } from 'react-router-dom';
 import { signinUser } from '../actions/index';
 import '../styles/signin.scss';
 
@@ -51,10 +51,19 @@ class Signin extends Component {
               <h2>Password</h2>
               <input type="password" onChange={this.onPasswordChange} value={this.state.password} />
             </div>
+
+            <div className="signupActions">
+              <button type="button" className="signinLoginBtn" onClick={this.signinNow}>
+                <span className="signinLoginCta">Login</span>
+              </button>
+
+              <NavLink to="/signup" className="signupLink">Don&apos;t have an account? Sign Up</NavLink>
+            </div>
           </div>
+
         </div>
 
-        <div className="signinButtons">
+        {/* <div className="signinButtons">
           <button type="button" className="signinSignupBtn" onClick={() => this.props.history.push('/signup')}>
             <span className="signinSignupCta">Sign Up</span>
           </button>
@@ -62,7 +71,7 @@ class Signin extends Component {
           <button type="button" className="signinLoginBtn" onClick={this.signinNow}>
             <span className="signinLoginCta">Login</span>
           </button>
-        </div>
+        </div> */}
 
         {this.renderError()}
       </div>
@@ -77,4 +86,4 @@ function mapStateToProps(reduxState) {
 }
 
 // export default connect(mapStateToProps, { authError, signinUser })(Signin);
-export default connect(mapStateToProps, { signinUser })(Signin);
+export default withRouter(connect(mapStateToProps, { signinUser })(Signin));
