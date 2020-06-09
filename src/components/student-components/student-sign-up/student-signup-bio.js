@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../../styles/student-sign-up/student-signup-bio.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent,
 } from '../../../actions';
@@ -40,46 +39,23 @@ class StudentBio extends Component {
 
   renderBioQuestions() {
     return (
-
-      <div className="StudentBioContainer">
-        <div className="StudentBioHeaderContainer">
-          <h1 className="StudentBioHeader">
-            Bio
-          </h1>
+      <div className="question">
+        <div className="question-header">
+          <div className="question-header-prompt">
+            <h1>Bio</h1>
+            <p>Add your name and graduation year!</p>
+          </div>
+          <i className="far fa-id-badge question-header-icon" id="icon" />
         </div>
-        <div className="StudentBioDescContainer">
-          <p className="StudentBioDesc">
-            Add your name and graduation year!
-          </p>
-          <i className="far fa-id-badge" id="icon" />
-        </div>
-        <div className="StudentBioQuestionsContainer">
-          <div className="nameContainer">
-            <div className="StudentBioQuestionLabelContainer">
-              <p className="StudentBioLabel">
-                First Name
-              </p>
-              <TextareaAutosize onBlur={(event) => this.changeStudentField('first_name', event)} defaultValue={this.props.student.first_name} />
-            </div>
-            <div className="StudentBioQuestionLabelContainer">
-              <p className="StudentBioLabel">
-                Last Name
-              </p>
-              <TextareaAutosize onBlur={(event) => this.changeStudentField('last_name', event)} defaultValue={this.props.student.last_name} />
-            </div>
-          </div>
-          <div className="StudentBioQuestionLabelContainer">
-            <p className="StudentBioLabel">
-              Graduation Year
-            </p>
-            <TextareaAutosize onBlur={(event) => this.changeStudentField('grad_year', event)} defaultValue={this.props.student.grad_year} />
-          </div>
-          <div className="StudentBioQuestionLabelContainer">
-            <p className="StudentBioLabel">
-              Phone Number
-            </p>
-            <TextareaAutosize onBlur={(event) => this.changeStudentField('phone_number', event)} defaultValue={this.props.student.phone_number} />
-          </div>
+        <div className="question-fields">
+          <p className="question-fields-title">First Name</p>
+          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('first_name', event)} defaultValue={this.props.student.first_name} />
+          <p className="question-fields-title">Last Name</p>
+          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('last_name', event)} defaultValue={this.props.student.last_name} />
+          <p className="question-fields-title">Graduation Year</p>
+          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('grad_year', event)} defaultValue={this.props.student.grad_year} />
+          <p className="question-fields-title">Phone Number</p>
+          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('phone_number', event)} defaultValue={this.props.student.phone_number} />
         </div>
       </div>
     );

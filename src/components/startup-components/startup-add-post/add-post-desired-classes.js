@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
-import '../../../styles/startup-add-post/add-post-industries.scss';
 import {
   fetchPost, createClassForPost, updatePost, fetchAllClasses,
 } from '../../../actions';
@@ -77,7 +76,8 @@ class AddPostClasses extends Component {
       }),
     };
     return (
-      <div className="add-classes">
+      <div className="question-fields-items-header">
+        <p className="question-fields-title">Desired Classes</p>
         <CreateableSelect
           className="select-dropdown"
           styles={customStyles}
@@ -103,9 +103,9 @@ class AddPostClasses extends Component {
       return (
         this.props.post.desired_classes.map((_class) => {
           return (
-            <div className="class" key={_class.name}>
+            <div className="question-fields-item" key={_class.name}>
               {_class.name}
-              <button type="submit" className="delete-btn-post-classes" style={{ cursor: 'pointer' }} onClick={() => { this.deleteClass({ _class }); }}>
+              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteClass({ _class }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>
@@ -122,22 +122,17 @@ class AddPostClasses extends Component {
   render() {
     if (this.props.post.desired_classes !== undefined && this.props.classes !== []) {
       return (
-        <div className="AddPostClassContainer">
-          <div className="AddPostClassHeaderContainer">
-            <h1 className="AddPostClassHeader">
-              Classes
-            </h1>
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Classes</h1>
+              <p>What classes characterize your volunteer position?</p>
+            </div>
+            <i className="fas fa-book-reader question-header-icon" id="icon" />
           </div>
-          <div className="AddPostClassDescContainer">
-            <p className="AddPostClassDesc">
-              What classes characterize your volunteer position?
-            </p>
-            <i className="fas fa-building" id="icon" />
-          </div>
-          <div id="classes">
-            <div className="AddPostClassListHeader">Classes</div>
+          <div className="question-fields">
             {this.renderAddClass()}
-            {this.renderClasses()}
+            <div className="question-fields-items">{this.renderClasses()}</div>
           </div>
         </div>
       );

@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
-import '../../../styles/student-sign-up/student-signup-industries.scss';
 import {
   fetchStudentByUserID, fetchUser,
   fetchAllIndustries, fetchCertainIndustries, createIndustryForStudent,
@@ -81,7 +80,8 @@ class StudentIndustries extends Component {
       }),
     };
     return (
-      <div className="add-industries">
+      <div className="question-fields-items-header">
+        <p className="question-fields-title">Industries</p>
         <CreateableSelect
           className="select-dropdown"
           styles={customStyles}
@@ -93,7 +93,6 @@ class StudentIndustries extends Component {
             this.addIndustry();
           }}
           onCreateOption={(newOption) => {
-            this.state.industry = newOption;
             this.state.industry = newOption;
             this.props.createIndustryForStudent({ name: newOption }, this.props.student);
           }}
@@ -107,9 +106,9 @@ class StudentIndustries extends Component {
       return (
         this.props.student.interested_industries.map((industry) => {
           return (
-            <div className="industry" key={industry.name}>
+            <div className="question-fields-item" key={industry.name}>
               {industry.name}
-              <button type="submit" className="delete-btn-student-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
+              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>
@@ -126,22 +125,17 @@ class StudentIndustries extends Component {
   render() {
     if (this.state.student.interested_industries !== undefined && this.props.industries !== []) {
       return (
-        <div className="StudentIndustryContainer">
-          <div className="StudentIndustryHeaderContainer">
-            <h1 className="StudentIndustryHeader">
-              Industries
-            </h1>
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Industries</h1>
+              <p>Add the industries you have an interest in!</p>
+            </div>
+            <i className="fas fa-book-reader question-header-icon" id="icon" />
           </div>
-          <div className="StudentIndustryDescContainer">
-            <p className="StudentIndustryDesc">
-              Add the industries you have an interest in!
-            </p>
-            <i className="fas fa-brain" id="icon" />
-          </div>
-          <div id="industries">
-            <div className="StudentIndustryListHeader">Industries</div>
+          <div className="question-fields">
             {this.renderAddIndustry()}
-            {this.renderIndustries()}
+            <div className="question-fields-items">{this.renderIndustries()}</div>
           </div>
         </div>
       );

@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
-import '../../../styles/student-sign-up/student-signup-industries.scss';
 import {
   fetchStudentByUserID, fetchUser,
   fetchAllClasses, fetchCertainClasses, createClassForStudent,
@@ -82,7 +81,8 @@ class StudentClasses extends Component {
       }),
     };
     return (
-      <div className="add-classes">
+      <div className="question-fields-items-header">
+        <p className="question-fields-title">Classes</p>
         <CreateableSelect
           className="select-dropdown"
           styles={customStyles}
@@ -106,11 +106,11 @@ class StudentClasses extends Component {
   renderClasses() {
     if (this.props.student?.relevant_classes) {
       return (
-        this.props.student.relevant_classes.map((course) => {
+        this.props.student.relevant_classes.map((_class) => {
           return (
-            <div className="class" key={course.name}>
-              {course.name}
-              <button type="submit" className="delete-btn-student-classes" style={{ cursor: 'pointer' }} onClick={() => { this.deleteClass({ course }); }}>
+            <div className="question-fields-item" key={_class.name}>
+              {_class.name}
+              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteClass({ _class }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>
@@ -127,22 +127,17 @@ class StudentClasses extends Component {
   render() {
     if (this.state.student.relevant_classes !== undefined && this.props.classes !== []) {
       return (
-        <div className="StudentClassContainer">
-          <div className="StudentClassHeaderContainer">
-            <h1 className="StudentClassHeader">
-              Classes
-            </h1>
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Classes</h1>
+              <p>Add the classes you have taken!!</p>
+            </div>
+            <i className="fas fa-book-reader question-header-icon" id="icon" />
           </div>
-          <div className="StudentClassDescContainer">
-            <p className="StudentClassDesc">
-              Add the classes you have!
-            </p>
-            <i className="fas fa-brain" id="icon" />
-          </div>
-          <div id="classes">
-            <div className="StudentClassListHeader">Classes</div>
+          <div className="question-fields">
             {this.renderAddClass()}
-            {this.renderClasses()}
+            <div className="question-fields-items">{this.renderClasses()}</div>
           </div>
         </div>
       );

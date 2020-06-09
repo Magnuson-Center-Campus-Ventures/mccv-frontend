@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../../styles/startup-sign-up/startup-signup-desc.scss';
 import {
   fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
 } from '../../../actions';
@@ -47,26 +46,17 @@ class StartupDesc extends Component {
 
      renderDescQuestions() {
        return (
-
-         <div className="StartupDescContainer">
-           <div className="StartupDescHeaderContainer">
-             <h1 className="StartupDescHeader">
-               Desc
-             </h1>
-           </div>
-           <div className="StartupDescDescContainer">
-             <p className="StartupDescDesc">
-               Add your startup’s name and location!
-             </p>
-             <i className="far fa-id-badge" id="icon" />
-           </div>
-           <div className="StartupDescQuestionsContainer">
-             <div className="StartupDescQuestionLabelContainer">
-               <p className="StartupDescLabel">
-                 Description
-               </p>
-               <TextareaAutosize onChange={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
+         <div className="question">
+           <div className="question-header">
+             <div className="question-header-prompt">
+               <h1>Description</h1>
+               <p>Add your startup’s description!</p>
              </div>
+             <i className="far fa-id-badge question-header-icon" id="icon" />
+           </div>
+           <div className="question-fields">
+             <p className="question-fields-title">Description</p>
+             <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
            </div>
          </div>
        );

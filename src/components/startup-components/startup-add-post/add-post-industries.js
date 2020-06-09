@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
-import '../../../styles/startup-add-post/add-post-industries.scss';
 import {
   fetchPost, createIndustryForPost, updatePost, fetchAllIndustries,
 } from '../../../actions';
@@ -77,7 +76,8 @@ class AddPostIndustries extends Component {
       }),
     };
     return (
-      <div className="add-industries">
+      <div className="question-fields-items-header">
+        <p className="question-fields-title">Industries</p>
         <CreateableSelect
           className="select-dropdown"
           styles={customStyles}
@@ -102,9 +102,9 @@ class AddPostIndustries extends Component {
       return (
         this.props.post.industries.map((industry) => {
           return (
-            <div className="industry" key={industry.name}>
+            <div className="question-fields-item" key={industry.name}>
               {industry.name}
-              <button type="submit" className="delete-btn-post-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
+              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>
@@ -122,22 +122,17 @@ class AddPostIndustries extends Component {
     // still have occasioanl rendering issue for industries.all
     if (this.props.post.industries !== undefined && this.props.industries.all !== []) {
       return (
-        <div className="AddPostIndustryContainer">
-          <div className="AddPostIndustryHeaderContainer">
-            <h1 className="AddPostIndustryHeader">
-              Industries
-            </h1>
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Industries</h1>
+              <p>What industries characterize your volunteer position?</p>
+            </div>
+            <i className="fas fa-building question-header-icon" id="icon" />
           </div>
-          <div className="AddPostIndustryDescContainer">
-            <p className="AddPostIndustryDesc">
-              What industries characterize your volunteer position?
-            </p>
-            <i className="fas fa-building" id="icon" />
-          </div>
-          <div id="industries">
-            <div className="AddPostIndustryListHeader">Industries</div>
+          <div className="question-fields">
             {this.renderAddIndustry()}
-            {this.renderIndustries()}
+            <div className="question-fields-items">{this.renderIndustries()}</div>
           </div>
         </div>
       );
