@@ -252,7 +252,7 @@ class Post extends Component {
   }
 
   approvePost() {
-    this.props.post.status = 'Approved';
+    this.props.post.status = this.props.status;
     this.props.updatePost(this.props.post.id, this.props.post);
     this.forceUpdate();
   }
@@ -611,6 +611,7 @@ class Post extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
+  status: reduxState.startups.current.status,
   post: reduxState.posts.current,
   user: reduxState.user.current,
   allIndustries: reduxState.industries.all,
