@@ -247,6 +247,10 @@ class StartupProfile extends Component {
               <p>About {`${this.props.startup.name}`}:</p>
               <div className="startup-description">{`${this.props.startup.description}`}</div>
             </div>
+            <button className="startup-edit-button edit-button"
+              onClick={this.submit}
+            >{this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
+            </button>
           </div>
         );
       } else {
@@ -268,6 +272,10 @@ class StartupProfile extends Component {
               <p>Description</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
             </div>
+            <button className="startup-edit-button edit-button"
+              onClick={this.submit}
+            >{this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
+            </button>
           </div>
         );
       }
@@ -356,16 +364,18 @@ class StartupProfile extends Component {
       return (
         <div className="startup-postings">
           <div className="startup-add-posting-box">
-            <h1>Volunteer Positions:</h1>
+            <span className="startup-postings-h1">Volunteer Positions:</span>
             <button type="button"
               className="startup-add-posting-btn"
               onClick={() => {
                 this.addPosting();
               }}
             >
-              <i className="fas fa-plus" />
+              <i className="fas fa-plus-circle" />
             </button>
           </div>
+          { this.renderToggles() }
+          <ul className="startup-postings-list" />
         </div>
       );
     }
@@ -376,10 +386,6 @@ class StartupProfile extends Component {
       <div className="startup">
         { this.renderPostings() }
         { this.renderStartup() }
-        <button className="edit-button"
-          onClick={this.submit}
-        >{this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
-        </button>
       </div>
     );
     /* if (this.props.startup.status === 'Approved') {

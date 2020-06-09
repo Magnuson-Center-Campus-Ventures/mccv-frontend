@@ -95,7 +95,7 @@ class Startup extends Component {
         this.props.startup.posts !== undefined
           ? (
             <div className="startup-postings">
-              <h1>Volunteer Positions:</h1>
+              <h1 className="startup-postings-header">Volunteer Positions:</h1>
               <ul className="startup-postings-list">
                 {mappingPostings}
               </ul>
@@ -105,7 +105,8 @@ class Startup extends Component {
     } else {
       return (
         <div className="startup-postings">
-          <h1>Volunteer Positions:</h1>
+          <h1 className="startup-postings-header">Volunteer Positions:</h1>
+          <ul className="startup-postings-list" />
         </div>
       );
     }
