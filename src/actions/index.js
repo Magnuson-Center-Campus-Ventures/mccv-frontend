@@ -242,6 +242,7 @@ export function fetchStudentByID(id) {
 export function fetchStudentByUserID(userID) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/profile/${userID}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      localStorage.setItem('firstName', response.data.first_name); // name for navBar
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, error });
@@ -714,7 +715,8 @@ export function signinUser({ email, password }, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/signin`, { email, password }).then((response) => {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userID', response.data.user.id); // can maybe take out
+      localStorage.setItem('userID', response.data.user.id);
+      localStorage.setItem('role', response.data.user.role);
       axios.get(`${ROOT_URL}/users/${response.data.user.id}`, { headers: { authorization: response.data.token } }).then((userResp) => {
         dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
         if (response.data.user.role === 'student' || response.data.user.role === 'admin') {
@@ -744,7 +746,8 @@ export function signupUser({
       email, password, role, student_profile_id, startup_id,
     }).then((response) => {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userID', response.data.user.id); // can maybe take out
+      localStorage.setItem('userID', response.data.user.id);
+      localStorage.setItem('role', response.data.user.role);
       // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
       if (response.data.user.role === 'student') {
@@ -765,8 +768,6 @@ export function signupUser({
 // and deauths
 export function signoutUser(history) {
   return (dispatch) => {
-    // localStorage.removeItem('token');
-    // localStorage.removeItem('userID');
     localStorage.clear();
     dispatch({ type: ActionTypes.LOGOUT_USER });
     history.push('/signin');

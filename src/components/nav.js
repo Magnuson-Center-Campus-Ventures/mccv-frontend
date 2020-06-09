@@ -15,10 +15,19 @@ class Nav extends Component {
   }
 
   componentDidMount() {
+    /*
     if (localStorage.getItem('userID')) {
       this.props.fetchUser(localStorage.getItem('userID'));
     }
     if (this.props.role === 'student') {
+      this.props.fetchStudentByID(this.props.user.student_profile_id);
+    } */
+    const role = localStorage.getItem('role');
+    const userID = localStorage.getItem('userID');
+    if (userID) {
+      this.props.fetchUser(userID);
+    }
+    if (role === 'student') {
       this.props.fetchStudentByID(this.props.user.student_profile_id);
     }
     this.setState({ isMounted: true });
@@ -32,7 +41,11 @@ class Nav extends Component {
 
   // eslint-disable-next-line consistent-return
   navRender() {
-    if (!this.props.authenticated) { // if not signed in
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+    const firstName = localStorage.getItem('firstName');
+    // if (!this.props.authenticated) { // if not signed in
+    if (!token) { // if not signed in
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
@@ -47,7 +60,8 @@ class Nav extends Component {
           </li>
         </ul>
       );
-    } else if (this.props.authenticated && this.props.role === 'admin') { // if logged in user is an admin
+    } else if (token && role === 'admin') { // if logged in user is an admin
+    // else if (this.props.authenticated && this.props.role === 'admin') { // if logged in user is an admin
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
@@ -61,7 +75,8 @@ class Nav extends Component {
           </li>
         </ul>
       );
-    } else if (this.props.authenticated && this.props.role === 'startup') { // if logged in user is a startup
+    } else if (token && role === 'startup') { // if logged in user is a startup
+    // else if (this.props.authenticated && this.props.role === 'startup') { // if logged in user is a startup
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
@@ -73,7 +88,8 @@ class Nav extends Component {
           </button>
         </ul>
       );
-    } else if (this.props.authenticated && this.props.role === 'student') { // if logged in user is a student
+    } else if (token && role === 'student') { // if logged in user is a student
+    // else if (this.props.authenticated && this.props.role === 'student') { // if logged in user is a student
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
@@ -82,7 +98,7 @@ class Nav extends Component {
           <li><NavLink to="/applications" className="navlink" activeClassName="activeBorder">Applications</NavLink></li>
           <li>
             <button type="button" className="navNameBtn">
-              <span className="navNameCta">{this.props.name}</span>
+              <span className="navNameCta">{firstName}</span>
             </button>
           </li>
           <div className="userDropdown">
@@ -109,11 +125,11 @@ class Nav extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  role: reduxState.user.current.role,
+  // role: reduxState.user.current.role,
   user: reduxState.user.current,
-  authenticated: reduxState.user.authenticated,
+  // authenticated: reduxState.user.authenticated,
   student: reduxState.students.current_student,
-  name: reduxState.students.current_student.first_name,
+  // name: reduxState.students.current_student.first_name,
 });
 
 
