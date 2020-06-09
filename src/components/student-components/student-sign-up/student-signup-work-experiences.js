@@ -127,6 +127,12 @@ class StudentWorkExperiences extends Component {
   render() {
     return (
       <div className="question">
+        <div className="student-profile">
+          <NewWorkExp
+            onClose={this.hideWorkExpModal}
+            show={this.state.show}
+          />
+        </div>
         <div className="question-header">
           <div className="question-header-prompt">
             <h1>Work Experience</h1>
@@ -144,12 +150,7 @@ class StudentWorkExperiences extends Component {
             {this.renderWorkExperiences()}
           </div>
         </div>
-        <div className="student-profile">
-          <NewWorkExp
-            onClose={this.hideWorkExpModal}
-            show={this.state.show}
-          />
-        </div>
+
       </div>
     );
   }
