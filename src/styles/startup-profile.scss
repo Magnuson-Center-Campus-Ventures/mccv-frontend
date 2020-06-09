@@ -7,6 +7,7 @@
 
 .startup-postings {
   position: fixed;
+  top: 5em;
   bottom: 3em;
   justify-content: center;
   margin-bottom: 0;
@@ -14,7 +15,7 @@
 }
 
 .startup-postings-header{
-  margin-bottom: 10vh;
+  margin-top: 1em;
   font-size: 1.5em;
   text-align: center;
 }
@@ -55,7 +56,22 @@
   list-style: none;
   background-color: #EDEDED;
   overflow-y: auto;
-  height: 60vh;
+  position: fixed;
+  top: 10em;
+  bottom: 3em;
+  width: 35vw;
+}
+
+.startup-postings-list-startup {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  background-color: #EDEDED;
+  overflow-y: auto;
+  position: fixed;
+  top: 15em;
+  bottom: 3em;
+  width: 35vw;
 }
 
 .startup-posting {
@@ -189,7 +205,6 @@ br{
   justify-content: center;
   align-items: center;
   margin-top: 1em;
-  margin-bottom: 1em;
 }
 
 .postingLink{

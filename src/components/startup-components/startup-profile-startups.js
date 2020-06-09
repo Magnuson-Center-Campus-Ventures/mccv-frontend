@@ -354,7 +354,7 @@ class StartupProfile extends Component {
                 </button>
               </div>
               { this.renderToggles() }
-              <ul className="startup-postings-list">
+              <ul className="startup-postings-list-startup">
                 {mappingPostings}
               </ul>
             </div>
@@ -375,7 +375,7 @@ class StartupProfile extends Component {
             </button>
           </div>
           { this.renderToggles() }
-          <ul className="startup-postings-list" />
+          <ul className="startup-postings-list-startup" />
         </div>
       );
     }
