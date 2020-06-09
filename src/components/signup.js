@@ -114,7 +114,7 @@ class Signup extends Component {
                 <span>Sign Up</span>
               </button>
 
-              <NavLink to="/signin" className="loginLink">Already have an account? Sign In</NavLink>
+              <NavLink to="/signin" className="loginLink">Already have an account? Login</NavLink>
             </div>
           </div>
         </div>
