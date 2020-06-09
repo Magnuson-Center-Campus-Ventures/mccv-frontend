@@ -7,9 +7,13 @@
 .startup-postings {
   width: 45vw;
   justify-content: center;
+}
+
+.startup-postings-list{
   background-color: #EDEDED;
   overflow-y: auto;
   margin-bottom: 5vh;
+  height: 60vh;
 }
 
 .startup-postings > h1{
@@ -151,7 +155,7 @@ br{
   display: flex;
   justify-content: center;
   align-content: center;
-  background-color:  #45B990;
+  background-color: transparent;
   color: white;
   border: 0px solid #C2C8CB; // 3px on white
   text-decoration: none;
@@ -166,11 +170,13 @@ br{
 
 .startup-add-posting-btn > i{
   margin: 0;
-  padding: 0;
+  margin-top: -.3em;
+  color: #45B990;
+  font-size: 2em;
 }
 
-.startup-add-posting-btn:hover {
-  background-color: #2D7D61;
+.startup-add-posting-btn > i:hover {
+  color: #2D7D61;
 }
 
 .startup-add-posting-box {
@@ -185,6 +191,14 @@ br{
 .postingLink{
   color: #000000;
   text-decoration: none;
+}
+
+.startup-posting > a:link{
+  color:black
+} 
+
+.startup-posting > a:visited{
+  color: black
 }
 
 .startup-profile-admin-buttons > button{

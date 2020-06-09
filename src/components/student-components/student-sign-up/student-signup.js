@@ -13,6 +13,7 @@ import StudentSignUpClasses from './student-signup-classes';
 import {
   fetchStudentByUserID, fetchUser, updateStudent, submitStudent, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 } from '../../../actions';
+import '../../../styles/create-new-paginator.scss';
 
 class StudentSignUp extends Component {
   constructor(props) {
@@ -43,7 +44,7 @@ class StudentSignUp extends Component {
   renderSubmit() {
     if (this.state.index === 7) {
       return (
-        <div className="buttonContainer">
+        <div className="question-submit">
           <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
             Submit!
           </button>
@@ -82,24 +83,24 @@ class StudentSignUp extends Component {
   render() {
     return (
       <div className="paginator">
+        {this.renderComponent()}
+        {this.renderSubmit()}
         <ReactPaginate
           previousLabel="previous"
           nextLabel="next"
           breakLabel="..."
           pageCount={8}
           marginPagesDisplayed={2}
-          pageRangeDisplayed={4}
+          pageRangeDisplayed={8}
           onPageChange={this.handlePageClick}
         />
-        {this.renderComponent()}
-        {this.renderSubmit()}
       </div>
     );
   }
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
+  userID: reduxState.user.userID,
   student: reduxState.students.current_student,
 });
 

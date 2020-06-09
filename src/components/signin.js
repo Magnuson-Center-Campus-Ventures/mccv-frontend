@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  authError, signinUser,
-} from '../actions/index';
+// import { authError, signinUser } from '../actions/index';
+import { signinUser } from '../actions/index';
 import '../styles/signin.scss';
 
 class Signin extends Component {
@@ -73,12 +72,9 @@ class Signin extends Component {
 
 function mapStateToProps(reduxState) {
   return {
-    authenticated: reduxState.auth.authenticated,
-    userID: reduxState.auth.userID,
-    error: reduxState.auth.error,
+    error: reduxState.user.error,
   };
 }
 
-export default connect(mapStateToProps, {
-  authError, signinUser,
-})(Signin);
+// export default connect(mapStateToProps, { authError, signinUser })(Signin);
+export default connect(mapStateToProps, { signinUser })(Signin);

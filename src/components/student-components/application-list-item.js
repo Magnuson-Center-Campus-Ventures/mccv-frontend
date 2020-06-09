@@ -83,7 +83,6 @@ class ApplicationListItem extends Component {
 const mapStateToProps = (reduxState) => ({
   student: reduxState.students.current_student,
   user: reduxState.user.current,
-  userID: reduxState.auth.userID,
   current: reduxState.submittedApplications.current,
   post: reduxState.posts.current,
   questions: reduxState.questions.all,

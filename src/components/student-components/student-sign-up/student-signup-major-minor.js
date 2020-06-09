@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import '../../../styles/student-sign-up/student-signup-major-minor.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent,
 } from '../../../actions';
@@ -82,16 +81,14 @@ class StudentMajorMinors extends Component {
 
   renderMajors() {
     return (
-      this.props.student.majors.map((major) => {
+      this.props.student.majors.map((value) => {
         return (
-          <div className="major" key={major}>
-            <div className="text">
-              {major}
-            </div>
-            <button type="submit" className="delete-btn-student-major-minor" style={{ cursor: 'pointer' }} onClick={() => { this.deleteMajor({ major }); }}>
+          <li className="question-fields-resp" key={value}>
+            {value}
+            <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteMajor({ value }); }}>
               <i className="far fa-trash-alt" id="icon" />
             </button>
-          </div>
+          </li>
         );
       })
     );
@@ -99,16 +96,14 @@ class StudentMajorMinors extends Component {
 
   renderMinors() {
     return (
-      this.state.student.minors.map((minor) => {
+      this.state.student.minors.map((value) => {
         return (
-          <div className="minor" key={minor}>
-            <div className="text">
-              {minor}
-            </div>
-            <button type="submit" className="delete-btn-student-major-minor" style={{ cursor: 'pointer' }} onClick={() => { this.deleteMinor({ minor }); }}>
+          <li className="question-fields-resp" key={value}>
+            {value}
+            <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteMinor({ value }); }}>
               <i className="far fa-trash-alt" id="icon" />
             </button>
-          </div>
+          </li>
         );
       })
     );
@@ -117,33 +112,27 @@ class StudentMajorMinors extends Component {
   render() {
     if (this.state.student.majors !== undefined && this.state.student.minors !== undefined) {
       return (
-        <div className="StudentMajorMinorContainer">
-          <div className="StudentMajorMinorHeaderContainer">
-            <h1 className="StudentMajorMinorHeader">
-              Majors/Minors
-            </h1>
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Majors/Minors</h1>
+              <p>Add your majors and minors!</p>
+            </div>
+            <i className="fas fa-user-graduate question-header-icon" id="icon" />
           </div>
-          <div className="StudentMajorMinorDescContainer">
-            <p className="StudentMajorMinorDesc">
-              Add your majors and minors!
-            </p>
-            <i className="fas fa-user-graduate" id="icon" />
-          </div>
-          <div id="majors">
-            <div className="StudentMajorMinorListHeader">Majors</div>
-            <input onChange={this.onMajorChange} value={this.state.major} />
-            <button type="submit" className="delete-btn-student-major-minor" style={{ cursor: 'pointer' }} onClick={this.addMajor} value={this.major}>
+          <div className="question-fields">
+            <p className="question-fields-title">Majors</p>
+            <input className="question-fields-text" onChange={this.onMajorChange} value={this.state.major} />
+            <button className="question-fields-button" type="submit" style={{ cursor: 'pointer' }} onClick={this.addMajor} value={this.major}>
               <i className="far fa-plus-square" id="icon" />
             </button>
-            {this.renderMajors()}
-          </div>
-          <div id="minors">
-            <div className="StudentMajorMinorListHeader">Minors</div>
-            <input onChange={this.onMinorChange} value={this.state.minor} />
-            <button type="submit" className="delete-btn-student-major-minor" style={{ cursor: 'pointer' }} onClick={this.addMinor} value={this.minor}>
+            <ul className="question-fields-list-mm">{this.renderMajors()}</ul>
+            <p className="question-fields-title">Minors</p>
+            <input className="question-fields-text" onChange={this.onMinorChange} value={this.state.minor} />
+            <button className="question-fields-button" type="submit" style={{ cursor: 'pointer' }} onClick={this.addMinor} value={this.minor}>
               <i className="far fa-plus-square" id="icon" />
             </button>
-            {this.renderMinors()}
+            <ul className="question-fields-list-mm">{this.renderMinors()}</ul>
           </div>
         </div>
       );
@@ -156,7 +145,7 @@ class StudentMajorMinors extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
+  userID: reduxState.user.userID,
   student: reduxState.students.current_student,
 });
 

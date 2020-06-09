@@ -13,6 +13,7 @@ import AddPostDescription from './add-post-description';
 import {
   fetchPost, updatePost, submitPost, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 } from '../../../actions';
+import '../../../styles/create-new-paginator.scss';
 
 class AddPost extends Component {
   constructor(props) {
@@ -36,13 +37,14 @@ class AddPost extends Component {
   };
 
   onSubmit = () => {
+    this.props.post.status = 'Approved';
     this.props.submitPost(this.props.post.id, this.props.post, this.props.history);
   }
 
   renderSubmit() {
     if (this.state.index === 6) {
       return (
-        <div className="buttonContainer">
+        <div className="question-submit">
           <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
             Submit!
           </button>
@@ -79,24 +81,24 @@ class AddPost extends Component {
   render() {
     return (
       <div className="paginator">
+        {this.renderComponent()}
+        {this.renderSubmit()}
         <ReactPaginate
-          previousLabel="previous"
-          nextLabel="next"
+          className="pagintor-options"
+          previousLabel="Previous"
+          nextLabel="Next"
           breakLabel="..."
           pageCount={7}
           marginPagesDisplayed={2}
           pageRangeDisplayed={7}
           onPageChange={this.handlePageClick}
         />
-        {this.renderComponent()}
-        {this.renderSubmit()}
       </div>
     );
   }
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
   post: reduxState.posts.current,
 });
 

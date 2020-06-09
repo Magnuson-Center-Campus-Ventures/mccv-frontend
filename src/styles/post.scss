@@ -107,7 +107,7 @@ ul {
     opacity: 50%;
 }
 
-#submit-app {
+.post-btn {
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;
@@ -121,9 +121,9 @@ ul {
     color: white;
     position: fixed;
     right: 2vw;
-    bottom: 2vw;
+    bottom: 7vw;
 }
-#submit-app:hover{
+.post-btn:hover{
     background-color: #2D7D61;
 }
   

@@ -9,7 +9,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import '../../../styles/student-sign-up/student-signup-workexperiences.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent, updateOtherExperience, fetchOtherExperiences, deleteOtherExperience,
 } from '../../../actions';
@@ -65,6 +64,7 @@ class StudentOtherExperiences extends Component {
      this.state.otherExps.forEach((otherExp) => {
        this.props.updateOtherExperience(otherExp._id, otherExp);
      });
+     this.props.updateStudent(this.state.student.id, this.state.student);
    }
 
    changeOtherExpField = (index, field, value) => {
@@ -76,17 +76,6 @@ class StudentOtherExperiences extends Component {
          otherExps,
        };
      });
-   }
-
-   submit = () => {
-     if (this.state.isEditing) {
-       const student = { ...this.state.student };
-       this.props.updateStudent(this.state.student.id, student);
-       this.state.otherExps.forEach((otherExp) => {
-         this.props.updateOtherExperience(otherExp._id, otherExp);
-       });
-     }
-     this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
    }
 
      // update student field
@@ -102,15 +91,6 @@ class StudentOtherExperiences extends Component {
            student,
          };
        });
-     }
-
-     // Removes time from date
-     convertDate=(date) => {
-       if (typeof date !== 'undefined') {
-         const dateISO = date.slice(0, 10).split('-');
-         return `${dateISO[1]}/${dateISO[2]}/${dateISO[0]}`;
-       }
-       return '';
      }
 
      hideOtherExpModal = () => {
@@ -135,49 +115,28 @@ class StudentOtherExperiences extends Component {
 
     render() {
       return (
-        <div>
-          <div className="StudentOtherExperienceContainer">
-            {/* <NewOtherExp onClose={this.hideModal} show={this.state.show} /> */}
-            <div className="StudentOtherExperienceHeaderContainer">
-              <h1 className="StudentOtherExperienceHeader">
-                Personal Projects And Other Experiences
-              </h1>
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Personal Projects And Other Experiences</h1>
+              <p>Add personal projects and other experiences that have been meaningful to you!</p>
             </div>
-            <div className="StudentOtherExperienceDescContainer">
-              <p className="StudentOtherExperienceDesc">
-                Add personal projects and other experiences that have been meaningful to you!
-              </p>
-              <i className="fas fa-briefcase" id="icon" />
+            <i className="fas fa-briefcase question-header-icon" id="icon" />
+          </div>
+          <div className="question-fields">
+            <div className="question-fields-exp-header">
+              <p className="question-fields-title">Personal Projects And Other Experiences</p>
+              <i className="fas fa-plus-circle question-fields-button" id="addicon" onClick={(e) => { this.showModal(); }} />
             </div>
-            <div className="OtherExperienceSubtitle">
-              <u>
-                Personal Projects And Other Experiences
-              </u>
-              <i className="fas fa-plus-circle"
-                id="addicon"
-                onClick={(e) => {
-                  this.showModal();
-                }}
-              />
-              <i className="far fa-edit"
-                id="editicon"
-                onClick={(e) => {
-                  this.submit();
-                }}
-              />
+            <div id="other-exps">
+              {this.renderOtherExperiences()}
             </div>
-            {/* <div id="other-exps">
-               {this.renderOtherExperiences()};
-             </div> */}
           </div>
           <div className="student-profile">
             <NewOtherExp
               onClose={this.hideOtherExpModal}
               show={this.state.show}
             />
-            <div id="other-exps">
-              {this.renderOtherExperiences()}
-            </div>
           </div>
         </div>
       );
@@ -185,7 +144,7 @@ class StudentOtherExperiences extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
+  userID: reduxState.user.userID,
   student: reduxState.students.current_student,
   otherExps: reduxState.students.current_other_exps,
 });

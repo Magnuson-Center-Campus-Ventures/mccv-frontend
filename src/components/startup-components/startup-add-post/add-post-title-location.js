@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../../styles/startup-add-post/add-post-title-location.scss';
 import {
   fetchPost, updatePost,
 } from '../../../actions';
@@ -39,35 +38,21 @@ class AddPostTitleLocation extends Component {
   renderTitleQuestions() {
     if (this.props.post) {
       return (
-        <div className="PostTitleContainer">
-          <div className="PostTitleHeaderContainer">
-            <h1 className="PostTitleHeader">
-              Title and Location
-            </h1>
-          </div>
-          <div className="PostTitleDescContainer">
-            <p className="PostTitleDesc">
-              Add the title and location of this volunteer position
-            </p>
-            <i className="far fa-id-badge" id="icon" />
-          </div>
-          <div className="PostTitleQuestionsContainer">
-            <div className="PostTitleNameContainer">
-              <div className="PostTitleQuestionLabelContainer">
-                <p className="PostTitleLabel">
-                  Title
-                </p>
-                <TextareaAutosize onChange={(event) => this.changePostField('title', event)} defaultValue={this.props.post.title} />
-                <p className="PostTitleLabel">
-                  City
-                </p>
-                <TextareaAutosize onChange={(event) => this.changePostField('city', event)} defaultValue={this.props.post.city} />
-                <p className="PostTitleLabel">
-                  State
-                </p>
-                <TextareaAutosize onChange={(event) => this.changePostField('state', event)} defaultValue={this.props.post.state} />
-              </div>
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Title and Location</h1>
+              <p>Add the title and location of this volunteer position</p>
             </div>
+            <i className="far fa-id-badge question-header-icon" id="icon" />
+          </div>
+          <div className="question-fields">
+            <p className="question-fields-title">Title</p>
+            <TextareaAutosize className="question-fields-text" onChange={(event) => this.changePostField('title', event)} defaultValue={this.props.post.title} />
+            <p className="question-fields-title">City</p>
+            <TextareaAutosize className="question-fields-text" onChange={(event) => this.changePostField('city', event)} defaultValue={this.props.post.city} />
+            <p className="question-fields-title">State</p>
+            <TextareaAutosize className="question-fields-text" onChange={(event) => this.changePostField('state', event)} defaultValue={this.props.post.state} />
           </div>
         </div>
       );
@@ -82,7 +67,6 @@ class AddPostTitleLocation extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
   post: reduxState.posts.current,
 });
 
