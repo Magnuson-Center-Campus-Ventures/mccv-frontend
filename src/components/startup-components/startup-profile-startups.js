@@ -154,9 +154,7 @@ class StartupProfile extends Component {
 
   populateCurrentPosts() {
     this.state.posts = this.props.startup.posts.filter((value) => {
-      if (this.state.approved === this.state.archived && this.state.approved === this.state.pending) {
-        return (value.status === 'Approved' || value.status === 'Archived' || value.status === 'Pending');
-      } else if (value.status === 'Archived') {
+      if (value.status === 'Archived') {
         return (this.state.archived);
       } else if (value.status === 'Pending') {
         return (this.state.pending);
