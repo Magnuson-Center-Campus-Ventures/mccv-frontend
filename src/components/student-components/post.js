@@ -253,6 +253,7 @@ class Post extends Component {
 
   approvePost() {
     this.props.post.status = this.props.status;
+    console.log(this.props.post.status);
     this.props.updatePost(this.props.post.id, this.props.post);
     this.forceUpdate();
   }
@@ -273,21 +274,29 @@ class Post extends Component {
     } else if (this.props.user.role === 'startup') {
       return (
         <div className="post-startup-buttons">
-          <button className="post-btn"
-            type="submit"
-            onClick={(e) => {
-              this.showArchiveModal();
-            }}
-          >
-            Archive Position
-          </button>
+          {!this.state.isEditing
+            ? (
+              <button className="post-btn"
+                type="submit"
+                onClick={(e) => {
+                  this.showArchiveModal();
+                }}
+              >
+                Archive Position
+              </button>
+            )
+            : null}
 
-          <button className="post-btn"
-            type="submit"
-            onClick={this.approvePost}
-          >
-            Approve Posting
-          </button>
+          {!this.state.isEditing
+            ? (
+              <button className="post-btn"
+                type="submit"
+                onClick={this.approvePost}
+              >
+                Approve Posting
+              </button>
+            )
+            : null}
 
           <button id="edit-post"
             className="post-btn"
@@ -566,6 +575,9 @@ class Post extends Component {
           <h2 id="name">{this.props.post.startup_id.name}</h2>
           <img src={pin} alt="location" />
           <h2 id="state">{`${this.props.post.city}, ${this.props.post.state}`}</h2>
+          {this.props.user.role === 'startup'
+            ? <h2 id="post-status-view">{`Status: ${this.props.post.status}`}</h2>
+            : null }
         </div>
         <div className="top">
           <div id="project">
