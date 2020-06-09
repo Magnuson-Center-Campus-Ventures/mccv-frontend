@@ -1,53 +1,66 @@
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
+  // user actions
   FETCH_USER: 'FETCH_USER',
+  LOGOUT_USER: 'LOGOUT_USER',
+  AUTH_ERROR: 'AUTH_ERROR',
+  // post actions
   FETCH_POST: 'FETCH_POST',
   CLEAR_POST: 'CLEAR_POST',
   FETCH_POSTS: 'FETCH_POSTS',
   UPDATE_POST: 'UPDATE_POST',
+  // startup actions
   FETCH_STARTUP: 'FETCH_STARTUP',
   FETCH_STARTUPS: 'FETCH_STARTUPS',
+  // student actions
   FETCH_STUDENT: 'FETCH_STUDENT',
   CLEAR_STUDENT: 'CLEAR_STUDENT',
   CREATE_STUDENT: 'CREATE_STUDENT',
   FETCH_STUDENTS: 'FETCH_STUDENTS',
   FETCH_STUDENT_USER: 'FETCH_STUDENT_USER',
+  // work experience actions
   FETCH_WORK_EXPS: 'FETCH_WORK_EXPS',
   ADD_WORK_EXP: 'ADD_WORK_EXP',
   UPDATE_WORK_EXP: 'UPDATE_WORK_EXP',
   DELETE_WORK_EXP: 'DELETE_WORK_EXP',
+  // other experience actions
   FETCH_OTHER_EXPS: 'FETCH_OTHER_EXPS',
   ADD_OTHER_EXP: 'ADD_OTHER_EXP',
   UPDATE_OTHER_EXP: 'UPDATE_OTHER_EXP',
   DELETE_OTHER_EXP: 'DELETE_OTHER_EXP',
+  // application actions
   FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
   FETCH_APPLICATION: 'FETCH_APPLICATION',
+  // question actions
   FETCH_QUESTIONS: 'FETCH_QUESTIONS',
   FETCH_QUESTION: 'FETCH_QUESTION',
+  // submitted application actions
   FETCH_SUBMITTED_APPLICATIONS: 'FETCH_SUBMITTED_APPLICATIONS',
   FETCH_SUBMITTED_APPLICATION: 'FETCH_SUBMITTED_APPLICATION',
   UPDATE_SUBMITTED_APPLICATION: 'UPDATE_SUBMITTED_APPLICATION',
   SUBMIT_APPLICATION: 'SUBMIT_APPLICATION',
   CLEAR_APPLICATION: 'CLEAR_APPLICATION',
+  // industry actions
   FETCH_ALL_INDUSTRIES: 'FETCH_ALL_INDUSTRIES',
   FETCH_SOME_INDUSTRIES: 'FETCH_SOME_INDUSTRIES',
   ADD_INDUSTRY: 'ADD_INDUSTRY',
+  // skills actions
   FETCH_ALL_SKILLS: 'FETCH_ALL_SKILLS',
   FETCH_SOME_SKILLS: 'FETCH_SOME_SKILLS',
   ADD_SKILL: 'ADD_SKILL',
+  // classes actions
   FETCH_ALL_CLASSES: 'FETCH_ALL_CLASSES',
   FETCH_SOME_CLASSES: 'FETCH_SOME_CLASSES',
   ADD_CLASS: 'ADD_CLASS',
+  // general error
   ERROR_SET: 'ERROR_SET',
-  AUTH_USER: 'AUTH_USER',
-  DEAUTH_USER: 'DEAUTH_USER',
-  LOGOUT_USER: 'LOGOUT_USER',
-  AUTH_ERROR: 'AUTH_ERROR',
+  // AUTH_USER: 'AUTH_USER',
+  // DEAUTH_USER: 'DEAUTH_USER',
 };
 
 export function fetchPosts() {
@@ -116,6 +129,7 @@ export function fetchPost(id) {
   };
 }
 
+// this is broken btw
 export function updatePost(id, post) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
@@ -697,19 +711,15 @@ export function signinUser({ email, password }, history) {
   // takes in an object with email and password (minimal user object)
   // returns a thunk method that takes dispatch as an argument (just like our create post method really)
   // does an axios.post on the /signin endpoint
-  // on success does:
-  // dispatch({ type: ActionTypes.AUTH_USER, id: result.id });
-  // localStorage.setItem('token', response.data.token);
-  // on error should dispatch(authError(`Sign In Failed: ${error.response.data}`));
   return (dispatch) => {
     axios.post(`${ROOT_URL}/signin`, { email, password }).then((response) => {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userID', response.data.id); // can maybe take out
-      axios.get(`${ROOT_URL}/users/${response.data.id}`, { headers: { authorization: response.data.token } }).then((userResp) => {
-        dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
-        if (response.data.role === 'student' || response.data.role === 'admin') {
+      localStorage.setItem('userID', response.data.user.id); // can maybe take out
+      axios.get(`${ROOT_URL}/users/${response.data.user.id}`, { headers: { authorization: response.data.token } }).then((userResp) => {
+        dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
+        if (response.data.user.role === 'student' || response.data.user.role === 'admin') {
           history.push('/posts');
-        } else if (response.data.role === 'startup') {
+        } else if (response.data.user.role === 'startup') {
           history.push('/students');
         }
         dispatch({ type: ActionTypes.FETCH_USER, payload: userResp.data });
@@ -729,23 +739,21 @@ export function signupUser({
   // takes in an object with email and password (minimal user object)
   // returns a thunk method that takes dispatch as an argument (just like our create post method really)
   // does an axios.post on the /signup endpoint (only difference from above)
-  // on success does:
-  //  dispatch({ type: ActionTypes.AUTH_USER });
-  //  localStorage.setItem('token', response.data.token);
-  // on error should dispatch(authError(`Sign Up Failed: ${error.response.data}`));
   return (dispatch) => {
     axios.post(`${ROOT_URL}/signup`, {
       email, password, role, student_profile_id, startup_id,
     }).then((response) => {
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userID', response.data.id); // can maybe take out
-      dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
-      // dispatch({ type: ActionTypes.AUTH_USER });
-      if (role === 'student') {
+      localStorage.setItem('userID', response.data.user.id); // can maybe take out
+      // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
+      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
+      if (response.data.user.role === 'student') {
         history.push('/student-signup');
-      } else if (role === 'startup') {
+      } else if (response.data.user.role === 'startup') {
         history.push('/startup-signup');
-      } // and maybe add admin as well
+      } else if (response.data.user.role === 'admin') { // likely not to reach here as no option to determine role of admin
+        history.push('/posts');
+      }
     }).catch((error) => {
       // eslint-disable-next-line no-alert
       dispatch(authError(`Sign Up Failed: ${error.response.data}`));
@@ -757,8 +765,10 @@ export function signupUser({
 // and deauths
 export function signoutUser(history) {
   return (dispatch) => {
-    localStorage.removeItem('token');
-    dispatch({ type: ActionTypes.DEAUTH_USER });
+    // localStorage.removeItem('token');
+    // localStorage.removeItem('userID');
+    localStorage.clear();
+    dispatch({ type: ActionTypes.LOGOUT_USER });
     history.push('/signin');
   };
 }
@@ -773,13 +783,6 @@ export function fetchUser(id) {
     });
   };
 }
-
-export function clearUserState() {
-  return (dispatch) => {
-    dispatch({ type: ActionTypes.LOGOUT_USER });
-  };
-}
-
 
 export function updateUser(id, user) {
   return (dispatch) => {

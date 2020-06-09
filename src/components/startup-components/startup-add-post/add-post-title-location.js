@@ -82,7 +82,6 @@ class AddPostTitleLocation extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
   post: reduxState.posts.current,
 });
 

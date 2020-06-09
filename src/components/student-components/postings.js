@@ -341,7 +341,7 @@ class Posts extends Component {
         });
       } else {
         return (
-          <div> Sorry, no postings match that query</div>
+          <div> Sorry, no positions match that query</div>
         );
       }
     } else if (this.state.archive) {
@@ -365,7 +365,7 @@ class Posts extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          <h3>Show Archived Postings: </h3>
+          <h3>Show Archived Volunteer Positions: </h3>
           <div id="archiveToggle">
             <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
           </div>
@@ -374,7 +374,7 @@ class Posts extends Component {
     } else {
       return (
         <div id="filters">
-          <h3>Show Recommended Postings: </h3>
+          <h3>View Recommended Volunteer Positions: </h3>
           <div id="archiveToggle">
             <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
           </div>
@@ -396,7 +396,7 @@ class Posts extends Component {
       this.props.posts && this.state.results
         ? (
           <div className="pageContent">
-            <h1> All Postings</h1>
+            <h1> View All Volunteer Positions</h1>
             <div className="content">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
