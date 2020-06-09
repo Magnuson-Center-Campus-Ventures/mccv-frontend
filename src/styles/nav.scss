@@ -22,16 +22,15 @@ body, html {
   z-index: 1;
 }
 
-#nav-bar li{
+.navLi{
   padding-left: 1em;
   padding-right: 1em;
-  line-height: 3.5em;
   font-size: 1em;
   height: 100%;
   width: 100%;
   list-style: none;
   border-bottom: .5em solid transparent;
-  color: white;
+  // color: white;
   text-decoration: none;
   display: flex;
   flex-direction: column;
@@ -39,57 +38,137 @@ body, html {
   align-items: center;
 }
 
-#nav-bar a{
+.navlink{
+  color: white;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  line-height: 3.5em;
 }
 
-#nav-bar .navlink:visited{
+.navlink:visited{
   color: white;
   text-decoration: none;
 }
 
-#nav-bar .navlink:hover {
+.navlink:hover {
   border-bottom: .5em solid #EFEFF0;
+  cursor: pointer;
 }
 
-#nav-bar .navlink.activeBorder {
+.navlink.activeBorder {
   border-bottom: .5em solid #EFEFF0;
 }
 
 .mccv {
   color: white;
   font-weight: 550;
+  margin: 0px;
 }
 
 #navbar li:first-child {
   flex-grow: 1;
+  height: 4em;
 }
 
 .navLoginBtn, .navLogoutBtn{
   background-color: #EFEFF0;
   color: black;
-  border: 0px solid #C2C8CB; // 3px on white
+  border: 0px; 
   text-decoration: none;
   font-size: 1em;
   border-radius: .85em;
   width: 5.5em;
   height: 2.25em;
-  margin: 1.5em;
+  margin: 0em;
   font-family: Avenir Next;
 }
 
-.navLoginBtn:hover, .navLogoutBtn:hover{
+.navDropdownLogoutBtn{
+  background-color: #45B990;
+  color: white;
+  border: 0px;
+  text-decoration: none;
+  font-size: 1em;
+  border-radius: .85em;
+  width: 5.5em;
+  height: 2.25em;
+  margin: 0em;
+  font-family: Avenir Next;
+}
+
+.navLoginBtn:hover, .navLogoutBtn:hover {
   background-color: #C2C8CB;
+  cursor: pointer;
+}
+
+.navDropdownLogoutBtn:hover{
+  background-color: #2D7D61;
+  cursor: pointer
+}
+
+.navNameBtn {
+  background-color: #2D7D61;
+  border: 0px;
+  height: 100%;
+  min-width: 8em;
+  margin: 0px;
+  font-size: 1em;
+  font-family: Avenir Next;
+  font-style: normal;
+  color: white;
 }
 
 .dropdownOptions {
-  // visibility: hidden;
+  display: none;
+}
+
+.dropdownContainer:hover .dropdownOptions{
+  cursor: pointer;
+  display: block;
+  height: 8em;
+  background-color: #EFEFF0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-around;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.dropdownOptions::after {
+  display: block;
+}
+
+.dropdownLi {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
+  margin: 0px;
+  padding: 0px;
+  color: black;
+  text-decoration: none;
+  line-height: 2em;
+}
+
+.navLinkDropdown, .navlinkDropdown:visited{
+  color: black;
+  text-decoration: none;
+}
+
+.navlinkDropdown:hover {
+  border-bottom: .25em solid #2D7D61;
+  cursor: pointer;
+}
+
+.navlinkDropdown.activeBorder {
+  border-bottom: .25em solid #2D7D61;
+}
+
+.fa-user {
+  color: white;
+  font-size: 1.5em;
+  padding-right: .5em;
 }
