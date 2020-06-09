@@ -56,16 +56,18 @@ class StartupIndustries extends Component {
   }
 
   populateCurrentIndustries() {
-    this.props.startup.industries.forEach((value) => {
-      if (!this.state.selectedIndustries.includes(value.name)) {
-        this.state.selectedIndustries.push(value.name);
-      }
-    });
-    this.props.industries.forEach((value) => {
-      if (!this.state.selectedIndustries.includes(value.name)) {
-        this.state.displayIndustries.push({ label: value.name });
-      }
-    });
+    if (this.state.displayIndustries.length === 0) {
+      this.props.startup.industries.forEach((value) => {
+        if (!this.state.selectedIndustries.includes(value.name)) {
+          this.state.selectedIndustries.push(value.name);
+        }
+      });
+      this.props.industries.forEach((value) => {
+        if (!this.state.selectedIndustries.includes(value.name)) {
+          this.state.displayIndustries.push({ label: value.name });
+        }
+      });
+    }
   }
 
 
