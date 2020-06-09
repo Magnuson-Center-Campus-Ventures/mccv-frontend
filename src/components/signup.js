@@ -1,5 +1,6 @@
 /* eslint-disable react/no-did-update-set-state */
 import React, { Component } from 'react';
+import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   authError, signupUser, createStudent, updateUser,
@@ -85,7 +86,7 @@ class Signup extends Component {
       <div className="signupPage">
         <div className="signupBoard">
           <div className="signupLeft">
-            <h1>Are you a</h1>
+            <h1>Sign up as a</h1>
             <div className="roleButtons">
               <button type="button" className={this.studentClassname()} onClick={this.roleStudent}>
                 <span className="roleStudentCta">Student</span>
@@ -107,10 +108,18 @@ class Signup extends Component {
               <h2>Password</h2>
               <input type="password" onChange={this.onPasswordChange} value={this.state.password} />
             </div>
+
+            <div className="signupActions">
+              <button type="button" className="signupSignupBtn" onClick={this.signupNow}>
+                <span>Sign Up</span>
+              </button>
+
+              <NavLink to="/signin" className="loginLink">Already have an account? Sign In</NavLink>
+            </div>
           </div>
         </div>
 
-        <div className="signupButtons">
+        {/* <div className="signupButtons">
           <button type="button" className="signupLoginBtn" onClick={() => this.props.history.push('/signin')}>
             <span>Login</span>
           </button>
@@ -118,7 +127,7 @@ class Signup extends Component {
           <button type="button" className="signupSignupBtn" onClick={this.signupNow}>
             <span>Sign Up</span>
           </button>
-        </div>
+        </div> */}
         {this.renderError()}
       </div>
     );
@@ -131,6 +140,6 @@ function mapStateToProps(reduxState) {
   };
 }
 
-export default connect(mapStateToProps, {
+export default withRouter(connect(mapStateToProps, {
   authError, signupUser, createStudent, updateUser,
-})(Signup);
+})(Signup));
