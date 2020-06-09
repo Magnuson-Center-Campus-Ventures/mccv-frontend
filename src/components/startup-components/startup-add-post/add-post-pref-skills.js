@@ -56,16 +56,18 @@ class AddPostPrefSkillss extends Component {
   }
 
   populateCurrentSkills() {
-    this.props.post.preferred_skills.forEach((value) => {
-      if (!this.state.selectedSkills.includes(value.name)) {
-        this.state.selectedSkills.push(value.name);
-      }
-    });
-    this.props.skills.forEach((value) => {
-      if (!this.state.selectedSkills.includes(value.name)) {
-        this.state.displaySkills.push({ label: value.name });
-      }
-    });
+    if (this.state.displaySkills.length === 0) {
+      this.props.post.preferred_skills.forEach((value) => {
+        if (!this.state.selectedSkills.includes(value.name)) {
+          this.state.selectedSkills.push(value.name);
+        }
+      });
+      this.props.skills.forEach((value) => {
+        if (!this.state.selectedSkills.includes(value.name)) {
+          this.state.displaySkills.push({ label: value.name });
+        }
+      });
+    }
   }
 
   renderAddSkill() {

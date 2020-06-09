@@ -12,25 +12,25 @@
 }
 
 .paginator > ul > li{
-  padding: 2em;
-  padding-top: 1vh;
-  padding-bottom: 1vh;
   display: inline;
-  background-color: #C6CED2;
-  transition: color .25s, background-color 0;
 }
 
 .paginator > ul > li > a{
   cursor: pointer;
+  background-color: #C6CED2;
+  padding: 2em;
+  padding-top: .5em;
+  padding-bottom: .5em;
+  transition: color .25s, background-color 0;
 }
 
-.paginator > ul > li.previous{
+.paginator > ul > li.previous > a{
   color: white;
   background-color: #45B990;
   margin-right: 2em;
 }
 
-.paginator > ul > li.next{
+.paginator > ul > li.next > a{
   color: white;
   background-color: #45B990;
   padding-right: 3em;
@@ -38,7 +38,7 @@
   margin-left: 2em;
 }
 
-.paginator > ul > li.selected{
+.paginator > ul > li.selected > a{
   color: white;
   background-color: #45B990;
   transition: color .125s, background-color .25s;
@@ -140,4 +140,3 @@
 .question-fields-exp-header{
   display: flex;
 }
-
