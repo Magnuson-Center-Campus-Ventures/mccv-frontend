@@ -60,13 +60,13 @@ class StudentProfile extends Component {
     if (this.props.student && this.props.student !== {} && prevProps.student !== this.props.student) {
       const student = this.props.student;
 
-      if (this.props.student.first_name && this.props.student.first_name === prevProps.student.first_name) {
+      if (this.props.student.first_name && this.props.student.first_name === prevProps.student.first_name && prevState.student.first_name) {
         student.first_name = prevState.student.first_name;
       }
-      if (this.props.student.last_name && this.props.student.last_name === prevProps.student.last_name) {
+      if (this.props.student.last_name && this.props.student.last_name === prevProps.student.last_name && prevState.student.last_name) {
         student.last_name = prevState.student.last_name;
       }
-      if (this.props.student.phone_number && this.props.student.phone_number === prevProps.student.phone_number) {
+      if (this.props.student.phone_number && this.props.student.phone_number === prevProps.student.phone_number && prevState.student.phone_number) {
         student.phone_number = prevState.student.phone_number;
       }
 
@@ -466,7 +466,7 @@ class StudentProfile extends Component {
       return (
         <div className="profile-fixed">
           <div id="profile-header">
-            <h1>{`${this.state.student.first_name} ${this.state.student.last_name}`}</h1>
+            <h1>{`${this.state.student?.first_name} ${this.state.student?.last_name}`}</h1>
             <div id="class-year">{`Class of ${this.props.student?.grad_year}`}</div>
             <div id="major-row">
               <div>Major in</div>
