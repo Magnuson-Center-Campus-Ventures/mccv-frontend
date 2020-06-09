@@ -128,6 +128,15 @@ body{
     margin-right: 2vw;
 }
 
+#lastOne > h1 {
+    margin-block-end: 0;
+    margin-block-start: 0;
+    font-weight: normal;
+    border-bottom: 0;
+    font-size: 120%;
+    margin-right: 2vw; 
+}
+
 .extraInfo > h3 {
     font-weight: normal;
     font-size: 90%
@@ -136,6 +145,10 @@ body{
 .industriesList{
     display: flex;
     flex-wrap: wrap;
+}
+
+.postIndustries{
+    display: block;
 }
 
 .industriesList > h2 {

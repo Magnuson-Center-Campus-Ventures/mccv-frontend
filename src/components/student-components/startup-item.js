@@ -21,10 +21,21 @@ const StartupListItem = (props) => {
         </h1>
       );
     }
-    return (
-      <h1 key={industry.id} id="notFirstInd">
-        {industry.name}
-      </h1>
+    return index < 3 ? (
+      index === 2 && props.startup.industries.length > 3 ? (
+        <div id="lastOne">
+          <h1 key={industry.id} id="notFirstInd">
+            {industry.name}
+          </h1>
+          <p> and {props.startup.industries.length - 3} more...  </p>
+        </div>
+      ) : (
+        <h1 key={industry.id} id="notFirstInd">
+          {industry.name}
+        </h1>
+      )
+    ) : (
+      <div />
     );
   });
 
