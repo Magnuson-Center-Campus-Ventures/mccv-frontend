@@ -107,7 +107,7 @@ ul {
     opacity: 50%;
   }
 
-#submit-app {
+.post-btn {
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;
@@ -121,25 +121,10 @@ ul {
     color: white;
     position: fixed;
     right: 2vw;
-    bottom: 2vw;
+    bottom: 7vw;
 }
-#submit-app:hover{
+.post-btn:hover{
     background-color: #2D7D61;
-}
-  
-.post-btn {
-    background-color: #45B990;
-    color: white;
-    border: none;
-    padding-top: 7px;
-    padding-bottom: 7px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 20px;
-    margin-left: 2%;
-}
-.post-btn:hover {
-    background-color: #015E36;
 }
 .post-btn:focus {
     outline: 0;

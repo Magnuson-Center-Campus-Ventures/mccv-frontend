@@ -170,7 +170,7 @@ class SubmittedApplications extends Component {
                 </div>
                 <div id="info-status">
                   <h1>Status: </h1>
-                  <div id="pill status">{post.status}</div>
+                  <div id="pill status">{application.status}</div>
                 </div>
               </div>
             </Link>
@@ -206,7 +206,7 @@ class SubmittedApplications extends Component {
             </div>
             <div className="postInfo">
               <h1 id="postTitle">{post.title}</h1>
-              <h2 id="status">status: {post.status}</h2>
+              <h2 id="status">status: {application.status}</h2>
             </div>
           </Link>
         );
