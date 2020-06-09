@@ -342,7 +342,7 @@ class StartupProfile extends Component {
                     this.addPosting();
                   }}
                 >
-                  <i className="fas fa-plus" />
+                  <i className="fas fa-plus-circle" />
                 </button>
               </div>
               { this.renderToggles() }

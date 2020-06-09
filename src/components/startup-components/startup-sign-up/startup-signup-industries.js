@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
-import '../../../styles/startup-sign-up/startup-signup-industries.scss';
 import {
   fetchStartupByUserID, fetchUser,
   fetchAllIndustries, fetchCertainIndustries, createIndustryForStartup,
