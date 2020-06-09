@@ -112,11 +112,11 @@ class Signup extends Component {
 
         <div className="signupButtons">
           <button type="button" className="signupLoginBtn" onClick={() => this.props.history.push('/signin')}>
-            <span className="signupSignupCta">Login</span>
+            <span>Login</span>
           </button>
 
           <button type="button" className="signupSignupBtn" onClick={this.signupNow}>
-            <span className="signupLoginCta">Sign Up</span>
+            <span>Sign Up</span>
           </button>
         </div>
         {this.renderError()}
