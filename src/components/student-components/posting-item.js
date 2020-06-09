@@ -18,7 +18,7 @@ const PostListItem = (props) => {
       return (
         <h2 key={industry.id}>
           <div id="industryTitle">
-            Industries: <div className="pill"> {industry.name} </div>
+            Industries: <div className="pill" id="notFirstInd"> {industry.name} </div>
           </div>
         </h2>
       );

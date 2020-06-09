@@ -1,15 +1,23 @@
+html{
+    height: 100%;
+}
+
+body{
+    min-height: 100%;
+}
+
 #main{
-    height: 100%
+    min-height:80vh;
 }
 
 #main-div{
-    height: 100%
+    min-height:90vh;
 }
 
-.content{
+.listContent{
     display: flex;
     justify-content: flex-start;
-    height: 100%;
+    min-height:80vh;
 }
 
 .list{
@@ -34,7 +42,7 @@
 .companyInfo{
     display: flex;
     justify-content: space-between;
-    height: 40%;
+    height: 35%;
     margin-right: 5px;
     margin-left: 5px;
 }
@@ -78,7 +86,7 @@
 }
 
 .postInfo{
-    height: 60%;
+    height: 65%;
     margin-right: 5px;
     margin-left: 15px;
 }
@@ -120,6 +128,15 @@
     margin-right: 2vw;
 }
 
+#lastOne > h1 {
+    margin-block-end: 0;
+    margin-block-start: 0;
+    font-weight: normal;
+    border-bottom: 0;
+    font-size: 120%;
+    margin-right: 2vw; 
+}
+
 .extraInfo > h3 {
     font-weight: normal;
     font-size: 90%
@@ -128,6 +145,10 @@
 .industriesList{
     display: flex;
     flex-wrap: wrap;
+}
+
+.postIndustries{
+    display: block;
 }
 
 .industriesList > h2 {
@@ -143,6 +164,23 @@
     margin-bottom: 1vh;
     margin-right: 1vw;
 }
+
+#postings{
+    margin-left: 0;
+    margin-bottom: 1vh;
+    margin-right: 1vw;
+}
+
+#lastOne{
+    display: flex;
+}
+
+#lastOne > p{
+    margin-block-end: 0;
+    margin-block-start: 0;
+    font-style: italic;;
+}
+
 
 #industryTitle{
     display: flex;
@@ -191,7 +229,8 @@
 }
 
 .pageContent{
-    height: 100%
+    height: 100%;
+    margin-bottom: 0;
 }
 
 .pageContent > h1{
