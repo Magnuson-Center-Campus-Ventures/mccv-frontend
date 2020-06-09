@@ -226,46 +226,53 @@ class SubmittedApplications extends Component {
       (this.state.studentApplications !== undefined || null) && (this.state.results !== null || undefined)
         ? (
           <div className="filter-container">
-            <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="status-filter"
-              placeholder="Filter by Status"
-              options={this.state.statusOptions}
-              value={this.state.selectedStatusOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedStatusOptions: selectedOptions });
-                const titles = (this.state.selectedTitleOptions && this.state.selectedTitleOptions.length > 0)
-                  ? this.state.selectedTitleOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const statuses = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                this.onFilter(statuses, titles);
-              }}
-            />
-            <Select
-              isMulti
-              styles={dropdownStyles}
-              name="title-filter"
-              placeholder="Filter by Title"
-              options={this.state.titleOptions}
-              value={this.state.selectedTitleOptions}
-              onChange={(selectedOptions) => {
-                this.setState({ selectedTitleOptions: selectedOptions });
-                const titles = (selectedOptions && selectedOptions.length > 0)
-                  ? selectedOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                const statuses = (this.state.selectedStatusOptions && this.state.selectedStatusOptions.length > 0)
-                  ? this.state.selectedStatusOptions.map((option) => option.value.toLowerCase())
-                  : ['emptytext'];
-                this.onFilter(statuses, titles);
-              }}
-            />
-            <div className="list">
-              {this.renderApplications()}
+            <h1> View All Submitted Applications</h1>
+            <div className="listContent">
+              <div className="sideFilterBar">
+                <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
+                <Select
+                  isMulti
+                  styles={dropdownStyles}
+                  name="status-filter"
+                  placeholder="Filter by Status"
+                  options={this.state.statusOptions}
+                  value={this.state.selectedStatusOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedStatusOptions: selectedOptions });
+                    const titles = (this.state.selectedTitleOptions && this.state.selectedTitleOptions.length > 0)
+                      ? this.state.selectedTitleOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const statuses = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    this.onFilter(statuses, titles);
+                  }}
+                />
+                <Select
+                  isMulti
+                  styles={dropdownStyles}
+                  name="title-filter"
+                  placeholder="Filter by Title"
+                  options={this.state.titleOptions}
+                  value={this.state.selectedTitleOptions}
+                  onChange={(selectedOptions) => {
+                    this.setState({ selectedTitleOptions: selectedOptions });
+                    const titles = (selectedOptions && selectedOptions.length > 0)
+                      ? selectedOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    const statuses = (this.state.selectedStatusOptions && this.state.selectedStatusOptions.length > 0)
+                      ? this.state.selectedStatusOptions.map((option) => option.value.toLowerCase())
+                      : ['emptytext'];
+                    this.onFilter(statuses, titles);
+                  }}
+                />
+              </div>
+
+              <div className="list">
+                {this.renderApplications()}
+              </div>
             </div>
+
           </div>
 
         ) : (
