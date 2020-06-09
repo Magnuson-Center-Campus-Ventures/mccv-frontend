@@ -37,9 +37,6 @@ class StartupBio extends Component {
            startup,
          };
        });
-       //  this.props.updateStartup(this.props.startup.id,
-       //    Object.assign(this.state.student, startup));
-       //  this.props.updateStartup(this.props.startup.id, this.state.startup);
      }
 
      // Send update to database
@@ -50,39 +47,21 @@ class StartupBio extends Component {
 
      renderBioQuestions() {
        return (
-
-         <div className="StartupBioContainer">
-           <div className="StartupBioHeaderContainer">
-             <h1 className="StartupBioHeader">
-               Bio
-             </h1>
-           </div>
-           <div className="StartupBioDescContainer">
-             <p className="StartupBioDesc">
-               Add your startup’s name and location!
-             </p>
-             <i className="far fa-id-badge" id="icon" />
-           </div>
-           <div className="StartupBioQuestionsContainer">
-             <div className="nameContainer">
-               <div className="StartupBioQuestionLabelContainer">
-                 <p className="StartupBioLabel">
-                   Name
-                 </p>
-                 <TextareaAutosize onChange={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
-                 <p className="StartupBioLabel">
-                   City
-                 </p>
-                 <TextareaAutosize onChange={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
-                 <p className="StartupBioLabel">
-                   State
-                 </p>
-                 <TextareaAutosize onChange={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
-               </div>
+         <div className="question">
+           <div className="question-header">
+             <div className="question-header-prompt">
+               <h1>Bio</h1>
+               <p>Add your startup’s name and location!</p>
              </div>
-             <div className="StartupBioQuestionLabelContainer">
-               <div className="StartupBioQuestionLabelContainer" />
-             </div>
+             <i className="far fa-id-badge question-header-icon" id="icon" />
+           </div>
+           <div className="question-fields">
+             <p className="question-fields-title">Name</p>
+             <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
+             <p className="question-fields-title">City</p>
+             <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
+             <p className="question-fields-title">State</p>
+             <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
            </div>
          </div>
        );

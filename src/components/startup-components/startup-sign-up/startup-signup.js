@@ -5,7 +5,7 @@ import ReactPaginate from 'react-paginate';
 import StartupSignUpBio from './startup-signup-bio';
 import StartupSignUpDesc from './startup-signup-desc';
 import StartupSignUpIndustries from './startup-signup-industries';
-import StartupSignUpVideo from './startup-signup-video';
+// import StartupSignUpVideo from './startup-signup-video';
 import {
   fetchStartupByUserID, fetchUser, updateStartup, submitStartup, fetchAllSkills, fetchAllIndustries, fetchAllClasses,
 } from '../../../actions';
@@ -23,8 +23,6 @@ class StartupSignUp extends Component {
     this.props.fetchStartupByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
     this.props.fetchAllIndustries();
-    this.props.fetchAllClasses();
-    this.props.fetchAllSkills();
   }
 
   handlePageClick = (data) => {
@@ -38,9 +36,9 @@ class StartupSignUp extends Component {
   }
 
   renderSubmit() {
-    if (this.state.index === 3) {
+    if (this.state.index === 2) {
       return (
-        <div className="buttonContainer">
+        <div className="question-submit">
           <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
             Submit!
           </button>
@@ -61,8 +59,8 @@ class StartupSignUp extends Component {
         return <StartupSignUpDesc />;
       case 2:
         return <StartupSignUpIndustries />;
-      case 3:
-        return <StartupSignUpVideo />;
+      // case 3:
+      //   return <StartupSignUpVideo />;
       default:
         return <div>Out of pages!</div>;
     }
@@ -77,14 +75,10 @@ class StartupSignUp extends Component {
           previousLabel="previous"
           nextLabel="next"
           breakLabel="..."
-          // breakClassName="break-me"
-          pageCount={4}
+          pageCount={3}
           marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={3}
           onPageChange={this.handlePageClick}
-          // containerClassName="pagination"
-          // subContainerClassName="pages pagination"
-          // activeClassName="active"
         />
       </div>
     );

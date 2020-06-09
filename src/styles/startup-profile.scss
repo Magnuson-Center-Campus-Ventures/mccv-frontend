@@ -155,7 +155,7 @@ br{
   display: flex;
   justify-content: center;
   align-content: center;
-  background-color:  #45B990;
+  background-color: transparent;
   color: white;
   border: 0px solid #C2C8CB; // 3px on white
   text-decoration: none;
@@ -170,12 +170,13 @@ br{
 
 .startup-add-posting-btn > i{
   margin: 0;
-  margin-top: -6px;
-  padding: 0;
+  margin-top: -.3em;
+  color: #45B990;
+  font-size: 2em;
 }
 
-.startup-add-posting-btn:hover {
-  background-color: #2D7D61;
+.startup-add-posting-btn > i:hover {
+  color: #2D7D61;
 }
 
 .startup-add-posting-box {
