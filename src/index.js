@@ -17,6 +17,7 @@ const store = createStore(reducers, {}, compose(
 const token = localStorage.getItem('token');
 const userID = localStorage.getItem('userID');
 if (token && userID) {
+  // store.dispatch({ type: 'FETCH_USER', id: userID });
   store.dispatch({ type: 'AUTH_USER', id: userID });
 }
 
