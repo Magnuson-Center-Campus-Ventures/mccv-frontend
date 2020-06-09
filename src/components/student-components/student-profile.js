@@ -58,6 +58,26 @@ class StudentProfile extends Component {
   // once the student is loaded into props
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student && this.props.student !== {} && prevProps.student !== this.props.student) {
+      const student = this.props.student;
+
+      if (this.props.student.first_name && this.props.student.first_name === prevProps.student.first_name) {
+        student.first_name = prevState.student.first_name;
+      }
+      if (this.props.student.last_name && this.props.student.last_name === prevProps.student.last_name) {
+        student.last_name = prevState.student.last_name;
+      }
+      if (this.props.student.phone_number && this.props.student.phone_number === prevProps.student.phone_number) {
+        student.phone_number = prevState.student.phone_number;
+      }
+
+      if (this.props.student.majors && this.props.student.majors !== prevProps.student.majors) {
+        this.setState({ majors: this.props.student.majors });
+      } else student.majors = this.state.majors;
+
+      if (this.props.student.minors && this.props.student.minors !== prevProps.student.minors) {
+        this.setState({ minors: this.props.student.minors });
+      } else student.minors = this.state.minors;
+
       if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
         this.props.fetchWorkExperiences(this.props.student.work_exp);
       }
@@ -65,36 +85,31 @@ class StudentProfile extends Component {
         this.props.fetchOtherExperiences(this.props.student.other_exp);
       }
       // Set initial dropdown options to be the indutries, skills, and classes the student already has
-      let selectedIndustryOptions = [];
-      if (this.props.student.interested_industries) {
+      let selectedIndustryOptions = prevState.selectedIndustryOptions;
+      if (this.props.student.interested_industries && this.props.student.interested_industries !== prevProps.student.interested_industries) {
         selectedIndustryOptions = this.props.student.interested_industries.map((industry) => {
           return { value: industry.name, label: industry.name, industry };
         });
-      }
-      let selectedClassOptions = [];
-      if (this.props.student.relevant_classes) {
+        this.setState({ selectedIndustryOptions, ownIndustries: this.props.student.interested_industries });
+      } else student.interested_industries = this.state.ownIndustries;
+
+      let selectedClassOptions = prevState.selectedClassOptions;
+      if (this.props.student.relevant_classes && this.props.student.relevant_classes !== prevProps.student.relevant_classes) {
         selectedClassOptions = this.props.student.relevant_classes.map((_class) => {
           return { value: _class.name, label: _class.name, _class };
         });
-      }
-      let selectedSkillOptions = [];
-      if (this.props.student.skills) {
+        this.setState({ selectedClassOptions, ownClasses: this.props.student.relevant_classes });
+      } else student.relevant_classes = this.state.ownClasses;
+
+      let selectedSkillOptions = prevState.selectedSkillOptions;
+      if (this.props.student.skills && this.props.student.skills !== prevProps.student.skills) {
         selectedSkillOptions = this.props.student.skills.map((skill) => {
           return { value: skill.name, label: skill.name, skill };
         });
-      }
+        this.setState({ selectedSkillOptions, ownSkills: this.props.student.skills });
+      } else student.skills = this.state.ownSkills;
 
-      this.setState({
-        student: this.props.student,
-        majors: this.props.student.majors,
-        minors: this.props.student.minors,
-        ownIndustries: this.props.student.interested_industries,
-        selectedIndustryOptions,
-        ownClasses: this.props.student.relevant_classes,
-        selectedClassOptions,
-        ownSkills: this.props.student.skills,
-        selectedSkillOptions,
-      });
+      this.setState({ student });
     }
 
     // Set up options for dropdowns
