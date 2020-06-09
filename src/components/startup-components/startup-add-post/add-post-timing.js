@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-// import CreateableSelect from 'react-select/creatable';
-import '../../../styles/startup-add-post/add-post-industries.scss';
 import {
   fetchPost, updatePost,
 } from '../../../actions';
@@ -75,59 +73,45 @@ class AddPostTiming extends Component {
 
   renderTimingQuestions() {
     return (
-      <div className="PostTimingContainer">
-        <div className="PostTimingHeaderContainer">
-          <h1 className="PostTimingHeader">
-            Timing
-          </h1>
+      <div className="question">
+        <div className="question-header">
+          <div className="question-header-prompt">
+            <h1>Timing</h1>
+            <p>Add the start date, end date, and time commitment!</p>
+          </div>
+          <i className="far fa-clock question-header-icon" id="icon" />
         </div>
-        <div className="PostTimingDescContainer">
-          <p className="PostTimingDesc">
-            Add the start date, end date, and time commitment!
-          </p>
-          <i className="far fa-clock" id="icon" />
-        </div>
-        <div className="PostTimingQuestionsContainer">
-          <div className="PostTimingQuestionLabelContainer">
-            <p className="PostTimingLabel">
-              Start Date (mm/dd/yyyy)
-            </p>
-            <div style={{ color: 'red' }}>{this.state.badStartDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
-            <TextareaAutosize
-              onBlur={(event) => {
-                if (!this.isValidDate(event.target.value)) {
-                  this.setState({ badStartDate: true });
-                } else {
-                  this.setState({ badStartDate: false });
-                  this.changePostField('desired_start_date', event);
-                }
-              }}
-              defaultValue={this.convertDate(this.props.post.desired_start_date)}
-            />
-          </div>
-          <div className="PostTimingQuestionLabelContainer">
-            <p className="PostTimingLabel">
-              End Date (mm/dd/yyyy)
-            </p>
-            <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
-            <TextareaAutosize
-              onBlur={(event) => {
-                if (!this.isValidDate(event.target.value)) {
-                  this.setState({ badEndDate: true });
-                } else {
-                  this.setState({ badEndDate: false });
-                  this.changePostField('desired_end_date', event);
-                }
-              }}
-              defaultValue={this.convertDate(this.props.post.desired_end_date)}
-            />
-          </div>
-          <div className="PostTimingQuestionLabelContainer">
-            <p className="PostTimingLabel">
-              Hours/Week
-            </p>
-            <TextareaAutosize onBlur={(event) => this.changePostField('time_commitment', event)} defaultValue={this.props.post.time_commitment} />
-          </div>
+        <div className="question-fields">
+          <p className="question-fields-title">Start Date (mm/dd/yyyy)</p>
+          <div style={{ color: 'red' }}>{this.state.badStartDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
+          <TextareaAutosize
+            className="question-fields-text"
+            onBlur={(event) => {
+              if (!this.isValidDate(event.target.value)) {
+                this.setState({ badStartDate: true });
+              } else {
+                this.setState({ badStartDate: false });
+                this.changePostField('desired_start_date', event);
+              }
+            }}
+            defaultValue={this.convertDate(this.props.post.desired_start_date)}
+          />
+          <p className="question-fields-title">End Date (mm/dd/yyyy)</p>
+          <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
+          <TextareaAutosize
+            className="question-fields-text"
+            onBlur={(event) => {
+              if (!this.isValidDate(event.target.value)) {
+                this.setState({ badEndDate: true });
+              } else {
+                this.setState({ badEndDate: false });
+                this.changePostField('desired_end_date', event);
+              }
+            }}
+            defaultValue={this.convertDate(this.props.post.desired_end_date)}
+          />
+          <p className="question-fields-title">Hours/Week</p>
+          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changePostField('time_commitment', event)} defaultValue={this.props.post.time_commitment} />
         </div>
       </div>
     );
@@ -139,7 +123,6 @@ class AddPostTiming extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
   post: reduxState.posts.current,
 });
 

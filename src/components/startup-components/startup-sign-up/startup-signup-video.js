@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../../styles/startup-sign-up/startup-signup-video.scss';
+import '../../../styles/create-new-paginator.scss';
 import {
   fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
 } from '../../../actions';
@@ -78,7 +78,7 @@ class StartupVideo extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
+  userID: reduxState.user.userID,
   startup: reduxState.startups.current,
 });
 

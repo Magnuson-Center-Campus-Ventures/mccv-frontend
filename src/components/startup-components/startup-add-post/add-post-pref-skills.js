@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
-import '../../../styles/startup-add-post/add-post-pref-skills.scss';
 import {
   fetchPost, createSkillForPost, updatePost, fetchAllSkills,
 } from '../../../actions';
@@ -77,7 +76,8 @@ class AddPostPrefSkillss extends Component {
       }),
     };
     return (
-      <div className="add-skills">
+      <div className="question-fields-items-header">
+        <p className="question-fields-title">Prefered Skills</p>
         <CreateableSelect
           className="select-dropdown"
           styles={customStyles}
@@ -103,9 +103,9 @@ class AddPostPrefSkillss extends Component {
       return (
         this.props.post.preferred_skills.map((skill) => {
           return (
-            <div className="skill" key={skill.name}>
+            <div className="question-fields-item" key={skill.name}>
               {skill.name}
-              <button type="submit" className="delete-btn-post-skills" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
+              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>
@@ -123,22 +123,17 @@ class AddPostPrefSkillss extends Component {
     // still have occasioanl rendering issue for skills.all
     if (this.props.post.preferred_skills !== undefined && this.props.skills.all !== []) {
       return (
-        <div className="AddPostPrefSkillsContainer">
-          <div className="AddPostPrefSkillsHeaderContainer">
-            <h1 className="AddPostPrefSkillsHeader">
-              Preferred Skills
-            </h1>
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Preferred Skills</h1>
+              <p>What skills are preferred for your volunteer position?</p>
+            </div>
+            <i className="fas fa-brain question-header-icon" id="icon" />
           </div>
-          <div className="AddPostPrefSkillsDescContainer">
-            <p className="AddPostPrefSkillsDesc">
-              What skills are preferred for your volunteer position?
-            </p>
-            <i className="fas fa-building" id="icon" />
-          </div>
-          <div id="skills">
-            <div className="AddPostPrefSkillsListHeader">Skills</div>
+          <div className="question-fields">
             {this.renderAddSkill()}
-            {this.renderSkills()}
+            <div className="question-fields-items">{this.renderSkills()}</div>
           </div>
         </div>
       );
@@ -151,7 +146,6 @@ class AddPostPrefSkillss extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
   post: reduxState.posts.current,
   skills: reduxState.skills.all,
 });

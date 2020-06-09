@@ -127,10 +127,7 @@ class Signup extends Component {
 
 function mapStateToProps(reduxState) {
   return {
-    authenticated: reduxState.auth.authenticated,
-    userID: reduxState.auth.userID,
-    error: reduxState.auth.error,
-    studentID: reduxState.students.studentID,
+    error: reduxState.user.error,
   };
 }
 

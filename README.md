@@ -4,7 +4,10 @@ Magnuson Campus Ventures is an online platform for matching Dartmouth student vo
 
 currently live at http://cs52-mcv.surge.sh/
 
-**to do**: add in screenshots when styling is done! 
+![](https://i.imgur.com/w7FVtXj.png)
+![](https://i.imgur.com/sHekLkE.png)
+![](https://i.imgur.com/hzHY2xJ.png)
+![](https://i.imgur.com/Nas0UEV.png)
 
 ![](https://i.imgur.com/36UE3Tk.jpg)
 
