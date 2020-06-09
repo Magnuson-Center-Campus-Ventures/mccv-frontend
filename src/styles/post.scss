@@ -113,9 +113,14 @@ ul {
   
 .post-btn {
     background-color: #45B990;
+    width: 140px;
+    height: 45px;
     color: white;
     border: none;
-    font-size: 15px;
+    font-size: 17px;
+    position: fixed;
+    bottom: 7vw;
+    right: 5vw;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 12px;
