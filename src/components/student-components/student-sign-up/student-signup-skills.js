@@ -149,7 +149,7 @@ class StudentSkills extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  userID: reduxState.auth.userID,
+  userID: reduxState.user.userID,
   student: reduxState.students.current_student,
   skills: reduxState.skills.all,
 });

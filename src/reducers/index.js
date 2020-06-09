@@ -10,11 +10,11 @@ import SkillsReducer from './skills-reducer';
 import ClassesReducer from './classes-reducer';
 import ApplicationsReducer from './applications-reducer';
 import UserReducer from './user-reducer';
-import AuthReducer from './auth-reducer';
+// import AuthReducer from './auth-reducer';
 import SubmittedApplicationsReducer from './submitted-applications-reducer';
 import QuestionsReducer from './questions-reducer';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   posts: PostsReducer,
   startups: StartupsReducer,
   students: StudentsReducer,
@@ -25,7 +25,15 @@ const rootReducer = combineReducers({
   questions: QuestionsReducer,
   submittedApplications: SubmittedApplicationsReducer,
   user: UserReducer,
-  auth: AuthReducer,
 });
+
+const rootReducer = (state, action) => {
+  // when a logout action is dispatched it will reset redux state
+  if (action.type === 'LOGOUT_USER') {
+    // eslint-disable-next-line no-param-reassign
+    state = undefined;
+  }
+  return appReducer(state, action);
+};
 
 export default rootReducer;

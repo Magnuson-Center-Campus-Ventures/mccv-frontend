@@ -3,112 +3,43 @@
 import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { signoutUser, clearUserState, fetchUser } from '../actions';
+import { signoutUser, fetchUser, fetchStudentByID } from '../actions';
+import '../styles/nav.scss';
 
 class Nav extends Component {
-  _isMounted = false;
-
   constructor(props) {
     super(props);
     this.state = {
-      usertype: '',
+      isMounted: false,
     };
   }
 
   componentDidMount() {
-    this.setState({ usertype: this.props.user.role });
     if (localStorage.getItem('userID')) {
       this.props.fetchUser(localStorage.getItem('userID'));
     }
-    // console.log(localStorage.getItem('userID'));
-    this._isMounted = true;
+    if (this.props.role === 'student') {
+      this.props.fetchStudentByID(this.props.user.student_profile_id);
+    }
+    this.setState({ isMounted: true });
   }
 
   signout = (event) => {
-    localStorage.clear();
+    // localStorage.clear(); put this in signoutUser function
     this.props.signoutUser(this.props.history);
-    this.props.clearUserState();
   }
 
 
-  usertypeRender() {
-    if (this.props.user.role === 'student') { // if logged in user is a student
-      return (
-        <ul id="nav-bar">
-          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/posts">Positions</NavLink></li>
-          <li><NavLink to="/startups">Startups</NavLink></li>
-          <li><NavLink to="/applications">Applications</NavLink></li>
-          <li>
-            <div className="userDropdown">
-              <button type="button" className="navNameBtn">
-                <span className="navNameCta">Name</span>
-              </button>
-              <div className="dropdownOptions">
-                <NavLink to="/profile">Profile</NavLink>
-                <button type="button" className="signoutBtn" onClick={this.signout}>
-                  <span className="signoutCta">Logout</span>
-                </button>
-              </div>
-            </div>
-          </li>
-        </ul>
-      );
-    } else if (this.props.user.role === 'startup') { // if logged in user is a startup
-      // console.log('here ');
-      return (
-        <ul id="nav-bar">
-          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/students">Students</NavLink></li>
-          <li><NavLink to="/startupsubmittedapplications">Applications</NavLink></li>
-          <li>
-            <div className="userDropdown">
-              <button type="button" className="navNameBtn">
-                <span className="navNameCta">Name</span>
-              </button>
-              <div className="dropdownOptions">
-                <NavLink to="/startupprofile">Profile</NavLink>
-                <button type="button" className="signoutBtn" onClick={this.signout}>
-                  <span className="signoutCta">Logout</span>
-                </button>
-              </div>
-            </div>
-          </li>
-        </ul>
-      );
-    } else { // if logged in user is an admin
-      return (
-        <ul id="nav-bar">
-          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/posts">Positions</NavLink></li>
-          <li><NavLink to="/startups">Startups</NavLink></li>
-          <li><NavLink to="/students">Students</NavLink></li>
-          <li>
-            <div className="userDropdown">
-              <button type="button" className="navNameBtn">
-                <span className="navNameCta">Name</span>
-              </button>
-              <div className="dropdownOptions">
-                <button type="button" className="signoutBtn" onClick={this.signout}>
-                  <span className="signoutCta">Logout</span>
-                </button>
-              </div>
-            </div>
-          </li>
-        </ul>
-      );
-    }
-  }
-
-  authRender() {
+  // eslint-disable-next-line consistent-return
+  navRender() {
     if (!this.props.authenticated) { // if not signed in
       return (
         <ul id="nav-bar">
           <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink to="/">Students</NavLink></li>
-          <li><NavLink to="/startupslanding">Startups</NavLink></li>
+          <li><NavLink exact to="/" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
+          <li><NavLink to="/startupslanding" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
           <li>
-            <NavLink to="/signin">
+            <NavLink to="/signin" activeClassName="noBorder">
               <button type="button" className="navLoginBtn">
                 <span className="navLoginCta">Login</span>
               </button>
@@ -116,15 +47,61 @@ class Nav extends Component {
           </li>
         </ul>
       );
-    } else { // if signed in
-      return this.usertypeRender();
+    } else if (this.props.authenticated && this.props.role === 'admin') { // if logged in user is an admin
+      return (
+        <ul id="nav-bar">
+          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
+          <li><NavLink to="/posts" className="navlink" activeClassName="activeBorder">Positions</NavLink></li>
+          <li><NavLink to="/startups" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
+          <li><NavLink to="/students" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
+          <li>
+            <button type="button" className="navLogoutBtn" onClick={this.signout}>
+              <span className="navLogoutCta">Logout</span>
+            </button>
+          </li>
+        </ul>
+      );
+    } else if (this.props.authenticated && this.props.role === 'startup') { // if logged in user is a startup
+      return (
+        <ul id="nav-bar">
+          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
+          <li><NavLink to="/students" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
+          <li><NavLink to="/startupsubmittedapplications" className="navlink" activeClassName="activeBorder">Applications</NavLink></li>
+          <li><NavLink to="/startupprofile" className="navlink" activeClassName="activeBorder">My Profile</NavLink></li>
+          <button type="button" className="navLogoutBtn" onClick={this.signout}>
+            <span className="navLogoutCta">Logout</span>
+          </button>
+        </ul>
+      );
+    } else if (this.props.authenticated && this.props.role === 'student') { // if logged in user is a student
+      return (
+        <ul id="nav-bar">
+          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
+          <li><NavLink to="/posts" className="navlink" activeClassName="activeBorder">Positions</NavLink></li>
+          <li><NavLink to="/startups" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
+          <li><NavLink to="/applications" className="navlink" activeClassName="activeBorder">Applications</NavLink></li>
+          <li>
+            <button type="button" className="navNameBtn">
+              <span className="navNameCta">{this.props.name}</span>
+            </button>
+          </li>
+          <div className="userDropdown">
+            <div className="dropdownOptions">
+              <NavLink to="/profile" className="navlink" activeClassName="activeBorder">My Profile</NavLink>
+              <button type="button" className="navLogoutBtn" onClick={this.signout}>
+                <span className="navLogoutCta">Logout</span>
+              </button>
+            </div>
+          </div>
+        </ul>
+      );
     }
   }
 
   render() {
-    return this._isMounted ? (
+    return this.state.isMounted ? (
       <nav>
-        {this.authRender()}
+        {this.navRender()}
       </nav>
     )
       : (<nav />);
@@ -132,11 +109,12 @@ class Nav extends Component {
 }
 
 const mapStateToProps = (reduxState) => ({
-  authenticated: reduxState.auth.authenticated,
-  userID: reduxState.auth.userID,
-  error: reduxState.auth.error,
+  role: reduxState.user.current.role,
   user: reduxState.user.current,
+  authenticated: reduxState.user.authenticated,
+  student: reduxState.students.current_student,
+  name: reduxState.students.current_student.first_name,
 });
 
 
-export default withRouter(connect(mapStateToProps, { signoutUser, clearUserState, fetchUser })(Nav));
+export default withRouter(connect(mapStateToProps, { signoutUser, fetchUser, fetchStudentByID })(Nav));
