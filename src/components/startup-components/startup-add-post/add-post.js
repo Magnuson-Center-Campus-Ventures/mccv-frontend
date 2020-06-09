@@ -37,6 +37,7 @@ class AddPost extends Component {
   };
 
   onSubmit = () => {
+    this.props.post.status = 'Approved';
     this.props.submitPost(this.props.post.id, this.props.post, this.props.history);
   }
 

@@ -80,7 +80,8 @@ class StudentSkills extends Component {
       }),
     };
     return (
-      <div className="add-skills">
+      <div className="question-fields-items-header">
+        <p className="question-fields-title">Skills</p>
         <CreateableSelect
           className="select-dropdown"
           styles={customStyles}
@@ -106,9 +107,9 @@ class StudentSkills extends Component {
       return (
         this.props.student.skills.map((skill) => {
           return (
-            <div className="skill" key={skill.name}>
+            <div className="question-fields-item" key={skill.name}>
               {skill.name}
-              <button type="submit" className="delete-btn-student-skills" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
+              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>
@@ -125,22 +126,17 @@ class StudentSkills extends Component {
   render() {
     if (this.state.student.skills !== undefined && this.props.skills !== []) {
       return (
-        <div className="StudentSkillContainer">
-          <div className="StudentSkillHeaderContainer">
-            <h1 className="StudentSkillHeader">
-              Skills
-            </h1>
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Skills</h1>
+              <p>Add the skills you have!</p>
+            </div>
+            <i className="fas fa-brain question-header-icon" id="icon" />
           </div>
-          <div className="StudentSkillDescContainer">
-            <p className="StudentSkillDesc">
-              Add the skills you have!
-            </p>
-            <i className="fas fa-brain" id="icon" />
-          </div>
-          <div id="skills">
-            <div className="StudentSkillListHeader">Skills</div>
+          <div className="question-fields">
             {this.renderAddSkill()}
-            {this.renderSkills()}
+            <div className="question-fields-items">{this.renderSkills()}</div>
           </div>
         </div>
       );

@@ -9,7 +9,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import '../../../styles/student-sign-up/student-signup-workexperiences.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent, updateWorkExperience, fetchWorkExperiences, deleteWorkExperience,
 } from '../../../actions';
@@ -65,6 +64,7 @@ class StudentWorkExperiences extends Component {
     this.state.workExps.forEach((workExp) => {
       this.props.updateWorkExperience(workExp._id, workExp);
     });
+    this.props.updateStudent(this.state.student.id, this.state.student);
   }
 
   changeWorkExpField = (index, field, value) => {
@@ -76,17 +76,6 @@ class StudentWorkExperiences extends Component {
         workExps,
       };
     });
-  }
-
-  submit = () => {
-    if (this.state.isEditing) {
-      const student = { ...this.state.student };
-      this.props.updateStudent(this.state.student.id, student);
-      this.state.workExps.forEach((workExp) => {
-        this.props.updateWorkExperience(workExp._id, workExp);
-      });
-    }
-    this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
   }
 
   // update student field
@@ -102,15 +91,6 @@ class StudentWorkExperiences extends Component {
         student,
       };
     });
-  }
-
-  // Removes time from date
-  convertDate=(date) => {
-    if (typeof date !== 'undefined') {
-      const dateISO = date.slice(0, 10).split('-');
-      return `${dateISO[1]}/${dateISO[2]}/${dateISO[0]}`;
-    }
-    return '';
   }
 
   hideWorkExpModal = () => {
@@ -135,49 +115,28 @@ class StudentWorkExperiences extends Component {
 
   render() {
     return (
-      <div>
-        <div className="StudentWorkExperienceContainer">
-          {/* <NewWorkExp onClose={this.hideModal} show={this.state.show} /> */}
-          <div className="StudentWorkExperienceHeaderContainer">
-            <h1 className="StudentWorkExperienceHeader">
-              Work Experience
-            </h1>
+      <div className="question">
+        <div className="question-header">
+          <div className="question-header-prompt">
+            <h1>Work Experience</h1>
+            <p>Add your relevant work experience!</p>
           </div>
-          <div className="StudentWorkExperienceDescContainer">
-            <p className="StudentWorkExperienceDesc">
-              Add your relevant work experience!
-            </p>
-            <i className="fas fa-briefcase" id="icon" />
+          <i className="fas fa-briefcase question-header-icon" id="icon" />
+        </div>
+        <div className="question-fields">
+          <div className="question-fields-exp-header">
+            <p className="question-fields-title">Work Experiences</p>
+            <i className="fas fa-plus-circle question-fields-button" id="addicon" onClick={(e) => { this.showModal(); }} />
           </div>
-          <div className="WorkExperienceSubtitle">
-            <u>
-              Work Experiences
-            </u>
-            <i className="fas fa-plus-circle"
-              id="addicon"
-              onClick={(e) => {
-                this.showModal();
-              }}
-            />
-            <i className="far fa-edit"
-              id="editicon"
-              onClick={(e) => {
-                this.submit();
-              }}
-            />
+          <div id="work-exps">
+            {this.renderWorkExperiences()}
           </div>
-          {/* <div id="work-exps">
-              {this.renderWorkExperiences()};
-            </div> */}
         </div>
         <div className="student-profile">
           <NewWorkExp
             onClose={this.hideWorkExpModal}
             show={this.state.show}
           />
-          <div id="work-exps">
-            {this.renderWorkExperiences()}
-          </div>
         </div>
       </div>
     );

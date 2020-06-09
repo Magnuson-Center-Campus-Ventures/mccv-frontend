@@ -20,6 +20,10 @@
   transition: color .25s, background-color 0;
 }
 
+.paginator > ul > li > a{
+  cursor: pointer;
+}
+
 .paginator > ul > li.previous{
   color: white;
   background-color: #45B990;
@@ -37,7 +41,7 @@
 .paginator > ul > li.selected{
   color: white;
   background-color: #45B990;
-  transition: color .25s, background-color .5s;
+  transition: color .125s, background-color .25s;
 }
 
 .question{
@@ -73,6 +77,7 @@
 }
 
 .question-fields-button{
+  margin-top: 0;
   margin-left: 1vw;
 }
 
@@ -81,6 +86,13 @@
   flex-direction: column;
   flex-wrap: wrap;
   height: 40vh;
+}
+
+.question-fields-list-mm{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 10vh;
 }
 
 .question-fields-resp{
@@ -118,4 +130,13 @@
   position: fixed;
   bottom: 10em;
   right: 10vw;
+}
+
+.new-work-exp{
+  position: fixed;
+  top: 15vh;
+}
+
+.question-fields-exp-header{
+  display: flex;
 }

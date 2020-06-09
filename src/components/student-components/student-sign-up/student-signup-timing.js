@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import '../../../styles/student-sign-up/student-signup-timing.scss';
 import {
   fetchStudentByUserID, fetchUser, updateStudent,
 } from '../../../actions';
@@ -31,6 +30,7 @@ class StudentTiming extends Component {
        this.setState((prevState) => {
          const student = { ...prevState.student };
          student[field] = value;
+         this.props.updateStudent(this.props.student.id, student);
          return {
            ...prevState,
            student,
@@ -72,59 +72,45 @@ class StudentTiming extends Component {
 
     renderTimingQuestions() {
       return (
-        <div className="StudentTimingContainer">
-          <div className="StudentTimingHeaderContainer">
-            <h1 className="StudentTimingHeader">
-              Timing
-            </h1>
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Timing</h1>
+              <p>Add your desired start date, end date, and time commitment!</p>
+            </div>
+            <i className="far fa-clock question-header-icon" id="icon" />
           </div>
-          <div className="StudentTimingDescContainer">
-            <p className="StudentTimingDesc">
-              Add your desired start date, end date, and time commitment!
-            </p>
-            <i className="far fa-clock" id="icon" />
-          </div>
-          <div className="StudentTimingQuestionsContainer">
-            <div className="StudentTimingQuestionLabelContainer">
-              <p className="StudentTimingLabel">
-                Start Date (mm/dd/yyyy)
-              </p>
-              <div style={{ color: 'red' }}>{this.state.badStartDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
-              <TextareaAutosize
-                onBlur={(event) => {
-                  if (!this.isValidDate(event.target.value)) {
-                    this.setState({ badStartDate: true });
-                  } else {
-                    this.setState({ badStartDate: false });
-                    this.changeStudentField('desired_start_date', event);
-                  }
-                }}
-                defaultValue={this.convertDate(this.props.student.desired_start_date)}
-              />
-            </div>
-            <div className="StudentTimingQuestionLabelContainer">
-              <p className="StudentTimingLabel">
-                End Date (mm/dd/yyyy)
-              </p>
-              <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
-              <TextareaAutosize
-                onBlur={(event) => {
-                  if (!this.isValidDate(event.target.value)) {
-                    this.setState({ badEndDate: true });
-                  } else {
-                    this.setState({ badEndDate: false });
-                    this.changeStudentField('desired_end_date', event);
-                  }
-                }}
-                defaultValue={this.convertDate(this.props.student.desired_end_date)}
-              />
-            </div>
-            <div className="StudentTimingQuestionLabelContainer">
-              <p className="StudentTimingLabel">
-                Hours/Week
-              </p>
-              <TextareaAutosize onBlur={(event) => this.changeStudentField('time_commitment', event)} defaultValue={this.props.student.time_commitment} />
-            </div>
+          <div className="question-fields">
+            <p className="question-fields-title">Start Date (mm/dd/yyyy)</p>
+            <div style={{ color: 'red' }}>{this.state.badStartDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
+            <TextareaAutosize
+              className="question-fields-text"
+              onBlur={(event) => {
+                if (!this.isValidDate(event.target.value)) {
+                  this.setState({ badStartDate: true });
+                } else {
+                  this.setState({ badStartDate: false });
+                  this.changeStudentField('desired_start_date', event);
+                }
+              }}
+              defaultValue={this.convertDate(this.props.student.desired_start_date)}
+            />
+            <p className="question-fields-title">End Date (mm/dd/yyyy)</p>
+            <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
+            <TextareaAutosize
+              className="question-fields-text"
+              onBlur={(event) => {
+                if (!this.isValidDate(event.target.value)) {
+                  this.setState({ badEndDate: true });
+                } else {
+                  this.setState({ badEndDate: false });
+                  this.changeStudentField('desired_end_date', event);
+                }
+              }}
+              defaultValue={this.convertDate(this.props.student.desired_end_date)}
+            />
+            <p className="question-fields-title">Hours/Week</p>
+            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('time_commitment', event)} defaultValue={this.props.student.time_commitment} />
           </div>
         </div>
       );
