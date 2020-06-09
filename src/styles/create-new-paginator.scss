@@ -18,7 +18,7 @@
 .paginator > ul > li > a{
   cursor: pointer;
   background-color: #C6CED2;
-  padding: 2em;
+  padding: 1em;
   padding-top: .5em;
   padding-bottom: .5em;
   transition: color .25s, background-color 0;
@@ -33,8 +33,8 @@
 .paginator > ul > li.next > a{
   color: white;
   background-color: #45B990;
-  padding-right: 3em;
-  padding-left: 3em;
+  padding-right: 2em;
+  padding-left: 2em;
   margin-left: 2em;
 }
 
@@ -59,7 +59,7 @@
 }
 
 .question-header-icon{
-  font-size: 15vh;
+  font-size: 10em;
 }
 
 .question-fields{
