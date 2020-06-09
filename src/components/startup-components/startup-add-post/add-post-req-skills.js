@@ -6,7 +6,7 @@ import CreateableSelect from 'react-select/creatable';
 // import CreateableSelect from 'react-select/creatable';
 import '../../../styles/startup-add-post/add-post-req-skills.scss';
 import {
-  fetchPost, createSkillForPost, updatePost, fetchAllSkills,
+  fetchPost, createReqSkillForPost, updatePost, fetchAllSkills,
 } from '../../../actions';
 
 class AddPostReqSkills extends Component {
@@ -91,7 +91,7 @@ class AddPostReqSkills extends Component {
           }}
           onCreateOption={(newOption) => {
             this.state.skill = newOption;
-            this.props.createSkillForPost({ name: newOption }, this.props.post);
+            this.props.createReqSkillForPost({ name: newOption }, this.props.post);
           }}
         />
       </div>
@@ -158,5 +158,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPost, createSkillForPost, updatePost, fetchAllSkills,
+  fetchPost, createReqSkillForPost, updatePost, fetchAllSkills,
 })(AddPostReqSkills));

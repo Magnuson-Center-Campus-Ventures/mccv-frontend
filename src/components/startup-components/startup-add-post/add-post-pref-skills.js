@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import CreateableSelect from 'react-select/creatable';
 import '../../../styles/startup-add-post/add-post-pref-skills.scss';
 import {
-  fetchPost, createSkillForPost, updatePost, fetchAllSkills,
+  fetchPost, createPrefSkillForPost, updatePost, fetchAllSkills,
 } from '../../../actions';
 
 class AddPostPrefSkillss extends Component {
@@ -90,7 +90,7 @@ class AddPostPrefSkillss extends Component {
           }}
           onCreateOption={(newOption) => {
             this.state.skill = newOption;
-            this.props.createSkillForPost({ name: newOption }, this.props.post);
+            this.props.createPrefSkillForPost({ name: newOption }, this.props.post);
           }}
         />
       </div>
@@ -157,5 +157,5 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchPost, createSkillForPost, updatePost, fetchAllSkills,
+  fetchPost, createPrefSkillForPost, updatePost, fetchAllSkills,
 })(AddPostPrefSkillss));
