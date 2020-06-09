@@ -44,23 +44,7 @@ class Nav extends Component {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
     const firstName = localStorage.getItem('firstName');
-    // if (!this.props.authenticated) { // if not signed in
-    if (!token) { // if not signed in
-      return (
-        <ul id="nav-bar">
-          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
-          <li><NavLink exact to="/" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
-          <li><NavLink to="/startupslanding" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
-          <li>
-            <NavLink to="/signin" activeClassName="noBorder">
-              <button type="button" className="navLoginBtn">
-                <span className="navLoginCta">Login</span>
-              </button>
-            </NavLink>
-          </li>
-        </ul>
-      );
-    } else if (token && role === 'admin') { // if logged in user is an admin
+    if (token && role && role === 'admin') { // if logged in user is an admin
     // else if (this.props.authenticated && this.props.role === 'admin') { // if logged in user is an admin
       return (
         <ul id="nav-bar">
@@ -75,7 +59,7 @@ class Nav extends Component {
           </li>
         </ul>
       );
-    } else if (token && role === 'startup') { // if logged in user is a startup
+    } else if (token && role && role === 'startup') { // if logged in user is a startup
     // else if (this.props.authenticated && this.props.role === 'startup') { // if logged in user is a startup
       return (
         <ul id="nav-bar">
@@ -88,7 +72,7 @@ class Nav extends Component {
           </button>
         </ul>
       );
-    } else if (token && role === 'student') { // if logged in user is a student
+    } else if (token && role && role === 'student') { // if logged in user is a student
     // else if (this.props.authenticated && this.props.role === 'student') { // if logged in user is a student
       return (
         <ul id="nav-bar">
@@ -109,6 +93,21 @@ class Nav extends Component {
               </button>
             </div>
           </div>
+        </ul>
+      );
+    } else { // user not logged in or role undefined
+      return (
+        <ul id="nav-bar">
+          <li><div className="mccv">Magnuson Center Campus Ventures</div></li>
+          <li><NavLink exact to="/" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
+          <li><NavLink to="/startupslanding" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
+          <li>
+            <NavLink to="/signin" activeClassName="noBorder">
+              <button type="button" className="navLoginBtn">
+                <span className="navLoginCta">Login</span>
+              </button>
+            </NavLink>
+          </li>
         </ul>
       );
     }
