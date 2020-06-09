@@ -61,18 +61,16 @@ class StudentClasses extends Component {
   }
 
   populateCurrentClasses() {
-    if (this.state.displayClasses.length === 0) {
-      this.props.student.relevant_classes.forEach((value) => {
-        if (!this.state.selectedClasses.includes(value.name)) {
-          this.state.selectedClasses.push(value.name);
-        }
-      });
-      this.props.classes.forEach((value) => {
-        if (!this.state.selectedClasses.includes(value.name)) {
-          this.state.displayClasses.push({ label: value.name });
-        }
-      });
-    }
+    this.props.student.relevant_classes.forEach((value) => {
+      if (!this.state.selectedClasses.includes(value.name)) {
+        this.state.selectedClasses.push(value.name);
+      }
+    });
+    this.props.classes.forEach((value) => {
+      if (!this.state.selectedClasses.includes(value.name)) {
+        this.state.displayClasses.push({ label: value.name });
+      }
+    });
   }
 
   renderAddClass() {
