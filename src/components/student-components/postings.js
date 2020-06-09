@@ -397,7 +397,7 @@ class Posts extends Component {
         ? (
           <div className="pageContent">
             <h1> View All Volunteer Positions</h1>
-            <div className="content">
+            <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
                 <Select
