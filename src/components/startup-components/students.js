@@ -182,7 +182,7 @@ class Students extends Component {
       // });
       return {
         ...prevState,
-        sortedStudents: tempStudents.slice(0, 1),
+        sortedStudents: tempStudents.slice(0, 3),
       };
     });
   }

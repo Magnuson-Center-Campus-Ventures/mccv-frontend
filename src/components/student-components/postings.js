@@ -178,7 +178,7 @@ class Posts extends Component {
         // });
         return {
           ...prevState,
-          sortedPosts: tempPosts.slice(0, 2),
+          sortedPosts: tempPosts.slice(0, 3),
         };
       });
     }
