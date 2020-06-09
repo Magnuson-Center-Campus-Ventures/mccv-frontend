@@ -18,7 +18,7 @@ const token = localStorage.getItem('token');
 const userID = localStorage.getItem('userID');
 if (token && userID) {
   // store.dispatch({ type: 'FETCH_USER', id: userID });
-  store.dispatch({ type: 'AUTH_USER', id: userID });
+  store.dispatch({ type: 'AUTH_USER', id: userID }); // NOT SURE what to do about this since no AUTH_USER
 }
 
 // we now wrap App in a Provider
