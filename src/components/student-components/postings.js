@@ -158,12 +158,12 @@ class Posts extends Component {
       // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
       const postScores = {};
       this.state.live.forEach((post) => {
-        const numMatches = post.industries.filter((industry) => studentIndustries.includes(industry.name)).length
-        + post.startup_id.industries.filter((industry) => studentIndustries.includes(industry.name)).length
-        + post.desired_classes.filter((_class) => studentClasses.includes(_class.name)).length
-        + post.required_skills.filter((skill) => studentSkills.includes(skill.name)).length
+        const numMatches = post.industries?.filter((industry) => studentIndustries.includes(industry.name)).length
+        + post.startup_id.industries?.filter((industry) => studentIndustries.includes(industry.name)).length
+        + post.desired_classes?.filter((_class) => studentClasses.includes(_class.name)).length
+        + post.required_skills?.filter((skill) => studentSkills.includes(skill.name)).length
         // Preferred skills get half the weight of required skills
-        + 0.5 * (post.preferred_skills.filter((skill) => studentSkills.includes(skill.name)).length);
+        + 0.5 * (post.preferred_skills?.filter((skill) => studentSkills.includes(skill.name)).length);
         postScores[post._id] = numMatches;
       });
 
@@ -178,7 +178,7 @@ class Posts extends Component {
         // });
         return {
           ...prevState,
-          sortedPosts: tempPosts.slice(0, 2),
+          sortedPosts: tempPosts.slice(0, 3),
         };
       });
     }
@@ -197,16 +197,16 @@ class Posts extends Component {
       posts = recommend ? this.state.sortedPosts : this.state.live;
     }
     posts.forEach((post) => {
-      const skills = post.required_skills.map((skill) => skill.name.toLowerCase());
-      const responsibilities = post.responsibilities.map((resp) => resp.toLowerCase());
-      const postInd = post.industries.map((industry) => industry.name.toLowerCase());
+      const skills = post.required_skills?.map((skill) => skill.name.toLowerCase());
+      const responsibilities = post.responsibilities?.map((resp) => resp.toLowerCase());
+      const postInd = post.industries?.map((industry) => industry.name.toLowerCase());
       const startupInd = [];
       fetchIndustriesFromID(post.startup_id.industries, (industry) => { startupInd.push(industry.name.toLowerCase()); });
       const postLoc = `${post.city}, ${post.state}`;
       const startupLoc = `${post.startup_id.city}, ${post.startup_id.state}`.toLowerCase();
       const startDate = moment(post.desired_start_date);
       // Checks for search
-      if (post.title.toLowerCase().includes(searchterm)
+      if (post.title?.toLowerCase().includes(searchterm)
       || postLoc.toLowerCase().includes(searchterm)
       || skills.includes(searchterm) // array
       || responsibilities.includes(searchterm) // array

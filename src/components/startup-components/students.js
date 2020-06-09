@@ -163,11 +163,11 @@ class Students extends Component {
   calculateScores = (startupIndustries, postsReqSkills, postsPrefSkills, postsClasses) => {
     const studentScores = {};
     this.state.live.forEach((student) => {
-      const numMatches = student.interested_industries.filter((industry) => startupIndustries.includes(industry.name)).length
-          + student.skills.filter((skill) => postsReqSkills.includes(skill.name)).length
+      const numMatches = student.interested_industries?.filter((industry) => startupIndustries.includes(industry.name)).length
+          + student.skills?.filter((skill) => postsReqSkills.includes(skill.name)).length
           // Preferred skills get half the weight of required skills
-          + 0.5 * (student.skills.filter((skill) => postsPrefSkills.includes(skill.name)).length)
-          + student.relevant_classes.filter((_class) => postsClasses.includes(_class.name)).length;
+          + 0.5 * (student.skills?.filter((skill) => postsPrefSkills.includes(skill.name)).length)
+          + student.relevant_classes?.filter((_class) => postsClasses.includes(_class.name)).length;
       studentScores[student._id] = numMatches;
     });
 
@@ -182,7 +182,7 @@ class Students extends Component {
       // });
       return {
         ...prevState,
-        sortedStudents: tempStudents.slice(0, 1),
+        sortedStudents: tempStudents.slice(0, 3),
       };
     });
   }
@@ -202,15 +202,15 @@ class Students extends Component {
       students = recommend ? this.state.sortedStudents : this.state.live;
     }
     students.map((student) => {
-      const majors = student.majors.map((major) => major.toLowerCase());
-      const minors = student.minors.map((minor) => minor.toLowerCase());
-      const skills = student.skills.map((skill) => skill.name.toLowerCase());
-      const classes = student.relevant_classes.map((_class) => _class.name.toLowerCase());
-      const industries = student.interested_industries.map((industry) => industry.name.toLowerCase());
+      const majors = student.majors?.map((major) => major.toLowerCase());
+      const minors = student.minors?.map((minor) => minor.toLowerCase());
+      const skills = student.skills?.map((skill) => skill.name.toLowerCase());
+      const classes = student.relevant_classes?.map((_class) => _class.name.toLowerCase());
+      const industries = student.interested_industries?.map((industry) => industry.name.toLowerCase());
       // Checks for search
-      if (student.first_name.toLowerCase().includes(searchterm)
-      || student.last_name.toLowerCase().includes(searchterm)
-      || student.grad_year.includes(searchterm)
+      if (student.first_name?.toLowerCase().includes(searchterm)
+      || student.last_name?.toLowerCase().includes(searchterm)
+      || student.grad_year?.includes(searchterm)
       || majors.includes(searchterm) // array
       || minors.includes(searchterm) // array
       || skills.includes(searchterm) // array
