@@ -192,10 +192,14 @@ class SubmittedApplications extends Component {
             break;
           }
         }
+        const logo = post.startup_id.logo ? (
+          <img src={post.startup_id.logo} alt='' />
+        ) : (
+          <div />
+        );
         return (
           <Link to={route} key={application.id} className="listItem">
             <div className="companyInfo">
-              <img src={post.startup_id.logo} alt="no logo" />
               <div className="companyText">
                 <h1 id="startupName"> { post.startup_id.name} </h1>
                 <div className="location">
@@ -203,6 +207,7 @@ class SubmittedApplications extends Component {
                   <h2> {`${post.city}, ${post.state}`} </h2>
                 </div>
               </div>
+              {logo}
             </div>
             <div className="postInfo">
               <h1 id="postTitle">{post.title}</h1>
