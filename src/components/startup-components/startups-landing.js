@@ -78,9 +78,11 @@ const StartupsLanding = (props) => {
             </div>
           </div>
 
-          <button type="button" className="landingPageLearnMoreBtn">
-            <span>Learn More</span>
-          </button>
+          <NavLink to="/startupsfaq">
+            <button type="button" className="landingPageLearnMoreBtn">
+              <span>Learn More</span>
+            </button>
+          </NavLink>
 
         </div>
       </div>

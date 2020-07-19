@@ -53,19 +53,19 @@ const App = (props) => {
           <Route path="/signin" component={Signin} />
           <Route path="/signup" component={Signup} />
           <Route path="/credits" component={Credits} />
+          <Route path="/studentsfaq" component={StudentsFAQ} />
+          <Route path="/startupsfaq" component={StartupsFAQ} />
           {/* Private route */}
           <PrivateRoute path="/posts/:postID" component={Post} />
           <PrivateRoute path="/posts" component={Postings} />
           {/* Student routes */}
           <StudentRoute path="/student-signup" component={StudentSignUp} />
-          <StudentRoute path="/studentsfaq" component={StudentsFAQ} />
           <StudentRoute path="/startups/:startupID" component={StartupProfile} />
           <StudentRoute path="/startups" component={Startups} />
           <StudentRoute path="/applications/:applicationID" component={ApplicationListItem} />
           <StudentRoute path="/applications" component={SubmittedApplications} />
           <StudentRoute path="/profile" component={StudentProfile} />
           {/* Startup routes */}
-          <StartupRoute path="/startupsfaq" component={StartupsFAQ} />
           <StartupRoute path="/students/:studentID" component={StudentProfileStartup} />
           <StartupRoute path="/students" component={Students} />
           <StartupRoute path="/startupsubmittedapplications/:applicationID" component={StartupApplicationListItem} />
