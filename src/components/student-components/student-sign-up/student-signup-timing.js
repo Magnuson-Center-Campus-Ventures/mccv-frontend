@@ -76,12 +76,13 @@ class StudentTiming extends Component {
           <div className="question-header">
             <div className="question-header-prompt">
               <h1>Timing</h1>
-              <p>Add your desired start date, end date, and time commitment!</p>
+              <p>Add your Availability! <br /> </p>
+                {/* What's your desired start date, end date, and time commitment!</p> */}
             </div>
             <i className="far fa-clock question-header-icon" id="icon" />
           </div>
           <div className="question-fields">
-            <p className="question-fields-title">Start Date (mm/dd/yyyy)</p>
+            <p className="question-fields-title">Available from...(mm/dd/yyyy)</p>
             <div style={{ color: 'red' }}>{this.state.badStartDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
             <TextareaAutosize
               className="question-fields-text"
@@ -95,7 +96,7 @@ class StudentTiming extends Component {
               }}
               defaultValue={this.convertDate(this.props.student.desired_start_date)}
             />
-            <p className="question-fields-title">End Date (mm/dd/yyyy)</p>
+            <p className="question-fields-title"> to... (mm/dd/yyyy)</p>
             <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
             <TextareaAutosize
               className="question-fields-text"

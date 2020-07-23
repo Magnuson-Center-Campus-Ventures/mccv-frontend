@@ -13,6 +13,7 @@ class AddPostTiming extends Component {
       post: {},
       badStartDate: false,
       badEndDate: false,
+      tooLong: false, 
     };
 
     this.changePostField = this.changePostField.bind(this);
@@ -71,7 +72,17 @@ class AddPostTiming extends Component {
     return day > 0 && day <= monthLength[month - 1];
   };
 
+  isValidLength = (endDate) => {
+    const start = new Date(this.state.post.desired_start_date);
+    const end = new Date(endDate);
+    return ((end.getTime() -start.getTime()) / (1000 * 60 * 60 * 24) > 28 && (end.getTime() -start.getTime()) / (1000 * 60 * 60 * 24) < 70);
+    // console.log((end.getTime() -start.getTime()) / (1000 * 60 * 60 * 24));
+    // console.log('start: ', this.state.post.desired_start_date); 
+    // console.log('end: ', endDate); 
+  }
+
   renderTimingQuestions() {
+    let startDate; 
     return (
       <div className="question">
         <div className="question-header">
@@ -90,6 +101,7 @@ class AddPostTiming extends Component {
               if (!this.isValidDate(event.target.value)) {
                 this.setState({ badStartDate: true });
               } else {
+                startDate = event.target.value; 
                 this.setState({ badStartDate: false });
                 this.changePostField('desired_start_date', event);
               }
@@ -98,12 +110,16 @@ class AddPostTiming extends Component {
           />
           <p className="question-fields-title">End Date (mm/dd/yyyy)</p>
           <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
+          <div style={{ color: 'red' }}>{this.state.tooLong ? 'Positions need to be between 4 and 10 weeks!' : null}</div>
           <TextareaAutosize
             className="question-fields-text"
             onBlur={(event) => {
               if (!this.isValidDate(event.target.value)) {
                 this.setState({ badEndDate: true });
-              } else {
+              } else if (!this.isValidLength(event.target.value)){
+                this.setState({ tooLong: true}); 
+              }
+              else {
                 this.setState({ badEndDate: false });
                 this.changePostField('desired_end_date', event);
               }
