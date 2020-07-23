@@ -76,13 +76,9 @@ class AddPostTiming extends Component {
     const start = new Date(this.state.post.desired_start_date);
     const end = new Date(endDate);
     return ((end.getTime() -start.getTime()) / (1000 * 60 * 60 * 24) > 28 && (end.getTime() -start.getTime()) / (1000 * 60 * 60 * 24) < 70);
-    // console.log((end.getTime() -start.getTime()) / (1000 * 60 * 60 * 24));
-    // console.log('start: ', this.state.post.desired_start_date); 
-    // console.log('end: ', endDate); 
   }
 
   renderTimingQuestions() {
-    let startDate; 
     return (
       <div className="question">
         <div className="question-header">
@@ -101,7 +97,6 @@ class AddPostTiming extends Component {
               if (!this.isValidDate(event.target.value)) {
                 this.setState({ badStartDate: true });
               } else {
-                startDate = event.target.value; 
                 this.setState({ badStartDate: false });
                 this.changePostField('desired_start_date', event);
               }
