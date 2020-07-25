@@ -15,6 +15,7 @@ import Footer from './footer';
 import Signin from './signin';
 import Signup from './signup';
 import ForgotPassword from './forgot-password';
+import ResetPassword from './reset-password';
 import Credits from './credits';
 import StudentsFAQ from './student-components/students-faq';
 import StartupsFAQ from './startup-components/startups-faq';
@@ -54,6 +55,7 @@ const App = (props) => {
           <Route path="/signin" component={Signin} />
           <Route path="/signup" component={Signup} />
           <Route path="/forgotpassword" component={ForgotPassword} />
+          <Route path="/resetpassword" component={ResetPassword} />
           <Route path="/credits" component={Credits} />
           <Route path="/studentsfaq" component={StudentsFAQ} />
           <Route path="/startupsfaq" component={StartupsFAQ} />

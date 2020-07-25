@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
-import { fetchUsers, signinUser } from '../actions/index';
+import { createResetToken } from '../actions/index';
 import '../styles/forgot-password.scss';
 
 class ForgotPassword extends Component {
@@ -9,12 +9,7 @@ class ForgotPassword extends Component {
     super(props);
     this.state = {
       email: '',
-      password: '',
     };
-  }
-
-  componentDidMount() {
-    this.props.fetchUsers();
   }
 
   onEmailChange = (event) => {
@@ -23,7 +18,7 @@ class ForgotPassword extends Component {
 
   sendEmail = (event) => {
     const fields = { ...this.state };
-    this.props.signinUser(fields, this.props.history);
+    this.props.createResetToken(fields, this.props.history);
   }
 
   renderError = () => {
@@ -33,13 +28,13 @@ class ForgotPassword extends Component {
     return null;
   }
 
-  render() {
+  render() { 
     return (
       <div className="signinPage">
         <div className="signinBoard">
           <div className="signinLeft">
             <h1>Forgot your password?</h1>
-            <h2>Type in your email and we will send you a link to reset your password</h2>
+            <h2>Enter your email and we will send you a link to reset your password</h2>
           </div>
 
           <div className="signinRight">
@@ -52,8 +47,6 @@ class ForgotPassword extends Component {
               <button type="button" className="signinLoginBtn" onClick={this.sendEmail}>
                 <span className="signinLoginCta">Send email</span>
               </button>
-              <NavLink to="/signin" className="signupLink">Remember your password?</NavLink>
-              <br/>
               <NavLink to="/signup" className="signupLink">Don&apos;t have an account? Sign Up</NavLink>
             </div>
           </div>
@@ -71,4 +64,4 @@ function mapStateToProps(reduxState) {
   };
 }
 
-export default withRouter(connect(mapStateToProps, { fetchUsers, signinUser })(ForgotPassword));
+export default withRouter(connect(mapStateToProps, { createResetToken })(ForgotPassword));
