@@ -11,6 +11,7 @@ import { fetchStudents, fetchStartupByUserID, fetchUser } from '../../actions';
 import { fetchSkillsFromID, fetchClassesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
 import StudentListItem from './student-item';
+import { fetchStudent } from '../../services/dartmouthAPI';
 
 class Students extends Component {
   constructor(props) {
@@ -36,6 +37,7 @@ class Students extends Component {
 
   componentDidMount() {
     this.props.fetchStudents();
+    fetchStudent(); 
     this.props.fetchUser(localStorage.getItem('userID'));
     this.props.fetchStartupByUserID(localStorage.getItem('userID'));
   }
