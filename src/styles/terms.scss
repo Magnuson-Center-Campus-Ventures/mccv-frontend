@@ -2,8 +2,8 @@
   z-index: 2;
   position: fixed;
   // padding: 2em;
-  top: 4em;
-  bottom: 4em;
+  top: 6em;
+  bottom: 6em;
   padding-right: 5em;
   padding-left: 5em;
   overflow-y: scroll;
@@ -42,7 +42,7 @@
   margin: 5px;
 }
 
-.close-modal {
+.terms-close-modal {
   width: 20px;
   align-self: end;
   margin-top: 5px;
@@ -60,7 +60,7 @@
   font-size: 3vw;
 }
 
-.modal-add-button {
+.modal-signed-button {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
@@ -75,8 +75,27 @@
   color: white;
 }
 
-.modal-add-button:hover{
+.modal-signed-button:hover{
   background-color: #2D7D61;
+}
+
+.modal-unsigned-button {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 10px;
+  margin-left: 100px;
+  margin-right: 100px;
+  background-color: #EFEFF0;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  border-radius: 5px;
+  color: white;
+}
+
+.modal-unsigned-button:hover{
+  background-color: #EFEFF0;
 }
 
 #first-student-input {

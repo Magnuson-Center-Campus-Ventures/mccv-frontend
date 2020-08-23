@@ -12,19 +12,40 @@ class StudentTerms extends React.Component {
     };
   }
 
+  acceptTC() {
+    this.props.acceptTC({ 
+      signature: this.state.signature,
+    });
+  }
+
+  renderAcceptTC() {
+    if (this.state.signature != '') {
+      return  <button className="modal-signed-button" onClick={() => {
+        this.props.acceptTC({ signature: this.state.signature, })}}>
+                Accept Terms and Conditions
+              </button>;
+    }
+    else {
+      return  <button className="modal-unsigned-button">
+                Accept Terms and Conditions
+              </button>;
+    }
+  }
+
   render() {
     if (!this.props.show) {
       return null;
     }
     return (
       <div className="terms-container">
-        <div className="terms-title">Student Terms and Conditions<img className="close-modal"
+        <div className="terms-title">
+          <img className="terms-close-modal"
           src={close}
           alt="close"
           style={{ cursor: 'pointer' }}
           onClick={this.props.onClose}
         />
-        <h1 className="terms-title">Magnuson Center Campus Ventures For Students</h1>
+        <h1 className="terms-title">Magnuson Center Campus Ventures Terms and Conditions For Students</h1>
         <p>
           The Magnuson Center for Entrepreneurship (Magnuson Center) provides a student experience marketplace platform (MCCV Platform) in the form of the Magnuson Center Campus Ventures (MCCV) program.
           The MCCV program is a platform that provides Dartmouth undergraduate and graduate students (MCCV Student Participant)
@@ -81,15 +102,8 @@ class StudentTerms extends React.Component {
       <div className="terms-signature-container">
         <div className="new-work-exp-body">
           <div className="input-title">Sign your name here</div>
-          <input className="short-input" onBlur={(event) => this.setState({ signature: event.target.value })} />
-          <button className="modal-add-button"
-            onClick={() => {
-              this.props.onClose({ 
-                signature: this.state.signature,
-              });
-            }}
-          >Accept Terms and Conditions
-          </button>
+          <input className="short-input" onInput={(event) => this.setState({ signature: event.target.value })} />
+          {this.renderAcceptTC()}
         </div>
       </div>
     </div>
