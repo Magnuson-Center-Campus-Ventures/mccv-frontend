@@ -24,10 +24,6 @@ import SubmittedApplications from './student-components/submitted-applications';
 import StartupApplicationListItem from './startup-components/startup-application-list-item';
 import StudentSignUp from './student-components/student-sign-up/student-signup';
 import StartupProfileStartups from './startup-components/startup-profile-startups';
-import StartupSignUpBio from './startup-components/startup-sign-up/startup-signup-bio';
-import StartupSignUpDesc from './startup-components/startup-sign-up/startup-signup-desc';
-import StartupSignUpVideo from './startup-components/startup-sign-up/startup-signup-video';
-import StartupSignUpIndustries from './startup-components/startup-sign-up/startup-signup-industries';
 import StartupSignUp from './startup-components/startup-sign-up/startup-signup';
 import PrivateRoute from './private-route';
 import StudentRoute from './student-components/student-route';
@@ -76,10 +72,6 @@ const App = (props) => {
           <StartupRoute path="/startupsubmittedapplications" component={StartupSubmittedApplications} />
           <StartupRoute path="/startupprofile" component={StartupProfileStartups} />
           <StartupRoute path="/startup-signup" component={StartupSignUp} />
-          <StartupRoute path="/startup-signup-bio" component={StartupSignUpBio} />
-          <StartupRoute path="/startup-signup-desc" component={StartupSignUpDesc} />
-          <StartupRoute path="/startup-signup-industries" component={StartupSignUpIndustries} />
-          <StartupRoute path="/startup-signup-video" component={StartupSignUpVideo} />
           <StartupRoute path="/add-post" component={AddPost} />
           <StartupRoute path="/add-post-title-location" component={AddPostTitleLocation} />
           <StartupRoute path="/add-post-timing" component={AddPostTiming} />
