@@ -124,7 +124,7 @@ class StudentSkills extends Component {
       );
     }
   }
-
+ 
   render() {
     if (this.state.student.skills !== undefined && this.props.skills !== []) {
       return (
@@ -132,7 +132,7 @@ class StudentSkills extends Component {
           <div className="question-header">
             <div className="question-header-prompt">
               <h1>Skills</h1>
-              <p>Add the skills you have!</p>
+              <p>(Optional) Search/Select the skills you have!</p>
             </div>
             <i className="fas fa-brain question-header-icon" id="icon" />
           </div>

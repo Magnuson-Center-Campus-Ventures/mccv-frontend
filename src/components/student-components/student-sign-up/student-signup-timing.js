@@ -95,7 +95,7 @@ class StudentTiming extends Component {
           <div className="question-header">
             <div className="question-header-prompt">
               <h1>Timing</h1>
-              <p>Add your desired start date, end date, and time commitment!</p>
+              <p>(Optional) Add your desired start date, end date, and time commitment!</p>
             </div>
             <i className="far fa-clock question-header-icon" id="icon" />
           </div>

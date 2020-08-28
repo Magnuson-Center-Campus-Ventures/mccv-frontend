@@ -64,13 +64,13 @@ class StudentSignUp extends Component {
       case 1:
         return <StudentSignUpTiming />;
       case 2:
-        return <StudentSignUpIndustries />;
+        return <StudentSignUpMajorMinor />;
       case 3:
         return <StudentSignUpWorkExperiences />;
       case 4:
         return <StudentSignUpOtherExperiences />;
       case 5:
-        return <StudentSignUpMajorMinor />;
+        return <StudentSignUpIndustries />;
       case 6:
         return <StudentSignUpClasses />;
       case 7:
