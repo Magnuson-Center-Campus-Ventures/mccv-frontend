@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { DateRange } from 'react-date-range';
 import TextareaAutosize from 'react-textarea-autosize';
 import {
   fetchStudentByUserID, fetchUser, updateStudent,
 } from '../../../actions';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 class StudentTiming extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      student: {},
+      student: {
+        desired_start_date: new Date().toISOString(),
+        desired_end_date: new Date().toISOString(),
+      },
       badStartDate: false,
       badEndDate: false,
+      secondClick: true,
     };
   }
 
@@ -22,53 +29,65 @@ class StudentTiming extends Component {
     this.props.fetchUser(this.props.userID);
   }
 
-     // update student field
-     changeStudentField = (field, event) => {
-       // eslint-disable-next-line prefer-destructuring
-       const value = event.target.value;
+  // update student field
+  changeStudentField = (field, event) => {
+    // eslint-disable-next-line prefer-destructuring
+    const value = event.target.value;
 
-       this.setState((prevState) => {
-         const student = { ...prevState.student };
-         student[field] = value;
-         this.props.updateStudent(this.props.student.id, student);
-         return {
-           ...prevState,
-           student,
-         };
-       });
-     }
+    this.setState((prevState) => {
+      const student = { ...prevState.student };
+      student[field] = value;
+      this.props.updateStudent(this.props.student.id, student);
+      return {
+        ...prevState,
+        student,
+      };
+    });
+  }
 
-     // Removes time from date
-     convertDate=(date) => {
-       if (typeof date !== 'undefined') {
-         const dateISO = date.slice(0, 10).split('-');
-         return `${dateISO[1]}/${dateISO[2]}/${dateISO[0]}`;
-       }
-       return '';
-     }
+  checkDateRange = () => {
+    console.log(this.state.student);
+    const start = new Date(this.state.student.desired_start_date);
+    const end = new Date(this.state.student.desired_end_date);
+    const diff = (end.getTime() - start.getTime())/(1000 * 3600 * 24 * 7);
+    if (diff > 3.5 && diff <= 10) {
+      this.state.validDate = true;
+      this.props.updateStudent(this.props.student.id, this.state.student);
+    } else {
+      this.state.validDate = false;
+      this.state.student.desired_end_date = new Date(start.getTime() + (1000 * 3600 * 24 * 7 * 4));
+    }
+  }
 
-     // Date validation function taken from https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
-    isValidDate = (dateString) => {
-      // Check for mm/dd/yyyy pattern
-      if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString)) { return false; }
 
-      // Parse the date parts to integers
-      const parts = dateString.split('/');
-      const day = parseInt(parts[1], 10);
-      const month = parseInt(parts[0], 10);
-      const year = parseInt(parts[2], 10);
+  renderDateError = () => {
+    if (this.state.validDate == false) {
+      return <div className="date-error">Please make the date range 4-10 weeks long</div>
+    } else return null;
+  }
 
-      // Check the ranges of month and year
-      if (year < 1000 || year > 3000 || month === 0 || month > 12) return false;
-
-      const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-      // Adjust for leap years
-      if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) monthLength[1] = 29;
-
-      // Check the range of the day
-      return day > 0 && day <= monthLength[month - 1];
-    };
+  renderDateRange = () => {
+    return (
+      <DateRange
+        editableDateInputs={true}
+        onChange={(ranges) => {
+          this.state.secondClick = !this.state.secondClick;
+          this.state.student.desired_start_date = ranges.selection.startDate.toISOString();
+          this.state.student.desired_end_date = ranges.selection.endDate.toISOString();
+          if (this.state.secondClick){
+            this.checkDateRange();
+          }
+          this.forceUpdate();
+        }}
+        moveRangeOnFirstSelection={false}
+        ranges={[{
+          startDate: new Date(this.state.student.desired_start_date),
+          endDate: new Date(this.state.student.desired_end_date),
+          key: 'selection',
+        }]}
+      />
+    )
+  }
 
     renderTimingQuestions() {
       return (
@@ -80,35 +99,12 @@ class StudentTiming extends Component {
             </div>
             <i className="far fa-clock question-header-icon" id="icon" />
           </div>
-          <div className="question-fields">
-            <p className="question-fields-title">Start Date (mm/dd/yyyy)</p>
-            <div style={{ color: 'red' }}>{this.state.badStartDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
-            <TextareaAutosize
-              className="question-fields-text"
-              onBlur={(event) => {
-                if (!this.isValidDate(event.target.value)) {
-                  this.setState({ badStartDate: true });
-                } else {
-                  this.setState({ badStartDate: false });
-                  this.changeStudentField('desired_start_date', event);
-                }
-              }}
-              defaultValue={this.convertDate(this.props.student.desired_start_date)}
-            />
-            <p className="question-fields-title">End Date (mm/dd/yyyy)</p>
-            <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
-            <TextareaAutosize
-              className="question-fields-text"
-              onBlur={(event) => {
-                if (!this.isValidDate(event.target.value)) {
-                  this.setState({ badEndDate: true });
-                } else {
-                  this.setState({ badEndDate: false });
-                  this.changeStudentField('desired_end_date', event);
-                }
-              }}
-              defaultValue={this.convertDate(this.props.student.desired_end_date)}
-            />
+          <div className="question-horizontal">
+            <div className="student-edit-dates">
+              <div>Desired Start and End Date</div>
+              {this.renderDateError()}
+              {this.renderDateRange()}
+            </div>
             <p className="question-fields-title">Hours/Week</p>
             <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('time_commitment', event)} defaultValue={this.props.student.time_commitment} />
           </div>

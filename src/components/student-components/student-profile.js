@@ -236,23 +236,9 @@ class StudentProfile extends Component {
   }
 
   renderDateRange = () => {
-    const selectionRange = {
-      startDate: new Date(this.state.student.desired_start_date),
-      endDate: new Date(this.state.student.desired_end_date),
-      key: 'selection',
-    }
-    // import {useState} from 'react'
-    // const [state, setState] = useState([
-    //   {
-    //     startDate: new Date(),
-    //     endDate: null,
-    //     key: 'selection'
-    //   }
-    // ]);
     return (
       <DateRange
         editableDateInputs={true}
-        // onChange={item => setState([item.selection])}
         onChange={(ranges) => {
           this.state.student.desired_start_date = ranges.selection.startDate.toISOString();
           this.state.student.desired_end_date = ranges.selection.endDate.toISOString();
@@ -267,7 +253,6 @@ class StudentProfile extends Component {
       />
     )
   }
-  
 
   renderMajMin = (array) => {
     if (array) {

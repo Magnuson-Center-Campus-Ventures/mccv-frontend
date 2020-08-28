@@ -133,7 +133,7 @@ class StudentClasses extends Component {
           <div className="question-header">
             <div className="question-header-prompt">
               <h1>Classes</h1>
-              <p>Add the classes you have taken!!</p>
+              <p>(Optional) Add the classes you have taken!</p>
             </div>
             <i className="fas fa-book-reader question-header-icon" id="icon" />
           </div>
