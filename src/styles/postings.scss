@@ -29,14 +29,62 @@ body{
 }
 
 .listItem{
-    background-color: #EFEFF0;
+    background-color: #FFFFFF;
     margin-top: 4%;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     height: 275px;
     width: 275px;
+}
+
+.postBody{
+    background-color: #FFFFFF;
+    height: 275px;
+    width: 275px;
     display: flex;
     flex-direction: column;
-    color: #000000
+}
+
+.postText{
+    margin: 1em;
+    text-align: left;
+}
+
+#postTitle{ 
+  font-weight: 600;
+  font-size: 150%;
+  margin: .25em;
+}
+
+#startupName{ 
+  font-weight: 500;
+  font-size: 130%;
+  margin: .25em;
+}
+
+#postLocation{
+  font-size: .8em;
+  font-style: italic;
+  margin: 0em;
+  padding: 0em;
+  text-align: left
+}
+
+.company{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.companyLeft {
+  width: 60%;
+}
+
+.companyRight{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  width: 40%;
 }
 
 .companyInfo{
@@ -60,8 +108,8 @@ body{
 
 .location{
     display: flex;
-    justify-content: center;
-    margin-top: 20px
+    // justify-content: left;
+    // margin-top: 20px
 }
 
 .location > h2{
@@ -75,14 +123,12 @@ body{
 
 .locationIcon{
     background: url('../assets/location.png');
-    background-size: 15px 15px;
-    height: 15px;
-    width: 15px;
+    background-size: 1em 1em;
+    height: 1em;
+    width: 1em;
     display: block;
-}
-
-#startupName{ 
-    font-size: 150%;
+    margin-left: .5em;
+    margin-right: .5em;
 }
 
 .postInfo{
@@ -93,12 +139,6 @@ body{
 
 .listItem:hover{
     box-shadow: 1px 8px 8px  rgba(0, 0, 0, 0.25);
-}
-
-#postTitle{ 
-    font-weight: normal;
-    text-align: center;
-    font-size: 140%;
 }
 
 .extraInfo {
@@ -252,6 +292,7 @@ body{
 }
 
 .rightSide{
+    background-color: #EFEFF0;
     width: 100%
 }
 

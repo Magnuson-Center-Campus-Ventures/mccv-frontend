@@ -30,9 +30,29 @@ const PostListItem = (props) => {
     );
   });
 
+  
+
   return (
     <Link to={route} key={props.post.id} className="listItem link">
-      <div className="companyInfo">
+      <div className="postBody">
+        <div className="postText">
+          <h1 id="postTitle">{ props.post.title}</h1>
+          <div className="company">
+            <div className="companyLeft">
+              <h1 id="startupName"> { props.post.startup_id.name} </h1>
+              <div className="location">
+                <span className="locationIcon" />
+                <h2 id="postLocation"> {`${props.post.city}, ${props.post.state}`} </h2>
+              </div>
+            </div>
+            <div className="companyRight">
+              <img src={props.post.startup_id.logo} alt="no logo" />
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      {/*<div className="companyInfo">
         <div className="companyText">
           <h1 id="startupName"> { props.post.startup_id.name} </h1>
           <div className="location">
@@ -41,14 +61,14 @@ const PostListItem = (props) => {
           </div>
         </div>
         {logo}
-        {/* <img src={props.post.startup_id.logo} alt="no logo" /> */}
+        <img src={props.post.startup_id.logo} alt="no logo" />
       </div>
       <div className="postInfo">
         <h1 id="postTitle">{ props.post.title}</h1>
         <div className="industriesList">
           {industries}
         </div>
-      </div>
+      </div> */}
     </Link>
   );
 };
