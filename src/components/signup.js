@@ -6,6 +6,8 @@ import {
   authError, signupUser, createStudent, updateUser,
 } from '../actions';
 import '../styles/signup.scss';
+import StudentTerms from './student-components/student-modals/student-terms'
+import StartupTerms from './startup-components/startup-modals/startup-terms'
 
 class Signup extends Component {
   constructor(props) {
@@ -16,6 +18,8 @@ class Signup extends Component {
       password: '',
       student_profile_id: '',
       startup_id: '',
+      signed: '',
+      show: false,
     };
   }
 
@@ -37,7 +41,7 @@ class Signup extends Component {
     this.setState({ role: 'startup' });
   }
 
-  signupNow = (event) => {
+  signupNow() {
     // create new user
     const newUser = { ...this.state };
     newUser.email = this.state.email;
@@ -45,7 +49,25 @@ class Signup extends Component {
     newUser.role = this.state.role;
     newUser.student_profile_id = this.state.student_profile_id;
     newUser.startup_id = this.state.startup_id;
+    newUser.signed = this.state.signed;
     this.props.signupUser(newUser, this.props.history);
+  }
+
+  showModal = (event) => {
+    this.setState({ show: true });
+  };
+  
+  hideModal = (event) => {
+    this.setState({ show: false });
+  }
+
+  signModal = (event) => {
+    if (event.signature != ''){
+      console.log('signup');
+      this.state.signed = new Date().getTime();
+      this.signupNow();
+    }
+    this.setState({ show: false });
   }
 
   // return button className if student is selected
@@ -84,6 +106,18 @@ class Signup extends Component {
   render() {
     return (
       <div className="signupPage">
+      <div className="student-profile">
+          <StudentTerms
+            onClose={this.hideModal}
+            acceptTC={this.signModal}
+            show={this.state.show && this.state.role=='student'}
+          />
+          <StartupTerms
+            onClose={this.hideModal}
+            acceptTC={this.signModal}
+            show={this.state.show && this.state.role=='startup'}
+          />
+        </div>
         <div className="signupBoard">
           <div className="signupLeft">
             <h1>Sign up as a</h1>
@@ -110,10 +144,9 @@ class Signup extends Component {
             </div>
 
             <div className="signupActions">
-              <button type="button" className="signupSignupBtn" onClick={this.signupNow}>
+              <button type="button" className="signupSignupBtn" onClick={this.showModal}>
                 <span>Sign Up</span>
               </button>
-
               <NavLink to="/signin" className="loginLink">Already have an account? Login</NavLink>
             </div>
           </div>
