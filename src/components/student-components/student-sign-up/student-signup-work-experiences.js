@@ -78,6 +78,17 @@ class StudentWorkExperiences extends Component {
     });
   }
 
+  submit = () => {
+    if (this.state.isEditing) {
+      const student = { ...this.state.student };
+      this.props.updateStudent(this.state.student.id, student);
+      this.state.workExps.forEach((workExp) => {
+        this.props.updateWorkExperience(workExp._id, workExp);
+      });
+    }
+    this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
+  }
+
   // update student field
   changeStudentField = (field, event) => {
     // eslint-disable-next-line prefer-destructuring
@@ -133,6 +144,7 @@ class StudentWorkExperiences extends Component {
           <div className="question-fields-exp-header">
             <p className="question-fields-title">Work Experiences</p>
             <i className="fas fa-plus-circle question-fields-button" id="addicon" onClick={(e) => { this.showModal(); }} />
+            <i className="far fa-edit question-fields-button" id="editicon" onClick={(e) => { this.submit(); }} />
           </div>
           <div id="work-exps">
             {this.renderWorkExperiences()}
