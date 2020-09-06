@@ -63,7 +63,6 @@ class Signup extends Component {
 
   signModal = (event) => {
     if (event.signature != ''){
-      console.log('signup');
       this.state.signed = new Date().getTime();
       this.signupNow();
     }

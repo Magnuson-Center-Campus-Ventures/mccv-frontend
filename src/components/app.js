@@ -24,23 +24,11 @@ import SubmittedApplications from './student-components/submitted-applications';
 import StartupApplicationListItem from './startup-components/startup-application-list-item';
 import StudentSignUp from './student-components/student-sign-up/student-signup';
 import StartupProfileStartups from './startup-components/startup-profile-startups';
-import StartupSignUpBio from './startup-components/startup-sign-up/startup-signup-bio';
-import StartupSignUpDesc from './startup-components/startup-sign-up/startup-signup-desc';
-import StartupSignUpVideo from './startup-components/startup-sign-up/startup-signup-video';
-import StartupSignUpIndustries from './startup-components/startup-sign-up/startup-signup-industries';
 import StartupSignUp from './startup-components/startup-sign-up/startup-signup';
 import PrivateRoute from './private-route';
 import StudentRoute from './student-components/student-route';
 import StartupRoute from './startup-components/startup-route';
 import ApplicationListItem from './student-components/application-list-item';
-import AddPost from './startup-components/startup-add-post/add-post';
-import AddPostTitleLocation from './startup-components/startup-add-post/add-post-title-location';
-import AddPostTiming from './startup-components/startup-add-post/add-post-timing';
-import AddPostRequiredSkills from './startup-components/startup-add-post/add-post-req-skills';
-import AddPostPreferredSkills from './startup-components/startup-add-post/add-post-pref-skills';
-import AddPostIndustries from './startup-components/startup-add-post/add-post-industries';
-import AddPostDesiredClasses from './startup-components/startup-add-post/add-post-desired-classes';
-import AddPostDescription from './startup-components/startup-add-post/add-post-description';
 import StartupSubmittedApplications from './startup-components/startup-submitted-applications';
 
 const App = (props) => {
@@ -76,18 +64,6 @@ const App = (props) => {
           <StartupRoute path="/startupsubmittedapplications" component={StartupSubmittedApplications} />
           <StartupRoute path="/startupprofile" component={StartupProfileStartups} />
           <StartupRoute path="/startup-signup" component={StartupSignUp} />
-          <StartupRoute path="/startup-signup-bio" component={StartupSignUpBio} />
-          <StartupRoute path="/startup-signup-desc" component={StartupSignUpDesc} />
-          <StartupRoute path="/startup-signup-industries" component={StartupSignUpIndustries} />
-          <StartupRoute path="/startup-signup-video" component={StartupSignUpVideo} />
-          <StartupRoute path="/add-post" component={AddPost} />
-          <StartupRoute path="/add-post-title-location" component={AddPostTitleLocation} />
-          <StartupRoute path="/add-post-timing" component={AddPostTiming} />
-          <StartupRoute path="/add-post-req-skills" component={AddPostRequiredSkills} />
-          <StartupRoute path="/add-post-pref-skills" component={AddPostPreferredSkills} />
-          <StartupRoute path="/add-post-industries" component={AddPostIndustries} />
-          <StartupRoute path="/add-post-desired-classes" component={AddPostDesiredClasses} />
-          <StartupRoute path="/add-post-description" component={AddPostDescription} />
           {/* error route */}
           <Route render={() => (<div>page not found </div>)} />
         </Switch>
