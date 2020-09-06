@@ -56,7 +56,7 @@ class Signin extends Component {
               <button type="button" className="signinLoginBtn" onClick={this.signinNow}>
                 <span className="signinLoginCta">Login</span>
               </button>
-
+              <NavLink to="/forgotpassword" className="signupLink">Forgot your password?</NavLink>
               <NavLink to="/signup" className="signupLink">Don&apos;t have an account? Sign Up</NavLink>
             </div>
           </div>

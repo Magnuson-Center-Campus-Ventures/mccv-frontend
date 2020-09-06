@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
+//const ROOT_URL = 'http://localhost:9090/api';
 const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
@@ -9,6 +9,7 @@ export const ActionTypes = {
   FETCH_USER: 'FETCH_USER',
   LOGOUT_USER: 'LOGOUT_USER',
   AUTH_ERROR: 'AUTH_ERROR',
+  UPDATE_USER: 'UPDATE_USER',
   // post actions
   FETCH_POST: 'FETCH_POST',
   CLEAR_POST: 'CLEAR_POST',
@@ -57,6 +58,9 @@ export const ActionTypes = {
   FETCH_ALL_CLASSES: 'FETCH_ALL_CLASSES',
   FETCH_SOME_CLASSES: 'FETCH_SOME_CLASSES',
   ADD_CLASS: 'ADD_CLASS',
+  // password reset actions
+  ADD_RESET_TOKEN: 'ADD_RESET_TOKEN',
+  FETCH_RESET_TOKEN: 'FETCH_RESET_TOKEN',
   // general error
   ERROR_SET: 'ERROR_SET',
   // AUTH_USER: 'AUTH_USER',
@@ -802,12 +806,49 @@ export function fetchUser(id) {
   };
 }
 
+export function fetchUsers() {
+  return (dispatch) => {
+    axios.get(`${ROOT_URL}/users`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
+    }).catch((error) => {
+      dispatch({ type: ActionTypes.ERROR_SET, error });
+    });
+  };
+}
+
 export function updateUser(id, user) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/users/${id}`, user, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+    });
+  };
+}
+
+// ADD_RESET_TOKEN: 'ADD_RESET_TOKEN',
+// FETCH_RESET_TOKEN: 'FETCH_RESET_TOKEN',
+
+export function createResetToken({ email, } , history) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/forgotpassword`, { email, }).then((response) => {
+      dispatch(authError(`Check your email to change your password! (expires in 10 minutes)`));
+      // history.push('/signin');
+    }).catch((error) => {
+      dispatch(authError(`Check your email to change your password! (expires in 10 minutes)`));
+      // history.push('/signin');
+    });
+  };
+}
+
+export function updatePassword({ token, password, } , history) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/updatepassword`, { token, password, }).then((response) => {
+      dispatch(authError(`Success: ${response.data}`));
+      // history.push('/signin');
+    }).catch((error) => {
+      dispatch(authError(`Error: ${error.response.data}`));
+      // history.push('/signin');
     });
   };
 }
