@@ -43,6 +43,7 @@ class Nav extends Component {
           <li className="navLi"><NavLink to="/posts" className="navlink" activeClassName="activeBorder">Positions</NavLink></li>
           <li className="navLi"><NavLink to="/startups" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
           <li className="navLi"><NavLink to="/students" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
+          <li className="navLi"><NavLink to="/dashboard" className="navlink" activeClassName="activeBorder">Dashboard</NavLink></li>
           <li className="navLi">
             <button type="button" className="navLogoutBtn" onClick={this.signout}>
               <span className="navLogoutCta">Logout</span>
