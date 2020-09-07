@@ -6,7 +6,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import TextareaAutosize from 'react-textarea-autosize';
 import CreateableSelect from 'react-select/creatable';
+import { DateRange } from 'react-date-range';
 import {
   fetchStudentByUserID, updateStudent, fetchUser,
   fetchWorkExperiences, updateWorkExperience, deleteWorkExperience,
@@ -19,6 +21,8 @@ import OtherExperience from './other-experience';
 import NewWorkExp from './student-modals/new-work-exp';
 import NewOtherExp from './student-modals/new-other-exp';
 import '../../styles/student-profile.scss';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 class StudentProfile extends Component {
   constructor(props) {
@@ -42,6 +46,9 @@ class StudentProfile extends Component {
       selectedSkillOptions: [],
       allClassOptions: [],
       selectedClassOptions: [],
+      start: new Date(),
+      end: new Date(),
+      validDate: true,
     };
   }
 
@@ -140,7 +147,7 @@ class StudentProfile extends Component {
       this.setState({ otherExps: this.props.otherExps });
     }
   }
-
+  
   changeStudentField = (field, event) => {
     const value = event.target.value;
 
@@ -194,18 +201,68 @@ class StudentProfile extends Component {
 
   submit = () => {
     if (this.state.isEditing) {
-      const student = { ...this.state.student };
-      student.majors = this.state.majors;
-      student.minors = this.state.minors;
-      this.props.updateStudent(this.state.student.id, student);
-      this.state.workExps.forEach((workExp) => {
-        this.props.updateWorkExperience(workExp._id, workExp);
-      });
-      this.state.otherExps.forEach((otherExp) => {
-        this.props.updateOtherExperience(otherExp._id, otherExp);
-      });
+      this.checkDateRange();
+      if (this.state.validDate == true) {
+        const student = { ...this.state.student };
+        student.majors = this.state.majors;
+        student.minors = this.state.minors;
+        this.props.updateStudent(this.state.student.id, student);
+        this.state.workExps.forEach((workExp) => {
+          this.props.updateWorkExperience(workExp._id, workExp);
+        });
+        this.state.otherExps.forEach((otherExp) => {
+          this.props.updateOtherExperience(otherExp._id, otherExp);
+        });
+        this.setState({ isEditing: false });
+      }
+    } else {
+      this.setState({ isEditing: true });
     }
-    this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
+    this.forceUpdate();
+  }
+
+  checkDateRange = () => {
+    const start = new Date(this.state.student.desired_start_date);
+    const end = new Date(this.state.student.desired_end_date);
+    const diff = (end.getTime() - start.getTime())/(1000 * 3600 * 24 * 7);
+    if (diff > 3.5 && diff <= 10) {
+      this.state.validDate = true;
+      this.props.updateStudent(this.props.student.id, this.state.student);
+    } else {
+      this.state.validDate = false;
+      this.state.student.desired_end_date = new Date(start.getTime() + (1000 * 3600 * 24 * 7 * 4));
+    }
+  }
+
+  renderDateError = () => {
+    if (this.state.validDate == false) {
+      return <div className="date-error">Please make the date range 4-10 weeks long before saving</div>
+    } else return null;
+  }
+
+  renderDateRange = () => {
+    if (this.state.student.desired_start_date != null){
+      this.state.start = new Date(this.state.student.desired_start_date);
+    } 
+    if (this.state.student.desired_end_date != null){
+      this.state.end = new Date(this.state.student.desired_end_date);
+    }
+    return (
+      <DateRange
+        editableDateInputs={true}
+        onChange={(ranges) => {
+          this.state.student.desired_start_date = ranges.selection.startDate.toISOString();
+          this.state.student.desired_end_date = ranges.selection.endDate.toISOString();
+          this.forceUpdate();
+        }}
+        moveRangeOnFirstSelection={false}
+        ranges={[{
+          startDate: this.state.start,
+          endDate: this.state.end,
+          key: 'selection',
+        }]}
+      />
+    )
   }
 
   renderMajMin = (array) => {
@@ -325,6 +382,13 @@ class StudentProfile extends Component {
               defaultValue={this.props.student?.phone_number ? this.props.student?.phone_number : null}
               onBlur={(event) => this.changeStudentField('phone_number', event)}
             />
+            <div className="student-edit-dates">
+              <div>Desired Start and End Date</div>
+              {this.renderDateError()}
+              {this.renderDateRange()}
+              <p className="question-fields-title">Hours/Week</p>
+              <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('time_commitment', event)} defaultValue={this.props.student?.time_commitment} />
+            </div>
           </div>
           <hr className="profile-divider" />
           <div id="student-edit-majmin">
@@ -478,13 +542,22 @@ class StudentProfile extends Component {
             </div>
             <div className="student-contact">{this.props.email}</div>
             <div className="student-contact">{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
+            <div className="student-start-date">
+              {this.state.student.desired_start_date ? 'Desired Start Date'.concat(': ', this.state.student.desired_start_date.toString().substring(0, 10)) : null}
+              </div>
+            <div className="student-end-date">
+              {this.state.student.desired_end_date ? 'Desired End Date'.concat(': ', this.state.student.desired_end_date.toString().substring(0, 10)) : null}
+              </div>
+            <div className="post-time-commitment">
+              {this.state.student.time_commitment ? 'Time Commitment'.concat(': ', this.state.student.time_commitment.toString()).concat(' ', 'hrs/week') : null}
+              </div>
             <hr className="profile-divider" />
             <div id="lists-row">
               <div className="list-section">
                 <h2>Industries</h2>
                 {this.renderPills(this.state.ownIndustries)}
               </div>
-              <div className="list-section">
+              <div className="list-section" >
                 <h2>Classes</h2>
                 {this.renderPills(this.state.ownClasses)}
               </div>
@@ -546,7 +619,7 @@ class StudentProfile extends Component {
         <hr className="profile-divider" />
         {this.state.isEditing ? (
           <div className="exps-edit">
-            <div className="exp-header">
+            <div className="exp-header" >
               <h2>Work Experience</h2>
               <button className="add-button"
                 onClick={() => {

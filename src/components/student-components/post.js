@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import CreateableSelect from 'react-select/creatable';
+import { DateRange } from 'react-date-range';
 import {
   fetchPost, updatePost, fetchApplication, fetchUser, clearApplication, clearPost,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills,
@@ -20,6 +21,8 @@ import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
 import pin from '../../../static/img/pin.png';
 import '../../styles/post.scss';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 class Post extends Component {
   constructor(props) {
@@ -27,8 +30,6 @@ class Post extends Component {
     this.state = {
       post: {},
       responsibilities: [],
-      badStartDate: false,
-      badEndDate: false,
       applyShow: false,
       archiveShow: false,
       isEditing: false,
@@ -43,6 +44,9 @@ class Post extends Component {
       selectedReqSkillOptions: [],
       allClassOptions: [],
       selectedClassOptions: [],
+      start: new Date(),
+      end: new Date(),
+      validDate: true,
     };
     this.showApplyModal = this.showApplyModal.bind(this);
     this.hideApplyModal = this.hideApplyModal.bind(this);
@@ -52,6 +56,9 @@ class Post extends Component {
   }
 
   componentDidMount() {
+    if (window.location.search == '?edit') {
+      this.state.isEditing = true;
+    }
     this.props.fetchPost(this.props.match.params.postID);
     this.props.fetchUser(localStorage.getItem('userID'));
     this.props.fetchAllIndustries();
@@ -164,14 +171,30 @@ class Post extends Component {
     });
   }
 
+  // submit = () => {
+  //   if (this.state.isEditing) {
+  //     const post = { ...this.state.post };
+  //     post.responsibilities = this.state.responsibilities;
+  //     this.props.updatePost(this.state.post.id, post);
+  //   }
+  //   this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
+  //   window.scrollTo(0, 0);
+  // }
+
   submit = () => {
     if (this.state.isEditing) {
-      const post = { ...this.state.post };
-      post.responsibilities = this.state.responsibilities;
-      this.props.updatePost(this.state.post.id, post);
+      this.checkDateRange();
+      if (this.state.validDate == true) {
+        const post = { ...this.state.post };
+        post.responsibilities = this.state.responsibilities;
+        this.props.updatePost(this.state.post.id, post);
+        this.setState({ isEditing: false });
+      }
+    } else {
+      this.setState({ isEditing: true });
     }
-    this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
     window.scrollTo(0, 0);
+    this.forceUpdate();
   }
 
   requiredSkillsHelper= () => {
@@ -218,44 +241,54 @@ class Post extends Component {
     }
   }
 
-  // Date validation function taken from https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
-  isValidDate = (dateString) => {
-    // Check for mm/dd/yyyy pattern
-    if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString)) { return false; }
-
-    // Parse the date parts to integers
-    const parts = dateString.split('/');
-    const day = parseInt(parts[1], 10);
-    const month = parseInt(parts[0], 10);
-    const year = parseInt(parts[2], 10);
-
-    // Check the ranges of month and year
-    if (year < 1000 || year > 3000 || month === 0 || month > 12) return false;
-
-    const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-    // Adjust for leap years
-    if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) monthLength[1] = 29;
-
-    // Check the range of the day
-    return day > 0 && day <= monthLength[month - 1];
-  };
-
-  formatDate = (inputDate) => {
-    const date = new Date(inputDate);
-    const month = date.getMonth() + 1;
-    const monthString = month < 10 ? `0${month}` : month;
-    const day = date.getDate();
-    const dayString = day < 10 ? `0${day}` : month;
-    const year = date.getFullYear();
-    return `${monthString}/${dayString}/${year}`;
-  }
-
   approvePost() {
     this.props.post.status = this.props.status;
     console.log(this.props.post.status);
     this.props.updatePost(this.props.post.id, this.props.post);
     this.forceUpdate();
+  }
+
+  checkDateRange = () => {
+    const start = new Date(this.props.post.desired_start_date);
+    const end = new Date(this.props.post.desired_end_date);
+    const diff = (end.getTime() - start.getTime())/(1000 * 3600 * 24 * 7);
+    if (diff > 3.5 && diff <= 10) {
+      this.state.validDate = true;
+    } else {
+      this.state.validDate = false;
+      this.props.post.desired_end_date = new Date(start.getTime() + (1000 * 3600 * 24 * 7 * 4));
+    }
+  }
+
+  renderDateError = () => {
+    if (this.state.validDate == false) {
+      return <div className="date-error">Please make the date range 4-10 weeks long before saving</div>
+    } else return null;
+  }
+
+  renderDateRange = () => {
+    if (this.props.post.desired_start_date != null){
+      this.state.start = new Date(this.props.post.desired_start_date);
+    } 
+    if (this.props.post.desired_end_date != null){
+      this.state.end = new Date(this.props.post.desired_end_date);
+    }
+    return (
+      <DateRange
+        editableDateInputs={true}
+        onChange={(ranges) => {
+          this.props.post.desired_start_date = ranges.selection.startDate.toISOString();
+          this.props.post.desired_end_date = ranges.selection.endDate.toISOString();
+          this.forceUpdate();
+        }}
+        moveRangeOnFirstSelection={false}
+        ranges={[{
+          startDate: this.state.start,
+          endDate: this.state.end,
+          key: 'selection',
+        }]}
+      />
+    )
   }
 
   // eslint-disable-next-line consistent-return
@@ -381,38 +414,13 @@ class Post extends Component {
             </div>
           </div>
           <div className="post-input-row">
-            <div className="input-row-elem">
-              <div className="input-title">Start Date (mm/dd/yyyy)</div>
-              <div style={{ color: 'red' }}>{this.state.badStartDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
-              <input className="short-input"
-                placeholder="mm/dd/yyyy"
-                defaultValue={this.formatDate(this.props.post?.desired_start_date)}
-                onBlur={(event) => {
-                  if (!this.isValidDate(event.target.value)) {
-                    this.setState({ badStartDate: true });
-                  } else {
-                    this.setState({ badStartDate: false });
-                    this.changePostField('desired_start_date', event);
-                  }
-                }}
-              />
+            <div className="student-edit-dates">
+              <div>Desired Start and End Date</div>
+              {this.renderDateError()}
+              {this.renderDateRange()}
             </div>
-            <div className="input-row-elem">
-              <div className="input-title">End Date (mm/dd/yyyy)</div>
-              <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format mm/dd/yyyy' : null}</div>
-              <input className="short-input"
-                placeholder="mm/dd/yyyy"
-                defaultValue={this.formatDate(this.props.post?.desired_end_date)}
-                onBlur={(event) => {
-                  if (!this.isValidDate(event.target.value)) {
-                    this.setState({ badEndDate: true });
-                  } else {
-                    this.setState({ badEndDate: false });
-                    this.changePostField('desired_end_date', event);
-                  }
-                }}
-              />
-            </div>
+            <p className="question-fields-title">Hours/Week</p>
+            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changePostField('time_commitment', event)} defaultValue={this.props.post?.time_commitment} />
           </div>
         </div>
         <hr className="post-edit-divider" />
@@ -578,6 +586,17 @@ class Post extends Component {
           {this.props.user.role === 'startup'
             ? <h2 id="post-status-view">{`Status: ${this.props.post.status}`}</h2>
             : null }
+        </div>
+        <div className="bar">
+          <div className="post-start-date">
+            {this.props.post.desired_start_date ? 'Start Date'.concat(': ', this.props.post.desired_start_date.toString().substring(0, 10)) : null}
+            </div>
+          <div className="post-end-date">
+            {this.props.post.desired_end_date ? 'End Date'.concat(': ', this.props.post.desired_end_date.toString().substring(0, 10)) : null}
+            </div>
+          <div className="post-time-commitment">
+            {this.props.post.time_commitment ? 'Time Commitment'.concat(': ', this.props.post.time_commitment.toString()).concat(' ', 'hrs/week') : null}
+            </div>
         </div>
         <div className="top">
           <div id="project">
