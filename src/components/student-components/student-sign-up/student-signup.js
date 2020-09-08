@@ -64,13 +64,13 @@ class StudentSignUp extends Component {
       case 1:
         return <StudentSignUpTiming />;
       case 2:
-        return <StudentSignUpIndustries />;
+        return <StudentSignUpMajorMinor />;
       case 3:
         return <StudentSignUpWorkExperiences />;
       case 4:
         return <StudentSignUpOtherExperiences />;
       case 5:
-        return <StudentSignUpMajorMinor />;
+        return <StudentSignUpIndustries />;
       case 6:
         return <StudentSignUpClasses />;
       case 7:
@@ -81,21 +81,54 @@ class StudentSignUp extends Component {
   }
 
   render() {
-    return (
-      <div className="paginator">
-        {this.renderComponent()}
-        {this.renderSubmit()}
-        <ReactPaginate
-          previousLabel="previous"
-          nextLabel="next"
-          breakLabel="..."
-          pageCount={8}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={8}
-          onPageChange={this.handlePageClick}
-        />
-      </div>
-    );
+    switch (this.state.index) {
+      case 0:
+        return (
+          <div className="paginator"> 
+            {this.renderComponent()}
+            {this.renderSubmit()}
+            <ReactPaginate
+              previousClassName="previous-hide"
+              previousLinkClassName="previous-link-hide"
+              breakLabel="..."
+              pageCount={8}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={8}
+              onPageChange={this.handlePageClick}
+            />
+          </div>
+        );
+      case 7:
+        return (
+          <div className="paginator"> 
+            {this.renderComponent()}
+            {this.renderSubmit()}
+            <ReactPaginate
+              nextClassName="next-hide"
+              nextLinkClassName="next-link-hide"
+              breakLabel="..."
+              pageCount={8}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={8}
+              onPageChange={this.handlePageClick}
+            />
+          </div>
+        );
+      default:
+        return (
+          <div className="paginator"> 
+            {this.renderComponent()}
+            {this.renderSubmit()}
+            <ReactPaginate
+              breakLabel="..."
+              pageCount={8}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={8}
+              onPageChange={this.handlePageClick}
+            />
+          </div>
+        );
+    }
   }
 }
 

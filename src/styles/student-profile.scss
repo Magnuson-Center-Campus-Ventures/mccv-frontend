@@ -242,3 +242,15 @@
   margin-bottom: 5px;
   font-size: 15px;
 }
+
+.student-edit-dates {
+  margin-top: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.date-error {
+  color: red;
+}
