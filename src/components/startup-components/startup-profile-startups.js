@@ -10,6 +10,7 @@ import {
   fetchStartupByUserID, updateStartup,
   fetchAllIndustries, createIndustryForStartup,
 } from '../../actions';
+import { uploadImage } from '../s3';
 import '../../styles/startup-profile.scss';
 
 class StartupProfile extends Component {
@@ -25,6 +26,7 @@ class StartupProfile extends Component {
       archived: true,
       pending: true,
       isEditing: false,
+      error: '',
     };
     // this.renderPostings = this.renderPostings.bind(this);
     this.handleApprovedToggle = this.handleApprovedToggle.bind(this);
@@ -73,8 +75,24 @@ class StartupProfile extends Component {
     this.forceUpdate();
   }
 
+  onImageUpload(event) {
+    const file = event.target.files[0];
+    // Handle null file
+    // Get url of the file and set it to the src of preview
+    if (file) {
+      this.setState({ preview: window.URL.createObjectURL(file), file });
+    }
+  }
+
   submit = () => {
     if (this.state.isEditing) {
+      if (this.state.file) {
+        uploadImage(this.state.file).then(url => {
+          this.state.startup.logo = url;
+        }).catch(error => {
+          this.state.error = 'error';
+        });
+      }
       this.props.updateStartup(this.state.startup.id, this.state.startup);
       this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
     } else {
@@ -255,6 +273,9 @@ class StartupProfile extends Component {
         return (
           <div className="startup-body">
             <div className="startup-header">
+              <p>logo</p>
+              <img id="preview" alt="preview" src={this.state.startup.logo} />
+              <input type="file" name="coverImage" onChange={this.onImageUpload} />
               <p>Name</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
             </div>
