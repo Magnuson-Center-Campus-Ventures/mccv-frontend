@@ -38,6 +38,7 @@ class StudentSignUp extends Component {
   };
 
   onSubmit = () => {
+    console.log('FROM SUBMIT', this.props.student);
     this.props.submitStudent(this.props.student.id, this.props.student, this.props.history);
   }
 

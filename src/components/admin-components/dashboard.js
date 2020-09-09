@@ -5,34 +5,49 @@ import { Link, withRouter } from 'react-router-dom';
 
 import StudentInfo from './student-info';
 import StartupInfo from './startup-info';
+import PositionInfo from './position-info'; 
 
 
 class AdminDashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            selected: 'Students', 
         };
     }
 
-// total students
-// total headcount at the moment - active students
-// grand total for academic year - students have been active the whole year
-// broken down by gender options
-// grad students, undergrad 
-// affiliation dropdown - Dartmouth, geisel, tuck, thayer, guarini
-// broken down by graduation year
-// broken down by major
-
+    handleChange = (event) => {
+        this.setState({selected: event.target.value});
+    }
 
     render() {
         return(
-            <div>
-                this is where the Admin Dashboard will go
-                <h1>Student Stats </h1>
-                <StudentInfo/>
-                <h1>Startup Stats</h1>
-                <StartupInfo/>
+            <div className="dashboard">
+                <h1>Activity Summary</h1>
+                <select value={this.state.selected} onChange={this.handleChange}>
+                    <option value="Students">View Student </option>
+                    <option value="Startups">View Startup </option>
+                    <option value="Position">View Position </option>
+                </select>
+                { this.state.selected === 'Students' ? 
+                (
+                    <div>
+                    {/* <h2>Student Stats </h2> */}
+                    <StudentInfo/>
+                    </div>
+                ): (
+                    this.state.selected === 'Startups' ? (
+                        <div>
+                        {/* <h2>Startup Stats</h2> */}
+                        <StartupInfo/>
+                    </div>
+                    ) : (
+                        <div>
+                            {/* <h2>Position Stats</h2> */}
+                            <PositionInfo /> 
+                        </div>
+                    )
+                )}
             </div>
         )
     }

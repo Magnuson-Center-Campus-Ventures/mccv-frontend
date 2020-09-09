@@ -12,6 +12,7 @@ class StudentMajorMinors extends Component {
     super(props);
     this.state = {
       student: {},
+      affiliation: 'undergrad',
       major: '',
       minor: '',
     };
@@ -32,8 +33,26 @@ class StudentMajorMinors extends Component {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
+      // if (this.state.student.affiliation){
+      //   console.log('FROM DID UPDATE', this.state.student);
+      //   this.props.updateStudent(this.props.student.id, this.state.student);
+
+      // }
     }
   }
+
+
+  onAffiliationChange = (event) => {
+    this.props.student.affiliation = event.target.value;
+    this.setState({
+      affiliation: event.target.value, 
+      // student: {
+      //   ...this.state.student, 
+      //   affiliation: event.target.value, 
+      // }
+    });
+    this.forceUpdate(); 
+}
 
   onMajorChange(event) {
     this.setState({
@@ -111,11 +130,21 @@ class StudentMajorMinors extends Component {
 
   render() {
     if (this.state.student.majors !== undefined && this.state.student.minors !== undefined) {
+      console.log('student: ', this.state.student); 
       return (
         <div className="question">
           <div className="question-header">
             <div className="question-header-prompt">
-              <h1>Majors/Minors</h1>
+              <h1>Education Information</h1>
+              <p> Dartmouth Affiliation </p>
+              <select value={this.state.affiliation} onChange={this.onAffiliationChange}>
+              {/* Dartmouth, geisel, tuck, thayer, guarini */}
+                <option value="Undergrad">Dartmouth College</option>
+                <option value="Geisel">Geisel School of Medicine </option>
+                <option value="Tuck">Tuck School of Business</option>
+                <option value="Thayer">Thayer School of Engineering</option>
+                <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+              </select>
               <p>Add your majors and minors!</p>
             </div>
             <i className="fas fa-user-graduate question-header-icon" id="icon" />
