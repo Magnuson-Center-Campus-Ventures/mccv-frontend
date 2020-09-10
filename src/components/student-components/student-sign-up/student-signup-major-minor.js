@@ -12,7 +12,7 @@ class StudentMajorMinors extends Component {
     super(props);
     this.state = {
       student: {},
-      affiliation: 'undergrad',
+      affiliation: '',
       major: '',
       minor: '',
     };
@@ -126,9 +126,10 @@ class StudentMajorMinors extends Component {
           <div className="question-header">
             <div className="question-header-prompt">
               <h1>Education Information</h1>
-              <p> Dartmouth Affiliation </p>
+              <p> Dartmouth Affiliation <span className="imptMessage">*</span> </p>
               <select value={this.state.affiliation} onChange={this.onAffiliationChange}>
               {/* Dartmouth, geisel, tuck, thayer, guarini */}
+                <option value="select">Select...</option>
                 <option value="Undergrad">Dartmouth College</option>
                 <option value="Geisel">Geisel School of Medicine </option>
                 <option value="Tuck">Tuck School of Business</option>
@@ -141,7 +142,7 @@ class StudentMajorMinors extends Component {
           </div>
           <div className="question-fields">
             <p className="question-fields-title">Majors</p>
-            <p>please make sure to write the full name of your major (e.x. "Computer Science" instead of "CS")</p>
+            <p className="imptMessage">please make sure to write the full name of your major (e.x. "Computer Science" instead of "CS")</p>
             <input className="question-fields-text" onChange={this.onMajorChange} value={this.state.major} />
             <button className="question-fields-button" type="submit" style={{ cursor: 'pointer' }} onClick={this.addMajor} value={this.major}>
               <i className="far fa-plus-square" id="icon" />

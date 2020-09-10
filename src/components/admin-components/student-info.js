@@ -64,10 +64,10 @@ class StudentInfo extends Component {
                 }
                 if (student.majors){
                     student.majors.map((major) => {
-                        if (majors[major] === undefined){
-                            majors[major] = 1; 
-                        } else{
-                            majors[major] = majors[major] + 1;
+                        if (majors[major.toLowerCase()] === undefined){
+                            majors[major.toLowerCase()] = 1; 
+                        } else {
+                            majors[major.toLowerCase()] = majors[major.toLowerCase()] + 1;
                         }
                     })
                 }

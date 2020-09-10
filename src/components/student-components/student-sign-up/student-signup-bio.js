@@ -57,11 +57,12 @@ class StudentBio extends Component {
           <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('grad_year', event)} defaultValue={this.props.student.grad_year} />
           <p className="question-fields-title">Phone Number</p>
           <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('phone_number', event)} defaultValue={this.props.student.phone_number} />
-          <p className="question-fields-title">Gender</p>
+          <p className="question-fields-title">Gender <span className="imptMessage"> *</span></p>
           <select value={this.props.selected} onBlur={(event) => {
             this.changeStudentField('gender', event);
             this.setState({selected: event.target.value})
             }}>
+              <option value="select">Select...</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other</option>
