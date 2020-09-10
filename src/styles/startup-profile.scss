@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: row;
   height: 100%;
-  overflow-y: hidden;
 }
 
 .startup-postings {
@@ -101,6 +100,15 @@
   margin: 3vh;
 }
 
+.startup-logo-container{
+  vertical-align: middle;
+}
+
+.startup-logo{
+  height: 100px;
+  width: 100px;
+}
+
 .startup-header > textarea{
   margin: 2vh;
 }
@@ -112,12 +120,13 @@
 .startup-body{
   position: fixed;
   top: 5em;
+  bottom: 4rem;
   right: 0;
   padding-left: 10vw;
   padding-right: 10vw;
   width: 45vw;
   text-align: center;
-  overflow-y: auto;
+  overflow-y: scroll;
   margin-bottom: 0vh;
   margin-left: 35vw;
 }

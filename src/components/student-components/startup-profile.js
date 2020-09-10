@@ -167,11 +167,27 @@ class Startup extends Component {
     }
   }
 
+  renderLogo(){
+    if (this.props.startup?.logo) {
+      return (<img className="startup-logo" id="logo" alt="" src={this.props.startup.logo} />);
+    }
+  }
+
+  renderVideo(){
+    if (this.props.startup?.video) {
+      return (<iframe title="videoLarge" className="embed-responsive-item" src={this.props.startup.video} />);
+    }
+
+  }
+
   renderStartup() {
     if (this.props.startup) {
       return (
         <div className="startup-body">
-          <h1 className="startup-header">{`${this.props.startup.name}`}</h1>
+          <div className="startup-header">
+            {this.renderLogo()}
+            <h1>{`${this.props.startup.name}`}</h1>
+          </div>
           <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
           <div className="startup-header">Industries:</div>
           <div className="startup-industries">{this.renderIndustries()}</div>
@@ -179,6 +195,9 @@ class Startup extends Component {
             <p>About {`${this.props.startup.name}`}:</p>
             <div className="startup-description">{`${this.props.startup.description}`}</div>
           </div>
+          <div className="startup-video">
+            {this.renderVideo()}
+            </div>
           {this.renderButtons()}
         </div>
       );

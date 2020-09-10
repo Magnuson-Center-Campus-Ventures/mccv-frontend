@@ -61,6 +61,8 @@ export const ActionTypes = {
   // password reset actions
   ADD_RESET_TOKEN: 'ADD_RESET_TOKEN',
   FETCH_RESET_TOKEN: 'FETCH_RESET_TOKEN',
+  // s3 actions
+  UPLOAD_IMAGE: 'UPLOAD_IMAGE',
   // general error
   ERROR_SET: 'ERROR_SET',
   // AUTH_USER: 'AUTH_USER',
@@ -851,4 +853,25 @@ export function updatePassword({ token, password, } , history) {
       // history.push('/signin');
     });
   };
+}
+
+function getSignedRequest(file) {
+  const fileName = encodeURIComponent(file.name);
+  return axios.get(`${ROOT_URL}/sign-s3?file-name=${fileName}&file-type=${file.type}`);
+}
+
+function uploadFileToS3(signedRequest, file, url) {
+  return new Promise((fulfill, reject) => {
+    axios.put(signedRequest, file, { headers: { 'Content-Type': file.type } }).then((response) => {
+      fulfill(url);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+}
+
+export function uploadImage(file) {
+  return getSignedRequest(file).then((response) => {
+    return uploadFileToS3(response.data.signedRequest, file, response.data.url);
+  });
 }

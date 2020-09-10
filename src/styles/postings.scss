@@ -39,6 +39,11 @@ body{
     color: #000000
 }
 
+.companyInfo > img{
+    height: 100px;
+    width: 100px;
+}
+
 .companyInfo{
     display: flex;
     justify-content: space-between;

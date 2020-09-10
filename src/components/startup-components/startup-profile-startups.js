@@ -9,8 +9,8 @@ import {
   createPost, fetchPosts, fetchPost, updatePost,
   fetchStartupByUserID, updateStartup,
   fetchAllIndustries, createIndustryForStartup,
+  uploadImage,
 } from '../../actions';
-import { uploadImage } from '../s3';
 import '../../styles/startup-profile.scss';
 
 class StartupProfile extends Component {
@@ -26,9 +26,11 @@ class StartupProfile extends Component {
       archived: true,
       pending: true,
       isEditing: false,
+      preview: '',
       error: '',
     };
     // this.renderPostings = this.renderPostings.bind(this);
+    this.onImageUpload = this.onImageUpload.bind(this);
     this.handleApprovedToggle = this.handleApprovedToggle.bind(this);
     this.handleArchivedToggle = this.handleArchivedToggle.bind(this);
     this.handlePendingToggle = this.handlePendingToggle.bind(this);
@@ -76,28 +78,33 @@ class StartupProfile extends Component {
   }
 
   onImageUpload(event) {
+    console.log(event);
     const file = event.target.files[0];
-    // Handle null file
-    // Get url of the file and set it to the src of preview
     if (file) {
-      this.setState({ preview: window.URL.createObjectURL(file), file });
-    }
-  }
-
-  submit = () => {
-    if (this.state.isEditing) {
-      if (this.state.file) {
-        uploadImage(this.state.file).then(url => {
+      this.state.preview = window.URL.createObjectURL(file);
+      if (file) {
+        uploadImage(file).then(url => {
+          console.log(url);
           this.state.startup.logo = url;
         }).catch(error => {
           this.state.error = 'error';
         });
       }
+    } else {
+      this.state.error = 'file is null';
+    }
+    this.forceUpdate();
+  }
+
+  submit = () => {
+    if (this.state.isEditing) {
       this.props.updateStartup(this.state.startup.id, this.state.startup);
       this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
     } else {
       this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
     }
+    this.state.preview = this.state.startup.logo;
+    this.forceUpdate();
   }
 
   changeStartupField = (field, event) => {
@@ -255,13 +262,19 @@ class StartupProfile extends Component {
       if (this.state.isEditing === false) {
         return (
           <div className="startup-body">
-            <h1 className="startup-header">{`${this.props.startup.name}`}</h1>
+            <div className="startup-header">
+              <img className="startup-logo" id="logo" alt="preview" src={this.state.startup.logo} />
+              <h1>{`${this.props.startup.name}`}</h1>
+            </div>
             <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
             {this.renderAddIndustry()}
             <div className="startup-industries">{this.renderIndustries()}</div>
             <div className="startup-description">
               <p>About {`${this.props.startup.name}`}:</p>
               <div className="startup-description">{`${this.props.startup.description}`}</div>
+            </div>
+            <div className="startup-video">
+              <iframe title="videoLarge" className="embed-responsive-item" src={this.state.startup.video} />
             </div>
             <button className="startup-edit-button edit-button"
               onClick={this.submit}
@@ -272,10 +285,13 @@ class StartupProfile extends Component {
       } else {
         return (
           <div className="startup-body">
-            <div className="startup-header">
-              <p>logo</p>
-              <img id="preview" alt="preview" src={this.state.startup.logo} />
+            <div className="startup-header startup-logo-container">
+              <p>Logo</p>
+              <img className="startup-logo" id="preview" alt="preview" src={this.state.preview} />
               <input type="file" name="coverImage" onChange={this.onImageUpload} />
+              <p>(Use company's name for filename)</p>
+            </div>
+            <div className="startup-header">
               <p>Name</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
             </div>
@@ -290,6 +306,11 @@ class StartupProfile extends Component {
             <div className="startup-description">
               <p>Description</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
+            </div>
+            <div className="startup-video">
+              <p>Link to your startup's pitch! (use the embed link for the video)</p>
+              <TextareaAutosize onBlur={(event) => this.changeStartupField('video', event)} defaultValue={this.props.startup.video} />
+              <iframe title="videoLarge" className="embed-responsive-item" src={this.state.startup.video} />
             </div>
             <button className="startup-edit-button edit-button"
               onClick={this.submit}
