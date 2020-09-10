@@ -92,7 +92,17 @@ class StartupSignUp extends Component {
               onPageChange={this.handlePageClick}
             />
             ) : (
-              <div> </div>
+              <div> 
+                <ReactPaginate
+              previousClassName="previous-hide"
+              previousLinkClassName="previous-link-hide"
+              breakLabel="..."
+              pageCount={3}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={3}
+              // onPageChange={this.handlePageClick}
+            />
+              </div>
             )}
             
           </div>

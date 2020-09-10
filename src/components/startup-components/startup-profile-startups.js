@@ -17,6 +17,7 @@ class StartupProfile extends Component {
     super(props);
     this.state = {
       startup: {},
+      affiliation: '',
       selectedIndustries: [],
       displayIndustries: [],
       industry: '',
@@ -201,6 +202,33 @@ class StartupProfile extends Component {
     }
   }
 
+  renderEditAffiliation(){
+    if (this.props.startup.affiliation){
+      if (this.state.isEditing === true){
+        return(
+          // <div>
+            <select value={this.state.affiliation} onChange={(event) => {
+              this.props.startup.affiliation = event.target.value;
+              this.changeStartupField('affiliation', event);
+              this.setState({
+                affiliation: event.target.value, 
+              });
+            }}>
+              <option value={this.state.affiliation}>{this.props.startup.affiliation}</option>
+              <option value="Undergrad">Dartmouth College</option>
+              <option value="Geisel">Geisel School of Medicine </option>
+              <option value="Tuck">Tuck School of Business</option>
+              <option value="Thayer">Thayer School of Engineering</option>
+              <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+              <option value="None">No Dartmouth affiliation</option>
+            </select>
+          // </div>
+          
+        )
+      }
+    }
+  }
+
   renderIndustries() {
     if (this.props.startup?.industries) {
       if (this.state.isEditing === true) {
@@ -240,6 +268,7 @@ class StartupProfile extends Component {
             <h1 className="startup-header">{`${this.props.startup.name}`}</h1>
             <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
             {this.renderAddIndustry()}
+            {/* <div>Affiliated with {this.props.startup.affiliation}</div> */}
             <div className="startup-industries">{this.renderIndustries()}</div>
             <div className="startup-description">
               <p>About {`${this.props.startup.name}`}:</p>
@@ -264,6 +293,8 @@ class StartupProfile extends Component {
               <p>State</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
             </div>
+            <p>Affiliation:</p>
+            {this.renderEditAffiliation()}
             {this.renderAddIndustry()}
             <div className="startup-industries">{this.renderIndustries()}</div>
             <div className="startup-description">
