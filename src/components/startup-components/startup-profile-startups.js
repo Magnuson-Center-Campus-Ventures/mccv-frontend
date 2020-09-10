@@ -78,13 +78,11 @@ class StartupProfile extends Component {
   }
 
   onImageUpload(event) {
-    console.log(event);
     const file = event.target.files[0];
     if (file) {
       this.state.preview = window.URL.createObjectURL(file);
       if (file) {
         uploadImage(file).then(url => {
-          console.log(url);
           this.state.startup.logo = url;
         }).catch(error => {
           this.state.error = 'error';

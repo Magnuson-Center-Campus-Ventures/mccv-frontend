@@ -63,7 +63,6 @@ class Signup extends Component {
 
   signModal = (event) => {
     if (event.signature != ''){
-      console.log('signup');
       this.state.signed = new Date().getTime();
       this.signupNow();
     }
@@ -114,6 +113,7 @@ class Signup extends Component {
           />
           <StartupTerms
             onClose={this.hideModal}
+            acceptTC={this.signModal}
             show={this.state.show && this.state.role=='startup'}
           />
         </div>
