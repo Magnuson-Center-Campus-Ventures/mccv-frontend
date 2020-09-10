@@ -33,11 +33,6 @@ class StudentMajorMinors extends Component {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ student: this.props.student });
-      // if (this.state.student.affiliation){
-      //   console.log('FROM DID UPDATE', this.state.student);
-      //   this.props.updateStudent(this.props.student.id, this.state.student);
-
-      // }
     }
   }
 
@@ -46,10 +41,6 @@ class StudentMajorMinors extends Component {
     this.props.student.affiliation = event.target.value;
     this.setState({
       affiliation: event.target.value, 
-      // student: {
-      //   ...this.state.student, 
-      //   affiliation: event.target.value, 
-      // }
     });
     this.forceUpdate(); 
 }
@@ -130,7 +121,6 @@ class StudentMajorMinors extends Component {
 
   render() {
     if (this.state.student.majors !== undefined && this.state.student.minors !== undefined) {
-      console.log('student: ', this.state.student); 
       return (
         <div className="question">
           <div className="question-header">
@@ -151,6 +141,7 @@ class StudentMajorMinors extends Component {
           </div>
           <div className="question-fields">
             <p className="question-fields-title">Majors</p>
+            <p>please make sure to write the full name of your major (e.x. "Computer Science" instead of "CS")</p>
             <input className="question-fields-text" onChange={this.onMajorChange} value={this.state.major} />
             <button className="question-fields-button" type="submit" style={{ cursor: 'pointer' }} onClick={this.addMajor} value={this.major}>
               <i className="far fa-plus-square" id="icon" />
