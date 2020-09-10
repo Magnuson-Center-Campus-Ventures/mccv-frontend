@@ -8,7 +8,7 @@ const PostListItem = (props) => {
   const route = `/posts/${props.post._id}`;
 
   const logo = props.post.startup_id.logo ? (
-    <img src={props.post.startup_id.logo} alt="  " />
+    <img src={props.post.startup_id.logo} alt=" " className="companyLogo"/>
   ) : (
     <div />
   );
@@ -30,7 +30,23 @@ const PostListItem = (props) => {
     );
   });
 
-  
+  const virtual = (props.post.virtual==true) ? (
+    <div className="location">
+      <span className="virtualIcon" />
+      <h2 id="virtualLocation">Virtual</h2>
+    </div>  
+  ) : (
+    <div />
+  );
+
+  const inperson = (props.post.city && props.post.state) ? (
+    <div className="location">
+      <span className="locationIcon" />
+      <h2 id="postLocation"> {`${props.post.city}, ${props.post.state}`} </h2>
+    </div>  
+  ) : (
+    <div />
+  );
 
   return (
     <Link to={route} key={props.post.id} className="listItem link">
@@ -40,13 +56,15 @@ const PostListItem = (props) => {
           <div className="company">
             <div className="companyLeft">
               <h1 id="startupName"> { props.post.startup_id.name} </h1>
-              <div className="location">
+              {virtual}
+              {inperson}
+              {/*<div className="location">
                 <span className="locationIcon" />
                 <h2 id="postLocation"> {`${props.post.city}, ${props.post.state}`} </h2>
-              </div>
+              </div>*/}
             </div>
             <div className="companyRight">
-              <img src={props.post.startup_id.logo} alt="no logo" />
+              {logo}
             </div>
           </div>
           

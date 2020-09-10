@@ -47,6 +47,7 @@ class Post extends Component {
       start: new Date(),
       end: new Date(),
       validDate: true,
+      locationShow: false,
     };
     this.showApplyModal = this.showApplyModal.bind(this);
     this.hideApplyModal = this.hideApplyModal.bind(this);
@@ -170,16 +171,6 @@ class Post extends Component {
       };
     });
   }
-
-  // submit = () => {
-  //   if (this.state.isEditing) {
-  //     const post = { ...this.state.post };
-  //     post.responsibilities = this.state.responsibilities;
-  //     this.props.updatePost(this.state.post.id, post);
-  //   }
-  //   this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
-  //   window.scrollTo(0, 0);
-  // }
 
   submit = () => {
     if (this.state.isEditing) {
@@ -388,6 +379,47 @@ class Post extends Component {
     });
   }
 
+  renderLocation = () => {
+    return (
+      <div className="location-wrapper">
+        <div className="input-title" id="location-type">How will volunteering be conducted? (Check all that apply)</div>
+        <div className="post-input-row">
+          <div className="post-checkbox">
+            <input type="checkbox" id="virtual" defaultValue={this.props.post?.virtual} onClick={(event) => this.changePostField('virtual', event)}/>
+            <label for="virtual">Virtually</label>
+          </div>
+          <div className="post-checkbox">
+            <input type="checkbox" id="inperson" defaultValue={this.props.post?.inperson} onClick={(_event) => this.renderCityState()}/>
+            <label for="inperson">In-Person</label>
+          </div>
+        </div>
+      
+        <div className="post-input-row" id="city-state-row">
+          <div className="input-row-elem">
+            <div className="input-title">City</div>
+            <input className="short-input" defaultValue={this.props.post?.city} onBlur={(event) => this.changePostField('city', event)} />
+          </div>
+          <div className="input-row-elem">
+            <div className="input-title">State Abbreviation</div>
+            <input className="short-input" defaultValue={this.props.post?.state} onBlur={(event) => this.changePostField('state', event)} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderCityState = () => {
+    this.changePostField('inperson', event);
+    var inPersonCheckbox = document.getElementById("inperson");
+    var cityStateRow = document.getElementById("city-state-row");
+
+    if (inPersonCheckbox.checked == true) {
+      cityStateRow.style.display = "flex";
+    } else {
+      cityStateRow.style.display = "none";
+    }
+  }
+
   renderEdit = () => {
     const dropdownStyles = {
       control: (base) => ({
@@ -403,16 +435,7 @@ class Post extends Component {
           <TextareaAutosize className="short-input-post" defaultValue={this.props.post?.title} onBlur={(event) => this.changePostField('title', event)} />
           <div className="input-title">Description</div>
           <TextareaAutosize className="tall-input" defaultValue={this.props.post?.description} onBlur={(event) => this.changePostField('description', event)} />
-          <div className="post-input-row">
-            <div className="input-row-elem">
-              <div className="input-title">City</div>
-              <input className="short-input" defaultValue={this.props.post?.city} onBlur={(event) => this.changePostField('city', event)} />
-            </div>
-            <div className="input-row-elem">
-              <div className="input-title">State Abbreviation</div>
-              <input className="short-input" defaultValue={this.props.post?.state} onBlur={(event) => this.changePostField('state', event)} />
-            </div>
-          </div>
+          {this.renderLocation()}
           <div className="post-input-row">
             <div className="student-edit-dates">
               <div>Desired Start and End Date</div>
