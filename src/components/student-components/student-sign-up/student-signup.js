@@ -45,7 +45,6 @@ class StudentSignUp extends Component {
         filled: true, 
       });
     }
-    this.forceUpdate();
   };
 
   ifFilled = () => {

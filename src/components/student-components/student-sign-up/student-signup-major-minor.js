@@ -137,12 +137,12 @@ class StudentMajorMinors extends Component {
                 <option value="Thayer">Thayer School of Engineering</option>
                 <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
               </select>
-              <p>Add your majors and minors!</p>
+              {/* <p>Add your majors and minors!</p> */}
             </div>
             <i className="fas fa-user-graduate question-header-icon" id="icon" />
           </div>
           <div className="question-fields">
-            <p className="question-fields-title">Majors</p>
+            <p className="question-fields-title">Majors <span></span></p>
             <p className="imptMessage">please make sure to write the full name of your major (e.x. "Computer Science" instead of "CS")</p>
             <input className="question-fields-text" onChange={this.onMajorChange} value={this.state.major} />
             <button className="question-fields-button" type="submit" style={{ cursor: 'pointer' }} onClick={this.addMajor} value={this.major}>

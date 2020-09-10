@@ -83,7 +83,6 @@ class StartupBio extends Component {
                 });
                 if (!this.state.badAffiliation){
                   this.props.ifFilled(); 
-                  console.log('in gender IF');
                 }
                 }}>
                 <option value="status">Select...</option>

@@ -58,7 +58,7 @@ class StudentBio extends Component {
           <p className="question-fields-title">Phone Number  <span className="imptMessage">*</span></p>
           <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('phone_number', event)} defaultValue={this.props.student.phone_number} />
           <p className="question-fields-title">Gender <span className="imptMessage"> *</span></p>
-          <select value={this.props.selected} onBlur={(event) => {
+          <select value={this.props.selected} onChange={(event) => {
             this.changeStudentField('gender', event);
             this.setState({selected: event.target.value}); 
             this.props.ifFilled(); 
