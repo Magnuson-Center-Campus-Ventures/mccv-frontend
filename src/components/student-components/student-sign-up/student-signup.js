@@ -20,6 +20,7 @@ class StudentSignUp extends Component {
     super(props);
     this.state = {
       index: 0,
+      filled: false, 
     };
   }
 
@@ -33,9 +34,27 @@ class StudentSignUp extends Component {
 
   handlePageClick = (data) => {
     this.props.updateStudent(this.props.student.id, this.props.student);
-    this.setState({ index: data.selected });
+    if (data.selected === 2){
+      this.setState({ 
+        index: data.selected,
+        filled: false, 
+      });
+    } else{
+      this.setState({ 
+        index: data.selected,
+        filled: true, 
+      });
+    }
     this.forceUpdate();
   };
+
+  ifFilled = () => {
+    console.log('in ifFilled'); 
+    this.setState({
+      filled: true, 
+    }); 
+    this.forceUpdate(); 
+  }
 
   onSubmit = () => {
     console.log('FROM SUBMIT', this.props.student);
@@ -61,11 +80,11 @@ class StudentSignUp extends Component {
   renderComponent() {
     switch (this.state.index) {
       case 0:
-        return <StudentSignUpBio />;
+        return <StudentSignUpBio ifFilled={this.ifFilled} />;
       case 1:
         return <StudentSignUpTiming />;
       case 2:
-        return <StudentSignUpMajorMinor />;
+        return <StudentSignUpMajorMinor ifFilled={this.ifFilled} />;
       case 3:
         return <StudentSignUpWorkExperiences />;
       case 4:
@@ -88,7 +107,8 @@ class StudentSignUp extends Component {
           <div className="paginator"> 
             {this.renderComponent()}
             {this.renderSubmit()}
-            <ReactPaginate
+            { this.state.filled? (
+              <ReactPaginate
               previousClassName="previous-hide"
               previousLinkClassName="previous-link-hide"
               breakLabel="..."
@@ -97,6 +117,10 @@ class StudentSignUp extends Component {
               pageRangeDisplayed={8}
               onPageChange={this.handlePageClick}
             />
+            ) : (
+            <div/>
+            )}
+            
           </div>
         );
       case 7:

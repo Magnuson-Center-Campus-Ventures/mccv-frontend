@@ -35,7 +35,6 @@ class StartupSignUp extends Component {
   };
 
   ifFilled = () => {
-    console.log('in ifFilled'); 
     this.setState({
       filled: true, 
     }); 

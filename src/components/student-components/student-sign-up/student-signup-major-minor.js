@@ -42,6 +42,7 @@ class StudentMajorMinors extends Component {
     this.setState({
       affiliation: event.target.value, 
     });
+    this.props.ifFilled(); 
     this.forceUpdate(); 
 }
 
