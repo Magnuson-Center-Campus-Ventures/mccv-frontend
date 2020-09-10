@@ -112,7 +112,7 @@ class PositionInfo extends Component {
 			}]
 		}
 		return (
-		<div>
+		<div className="pieGraph">
 			<CanvasJSChart options = {options}
 				/* onRef={ref => this.chart = ref} */
 			/>
@@ -184,7 +184,7 @@ class PositionInfo extends Component {
 			}]
 		}
 		return (
-		<div>
+		<div className="pieGraph">
 			<CanvasJSChart options = {options}
 				/* onRef={ref => this.chart = ref} */
 			/>
@@ -194,7 +194,6 @@ class PositionInfo extends Component {
 
 
     render() {
-        console.log(this.state.locations);
         return( 
             this._isMounted ? 
             ( <div className="dashboardContent">
@@ -212,7 +211,6 @@ class PositionInfo extends Component {
                         {this.renderLocation()}
                    </div>
                 </div>
-                
             </div>
             ) : <div />
             

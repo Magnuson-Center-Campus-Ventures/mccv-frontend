@@ -42,7 +42,7 @@ class StartupInfo extends Component {
             let industries = {};
             let locations = {};
             this.props.startups.map((startup) => {
-                console.log(startup); 
+                // console.log(startup); 
                 if (startup.status === 'Pending'){
                     this.setState((prevState) => ({
                         pending: prevState.pending +1,
@@ -139,7 +139,7 @@ class StartupInfo extends Component {
 			}]
 		}
 		return (
-		<div>
+		<div className="pieGraph">
 			<CanvasJSChart options = {options}
 				/* onRef={ref => this.chart = ref} */
 			/>
@@ -175,7 +175,7 @@ class StartupInfo extends Component {
 			}]
 		}
 		return (
-		<div>
+		<div className="pieGraph">
 			<CanvasJSChart options = {options}
 				/* onRef={ref => this.chart = ref} */
 			/>
@@ -210,7 +210,7 @@ class StartupInfo extends Component {
 			}]
 		}
 		return (
-		<div>
+		<div className="pieGraph">
 			<CanvasJSChart options = {options}
 				/* onRef={ref => this.chart = ref} */
 			/>
@@ -245,7 +245,7 @@ class StartupInfo extends Component {
 			}]
 		}
 		return (
-		<div>
+		<div className="pieGraph">
 			<CanvasJSChart options = {options}
 				/* onRef={ref => this.chart = ref} */
 			/>
@@ -258,7 +258,7 @@ class StartupInfo extends Component {
     render() {
         return( 
             this._isMounted ? 
-            ( <div>
+            ( <div className="dashboardContent">
                 <div className="stats">
                     <p>Total Active: <strong>{this.state.active}</strong></p>
                     <p>Total Pending: <strong>{this.state.pending}</strong> </p>
