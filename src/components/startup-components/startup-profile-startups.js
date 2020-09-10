@@ -220,7 +220,7 @@ class StartupProfile extends Component {
               <option value="Tuck">Tuck School of Business</option>
               <option value="Thayer">Thayer School of Engineering</option>
               <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
-              <option value="None">No Dartmouth affiliation</option>
+              <option value="Other">Other</option>
             </select>
           // </div>
           

@@ -95,10 +95,10 @@ class Startups extends Component {
       const industries = startup.industries.map((industry) => industry.name.toLowerCase());
       const location = `${startup.city}, ${startup.state}`.toLowerCase();
       // Checks for search
-      if (startup.name.toLowerCase().includes(searchterm)
-      || startup.city.toLowerCase().includes(searchterm)
-      || startup.state.toLowerCase().includes(searchterm)
-      || startup.description.toLowerCase().includes(searchterm)
+      if (startup.name?.toLowerCase().includes(searchterm)
+      || startup.city?.toLowerCase().includes(searchterm)
+      || startup.state?.toLowerCase().includes(searchterm)
+      || startup.description?.toLowerCase().includes(searchterm)
       || industries.includes(searchterm) // array
       // Checks for filter
       || selectedIndustries.some((industry) => industries.includes(industry))
