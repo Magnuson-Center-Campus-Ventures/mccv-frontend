@@ -171,15 +171,18 @@ class Post extends Component {
     });
   }
 
-  // submit = () => {
-  //   if (this.state.isEditing) {
-  //     const post = { ...this.state.post };
-  //     post.responsibilities = this.state.responsibilities;
-  //     this.props.updatePost(this.state.post.id, post);
-  //   }
-  //   this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
-  //   window.scrollTo(0, 0);
-  // }
+  changeCheckboxField = (field, event) => {
+    const checked = event.target.checked;
+
+    this.setState((prevState) => {
+      const post = { ...prevState.post };
+      post[field] = checked;
+      return {
+        ...prevState,
+        post,
+      };
+    });
+  }
 
   submit = () => {
     if (this.state.isEditing) {
@@ -301,7 +304,7 @@ class Post extends Component {
             this.showArchiveModal();
           }}
         >
-          Archive Position
+          Archive
         </button>
       );
     } else if (this.props.user.role === 'startup') {
@@ -315,7 +318,7 @@ class Post extends Component {
                   this.showArchiveModal();
                 }}
               >
-                Archive Position
+                Archive
               </button>
             )
             : null}
@@ -326,17 +329,36 @@ class Post extends Component {
                 type="submit"
                 onClick={this.approvePost}
               >
-                Approve Posting
+                Approve
               </button>
             )
             : null}
 
-          <button id="edit-post"
+          {/*<button id="edit-post-btn"
             className="post-btn"
             type="submit"
             onClick={this.submit}
           >{this.state.isEditing ? 'Save Changes' : 'Edit Position'}
-          </button>
+            </button>*/}
+          
+          {!this.state.isEditing
+            ? (
+              <button className="post-btn"
+                type="submit"
+                onClick={this.submit}
+              >
+                Edit
+              </button>
+            )
+            : (
+              <button id="save-changes-btn"
+              className="post-btn"
+              type="submit"
+              onClick={this.submit}
+              >
+                Save Changes
+              </button>
+            )}
         </div>
       );
     } else if (this.props.user.role === 'student') {
@@ -388,6 +410,47 @@ class Post extends Component {
     });
   }
 
+  renderLocation = () => {
+    return (
+      <div className="location-wrapper">
+        <div className="input-title" id="location-type">How will volunteering be conducted? (Check all that apply)</div>
+        <div className="post-input-row">
+          <div className="post-checkbox">
+            <input type="checkbox" id="virtual" onChange={(event) => this.changeCheckboxField('virtual', event)} checked={this.state.post?.virtual}/>
+            <label htmlFor="virtual">Virtually</label>
+          </div>
+          <div className="post-checkbox">
+            <input type="checkbox" id="inperson" onChange={(event) => this.renderCityState(event)} checked={this.state.post?.inperson}/>
+            <label htmlFor="inperson">In-Person</label>
+          </div>
+        </div>
+      
+        <div className="post-input-row" id="city-state-row">
+          <div className="input-row-elem">
+            <div className="input-title">City</div>
+            <input className="short-input" defaultValue={this.props.post?.city} onBlur={(event) => this.changePostField('city', event)} />
+          </div>
+          <div className="input-row-elem">
+            <div className="input-title">State Abbreviation</div>
+            <input className="short-input" defaultValue={this.props.post?.state} onBlur={(event) => this.changePostField('state', event)} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderCityState = (event) => {
+    this.changeCheckboxField('inperson', event);
+    var inPersonCheckbox = document.getElementById("inperson");
+    var cityStateRow = document.getElementById("city-state-row");
+
+    if (inPersonCheckbox.checked == true) {
+      cityStateRow.style.display = "flex";
+    } else {
+      cityStateRow.style.display = "none";
+    }
+  }
+
   renderEdit = () => {
     const dropdownStyles = {
       control: (base) => ({
@@ -403,16 +466,7 @@ class Post extends Component {
           <TextareaAutosize className="short-input-post" defaultValue={this.props.post?.title} onBlur={(event) => this.changePostField('title', event)} />
           <div className="input-title">Description</div>
           <TextareaAutosize className="tall-input" defaultValue={this.props.post?.description} onBlur={(event) => this.changePostField('description', event)} />
-          <div className="post-input-row">
-            <div className="input-row-elem">
-              <div className="input-title">City</div>
-              <input className="short-input" defaultValue={this.props.post?.city} onBlur={(event) => this.changePostField('city', event)} />
-            </div>
-            <div className="input-row-elem">
-              <div className="input-title">State Abbreviation</div>
-              <input className="short-input" defaultValue={this.props.post?.state} onBlur={(event) => this.changePostField('state', event)} />
-            </div>
-          </div>
+          {this.renderLocation()}
           <div className="post-input-row">
             <div className="student-edit-dates">
               <div>Desired Start and End Date</div>

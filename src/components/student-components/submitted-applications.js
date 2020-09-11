@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import Select from 'react-select';
 import SearchBar from './search-bar';
+import ApplicationTileItem from './application-tile-item';
 import {
   fetchSubmittedApplication,
   fetchSubmittedApplications,
@@ -16,7 +17,8 @@ import {
   clearPost,
   clearStudent,
 } from '../../actions';
-import '../../styles/applications.scss';
+//import '../../styles/applications.scss';
+import '../../styles/postings.scss';
 
 class SubmittedApplications extends Component {
   constructor(props) {
@@ -144,7 +146,16 @@ class SubmittedApplications extends Component {
       if (this.state.results.length > 0) {
         return this.state.results.map((application) => {
           const route = `/applications/${application._id}`;
-          let post = '';
+          return this.props.posts.map((post) => {
+            if (post.id === application.post_id){
+              return (
+                <Link to={route} key={application.id} className="listItem">
+                  <ApplicationTileItem key={post.id} post={post} status={application.status}/>
+                </Link>
+              );
+            }
+          });
+          {/*let post = '';
           for (const i in this.props.posts) {
             if (this.props.posts[i].id === application.post_id) {
               post = this.props.posts[i];
@@ -153,6 +164,7 @@ class SubmittedApplications extends Component {
           }
           return (
             <Link to={route} key={application.id} className="listItem">
+              <ApplicationListItem key={application.id} post={post}/>
               <div className="companyInfo">
                 <img src={post.startup_id.logo} alt="no logo" />
                 <div className="companyText">
@@ -174,7 +186,7 @@ class SubmittedApplications extends Component {
                 </div>
               </div>
             </Link>
-          );
+          );*/}
         });
       } else {
         return (
@@ -185,7 +197,16 @@ class SubmittedApplications extends Component {
       const { studentApplications } = this.state;
       return studentApplications.map((application) => {
         const route = `/applications/${application._id}`;
-        let post = '';
+        return this.props.posts.map((post) => {
+          if (post.id === application.post_id){
+            return (
+              <Link to={route} key={application.id} className="listItem">
+                <ApplicationTileItem key={post.id} post={post} status={application.status}/>
+              </Link>
+            );
+          }
+        });
+        {/*let post = '';
         for (const i in this.props.posts) {
           if (this.props.posts[i].id === application.post_id) {
             post = this.props.posts[i];
@@ -199,6 +220,7 @@ class SubmittedApplications extends Component {
         );
         return (
           <Link to={route} key={application.id} className="listItem">
+            <ApplicationListItem key={application.id} post={post}/>
             <div className="companyInfo">
               <div className="companyText">
                 <h1 id="startupName"> { post.startup_id.name} </h1>
@@ -214,7 +236,7 @@ class SubmittedApplications extends Component {
               <h2 id="status">status: {application.status}</h2>
             </div>
           </Link>
-        );
+        );*/}
       });
     }
   }
@@ -231,7 +253,7 @@ class SubmittedApplications extends Component {
       (this.state.studentApplications !== undefined || null) && (this.state.results !== null || undefined)
         ? (
           <div className="pageContent">
-            <h1> View All Submitted Applications</h1>
+            <h1 className="postingsTitle"> View All Submitted Applications</h1>
             <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
@@ -239,6 +261,7 @@ class SubmittedApplications extends Component {
                   isMulti
                   styles={dropdownStyles}
                   name="status-filter"
+                  className="filter"
                   placeholder="Filter by Status"
                   options={this.state.statusOptions}
                   value={this.state.selectedStatusOptions}
@@ -257,6 +280,7 @@ class SubmittedApplications extends Component {
                   isMulti
                   styles={dropdownStyles}
                   name="title-filter"
+                  className="filter"
                   placeholder="Filter by Title"
                   options={this.state.titleOptions}
                   value={this.state.selectedTitleOptions}

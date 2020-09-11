@@ -118,9 +118,6 @@ ul {
     color: white;
     border: none;
     font-size: 17px;
-    position: fixed;
-    bottom: 7vw;
-    right: 5vw;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 12px;
@@ -135,11 +132,26 @@ ul {
     outline: 0;
 }
 
+.post-startup-buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
 #edit-post {
     text-align: center;
     align-items: center;
-    margin-left: 20px;
-    margin-right: 20px;
+}
+
+#save-changes-btn {
+  text-align: center;
+  align-items: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  position: fixed;
+  bottom: 7vw;
+  right: 5vw;
 }
 
 .post-edit-divider {
@@ -164,6 +176,18 @@ ul {
 .tall-input {
     margin-bottom: 5px;
     font-size: 15px;
+    max-width: 80%;
+}
+.location-wrapper {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+#city-state-row{
+    display: none;
+}
+.post-checkbox {
+  margin-left: 1em;
+  margin-right: 1em;
 }
 .post-input-row {
     display: flex;
