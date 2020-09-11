@@ -16,24 +16,39 @@ const PostListItem = (props) => {
   const industries = props.post.industries.map((industry, index) => {
     if (index === 0) {
       return (
-        <h2 key={industry.id}>
-          <div id="industryTitle">
-            Industries: <div className="pill" id="notFirstInd"> {industry.name} </div>
-          </div>
-        </h2>
+        <div id="pillsTitle" key={industry.id}>
+          Industries: <div className="grayPill"> {industry.name} </div>
+        </div>
       );
-    }
-    return (
-      <h2 key={industry.id} className="pill" id="notFirstInd">
-        {industry.name}
-      </h2>
-    );
+    } else if (index < 5) {
+      return (
+        <div key={industry.id} className="grayPill">
+          {industry.name}
+        </div>
+      );
+    } 
+  });
+
+  const skills = props.post.required_skills.map((skill, index) => {
+    if (index === 0) {
+      return (
+        <div id="pillsTitle" key={skill.id}>
+          Skills: <div className="greenPill"> {skill.name} </div>
+        </div>
+      );
+    } else if (index < 3) {
+      return (
+        <div key={skill.id} className="greenPill">
+          {skill.name}
+        </div>
+      );
+    } 
   });
 
   const virtual = (props.post.virtual==true) ? (
     <div className="location">
       <span className="virtualIcon" />
-      <h2 id="virtualLocation">Virtual</h2>
+      <span className="postLocation">Virtual</span>
     </div>  
   ) : (
     <div />
@@ -42,8 +57,23 @@ const PostListItem = (props) => {
   const inperson = (props.post.city && props.post.state) ? (
     <div className="location">
       <span className="locationIcon" />
-      <h2 id="postLocation"> {`${props.post.city}, ${props.post.state}`} </h2>
+      <span className="postLocation"> {`${props.post.city}, ${props.post.state}`} </span>
     </div>  
+  ) : (
+    <div />
+  );
+
+  const start = new Date(props.post.desired_start_date);
+  const end = new Date(props.post.desired_end_date);
+
+  const startDate = (start) ? (
+    <span className="dateText">Starts {`${start.getMonth()}/${start.getDate()}/${start.getFullYear()}`}</span>
+  ) : (
+    <div />
+  );
+
+  const endDate = (end) ? (
+    <span className="dateText">Ends {`${end.getMonth()}/${end.getDate()}/${end.getFullYear()}`}</span>
   ) : (
     <div />
   );
@@ -52,20 +82,32 @@ const PostListItem = (props) => {
     <Link to={route} key={props.post.id} className="listItem link">
       <div className="postBody">
         <div className="postText">
-          <h1 id="postTitle">{ props.post.title}</h1>
-          <div className="company">
+
+          <div className="companyInfo">
             <div className="companyLeft">
-              <h1 id="startupName"> { props.post.startup_id.name} </h1>
-              {virtual}
-              {inperson}
-              {/*<div className="location">
-                <span className="locationIcon" />
-                <h2 id="postLocation"> {`${props.post.city}, ${props.post.state}`} </h2>
-              </div>*/}
+              <h1 className="startupName"> { props.post.startup_id.name} </h1>
             </div>
             <div className="companyRight">
               {logo}
             </div>
+          </div>
+
+          <div className="postInfo">
+            <h1 className="postTitle">{ props.post.title}</h1>
+            {virtual}
+            {inperson}
+            <div className="dates">
+              {startDate}
+              {endDate}
+            </div>
+          </div>
+
+          <div className="pillsList">
+            {skills}
+          </div>
+
+          <div className="pillsList">
+            {industries}
           </div>
           
         </div>

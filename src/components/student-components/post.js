@@ -47,7 +47,6 @@ class Post extends Component {
       start: new Date(),
       end: new Date(),
       validDate: true,
-      locationShow: false,
     };
     this.showApplyModal = this.showApplyModal.bind(this);
     this.hideApplyModal = this.hideApplyModal.bind(this);
@@ -165,6 +164,19 @@ class Post extends Component {
     this.setState((prevState) => {
       const post = { ...prevState.post };
       post[field] = value;
+      return {
+        ...prevState,
+        post,
+      };
+    });
+  }
+
+  changeCheckboxField = (field, event) => {
+    const checked = event.target.checked;
+
+    this.setState((prevState) => {
+      const post = { ...prevState.post };
+      post[field] = checked;
       return {
         ...prevState,
         post,
@@ -292,7 +304,7 @@ class Post extends Component {
             this.showArchiveModal();
           }}
         >
-          Archive Position
+          Archive
         </button>
       );
     } else if (this.props.user.role === 'startup') {
@@ -306,7 +318,7 @@ class Post extends Component {
                   this.showArchiveModal();
                 }}
               >
-                Archive Position
+                Archive
               </button>
             )
             : null}
@@ -317,17 +329,36 @@ class Post extends Component {
                 type="submit"
                 onClick={this.approvePost}
               >
-                Approve Posting
+                Approve
               </button>
             )
             : null}
 
-          <button id="edit-post"
+          {/*<button id="edit-post-btn"
             className="post-btn"
             type="submit"
             onClick={this.submit}
           >{this.state.isEditing ? 'Save Changes' : 'Edit Position'}
-          </button>
+            </button>*/}
+          
+          {!this.state.isEditing
+            ? (
+              <button className="post-btn"
+                type="submit"
+                onClick={this.submit}
+              >
+                Edit
+              </button>
+            )
+            : (
+              <button id="save-changes-btn"
+              className="post-btn"
+              type="submit"
+              onClick={this.submit}
+              >
+                Save Changes
+              </button>
+            )}
         </div>
       );
     } else if (this.props.user.role === 'student') {
@@ -385,12 +416,12 @@ class Post extends Component {
         <div className="input-title" id="location-type">How will volunteering be conducted? (Check all that apply)</div>
         <div className="post-input-row">
           <div className="post-checkbox">
-            <input type="checkbox" id="virtual" defaultValue={this.props.post?.virtual} onClick={(event) => this.changePostField('virtual', event)}/>
-            <label for="virtual">Virtually</label>
+            <input type="checkbox" id="virtual" onChange={(event) => this.changeCheckboxField('virtual', event)} checked={this.state.post?.virtual}/>
+            <label htmlFor="virtual">Virtually</label>
           </div>
           <div className="post-checkbox">
-            <input type="checkbox" id="inperson" defaultValue={this.props.post?.inperson} onClick={(_event) => this.renderCityState()}/>
-            <label for="inperson">In-Person</label>
+            <input type="checkbox" id="inperson" onChange={(event) => this.renderCityState(event)} checked={this.state.post?.inperson}/>
+            <label htmlFor="inperson">In-Person</label>
           </div>
         </div>
       
@@ -408,8 +439,8 @@ class Post extends Component {
     );
   }
 
-  renderCityState = () => {
-    this.changePostField('inperson', event);
+  renderCityState = (event) => {
+    this.changeCheckboxField('inperson', event);
     var inPersonCheckbox = document.getElementById("inperson");
     var cityStateRow = document.getElementById("city-state-row");
 

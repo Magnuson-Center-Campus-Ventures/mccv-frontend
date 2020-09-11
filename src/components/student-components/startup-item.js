@@ -8,7 +8,7 @@ const StartupListItem = (props) => {
   const route = `/startups/${props.startup._id}`;
 
   const logo = props.startup.logo ? (
-    <img src={props.startup.logo} alt="  " />
+    <img src={props.startup.logo} alt=" " className="companyLogo"/>
   ) : (
     <div />
   );
@@ -16,70 +16,81 @@ const StartupListItem = (props) => {
   const industries = props.startup.industries.map((industry, index) => {
     if (index === 0) {
       return (
-        <h1 key={industry.id}>
-          Industries: {industry.name}
-        </h1>
+        <div id="pillsTitle" key={industry.id}>
+          Industries: <div className="grayPill"> {industry.name} </div>
+        </div>
+      );
+    } else if (index < 3) {
+      return (
+        <div key={industry.id} className="grayPill">
+          {industry.name}
+        </div>
       );
     }
-    return index < 3 ? (
-      index === 2 && props.startup.industries.length > 3 ? (
-        <div id="lastOne">
-          <h1 key={industry.id} id="notFirstInd">
-            {industry.name}
-          </h1>
-          <p> and {props.startup.industries.length - 3} more...  </p>
-        </div>
-      ) : (
-        <h1 key={industry.id} id="notFirstInd">
-          {industry.name}
-        </h1>
-      )
-    ) : (
-      <div />
-    );
   });
 
-  const postNames = props.startup.posts.length > 2 ? (
-    props.startup.posts.map((post, index) => {
-      return index < 2 ? (
-        index === 1 ? (
-          <div id="lastOne">
-            <div className="pill" id="postings" key={post.id}>
-              {post.title}
-            </div>
-            <p> and {props.startup.posts.length - 2} more...  </p>
-          </div>
-        )
-          : (
-            <div className="pill" id="postings" key={post.id}>
-              {post.title}
-            </div>
-          )
-
-      ) : <div />;
-    })
-  ) : (
-    props.startup.posts.map((post) => {
+  const posts = props.startup.posts.map((post, index) => {
+    if (index == 0) {
       return (
-        <div className="pill" id="postings" key={post.id}>
+        <div id="pillsTitle" key={post.id}>
+          Posts: <div className="greenPill">{post.title}</div>
+        </div>
+      )
+    } else if (index < 3) {
+      return (
+        <div className="greenPill" id="postings" key={post.id}>
           {post.title}
         </div>
       );
-    })
-  );
+    }
+  });
 
-  const posts = props.startup.posts.length > 0 ? (
-    <div className="postings">
-      <h2>Looking for:  </h2>
-      {postNames}
-    </div>
+  const cityState = (props.startup.city && props.startup.state) ? (
+    <div className="location">
+      <span className="locationIcon" />
+      <span className="postLocation"> {`${props.startup.city}, ${props.startup.state}`} </span>
+    </div>  
   ) : (
     <div />
   );
 
+  const renderDescription = (props.startup.description?.length > 100) ? (
+    <p className="descriptionText">{`${props.startup.description.substring(0, 99)}...`}</p>
+  ) : (
+    <p className="descriptionText">{props.startup.description}</p>
+  );
+  
   return (
     <Link to={route} key={props.startup.id} className="listItem link">
-      <div className="companyInfo">
+      <div className="postBody">
+        <div className="postText">
+
+          <div className="companyInfo">
+            <div className="companyLeft">
+              <h1 className="startupName"> { props.startup.name} </h1>
+              {cityState}
+            </div>
+            <div className="companyRight">
+              {logo}
+            </div>
+          </div>
+
+          <div className="postInfo">
+            {renderDescription}
+          </div>
+
+          <div className="pillsList">
+            {posts}
+          </div>
+
+          <div className="pillsList">
+            {industries}
+          </div>
+          
+        </div>
+      </div>
+
+      {/*<div className="companyInfo">
         <div className="companyText">
           <h1 id="startupName"> {props.startup.name} </h1>
           <div className="location">
@@ -94,7 +105,7 @@ const StartupListItem = (props) => {
           {industries}
         </div>
         {posts}
-      </div>
+      </div>*/}
     </Link>
   );
 };
