@@ -117,11 +117,47 @@ class StudentSignUp extends Component {
               onPageChange={this.handlePageClick}
             />
             ) : (
-            <div/>
+                <ReactPaginate
+                previousClassName="previous-hide"
+                previousLinkClassName="previous-link-hide"
+                nextClassName="next-hide"
+                nextLinkClassName="next-link-hide"
+                breakLabel="..."
+                pageCount={8}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={8}
+                onPageChange={this.handlePageClick}
+              />
             )}
             
           </div>
         );
+        case 2: 
+        return(
+          <div className="paginator"> 
+            {this.renderComponent()}
+            {this.renderSubmit()}
+            {this.state.filled ? (
+              <ReactPaginate
+              breakLabel="..."
+              pageCount={8}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={8}
+              onPageChange={this.handlePageClick}
+            />
+            ) : (
+              <ReactPaginate
+              nextClassName="next-hide"
+              nextLinkClassName="next-link-hide"
+              breakLabel="..."
+              pageCount={8}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={8}
+              onPageChange={this.handlePageClick}
+            />
+            ) }
+          </div>
+        )
       case 7:
         return (
           <div className="paginator"> 
