@@ -140,7 +140,8 @@ class StartupProfile extends Component {
       students_selected: [],
       city: '',
       state: '',
-      remote: false,
+      virtual: false,
+      inperson: false,
     };
     this.props.createPost(newPost, this.props.startup, this.props.history);
   }

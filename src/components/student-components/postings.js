@@ -19,6 +19,7 @@ class Posts extends Component {
 
     this.state = {
       sortedPosts: [],
+      sortedVirtualPosts: [],
       industryOptions: [],
       selectedIndustryOptions: [],
       skillOptions: [],
@@ -32,12 +33,16 @@ class Posts extends Component {
       search: false,
       filter: false,
       archive: false,
+      virtualChecked: false,
+      virtualPosts: [],
       archived: [],
+      archivedVirtualPosts: [],
       live: [],
       results: [],
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
     this.handleRecommendChange = this.handleRecommendChange.bind(this);
+    this.handleVirtualChange = this.handleVirtualChange.bind(this);
   }
 
   componentDidMount() {
@@ -128,6 +133,7 @@ class Posts extends Component {
       && (prevProps.posts !== this.props.posts || prevProps.student !== this.props.student)) {
       // Score posts
       this.scorePosts();
+      this.sortedVirtualPosts();
       // // Load in approved posts
       // if (prevProps.posts !== this.props.posts) {
       //   this.loadPosts();
@@ -178,8 +184,36 @@ class Posts extends Component {
         // });
         return {
           ...prevState,
-          sortedPosts: tempPosts.slice(0, 3),
+          sortedPosts: tempPosts.slice(0, 6),
         };
+      });
+    }
+  }
+
+  sortedVirtualPosts = () => {
+    this.setState({ sortedVirtualPosts: [] });
+    if (this.state.recommend && this.state.virtualChecked) {
+      this.props.sortedPosts.forEach((post) => {
+        if (post.virtual === true) {
+          this.setState((prevState) => ({
+            sortedVirtualPosts: [...prevState.sortedVirtualPosts, post],
+          }));
+        }
+      });
+    }
+  }
+
+  archivedVirtualPosts = () => {
+    this.setState({ archivedVirtualPosts: [] });
+    if (this.state.archive && this.state.virtualChecked) {
+      this.props.archived.forEach((post) => {
+        console.log(post);
+        if (post.virtual === true) {
+          this.setState((prevState) => ({
+            archivedVirtualPosts: [...prevState.archivedVirtualPosts, post],
+          }));
+        }
+        console.log(this.state.archivedVirtualPosts);
       });
     }
   }
@@ -192,9 +226,25 @@ class Posts extends Component {
     const searchterm = text.toLowerCase();
     let posts = [];
     if (this.props.user.role === 'admin') {
-      posts = this.state.archive ? this.state.archived : this.state.live;
+      if (this.state.virtualChecked && this.state.archive) {
+        posts = this.state.archivedVirtualPosts;
+      } else if (this.state.virtualChecked) {
+        posts = this.state.virtualPosts;
+      } else if (this.state.archive) {
+        posts = this.state.archived;
+      } else {
+        posts = this.state.live;
+      }
     } else {
-      posts = recommend ? this.state.sortedPosts : this.state.live;
+      if (this.state.virtualChecked && recommend) {
+        posts = this.state.sortedVirtualPosts;
+      } else if (this.state.virtualChecked) {
+        posts = this.state.virtualPosts;
+      } else if (recommend) {
+        posts = this.state.sortedPosts;
+      } else {
+        posts = this.state.live;
+      }
     }
     posts.forEach((post) => {
       const skills = post.required_skills?.map((skill) => skill.name.toLowerCase());
@@ -219,7 +269,8 @@ class Posts extends Component {
       || selectedSkills.some((skill) => skills.includes(skill))
       || selectedLocations.includes(postLoc)
       || selectedLocations.includes(startupLoc)
-      || selectedDates.some((date) => date.month() === startDate.month() && date.year() === startDate.year())) {
+      || selectedDates.some((date) => date.month() === startDate.month() && date.year() === startDate.year())) 
+      {
         this.setState((prevState) => ({
           results: [...prevState.results, post],
         }));
@@ -287,6 +338,33 @@ class Posts extends Component {
   //   });
   // }
 
+  handleVirtualChange(checked) {
+    this.setState({ virtualChecked: checked });
+    this.setState({ virtualPosts: [] });
+    if (checked) {
+      this.props.posts.forEach((post) => {
+        if (post.virtual === true) {
+          this.setState((prevState) => ({
+            virtualPosts: [...prevState.virtualPosts, post],
+          }));
+        }
+      });
+    }
+    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
+      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
+      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const locations = (this.state.selectedLocationOptions && this.state.selectedLocationOptions.length > 0)
+      ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
+      : ['emptytext'];
+    const dates = (this.state.selectedDateOptions && this.state.selectedDateOptions.length > 0)
+      ? this.state.selectedDateOptions.map((option) => option.value)
+      : [moment('1111-11-11')];
+    this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, this.state.recommend);
+  }
+
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
     this.setState({ archived: [] });
@@ -332,6 +410,7 @@ class Posts extends Component {
   }
 
   renderPosts() {
+    var posts;
     if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
         return this.state.results.map((post) => {
@@ -344,39 +423,58 @@ class Posts extends Component {
           <div> Sorry, no positions match that query</div>
         );
       }
+    } else if (this.state.archive && this.state.virtualChecked) {
+      posts = this.state.archivedVirtualPosts;
     } else if (this.state.archive) {
-      const posts = this.state.archived;
-      return posts.map((post) => {
-        return (
-          <PostListItem user={this.props.user} post={post} key={post.id} />
-        );
-      });
+      posts = this.state.archived;
+    } else if (this.state.virtualChecked && this.state.recommend) {
+      posts = this.state.sortedVirtualPosts;
+    } else if (this.state.virtualChecked) {
+      posts = this.state.virtualPosts;
     } else {
-      const posts = this.state.recommend ? this.state.sortedPosts : this.state.live;
-      return posts.map((post) => {
-        return (
-          <PostListItem user={this.props.user} post={post} key={post.id} />
-        );
-      });
+      posts = this.state.recommend ? this.state.sortedPosts : this.state.live;
     }
+    return posts.map((post) => {
+      return (
+        <PostListItem user={this.props.user} post={post} key={post.id} />
+      );
+    });
   }
 
   renderButtons() {
     if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          <h3>Show Archived Volunteer Positions: </h3>
-          <div id="archiveToggle">
-            <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+          <div className="toggleGroup">
+            <span>View Archived Volunteer Positions: </span>
+            <div id="toggle">
+              <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+            </div>
+          </div>
+          
+          <div className="toggleGroup">
+            <span>View Virtual Positions: </span>
+            <div id="toggle">
+              <Switch onChange={this.handleVirtualChange} checked={this.state.virtualChecked} />
+            </div>
           </div>
         </div>
       );
     } else {
       return (
         <div id="filters">
-          <h3>View Recommended Volunteer Positions: </h3>
-          <div id="archiveToggle">
-            <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
+          <div className="toggleGroup">
+            <span>View Recommended Volunteer Positions: </span>
+            <div id="toggle">
+              <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
+            </div>
+          </div>
+
+          <div className="toggleGroup">
+            <span>View Virtual Positions: </span>
+            <div id="toggle">
+              <Switch onChange={this.handleVirtualChange} checked={this.state.virtualChecked} />
+            </div>
           </div>
         </div>
       );
@@ -396,7 +494,7 @@ class Posts extends Component {
       this.props.posts && this.state.results
         ? (
           <div className="pageContent">
-            <h1> View All Volunteer Positions</h1>
+            <h1 className="postingsTitle"> View All Volunteer Positions</h1>
             <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />

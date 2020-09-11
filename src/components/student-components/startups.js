@@ -260,7 +260,7 @@ class Startups extends Component {
       this.props.startups && this.state.results
         ? (
           <div className="pageContent">
-            <h1> View All Startups </h1>
+            <h1 className="postingsTitle"> View All Startups </h1>
             <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
