@@ -10,6 +10,7 @@ export const ActionTypes = {
   LOGOUT_USER: 'LOGOUT_USER',
   AUTH_ERROR: 'AUTH_ERROR',
   UPDATE_USER: 'UPDATE_USER',
+  USER_EXISTS: 'USER_EXISTS',
   // post actions
   FETCH_POST: 'FETCH_POST',
   CLEAR_POST: 'CLEAR_POST',
@@ -874,4 +875,15 @@ export function uploadImage(file) {
   return getSignedRequest(file).then((response) => {
     return uploadFileToS3(response.data.signedRequest, file, response.data.url);
   });
+}
+
+export function emailExists({ email, }) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/emailexists`, { email, }).then((response) => {
+      dispatch(authError(response.data));
+    }).catch((error) => {
+      dispatch(authError(response.data));
+    });
+  };
+
 }

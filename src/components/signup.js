@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  authError, signupUser, createStudent, updateUser,
+  authError, signupUser, createStudent, updateUser, emailExists,
 } from '../actions';
 import '../styles/signup.scss';
 import StudentTerms from './student-components/student-modals/student-terms'
@@ -19,12 +19,16 @@ class Signup extends Component {
       student_profile_id: '',
       startup_id: '',
       signed: '',
+      error: '',
+      displayed_error: '',
+      show_error: false,
       show: false,
     };
   }
 
   onEmailChange = (event) => {
     this.setState({ email: event.target.value });
+    this.props.emailExists({ email: event.target.value});
   }
 
   onPasswordChange = (event) => {
@@ -54,7 +58,15 @@ class Signup extends Component {
   }
 
   showModal = (event) => {
-    this.setState({ show: true });
+    console.log(this.state.error);
+    console.log(this.state.show_error);
+    if (this.state.error != ''){
+      this.state.show_error = true;
+      this.state.displayed_error = this.state.error;
+    } else {
+      this.setState({ show: true });
+    }
+    this.forceUpdate();
   };
   
   hideModal = (event) => {
@@ -88,8 +100,18 @@ class Signup extends Component {
   }
 
   renderError() {
-    if (this.props.error) {
-      return <div className="signupError">{this.props.error}</div>;
+    if (this.state.password == ''){
+      this.state.error = 'Sign Up Failed: Password is blank';
+    } else if (this.state.email == ''){
+      this.state.error = 'Sign Up Failed: Username is blank';
+    } else if (this.props.error == 'Email found') {
+      this.state.error = 'Sign Up Failed: User with this email already exists';
+    } else {
+      this.state.error = '';
+      this.state.show_error = false;
+    }
+    if (this.state.show_error) {
+      return <div className="signupError">{this.state.displayed_error}</div>;
     }
     return null;
   }
@@ -173,5 +195,5 @@ function mapStateToProps(reduxState) {
 }
 
 export default withRouter(connect(mapStateToProps, {
-  authError, signupUser, createStudent, updateUser,
+  authError, signupUser, createStudent, updateUser, emailExists,
 })(Signup));
