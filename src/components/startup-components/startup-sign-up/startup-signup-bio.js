@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import {
-  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup, uploadImage,
+  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup,
 } from '../../../actions';
 
 class StartupBio extends Component {
@@ -11,77 +11,43 @@ class StartupBio extends Component {
     super(props);
     this.state = {
       startup: {},
-      preview: '',
       selected: '',
       affiliation: '',
       badGender: true, 
       badAffiliation: true, 
     };
-    this.onImageUpload = this.onImageUpload.bind(this);
   }
 
   // Get profile info
   componentDidMount() {
+    // console.log(this.props.match.params.startupID);
     this.props.fetchStartupByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
   }
 
-  // update startup field
-  changeStartupField = (field, event) => {
-    // eslint-disable-next-line prefer-destructuring
-    const value = event.target.value;
-    this.setState((prevState) => {
-      const startup = { ...prevState.startup };
-      startup[field] = value;
-      this.props.updateStartup(this.props.startup.id, startup);
-      return {
-        ...prevState,
-        startup,
-      };
-    });
-  }
+     // update startup field
+     changeStartupField = (field, event) => {
+       // eslint-disable-next-line prefer-destructuring
+       const value = event.target.value;
 
-  onImageUpload(event) {
-  const file = event.target.files[0];
-  if (file) {
-    this.state.preview = window.URL.createObjectURL(file);
-    if (file) {
-      uploadImage(file).then(url => {
-        this.props.startup.logo = url;
-        this.state.startup.logo = url;
-        this.state.preview = url;
-      }).catch(error => {
-        this.state.error = error;
-      });
-    }
-  } else {
-    this.state.error = 'file is null';
-  }
-  this.forceUpdate();
-}
+       this.setState((prevState) => {
+         const startup = { ...prevState.startup };
+         startup[field] = value;
+         this.props.updateStartup(this.props.startup.id,
+           startup);
+         return {
+           ...prevState,
+           startup,
+         };
+       });
+     }
 
-  // Send update to database
-  onSubmit = (e) => {
-    this.props.updateStartup(this.props.startup.id, this.state.startup);
-  };
+     // Send update to database
+     onSubmit = (e) => {
+       this.props.updateStartup(this.props.startup.id, this.state.startup);
+     };
 
-renderLogo(){
-  if (this.state.preview === ''){
-    this.state.preview = this.props.startup.logo;
-  }
-  return(<img className="startup-logo" id="preview" alt="preview" src={this.state.preview} />);
-}
 
-      <div className="question-fields">
-        <p className="question-fields-title">Name</p>
-        <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
-        <p className="question-fields-title">City</p>
-        <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
-        <p className="question-fields-title">State</p>
-        <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
-
-        </div>
-      </div>
      renderBioQuestions() {
        return (
          <div className="question">
@@ -139,19 +105,13 @@ renderLogo(){
                 <option value="None">No Dartmouth affiliation</option>
               </select>
            </div>
-           <p>Logo (Use company's name for filename)</p>
-            {this.renderLogo()}
-            <input type="file" name="coverImage" onChange={this.onImageUpload} />
-            <p>Link to your startup's pitch! (use the embed link for the video)</p>
-            <TextareaAutosize onBlur={(event) => this.changeStartupField('video', event)} defaultValue={this.props.startup.video} />
-            <iframe title="videoLarge" className="embed-responsive-item" src={this.state.startup.video} />
          </div>
        );
      }
 
-  render() {
-    return this.renderBioQuestions();
-  }
+     render() {
+       return this.renderBioQuestions();
+     }
 }
 
 const mapStateToProps = (reduxState) => ({
