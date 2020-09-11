@@ -124,7 +124,7 @@ class StudentProfileStartup extends Component {
       <div className="profile-fixed">
         <div id="profile-header">
           <h1>{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
-          <div id="class-year">{`Class of ${this.props.student?.grad_year}`}</div>
+          <div id="class-year">{`Class of ${this.props.student?.grad_year}`}  ({this.props.student?.affiliation})</div>
           <div id="major-row">
             <div>Major in</div>
             {this.renderMajMin(this.props.student?.majors)}

@@ -15,6 +15,7 @@ class StartupSignUp extends Component {
     super(props);
     this.state = {
       index: 0,
+      filled: false, 
     };
   }
 
@@ -26,9 +27,19 @@ class StartupSignUp extends Component {
 
   handlePageClick = (data) => {
     this.props.updateStartup(this.props.startup.id, this.props.startup);
-    this.setState({ index: data.selected });
+    this.setState({ 
+      index: data.selected, 
+      filled: true, 
+     });
     this.forceUpdate();
   };
+
+  ifFilled = () => {
+    this.setState({
+      filled: true, 
+    }); 
+    this.forceUpdate(); 
+  }
 
   onSubmit = () => {
     this.props.submitStartup(this.props.startup.id, this.props.startup, this.props.history);
@@ -53,7 +64,7 @@ class StartupSignUp extends Component {
   renderComponent() {
     switch (this.state.index) {
       case 0:
-        return <StartupSignUpBio />;
+        return <StartupSignUpBio ifFilled={this.ifFilled} />;
       case 1:
         return <StartupSignUpDesc />;
       case 2:
@@ -70,7 +81,8 @@ class StartupSignUp extends Component {
           <div className="paginator"> 
             {this.renderComponent()}
             {this.renderSubmit()}
-            <ReactPaginate
+            {this.state.filled ? (
+              <ReactPaginate
               previousClassName="previous-hide"
               previousLinkClassName="previous-link-hide"
               breakLabel="..."
@@ -79,6 +91,20 @@ class StartupSignUp extends Component {
               pageRangeDisplayed={3}
               onPageChange={this.handlePageClick}
             />
+            ) : (
+              <ReactPaginate
+              nextClassName="next-hide"
+              nextLinkClassName="next-link-hide"
+              previousClassName="previous-hide"
+              previousLinkClassName="previous-link-hide"
+              breakLabel="..."
+              pageCount={3}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={3}
+              onPageChange={this.handlePageClick}
+            />
+            )}
+            
           </div>
         );
       case 7:

@@ -195,7 +195,6 @@ export function updateStartup(id, startup) {
   };
 }
 
-// export function fetchSearchResults(searchterm) {
 // student functions
 export function createStudent(newStudent) {
   return (dispatch) => {
@@ -207,19 +206,6 @@ export function createStudent(newStudent) {
       });
   };
 }
-
-// Moved search to frontend
-// export function fetchStartupSearch(searchterm) {
-//   return (dispatch) => {
-//     axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
-//       .then((response) => {
-//         dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
-//       })
-//       .catch((error) => {
-//         dispatch({ type: ActionTypes.ERROR_SET, error });
-//       });
-//   };
-// }
 
 export function fetchStudents() {
   return (dispatch) => {
