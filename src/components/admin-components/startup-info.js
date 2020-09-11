@@ -41,6 +41,8 @@ class StartupInfo extends Component {
         if (this.props.startups.length !== 0 && this.state.archived === 0 && this.state.active === 0 && this.state.pending === 0){
             let industries = {};
             let locations = {};
+            let genders = {};
+            let affiliation = {};
             this.props.startups.map((startup) => {
                 // console.log(startup); 
                 if (startup.status === 'Pending'){
@@ -79,8 +81,8 @@ class StartupInfo extends Component {
                             locations[local] = locations[local] + 1;
                         }
                     }
-                    if (startup.founderGender){
-                        const gender = startup.founderGender; 
+                    if (startup.founder_gender){
+                        const gender = startup.founder_gender; 
                         if (genders[gender] === undefined){
                             genders[gender] = 1; 
                         } else{
@@ -98,7 +100,7 @@ class StartupInfo extends Component {
                 }
             })
             // console.log(industries)
-            this.setState({ industries, locations });
+            this.setState({ industries, locations, genders, affiliation });
         }
     }
 

@@ -81,7 +81,7 @@ class StartupSignUp extends Component {
           <div className="paginator"> 
             {this.renderComponent()}
             {this.renderSubmit()}
-            {this.state.filled? (
+            {this.state.filled ? (
               <ReactPaginate
               previousClassName="previous-hide"
               previousLinkClassName="previous-link-hide"
@@ -92,17 +92,17 @@ class StartupSignUp extends Component {
               onPageChange={this.handlePageClick}
             />
             ) : (
-              <div> 
-                <ReactPaginate
+              <ReactPaginate
+              nextClassName="next-hide"
+              nextLinkClassName="next-link-hide"
               previousClassName="previous-hide"
               previousLinkClassName="previous-link-hide"
               breakLabel="..."
               pageCount={3}
               marginPagesDisplayed={2}
               pageRangeDisplayed={3}
-              // onPageChange={this.handlePageClick}
+              onPageChange={this.handlePageClick}
             />
-              </div>
             )}
             
           </div>

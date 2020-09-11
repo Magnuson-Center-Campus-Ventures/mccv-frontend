@@ -7,7 +7,7 @@ import CanvasJSReact from '../../helpers/canvasjs.react';
 const CanvasJS = CanvasJSReact.CanvasJS;
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-import { fetchStudents } from '../../actions/index';
+import { fetchStudents, fetchPosts } from '../../actions/index';
 import '../../styles/dashboard.scss';
 
 
@@ -23,6 +23,8 @@ class StudentInfo extends Component {
             active: 0, 
             archived: 0, 
             totalYear: 0, 
+            filled: 0, 
+            studentsMatched: new Set(), 
             genders: {},
             affiliation: {},
             gradYear: {}, 
@@ -31,13 +33,14 @@ class StudentInfo extends Component {
     }
 
     componentDidMount(){
-        this.props.fetchStudents()
+        this.props.fetchStudents();
+        this.props.fetchPosts(); 
         this._isMounted = true;
     }
 
     // going through 
     componentDidUpdate(){
-        if (this.props.students.length !== 0 && this.state.active === 0 && this.state.archived === 0){
+        if (this.props.students.length !== 0 && this.state.active === 0 && this.state.archived === 0 && this.props.posts.length !== 0){
             let gradYear = {}; 
             let majors = {};
             let genders = {}; 
@@ -91,6 +94,22 @@ class StudentInfo extends Component {
             this.setState({ gradYear, majors, genders, affiliation });
             this.setState({
                 archived: this.props.students.length - this.state.active
+            })
+            let studentsMatched = new Set(this.state.studentsMatched); 
+            this.props.posts.map((post) => {
+                console.log(post); 
+                if (post.status === 'Archived'){
+                    post.students_selected?.map((student) => {
+                        studentsMatched.add(student); 
+                        // this.setState(({ studentsMatched }) => ({
+                        //     studentsMatched: new Set(studentsMatched).add(student)
+                        //   }));
+                    })
+                }
+            })
+            this.setState({ studentsMatched });
+            this.setState({
+                filled: Object.keys(studentsMatched).length,
             })
         }
     }
@@ -250,11 +269,9 @@ class StudentInfo extends Component {
             this._isMounted && this.state.gradYear !== {} ? 
             ( <div className="dashboardContent">
                 <div className="stats">
-                    <p> Total Active: <strong>{this.state.active}</strong>
-                        {/* <p className="number"></p> */}
-                    </p>
-                    <p> Total Archived: <strong>{this.state.archived} </strong>
-                    </p>  
+                    <p> Total Active: <strong>{this.state.active}</strong> </p>
+                    <p> Total Archived: <strong>{this.state.archived} </strong> </p>  
+                    <p> Students Who Filled Positions: <strong>{this.state.filled} </strong> </p>
                 </div>
                 <div className="graphs">
                     <div className="graphRow">
@@ -280,10 +297,11 @@ class StudentInfo extends Component {
 function mapStateToProps(reduxState) {
     return {
         students: reduxState.students.all_students,
+        posts: reduxState.posts.all,
     };
   }
 
 
 
-export default withRouter(connect(mapStateToProps, { fetchStudents })(StudentInfo));
+export default withRouter(connect(mapStateToProps, { fetchStudents, fetchPosts })(StudentInfo));
   

@@ -20,7 +20,7 @@ class StartupBio extends Component {
 
   // Get profile info
   componentDidMount() {
-    console.log(this.props.match.params.startupID);
+    // console.log(this.props.match.params.startupID);
     this.props.fetchStartupByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
   }
@@ -100,7 +100,7 @@ class StartupBio extends Component {
                 });
                 if (!this.state.badGender){
                   this.props.ifFilled();
-                  console.log('in affiliation IF');
+                  // console.log('in affiliation IF');
                 }
               }}>
               {/* Dartmouth, geisel, tuck, thayer, guarini */}
