@@ -33,7 +33,7 @@ const StartupListItem = (props) => {
     if (index == 0) {
       return (
         <div id="pillsTitle" key={post.id}>
-          Posts: <div className="greenPill">{post.title}</div>
+          Positions: <div className="greenPill">{post.title}</div>
         </div>
       )
     } else if (index < 3) {
