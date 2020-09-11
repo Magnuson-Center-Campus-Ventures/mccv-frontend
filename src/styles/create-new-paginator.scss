@@ -3,6 +3,26 @@
   margin-top: 10vh;
 }
 
+.previous-hide{
+  opacity: 0%;
+  margin-right: 2em;
+}
+
+.previous-link-hide{
+  cursor: default;
+}
+
+.next-hide{
+  opacity: 0%;
+  cursor: default;
+  margin-left: 2em;
+  padding-left: 2em;
+}
+
+.next-link-hide{
+  cursor: default;
+}
+
 .paginator > ul{
   text-align: center;
   list-style: none;
@@ -12,11 +32,11 @@
 }
 
 .paginator > ul > li{
+  cursor: pointer;
   display: inline;
 }
 
 .paginator > ul > li > a{
-  cursor: pointer;
   background-color: #C6CED2;
   padding: 1em;
   padding-top: .5em;
@@ -136,7 +156,7 @@
   display: flex;
 }
 
-#studentExpModal{
-  position: fixed;
-  top: 2em;
+.imptMessage{
+  color: red;
+  font-style: italic;
 }

@@ -92,13 +92,39 @@ class StudentProfileStartup extends Component {
       });
     } else return <div>None</div>;
   }
+  
+  renderDateRange = () => {
+    if (this.state.student.desired_start_date != null){
+      this.state.start = new Date(this.state.student.desired_start_date);
+    } 
+    if (this.state.student.desired_end_date != null){
+      this.state.end = new Date(this.state.student.desired_end_date);
+    }
+    console.log(this.state.end);
+    return (
+      <DateRange
+        editableDateInputs={true}
+        onChange={(ranges) => {
+          this.state.student.desired_start_date = ranges.selection.startDate.toISOString();
+          this.state.student.desired_end_date = ranges.selection.endDate.toISOString();
+          this.forceUpdate();
+        }}
+        moveRangeOnFirstSelection={false}
+        ranges={[{
+          startDate: this.state.start,
+          endDate: this.state.end,
+          key: 'selection',
+        }]}
+      />
+    )
+  }
 
   renderBody = () => {
     return (
       <div className="profile-fixed">
         <div id="profile-header">
           <h1>{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
-          <div id="class-year">{`Class of ${this.props.student?.grad_year}`}</div>
+          <div id="class-year">{`Class of ${this.props.student?.grad_year}`}  ({this.props.student?.affiliation})</div>
           <div id="major-row">
             <div>Major in</div>
             {this.renderMajMin(this.props.student?.majors)}
@@ -109,6 +135,15 @@ class StudentProfileStartup extends Component {
           </div>
           <div className="student-contact">{this.props.email}</div>
           <div className="student-contact">{this.props.student?.phone_number ? this.props.student?.phone_number : null}</div>
+          <div className="student-start-date">
+            {this.props.student.desired_start_date ? 'Desired Start Date'.concat(': ', this.props.student.desired_start_date.toString().substring(0, 10)) : null}
+            </div>
+          <div className="student-end-date">
+            {this.props.student.desired_end_date ? 'Desired End Date'.concat(': ', this.props.student.desired_end_date.toString().substring(0, 10)) : null}
+            </div>
+          <div className="post-time-commitment">
+            {this.props.student.time_commitment ? 'Time Commitment'.concat(': ', this.props.student.time_commitment.toString()).concat(' ', 'hrs/week') : null}
+            </div>
           <hr className="profile-divider" />
           <div id="lists-row">
             <div className="list-section">

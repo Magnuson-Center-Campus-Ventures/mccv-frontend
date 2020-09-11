@@ -191,6 +191,9 @@ class Startup extends Component {
           <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
           <div className="startup-header">Industries:</div>
           <div className="startup-industries">{this.renderIndustries()}</div>
+          {this.props.user.role === 'admin' ? (
+            <div> Affiliation: {this.props.startup.affiliation}</div>
+          ): (<div/>)}
           <div className="startup-description">
             <p>About {`${this.props.startup.name}`}:</p>
             <div className="startup-description">{`${this.props.startup.description}`}</div>

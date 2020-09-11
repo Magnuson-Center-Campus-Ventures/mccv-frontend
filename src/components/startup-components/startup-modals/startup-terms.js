@@ -4,6 +4,7 @@
  import { withRouter } from 'react-router-dom';
  import close from '../../../../static/img/close.png';
  import '../../../styles/terms.scss';
+ 
  class StartupTerms extends React.Component {
    constructor(props) {
      super(props);

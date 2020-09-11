@@ -12,6 +12,7 @@ class StudentMajorMinors extends Component {
     super(props);
     this.state = {
       student: {},
+      affiliation: '',
       major: '',
       minor: '',
     };
@@ -34,6 +35,16 @@ class StudentMajorMinors extends Component {
       this.setState({ student: this.props.student });
     }
   }
+
+
+  onAffiliationChange = (event) => {
+    this.props.student.affiliation = event.target.value;
+    this.setState({
+      affiliation: event.target.value, 
+    });
+    this.props.ifFilled(); 
+    this.forceUpdate(); 
+}
 
   onMajorChange(event) {
     this.setState({
@@ -115,13 +126,24 @@ class StudentMajorMinors extends Component {
         <div className="question">
           <div className="question-header">
             <div className="question-header-prompt">
-              <h1>Majors/Minors</h1>
-              <p>Add your majors and minors!</p>
+              <h1>Education Information</h1>
+              <p> Dartmouth Affiliation <span className="imptMessage">*</span> </p>
+              <select value={this.state.affiliation} onChange={this.onAffiliationChange}>
+              {/* Dartmouth, geisel, tuck, thayer, guarini */}
+                <option value="select">Select...</option>
+                <option value="Undergrad">Dartmouth College</option>
+                <option value="Geisel">Geisel School of Medicine </option>
+                <option value="Tuck">Tuck School of Business</option>
+                <option value="Thayer">Thayer School of Engineering</option>
+                <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+              </select>
+              {/* <p>Add your majors and minors!</p> */}
             </div>
             <i className="fas fa-user-graduate question-header-icon" id="icon" />
           </div>
           <div className="question-fields">
-            <p className="question-fields-title">Majors</p>
+            <p className="question-fields-title">Majors <span></span></p>
+            <p className="imptMessage">please make sure to write the full name of your major (e.x. "Computer Science" instead of "CS")</p>
             <input className="question-fields-text" onChange={this.onMajorChange} value={this.state.major} />
             <button className="question-fields-button" type="submit" style={{ cursor: 'pointer' }} onClick={this.addMajor} value={this.major}>
               <i className="far fa-plus-square" id="icon" />

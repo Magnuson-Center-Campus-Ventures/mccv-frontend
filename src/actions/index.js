@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-//const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -85,6 +85,7 @@ export function createPost(post, startup, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
+        console.log(response.data.id);
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
         // Update the student with the newly created post
         startup.posts.push(response.data);
@@ -93,7 +94,7 @@ export function createPost(post, startup, history) {
         }).catch((error2) => {
           dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
         });
-        history.push('/add-post/');
+        history.push('/posts/'.concat(response.data.id,'/?edit'));
       }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });
@@ -197,7 +198,6 @@ export function updateStartup(id, startup) {
   };
 }
 
-// export function fetchSearchResults(searchterm) {
 // student functions
 export function createStudent(newStudent) {
   return (dispatch) => {
@@ -209,19 +209,6 @@ export function createStudent(newStudent) {
       });
   };
 }
-
-// Moved search to frontend
-// export function fetchStartupSearch(searchterm) {
-//   return (dispatch) => {
-//     axios.get(`${ROOT_URL}/startups-search/${searchterm}`, { headers: { authorization: localStorage.getItem('token') } })
-//       .then((response) => {
-//         dispatch({ type: ActionTypes.FETCH_STARTUPS, payload: response.data });
-//       })
-//       .catch((error) => {
-//         dispatch({ type: ActionTypes.ERROR_SET, error });
-//       });
-//   };
-// }
 
 export function fetchStudents() {
   return (dispatch) => {

@@ -131,7 +131,7 @@ class StudentIndustries extends Component {
           <div className="question-header">
             <div className="question-header-prompt">
               <h1>Industries</h1>
-              <p>Add the industries you have an interest in!</p>
+              <p>(Optional) Search/Select the industries you have an interest in!</p>
             </div>
             <i className="fas fa-book-reader question-header-icon" id="icon" />
           </div>
@@ -147,7 +147,7 @@ class StudentIndustries extends Component {
       );
     }
   }
-}
+} 
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.user.userID,

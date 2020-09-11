@@ -128,7 +128,7 @@ class StartupIndustries extends Component {
           <div className="question-header">
             <div className="question-header-prompt">
               <h1>Industries</h1>
-              <p>Add the industries that characterize your company!</p>
+              <p>Search/Select the industries that characterize your company!</p>
             </div>
             <i className="fas fa-building question-header-icon" id="icon" />
           </div>

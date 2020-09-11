@@ -20,6 +20,7 @@ class StudentSignUp extends Component {
     super(props);
     this.state = {
       index: 0,
+      filled: false, 
     };
   }
 
@@ -33,11 +34,29 @@ class StudentSignUp extends Component {
 
   handlePageClick = (data) => {
     this.props.updateStudent(this.props.student.id, this.props.student);
-    this.setState({ index: data.selected });
-    this.forceUpdate();
+    if (data.selected === 2){
+      this.setState({ 
+        index: data.selected,
+        filled: false, 
+      });
+    } else{
+      this.setState({ 
+        index: data.selected,
+        filled: true, 
+      });
+    }
   };
 
+  ifFilled = () => {
+    console.log('in ifFilled'); 
+    this.setState({
+      filled: true, 
+    }); 
+    this.forceUpdate(); 
+  }
+
   onSubmit = () => {
+    console.log('FROM SUBMIT', this.props.student);
     this.props.submitStudent(this.props.student.id, this.props.student, this.props.history);
   }
 
@@ -60,17 +79,17 @@ class StudentSignUp extends Component {
   renderComponent() {
     switch (this.state.index) {
       case 0:
-        return <StudentSignUpBio />;
+        return <StudentSignUpBio ifFilled={this.ifFilled} />;
       case 1:
         return <StudentSignUpTiming />;
       case 2:
-        return <StudentSignUpIndustries />;
+        return <StudentSignUpMajorMinor ifFilled={this.ifFilled} />;
       case 3:
         return <StudentSignUpWorkExperiences />;
       case 4:
         return <StudentSignUpOtherExperiences />;
       case 5:
-        return <StudentSignUpMajorMinor />;
+        return <StudentSignUpIndustries />;
       case 6:
         return <StudentSignUpClasses />;
       case 7:
@@ -81,21 +100,95 @@ class StudentSignUp extends Component {
   }
 
   render() {
-    return (
-      <div className="paginator">
-        {this.renderComponent()}
-        {this.renderSubmit()}
-        <ReactPaginate
-          previousLabel="previous"
-          nextLabel="next"
-          breakLabel="..."
-          pageCount={8}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={8}
-          onPageChange={this.handlePageClick}
-        />
-      </div>
-    );
+    switch (this.state.index) {
+      case 0:
+        return (
+          <div className="paginator"> 
+            {this.renderComponent()}
+            {this.renderSubmit()}
+            { this.state.filled? (
+              <ReactPaginate
+              previousClassName="previous-hide"
+              previousLinkClassName="previous-link-hide"
+              breakLabel="..."
+              pageCount={8}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={8}
+              onPageChange={this.handlePageClick}
+            />
+            ) : (
+                <ReactPaginate
+                previousClassName="previous-hide"
+                previousLinkClassName="previous-link-hide"
+                nextClassName="next-hide"
+                nextLinkClassName="next-link-hide"
+                breakLabel="..."
+                pageCount={8}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={8}
+                onPageChange={this.handlePageClick}
+              />
+            )}
+            
+          </div>
+        );
+        case 2: 
+        return(
+          <div className="paginator"> 
+            {this.renderComponent()}
+            {this.renderSubmit()}
+            {this.state.filled ? (
+              <ReactPaginate
+              breakLabel="..."
+              pageCount={8}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={8}
+              onPageChange={this.handlePageClick}
+            />
+            ) : (
+              <ReactPaginate
+              nextClassName="next-hide"
+              nextLinkClassName="next-link-hide"
+              breakLabel="..."
+              pageCount={8}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={8}
+              onPageChange={this.handlePageClick}
+            />
+            ) }
+          </div>
+        )
+      case 7:
+        return (
+          <div className="paginator"> 
+            {this.renderComponent()}
+            {this.renderSubmit()}
+            <ReactPaginate
+              nextClassName="next-hide"
+              nextLinkClassName="next-link-hide"
+              breakLabel="..."
+              pageCount={8}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={8}
+              onPageChange={this.handlePageClick}
+            />
+          </div>
+        );
+      default:
+        return (
+          <div className="paginator"> 
+            {this.renderComponent()}
+            {this.renderSubmit()}
+            <ReactPaginate
+              breakLabel="..."
+              pageCount={8}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={8}
+              onPageChange={this.handlePageClick}
+            />
+          </div>
+        );
+    }
   }
 }
 
