@@ -33,6 +33,8 @@ class StudentProfile extends Component {
       showWorkExpModal: false,
       showOtherExpModal: false,
       student: {},
+      gender: '',
+      affiliation: '',
       majors: [],
       minors: [],
       workExps: [],
@@ -265,6 +267,53 @@ class StudentProfile extends Component {
     )
   }
 
+  renderEditGender(){
+    if (this.props.student.gender){
+      if (this.state.isEditing === true) {
+        return(
+          <select value={this.state.gender} onChange={(event) => {
+            this.props.student.gender = event.target.value;
+            this.changeStudentField('gender', event);
+            this.setState({
+              gender: event.target.value, 
+            });
+          }}>
+            <option value={this.state.gender}>{this.props.student.gender}</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            <option value="prefer not to say">Prefer Not to Say</option>
+          </select>
+        )
+      }
+    }
+  }
+
+  renderEditAffiliation(){
+    if (this.props.student.affiliation){
+      if (this.state.isEditing === true){
+        return(
+          // <div>
+            <select value={this.state.affiliation} onChange={(event) => {
+              this.props.student.affiliation = event.target.value;
+              this.changeStudentField('affiliation', event);
+              this.setState({
+                affiliation: event.target.value, 
+              });
+            }}>
+              <option value={this.state.affiliation}>{this.props.student.affiliation}</option>
+              <option value="Undergrad">Dartmouth College</option>
+              <option value="Geisel">Geisel School of Medicine </option>
+              <option value="Tuck">Tuck School of Business</option>
+              <option value="Thayer">Thayer School of Engineering</option>
+              <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+            </select>
+          // </div>  
+        )
+      }
+    }
+  }
+
   renderMajMin = (array) => {
     if (array) {
       return array.map((elem, index) => {
@@ -382,6 +431,10 @@ class StudentProfile extends Component {
               defaultValue={this.props.student?.phone_number ? this.props.student?.phone_number : null}
               onBlur={(event) => this.changeStudentField('phone_number', event)}
             />
+            <div>
+            <div className="input-title">Gender</div>
+            {this.renderEditGender()}
+            </div>
             <div className="student-edit-dates">
               <div>Desired Start and End Date</div>
               {this.renderDateError()}
@@ -394,6 +447,9 @@ class StudentProfile extends Component {
           <div id="student-edit-majmin">
             <h2>Academic Information</h2>
             <div className="lists-row">
+              <div className="majmin-section">
+                Affiliation: {this.renderEditAffiliation()}
+              </div>
               <div className="majmin-section">
                 <div className="majmin-header">
                   <div className="input-title">Majors</div>
@@ -531,7 +587,7 @@ class StudentProfile extends Component {
         <div className="profile-fixed">
           <div id="profile-header">
             <h1>{`${this.state.student?.first_name} ${this.state.student?.last_name}`}</h1>
-            <div id="class-year">{`Class of ${this.props.student?.grad_year}`}</div>
+            <div id="class-year">{`Class of ${this.props.student?.grad_year}`} ({this.props.student?.affiliation})</div>
             <div id="major-row">
               <div>Major in</div>
               {this.renderMajMin(this.state.majors)}

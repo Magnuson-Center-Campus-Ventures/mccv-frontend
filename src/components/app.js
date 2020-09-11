@@ -28,8 +28,10 @@ import StartupSignUp from './startup-components/startup-sign-up/startup-signup';
 import PrivateRoute from './private-route';
 import StudentRoute from './student-components/student-route';
 import StartupRoute from './startup-components/startup-route';
+import AdminRoute from './admin-components/admin-route';
 import ApplicationListItem from './student-components/application-list-item';
 import StartupSubmittedApplications from './startup-components/startup-submitted-applications';
+import AdminDashboard from './admin-components/dashboard';
 
 const App = (props) => {
   return (
@@ -50,6 +52,8 @@ const App = (props) => {
           {/* Private route */}
           <PrivateRoute path="/posts/:postID" component={Post} />
           <PrivateRoute path="/posts" component={Postings} />
+          {/* Admin route */}
+          <AdminRoute path="/dashboard" component={AdminDashboard} />
           {/* Student routes */}
           <StudentRoute path="/student-signup" component={StudentSignUp} />
           <StudentRoute path="/startups/:startupID" component={StartupProfile} />
