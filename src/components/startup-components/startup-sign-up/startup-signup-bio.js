@@ -42,14 +42,6 @@ class StartupBio extends Component {
        });
      }
 
-  //    onAffiliationChange = (event) => {
-  //     this.props.student.affiliation = event.target.value;
-  //     this.setState({
-  //       affiliation: event.target.value, 
-  //     });
-  //     this.forceUpdate(); 
-  // }
-
      // Send update to database
      onSubmit = (e) => {
        this.props.updateStartup(this.props.startup.id, this.state.startup);

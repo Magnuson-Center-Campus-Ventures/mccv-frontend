@@ -45,6 +45,7 @@ class StudentBio extends Component {
           <div className="question-header-prompt">
             <h1>Bio</h1>
             <p>Add your name and graduation year!</p>
+            <p className="imptMessage">* indicates a required field!</p>
           </div>
           <i className="far fa-id-badge question-header-icon" id="icon" />
         </div>
