@@ -67,10 +67,11 @@ class StudentInfo extends Component {
                 }
                 if (student.majors){
                     student.majors.map((major) => {
-                        if (majors[major.toLowerCase()] === undefined){
-                            majors[major.toLowerCase()] = 1; 
+                        const maj = this.checkMajor(major); 
+                        if (majors[maj.toLowerCase()] === undefined){
+                            majors[maj.toLowerCase()] = 1; 
                         } else {
-                            majors[major.toLowerCase()] = majors[major.toLowerCase()] + 1;
+                            majors[maj.toLowerCase()] = majors[maj.toLowerCase()] + 1;
                         }
                     })
                 }
@@ -97,13 +98,13 @@ class StudentInfo extends Component {
             })
             let studentsMatched = new Set(this.state.studentsMatched); 
             this.props.posts.map((post) => {
-                console.log(post); 
+                // console.log(post); 
                 if (post.status === 'Archived'){
+                    // console.log('here'); 
+                    // console.log(post);
                     post.students_selected?.map((student) => {
+                        console.log(student); 
                         studentsMatched.add(student); 
-                        // this.setState(({ studentsMatched }) => ({
-                        //     studentsMatched: new Set(studentsMatched).add(student)
-                        //   }));
                     })
                 }
             })
@@ -111,6 +112,20 @@ class StudentInfo extends Component {
             this.setState({
                 filled: Object.keys(studentsMatched).length,
             })
+        }
+    }
+
+    checkMajor = (major) => {
+        if (major === 'cs' || major === 'CS'){
+            return 'computer science';
+        } else if (major === 'qss' || major === 'QSS'){
+            return 'quantitative social science'; 
+        } else if (major === 'econ' || major === 'Econ'){
+            return 'economics';
+        } else if (major === 'engs' || major === "Engs" || major === 'ENGS'){
+            return "engineering";
+        } else{
+            return major; 
         }
     }
 
