@@ -17,13 +17,19 @@ const StartupListItem = (props) => {
     if (index === 0) {
       return (
         <div id="pillsTitle" key={industry.id}>
-          Industries: <div className="grayPill"> {industry.name} </div>
+          Industries: <div className="yellowPill"> {industry.name} </div>
         </div>
       );
     } else if (index < 3) {
       return (
-        <div key={industry.id} className="grayPill">
+        <div key={industry.id} className="yellowPill">
           {industry.name}
+        </div>
+      );
+    } else if (index === 3) {
+      return (
+        <div key={industry.id} className="yellowPill">
+          ...
         </div>
       );
     }
@@ -36,10 +42,16 @@ const StartupListItem = (props) => {
           Positions: <div className="greenPill">{post.title}</div>
         </div>
       )
-    } else if (index < 3) {
+    } else if (index < 2) {
       return (
-        <div className="greenPill" id="postings" key={post.id}>
+        <div className="greenPill" key={post.id}>
           {post.title}
+        </div>
+      );
+    } else if (index === 2) {
+      return (
+        <div className="greenPill" key={post.id}>
+          ...
         </div>
       );
     }
@@ -54,10 +66,18 @@ const StartupListItem = (props) => {
     <div />
   );
 
-  const renderDescription = (props.startup.description?.length > 100) ? (
-    <p className="descriptionText">{`${props.startup.description.substring(0, 99)}...`}</p>
+  const renderDescription = (props.startup.description) ? (
+    (props.startup.description?.length > 100) ? (
+      <div className="postInfo">
+        <p className="descriptionText">{`${props.startup.description.substring(0, 99)}...`}</p>
+      </div>
+    ) : (
+      <div className="postInfo">
+        <p className="descriptionText">{props.startup.description}</p>
+      </div>
+    )
   ) : (
-    <p className="descriptionText">{props.startup.description}</p>
+    <div className="postSpace"/>
   );
   
   return (
@@ -75,9 +95,7 @@ const StartupListItem = (props) => {
             </div>
           </div>
 
-          <div className="postInfo">
-            {renderDescription}
-          </div>
+          {renderDescription}
 
           <div className="pillsList">
             {posts}

@@ -113,7 +113,10 @@ class WorkExperience extends Component {
         <div key={this.props.index} className="work-exp">
           <div className="exp-title">{this.props.workExp.employer}</div>
           <div className="work-exp-role">{this.props.workExp.role}</div>
-          <div>{`${this.props.workExp.city}, ${this.props.workExp.state}`}</div>
+          <div className="work-exp-location-row">
+            <span className="locationIcon" />
+            <span className="work-exp-location"> {`${this.props.workExp.city}, ${this.props.workExp.state}`} </span>
+          </div>  
           <div className="date-row">
             {`${new Date(this.props.workExp.start_date).getMonth() + 1}/${new Date(this.props.workExp.start_date).getFullYear()} - `}
             {this.props.workExp.currently_working ? 'present' : `${new Date(this.props.workExp.end_date).getMonth() + 1}/${new Date(this.props.workExp.end_date).getFullYear()}`}

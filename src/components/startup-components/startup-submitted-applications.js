@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import Select from 'react-select';
 import SearchBar from '../student-components/search-bar';
+import StartupSubmittedApplicationTileItem from './startup-submitted-application-tile-item';
 import {
   fetchSubmittedApplication,
   fetchSubmittedApplications,
@@ -17,7 +18,7 @@ import {
   clearPost,
   fetchStudents,
 } from '../../actions';
-import '../../styles/applications.scss';
+//import '../../styles/applications.scss';
 
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
@@ -146,7 +147,7 @@ class SubmittedApplications extends Component {
     const route = `/startupsubmittedapplications/${application._id}`;
     const post = this.props.posts.filter((e) => { return (e.id === application.post_id); })[0];
     const student = this.props.students.filter((e) => { return (e.id === application.student_id); })[0];
-    const majors = student.majors.length > 1
+    {/*const majors = student.majors.length > 1
       ? (
         student.majors.map((major, index) => {
           return (
@@ -159,10 +160,11 @@ class SubmittedApplications extends Component {
         <div id="pill major">
           Major: {student.majors[0]}
         </div>
-      );
+      );*/}
     return (
       <Link to={route} key={application.id} className="listItem link">
-        <div className="basic-info">
+        <StartupSubmittedApplicationTileItem key={application.id} post={post} student={student} status={application.status}/>
+        {/*<div className="basic-info">
           <h1 className="studentName">{`${student.first_name} ${student.last_name}`} </h1>
           <h2 className="gradYear">Class of {student.grad_year} </h2>
           <h2 className="major"> {majors} </h2>
@@ -176,7 +178,7 @@ class SubmittedApplications extends Component {
             <div id="status">Status: </div>
             <div id="pill-status">{application.status}</div>
           </div>
-        </div>
+        </div>*/}
       </Link>
     );
   }
@@ -215,7 +217,7 @@ class SubmittedApplications extends Component {
       && ((this.props.posts !== null || undefined) && !isEmpty(this.props.students))
         ? (
           <div className="pageContent">
-            <h1> View All Received Applications </h1>
+            <h1 className="postingsTitle"> View All Received Applications </h1>
             <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
@@ -223,6 +225,7 @@ class SubmittedApplications extends Component {
                   isMulti
                   styles={dropdownStyles}
                   name="status-filter"
+                  className="filter"
                   placeholder="Filter by Status"
                   options={this.state.statusOptions}
                   value={this.state.selectedStatusOptions}
@@ -241,6 +244,7 @@ class SubmittedApplications extends Component {
                   isMulti
                   styles={dropdownStyles}
                   name="title-filter"
+                  className="filter"
                   placeholder="Filter by Position"
                   options={this.state.titleOptions}
                   value={this.state.selectedTitleOptions}

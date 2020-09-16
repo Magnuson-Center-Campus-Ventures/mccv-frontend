@@ -1,116 +1,116 @@
-h1{
-    margin: 10px;
-}
-.list{
-    display: flex; 
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    margin-bottom: 3%;
-}
-.listItem{
-    background-color: #EFEFF0;
-    margin-top: 3%;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    // height: 40vh;
-    // width: 30vw;
-    height: 275px;
-    width: 275px;
-    display: flex;
-    flex-direction: column;
-    color: #000000;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-}
-#info{
-    display:flex;
-    flex-direction: row;
-    align-items: baseline;
-}
-#info > div {
-    margin:5px;
-}
-textarea{
-    width: 100%;
-}
-.basic-info{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-}
-#question-title{
-    margin-right:0;
-}
-.post-info{
-    height: fit-content;
-    font-size: 13px;
-    margin: 10px;
-}
-#pill-status, #pill-title{
-    flex-grow: 1;
-    padding: 5px;
-    text-align: center;
-    border-radius: 10px;
-    width: fit-content;
-    height: fit-content;
-    padding-right: 1vw;
-    padding-left: 1vw;
-    margin-bottom: 1vh;
-}
-#pill-status{
-    background-color:rgba(185, 173, 69, 0.5);;
-}
-#pill-title{
-    background-color:rgba(69, 185, 144, 0.5);
-}
-#applied, #status{
-    white-space: nowrap;
-    padding-right: 10px;
-    width: 70px;
-}
+// h1{
+//     margin: 10px;
+// }
+// .list{
+//     display: flex; 
+//     flex-direction: row;
+//     flex-wrap: wrap;
+//     justify-content: space-evenly;
+//     margin-bottom: 3%;
+// }
+// // .listItem{
+// //     background-color: #EFEFF0;
+// //     margin-top: 3%;
+// //     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+// //     // height: 40vh;
+// //     // width: 30vw;
+// //     height: 275px;
+// //     width: 275px;
+// //     display: flex;
+// //     flex-direction: column;
+// //     color: #000000;
+// //     display: flex;
+// //     flex-direction: column;
+// //     justify-content: space-evenly;
+// // }
+// #info{
+//     display:flex;
+//     flex-direction: row;
+//     align-items: baseline;
+// }
+// #info > div {
+//     margin:5px;
+// }
+// textarea{
+//     width: 100%;
+// }
+// .basic-info{
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     justify-content: space-between;
+// }
+// #question-title{
+//     margin-right:0;
+// }
+// .post-info{
+//     height: fit-content;
+//     font-size: 13px;
+//     margin: 10px;
+// }
+// #pill-status, #pill-title{
+//     flex-grow: 1;
+//     padding: 5px;
+//     text-align: center;
+//     border-radius: 10px;
+//     width: fit-content;
+//     height: fit-content;
+//     padding-right: 1vw;
+//     padding-left: 1vw;
+//     margin-bottom: 1vh;
+// }
+// #pill-status{
+//     background-color:rgba(185, 173, 69, 0.5);;
+// }
+// #pill-title{
+//     background-color:rgba(69, 185, 144, 0.5);
+// }
+// #applied, #status{
+//     white-space: nowrap;
+//     padding-right: 10px;
+//     width: 70px;
+// }
 
-// going to have to fix font sizing, esp for long names, edge cases, etc. need to get font-size to match window size & div size
-#application-item{ 
-    font-weight: normal;
-    text-align: center;
-    font-size: 120%;
-}
-.postInfo{
-    height: fit-content;
-}
-#application-item > h1{
-    font-weight: normal;
-    text-align: center;
-    font-size: 120%;
-}
+// // going to have to fix font sizing, esp for long names, edge cases, etc. need to get font-size to match window size & div size
+// #application-item{ 
+//     font-weight: normal;
+//     text-align: center;
+//     font-size: 120%;
+// }
+// .postInfo{
+//     height: fit-content;
+// }
+// #application-item > h1{
+//     font-weight: normal;
+//     text-align: center;
+//     font-size: 120%;
+// }
 
-#application-item > h2{
-    font-weight: normal;
-    border-bottom: 0;
-    font-size: 100%;
-}
+// #application-item > h2{
+//     font-weight: normal;
+//     border-bottom: 0;
+//     font-size: 100%;
+// }
 
-#application-item > h3 {
-    font-weight: normal;
-    font-size: 90%
-}
+// #application-item > h3 {
+//     font-weight: normal;
+//     font-size: 90%
+// }
 
-.filter-container{
-    // margin:10px;
-}
-.filter-container button{
-    border:none;
-    background-color: rgb(69, 186, 145);
-    margin:7px;
-    transition: none;
-}
-#search-bar {
-    margin-bottom: 20px;
+// // .filter-container{
+// //     margin:10px;
+// // }
+// .filter-container button{
+//     border:none;
+//     background-color: rgb(69, 186, 145);
+//     margin:7px;
+//     transition: none;
+// }
+// #search-bar {
+//     margin-bottom: 20px;
   
-    input {
-      font-size: 1.5em;
-      border-radius: .25em;
-    }
-}
+//     input {
+//       font-size: 1.5em;
+//       border-radius: .25em;
+//     }
+// }

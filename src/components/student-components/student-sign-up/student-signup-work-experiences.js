@@ -146,7 +146,7 @@ class StudentWorkExperiences extends Component {
             <i className="fas fa-plus-circle question-fields-button" id="addicon" onClick={(e) => { this.showModal(); }} />
             <i className="far fa-edit question-fields-button" id="editicon" onClick={(e) => { this.submit(); }} />
           </div>
-          <div id="work-exps">
+          <div className="exps-fixed">
             {this.renderWorkExperiences()}
           </div>
         </div>

@@ -37,7 +37,6 @@ class PositionInfo extends Component {
             let industries = {};
             let locations = {};
             this.props.posts.map((post) => {
-                console.log(post);
                 if (post.status === 'Archived'){
                     this.setState((prevState) => ({
                         archived: prevState.archived + 1, 
@@ -122,7 +121,6 @@ class PositionInfo extends Component {
 
     renderIndustries = () => {
         let graphData = [];
-        console.log(this.state.industries)
         Object.keys(this.state.industries).forEach((industry) => {
             const obj = {
                 y:  Object.keys(this.state.industries).length, 
@@ -158,7 +156,6 @@ class PositionInfo extends Component {
 
     renderLocation = () => {
         let graphData = [];
-        // console.log(this.state.industries)
         Object.keys(this.state.locations).forEach((location) => {
             const obj = {
                 y: this.state.locations[location], 
