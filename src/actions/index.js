@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-//const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -843,12 +843,13 @@ export function updatePassword({ token, password, } , history) {
   };
 }
 
-function getSignedRequest(file) {
+function getSignedRequest(id, file) {
   const fileName = encodeURIComponent(file.name);
-  return axios.get(`${ROOT_URL}/sign-s3?file-name=${fileName}&file-type=${file.type}`);
+  return axios.get(`${ROOT_URL}/sign-s3?file-name=${id}/${fileName}&file-type=${file.type}`);
 }
 
 function uploadFileToS3(signedRequest, file, url) {
+  console.log(signedRequest,file,url);
   return new Promise((fulfill, reject) => {
     axios.put(signedRequest, file, { headers: { 'Content-Type': file.type } }).then((response) => {
       fulfill(url);
@@ -858,8 +859,8 @@ function uploadFileToS3(signedRequest, file, url) {
   });
 }
 
-export function uploadImage(file) {
-  return getSignedRequest(file).then((response) => {
+export function uploadImage(id, file) {
+  return getSignedRequest(id, file).then((response) => {
     return uploadFileToS3(response.data.signedRequest, file, response.data.url);
   });
 }
