@@ -20,7 +20,7 @@ class PositionInfo extends Component {
             filled: 0, 
             archived: 0,             
             inperson: 0,
-            remote: 0, 
+            virtual: 0, 
             locations: {},
             industries: {}, 
         };
@@ -51,18 +51,25 @@ class PositionInfo extends Component {
                             filled: prevState.filled + 1, 
                         }));
                     }
-                    if (post.remote){
+                    if (post.virtual){
                         this.setState((prevState) => ({
-                            remote: prevState.remote + 1, 
+                            virtual: prevState.virtual + 1, 
+                        }));
+                    }
+                    if (post.inperson){
+                        this.setState((prevState) => ({
+                            inperson: prevState.inperson + 1, 
                         }));
                     }
                     if (post.industries){
                         post.industries.map((industry) => {
+                            console.log(industry.name);
                             if (industries[industry.name] === undefined){
                                 industries[industry.name] = 1;
                             } else {
                                 industries[industry.name] = industries[industry.name] + 1;
                             }
+                            console.log(industries);
                         })
                     }
                     if (post.city && post.state){
@@ -73,9 +80,6 @@ class PositionInfo extends Component {
                             locations[local] = locations[local] + 1;
                         }
                     }
-                    this.setState({
-                        inperson: this.state.active - this.state.remote,
-                    })
                 }
 
             })
@@ -86,8 +90,8 @@ class PositionInfo extends Component {
     renderRemote = () => {
         let graphData = [];
         graphData.push({
-            y: this.state.remote, 
-            label: 'Remote'
+            y: this.state.virtual, 
+            label: 'Virtual'
         }); 
         graphData.push({
             y: this.state.inperson,
@@ -97,7 +101,7 @@ class PositionInfo extends Component {
 			exportEnabled: true,
 			animationEnabled: true,
 			title: {
-				text: "In Person/Remote"
+				text: "In Person/Virtual"
 			},
 			data: [{
 				type: "pie",

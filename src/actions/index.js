@@ -10,6 +10,7 @@ export const ActionTypes = {
   LOGOUT_USER: 'LOGOUT_USER',
   AUTH_ERROR: 'AUTH_ERROR',
   UPDATE_USER: 'UPDATE_USER',
+  USER_EXISTS: 'USER_EXISTS',
   // post actions
   FETCH_POST: 'FETCH_POST',
   CLEAR_POST: 'CLEAR_POST',
@@ -61,6 +62,8 @@ export const ActionTypes = {
   // password reset actions
   ADD_RESET_TOKEN: 'ADD_RESET_TOKEN',
   FETCH_RESET_TOKEN: 'FETCH_RESET_TOKEN',
+  // s3 actions
+  UPLOAD_IMAGE: 'UPLOAD_IMAGE',
   // general error
   ERROR_SET: 'ERROR_SET',
   // AUTH_USER: 'AUTH_USER',
@@ -837,4 +840,36 @@ export function updatePassword({ token, password, } , history) {
       // history.push('/signin');
     });
   };
+}
+
+function getSignedRequest(file) {
+  const fileName = encodeURIComponent(file.name);
+  return axios.get(`${ROOT_URL}/sign-s3?file-name=${fileName}&file-type=${file.type}`);
+}
+
+function uploadFileToS3(signedRequest, file, url) {
+  return new Promise((fulfill, reject) => {
+    axios.put(signedRequest, file, { headers: { 'Content-Type': file.type } }).then((response) => {
+      fulfill(url);
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+}
+
+export function uploadImage(file) {
+  return getSignedRequest(file).then((response) => {
+    return uploadFileToS3(response.data.signedRequest, file, response.data.url);
+  });
+}
+
+export function emailExists({ email, }) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/emailexists`, { email, }).then((response) => {
+      dispatch(authError(response.data));
+    }).catch((error) => {
+      dispatch(authError(response.data));
+    });
+  };
+
 }
