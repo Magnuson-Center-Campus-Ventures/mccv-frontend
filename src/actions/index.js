@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-//const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -38,9 +38,15 @@ export const ActionTypes = {
   // application actions
   FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
   FETCH_APPLICATION: 'FETCH_APPLICATION',
+  ADD_APPLICATION: 'ADD_APPLICATION',
+  UPDATE_APPLICATION: 'UPDATE_APPLICATION',
+  ADD_APPLICATION_QUESTION: 'ADD_APPLICATION_QUESTION',
   // question actions
   FETCH_QUESTIONS: 'FETCH_QUESTIONS',
   FETCH_QUESTION: 'FETCH_QUESTION',
+  ADD_QUESTION: 'ADD_QUESTION',
+  UPDATE_QUESTION: 'UPDATE_QUESTION',
+  DELETE_QUESTION: 'DELETE_QUESTION',
   // submitted application actions
   FETCH_SUBMITTED_APPLICATIONS: 'FETCH_SUBMITTED_APPLICATIONS',
   FETCH_SUBMITTED_APPLICATION: 'FETCH_SUBMITTED_APPLICATION',
@@ -137,12 +143,12 @@ export function fetchPost(id) {
   };
 }
 
-// this is broken btw
 export function updatePost(id, post) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      dispatch({ type: ActionTypes.UPDATE_POST, payload: response.data });
     }).catch((error) => {
+      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -615,6 +621,72 @@ export function submitApplication(newApplication) {
   };
 }
 
+// creates new application and adds new question
+export function addPostApplicationQuestions(post, questions, history){
+  return (dispatch) => {
+    // create new application
+    axios.post(`${ROOT_URL}/applications`, {post_id: post.id, questions: []}, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response0) => {
+        console.log(response0.data.id);
+        // update the post with the application.id
+        post.application_id = response0.data.id
+        axios.put(`${ROOT_URL}/posts/${post.id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response3) => {
+          console.log(response3);
+        }).catch((error) => {
+          console.log(error);
+          dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
+        });
+        // create new questions
+        let newQuestions = []
+        questions.forEach((question) => {
+          axios.post(`${ROOT_URL}/questions`, question, { headers: { authorization: localStorage.getItem('token') } })
+            .then((response1) => {
+              console.log(response1);
+              newQuestions.push(response1.data.id);
+            }).catch((error) => {
+              console.log(error);
+              dispatch({ type: ActionTypes.ERROR_SET, error });
+            });
+        });
+        // put new questions in new application
+        axios.put(`${ROOT_URL}/applications/${response0.data.id}`, {questions: newQuestions}, { headers: { authorization: localStorage.getItem('token') } })
+          .then((response2) => {
+            console.log(response2);
+          }).catch((error2) => {
+            console.log(error2);
+            dispatch({ type: ActionTypes.ERROR_SET, error2 });
+          });
+        console.log(response0.data.id);
+        dispatch({ type: ActionTypes.ADD_APPLICATION_QUESTION, payload: response2.data });
+      }).catch((error) => {
+        console.log(error);
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
+
+export function addApplicationQuestion(application, question){
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/questions`, question, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        console.log(response);
+        application.questions.push(response.data.id);
+        axios.put(`${ROOT_URL}/applications/${application.id}`, application, { headers: { authorization: localStorage.getItem('token') } })
+          .then((response2) => {
+            console.log(response2);
+            dispatch({ type: ActionTypes.ADD_APPLICATION_QUESTION, payload: response2.data });
+          }).catch((error2) => {
+            console.log(error2);
+            dispatch({ type: ActionTypes.ERROR_SET, error2 });
+        });
+      }).catch((error) => {
+        console.log(error);
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
 export function clearApplication() {
   return (dispatch) => {
     dispatch({ type: ActionTypes.CLEAR_APPLICATION });
@@ -626,6 +698,17 @@ export function fetchQuestions() {
     axios.get(`${ROOT_URL}/questions`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
         dispatch({ type: ActionTypes.FETCH_QUESTIONS, payload: response.data });
+      }).catch((error) => {
+        dispatch({ type: ActionTypes.ERROR_SET, error });
+      });
+  };
+}
+
+export function addQuestion(question) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/questions`, question, { headers: { authorization: localStorage.getItem('token') } })
+      .then((response) => {
+        dispatch({ type: ActionTypes.ADD_QUESTION, payload: response.data });
       }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
       });

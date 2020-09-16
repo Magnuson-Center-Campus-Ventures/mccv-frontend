@@ -13,9 +13,12 @@ import TextareaAutosize from 'react-textarea-autosize';
 import CreateableSelect from 'react-select/creatable';
 import { DateRange } from 'react-date-range';
 import {
-  fetchPost, updatePost, fetchApplication, fetchUser, clearApplication, clearPost,
+  fetchPost, updatePost, 
+  fetchApplication, fetchApplications, addPostApplicationQuestions,
+  fetchUser, fetchStartup,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills,
   createIndustryForPost, createReqSkillForPost, createPrefSkillForPost, createClassForPost,
+  fetchQuestions, addQuestion, updateQuestion, deleteQuestion,
 } from '../../actions';
 import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
@@ -47,6 +50,9 @@ class Post extends Component {
       start: new Date(),
       end: new Date(),
       validDate: true,
+      newResponsibility: '',
+      newQuestions: [],
+      newQuestion: '',
     };
     this.showApplyModal = this.showApplyModal.bind(this);
     this.hideApplyModal = this.hideApplyModal.bind(this);
@@ -59,14 +65,31 @@ class Post extends Component {
     if (window.location.search == '?edit') {
       this.state.isEditing = true;
     }
+    this.props.fetchQuestions();
     this.props.fetchPost(this.props.match.params.postID);
     this.props.fetchUser(localStorage.getItem('userID'));
+    this.props.fetchApplications();
     this.props.fetchAllIndustries();
     this.props.fetchAllSkills();
     this.props.fetchAllClasses();
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.user && this.props.user !== {} && prevProps.user !== this.props.user) {
+      this.props.fetchStartup(this.props.user.startup_id);
+    }
+    if (this.props.application && this.props.application !== {} && prevProps.application !== this.props.application) {
+      this.state.newQuestions = [];
+      this.props.questions.forEach(element => {
+        if (this.props.application.questions.includes(element.id) && !this.state.newQuestions.includes(element.question)) {
+          this.state.newQuestions.push(element.question);
+        }
+      })
+      console.log(this.state.newQuestions);
+    }
+    if (this.props.post && prevProps.post !== this.props.post) {
+      this.props.fetchApplication(this.props.post.application_id);
+    }
     if (this.props.post && this.props.post !== {} && prevProps.post !== this.props.post) {
       // Set initial dropdown options to be the indutries, skills, and classes the post already has
       let selectedIndustryOptions = [];
@@ -185,12 +208,12 @@ class Post extends Component {
   }
 
   submit = () => {
+    console.log(this.props.post.application_id);
     if (this.state.isEditing) {
       this.checkDateRange();
       if (this.state.validDate == true) {
-        const post = { ...this.state.post };
-        post.responsibilities = this.state.responsibilities;
-        this.props.updatePost(this.state.post.id, post);
+        this.state.post.responsibilities = this.state.responsibilities;
+        this.props.addPostApplicationQuestions(this.state.post, this.state.newQuestions, this.props.history);
         this.setState({ isEditing: false });
       }
     } else {
@@ -230,7 +253,7 @@ class Post extends Component {
     }
   }
 
-  responsibilitiesHelper = () => {
+  responsibilitiesHelper = () => { 
     const responsibilities = [];
     if (this.props.post?.responsibilities) {
       for (let i = 0; i < this.props.post.responsibilities.length; i++) {
@@ -374,24 +397,11 @@ class Post extends Component {
     }
   }
 
-  renderEditResponsibilities = () => {
+  renderEditResponsibilities = () => { 
     return this.state.responsibilities.map((resp, index) => {
       return (
         <div key={resp} className="resp-input">
-          <TextareaAutosize className="short-input-post"
-            defaultValue={resp}
-            onBlur={(event) => {
-              const value = event.target.value;
-              this.setState((prevState) => {
-                const responsibilities = [...prevState.responsibilities];
-                responsibilities[index] = value;
-                return {
-                  ...prevState,
-                  responsibilities,
-                };
-              });
-            }}
-          />
+          <li id="responsibility" key={index}>{resp}</li>
           <button className="del-button"
             onClick={() => {
               this.setState((prevState) => {
@@ -451,6 +461,50 @@ class Post extends Component {
     }
   }
 
+  renderQuestionsNoEdit = (event) => {
+    if (this.props.user.role == 'student') {
+      return null;
+    } else { // not editing post
+      const items = [];
+      if (this.props.questions) {
+        this.props.questions.map((question) => {
+          if(this.props.application.questions.includes(question)){
+            items.push(
+              <li id="responsibility" key={question}>{question}</li>
+            );
+          };
+        });
+      return items;
+      }
+    }
+  }
+        
+  renderQuestionsEdit = (event) => {
+    console.log(this.state.newQuestions);
+    return this.state.newQuestions.map((resp, index) => {
+      return (
+        <div key={index} className="resp-input">
+          <li id="responsibility" key={resp}>{resp}</li>
+          <button className="del-button"
+            onClick={() => {
+              console.log(index);
+              this.setState((prevState) => {
+                let newQuestions = [...prevState.newQuestions];
+                newQuestions.splice(index, 1);
+                return {
+                  ...prevState,
+                  newQuestions,
+                };
+              });
+              this.forceUpdate();
+            }}>
+          <i className="far fa-trash-alt delete-icon" />
+          </button>
+        </div>
+      );
+    });
+  }
+
   renderEdit = () => {
     const dropdownStyles = {
       control: (base) => ({
@@ -475,6 +529,31 @@ class Post extends Component {
             </div>
             <p className="question-fields-title">Hours/Week</p>
             <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changePostField('time_commitment', event)} defaultValue={this.props.post?.time_commitment} />
+          </div>
+          <hr className="post-edit-divider" />
+          <div className="edits-resps">
+            <div className="resps-header">
+              <div className="input-title">Application Questions</div>
+              <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newQuestion = event.target.value} />
+              <button className="add-button"
+                onClick={() => {
+                  if (!this.state.newQuestions.includes(this.state.newQuestion)){
+                    this.setState((prevState) => {
+                      const newQuestions = [...prevState.newQuestions];
+                      newQuestions.push(this.state.newQuestion);
+                      this.state.newQuestion = '';
+                      return {
+                        ...prevState,
+                        newQuestions,
+                      };
+                    });
+                  }
+                }}
+              >
+              <i className="fa fa-plus add-icon" aria-hidden="true" />
+              </button>
+            </div>
+            {this.renderQuestionsEdit()}
           </div>
         </div>
         <hr className="post-edit-divider" />
@@ -602,18 +681,22 @@ class Post extends Component {
         <div className="edits-resps">
           <div className="resps-header">
             <div className="input-title">Responsibilities</div>
+            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newResponsibility = event.target.value} />
             <button className="add-button"
               onClick={() => {
-                this.setState((prevState) => {
-                  const responsibilities = [...prevState.responsibilities];
-                  responsibilities.push('');
-                  return {
-                    ...prevState,
-                    responsibilities,
-                  };
-                });
-              }}
-            ><i className="fa fa-plus add-icon" aria-hidden="true" />
+                  if (!this.state.responsibilities.includes(this.state.newResponsibility)){
+                  this.setState((prevState) => {
+                    const responsibilities = [...prevState.responsibilities];
+                    responsibilities.push(this.state.newResponsibility);
+                    this.state.newResponsibility = '';
+                    return {
+                      ...prevState,
+                      responsibilities,
+                    };
+                  });
+                }
+              }}>
+            <i className="fa fa-plus add-icon" aria-hidden="true" />
             </button>
           </div>
           {this.renderEditResponsibilities()}
@@ -665,6 +748,8 @@ class Post extends Component {
           </div>
         </div>
         <div className="bottom">
+          <h3>Application Questions</h3>
+          <ul id="skills">{this.renderQuestionsNoEdit()}</ul>
           <h3>Responsibilities</h3>
           <ul id="skills">{this.responsibilitiesHelper()}</ul>
         </div>
@@ -695,9 +780,13 @@ class Post extends Component {
   }
 }
 
+
 const mapStateToProps = (reduxState) => ({
   status: reduxState.startups.current.status,
   post: reduxState.posts.current,
+  questions: reduxState.questions.all,
+  applications: reduxState.applications.all,
+  application: reduxState.applications.current,
   user: reduxState.user.current,
   allIndustries: reduxState.industries.all,
   allSkills: reduxState.skills.all,
@@ -709,6 +798,9 @@ export default withRouter(connect(mapStateToProps, {
   updatePost,
   fetchUser,
   fetchApplication,
+  fetchApplications,
+  addPostApplicationQuestions,
+  fetchStartup,
   fetchAllIndustries,
   fetchAllClasses,
   fetchAllSkills,
@@ -716,4 +808,8 @@ export default withRouter(connect(mapStateToProps, {
   createReqSkillForPost,
   createPrefSkillForPost,
   createClassForPost,
+  fetchQuestions,
+  addQuestion,
+  updateQuestion,
+  deleteQuestion,
 })(Post));
