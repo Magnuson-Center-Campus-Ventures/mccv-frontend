@@ -44,7 +44,6 @@ class StartupInfo extends Component {
             let genders = {};
             let affiliation = {};
             this.props.startups.map((startup) => {
-                // console.log(startup); 
                 if (startup.status === 'Pending'){
                     this.setState((prevState) => ({
                         pending: prevState.pending +1,
@@ -99,7 +98,6 @@ class StartupInfo extends Component {
                     }
                 }
             })
-            // console.log(industries)
             this.setState({ industries, locations, genders, affiliation });
         }
     }
@@ -151,7 +149,6 @@ class StartupInfo extends Component {
 
     renderLocation = () => {
         let graphData = [];
-        // console.log(this.state.industries)
         Object.keys(this.state.locations).forEach((location) => {
             const obj = {
                 y: this.state.locations[location], 

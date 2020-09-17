@@ -52,7 +52,6 @@ class StudentClasses extends Component {
   }
 
   deleteClass = (course) => {
-    console.log(course);
     this.props.student.relevant_classes = this.props.student.relevant_classes.filter((value) => {
       return (value !== course.course);
     });

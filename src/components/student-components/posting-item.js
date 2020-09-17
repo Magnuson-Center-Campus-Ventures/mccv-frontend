@@ -17,13 +17,19 @@ const PostListItem = (props) => {
     if (index === 0) {
       return (
         <div id="pillsTitle" key={industry.id}>
-          Industries: <div className="grayPill"> {industry.name} </div>
+          Industries: <div className="yellowPill"> {industry.name} </div>
         </div>
       );
     } else if (index < 5) {
       return (
-        <div key={industry.id} className="grayPill">
+        <div key={industry.id} className="yellowPill">
           {industry.name}
+        </div>
+      );
+    } else if (index === 5) {
+      return (
+        <div key={industry.id} className="yellowPill">
+          ...
         </div>
       );
     } 
@@ -40,6 +46,12 @@ const PostListItem = (props) => {
       return (
         <div key={skill.id} className="greenPill">
           {skill.name}
+        </div>
+      );
+    } else if (index === 3) {
+      return (
+        <div key={skill.id} className="greenPill">
+          ...
         </div>
       );
     } 

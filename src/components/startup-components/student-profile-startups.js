@@ -10,6 +10,8 @@ import {
   fetchStudentByID, fetchUserByStudentID, fetchWorkExperiences, fetchOtherExperiences,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills, fetchUser,
 } from '../../actions';
+import WorkExperience from '../student-components/work-experience';
+import OtherExperience from '../student-components/other-experience';
 import Archive from '../admin-modals/archive';
 
 import '../../styles/student-profile.scss';
@@ -69,6 +71,18 @@ class StudentProfileStartup extends Component {
     }
   }
 
+  renderClassYearAffiliation() {
+    if (this.props.student?.affiliation) {
+      return (
+        <div id="class-year">{`Class of ${this.props.student?.grad_year}`} ({this.props.student?.affiliation})</div>
+      );
+    } else {
+      return (
+        <div id="class-year">{`Class of ${this.props.student?.grad_year}`}</div>
+      );
+    }
+  }
+  
   renderMajMin = (array) => {
     if (array) {
       return array.map((elem, index) => {
@@ -84,44 +98,122 @@ class StudentProfileStartup extends Component {
       });
     } else return null;
   }
+  
+  renderMajors = () => {
+    if (this.props.student?.majors?.length > 0 && this.props.student?.majors[0] != "") {
+      return (
+        <div id="major-row">
+          <div className="student-major-title">Major in </div>
+          {this.renderMajMin(this.props.student.majors)}
+        </div>
+      );
+    } else {
+      return (<div/>);
+    }
+  }
 
-  renderPills = (pillsArray) => {
+  renderMinors = () => {
+    if (this.props.student?.minors?.length > 0 && this.props.student?.minors[0] != "") {
+      return (
+        <div id="minor-row">
+          <div className="student-minor-title">Minor in </div>
+          {this.renderMajMin(this.props.student.minors)}
+        </div>
+      );
+    } else {
+      return (<div/>);
+    }
+  }
+
+  startDate = () => {
+    if (this.props.student?.desired_start_date != null) {
+      const start = new Date(this.props.student.desired_start_date);
+      return (
+        <span className="student-start-date">Desired Start Date: {`${start.getMonth()}/${start.getDate()}/${start.getFullYear()}`}</span>
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  endDate = () => {
+    if (this.props.student?.desired_end_date != null) {
+      const end = new Date(this.props.student.desired_end_date);
+      return (
+        <span className="student-end-date">Desired End Date: {`${end.getMonth()}/${end.getDate()}/${end.getFullYear()}`}</span>
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  renderGreenPills = (pillsArray) => {
     if (pillsArray && pillsArray.length > 0) {
       return pillsArray.map((elem, index) => {
-        return <div key={index} className="student-profile-pill">{elem.name}</div>;
+        return <div key={index} className="student-profile-pill-green">{elem.name}</div>;
       });
     } else return <div>None</div>;
   }
-  
-  renderDateRange = () => {
-    if (this.state.student.desired_start_date != null){
-      this.state.start = new Date(this.state.student.desired_start_date);
-    } 
-    if (this.state.student.desired_end_date != null){
-      this.state.end = new Date(this.state.student.desired_end_date);
-    }
-    console.log(this.state.end);
-    return (
-      <DateRange
-        editableDateInputs={true}
-        onChange={(ranges) => {
-          this.state.student.desired_start_date = ranges.selection.startDate.toISOString();
-          this.state.student.desired_end_date = ranges.selection.endDate.toISOString();
-          this.forceUpdate();
-        }}
-        moveRangeOnFirstSelection={false}
-        ranges={[{
-          startDate: this.state.start,
-          endDate: this.state.end,
-          key: 'selection',
-        }]}
-      />
-    )
+
+  renderRedPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-red">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderYellowPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-yellow">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
   }
 
   renderBody = () => {
     return (
       <div className="profile-fixed">
+        <div id="profile-header">
+          <h1 id="student-profile-name">{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
+          {this.renderClassYearAffiliation()}
+          {this.renderMajors()}
+          {this.renderMinors()}
+          <div className="space"/>
+          <div className="student-contact">{this.props.email}</div>
+          <div className="student-contact">{this.props.student?.phone_number ? this.props.student?.phone_number : null}</div>
+          <div className="space"/>
+          <div className="student-start-date">
+              {this.startDate()}
+          </div>
+          <div className="student-end-date">
+            {this.endDate()}
+          </div>
+          <div className="post-time-commitment">
+            {this.props.student.time_commitment ? 'Time Commitment'.concat(': ', this.props.student.time_commitment.toString()).concat(' ', 'hrs/week') : null}
+            </div>
+          <hr className="profile-divider" />
+          <div id="lists-row">
+            <div className="list-section">
+              <h2>Industries</h2>
+              {this.renderYellowPills(this.props.student?.interested_industries)}
+            </div>
+            <div className="list-section" >
+              <h2>Classes</h2>
+              {this.renderRedPills(this.props.student?.relevant_classes)}
+            </div>
+            <div className="list-section">
+              <h2>Skills</h2>
+              {this.renderGreenPills(this.props.student?.skills)}
+            </div>
+          </div>
+        </div>
+      </div>
+      /*<div className="profile-fixed">
         <div id="profile-header">
           <h1>{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
           <div id="class-year">{`Class of ${this.props.student?.grad_year}`}  ({this.props.student?.affiliation})</div>
@@ -160,12 +252,24 @@ class StudentProfileStartup extends Component {
             </div>
           </div>
         </div>
-      </div>
+    </div>*/
     );
   }
 
   renderWorkExperiences = () => {
     if (this.props.workExps !== []) {
+      return this.props.workExps.map((workExp, index) => {
+        return (
+          <WorkExperience key={index}
+            className="work-exp"
+            isEditing={false}
+            workExp={workExp}
+            index={index}
+          />
+        );
+      });
+    } else return null;
+    /*if (this.props.workExps !== []) {
       return this.props.workExps.map((workExp, index) => {
         return (
           <div key={index} className="work-exp">
@@ -180,11 +284,23 @@ class StudentProfileStartup extends Component {
           </div>
         );
       });
-    } else return null;
+    } else return null;*/
   }
 
   renderOtherExperiences = () => {
     if (this.props.otherExps !== []) {
+      return this.props.otherExps.map((otherExp, index) => {
+        return (
+          <OtherExperience key={index}
+            className="work-exp"
+            isEditing={false}
+            otherExp={otherExp}
+            index={index}
+          />
+        );
+      });
+    } else return null;
+    /*if (this.props.otherExps !== []) {
       return this.props.otherExps.map((otherExp, index) => {
         return (
           <div key={index} className="work-exp">
@@ -193,7 +309,7 @@ class StudentProfileStartup extends Component {
           </div>
         );
       });
-    } else return null;
+    } else return null;*/
   }
 
   render() {

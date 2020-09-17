@@ -207,13 +207,11 @@ class Posts extends Component {
     this.setState({ archivedVirtualPosts: [] });
     if (this.state.archive && this.state.virtualChecked) {
       this.props.archived.forEach((post) => {
-        console.log(post);
         if (post.virtual === true) {
           this.setState((prevState) => ({
             archivedVirtualPosts: [...prevState.archivedVirtualPosts, post],
           }));
         }
-        console.log(this.state.archivedVirtualPosts);
       });
     }
   }

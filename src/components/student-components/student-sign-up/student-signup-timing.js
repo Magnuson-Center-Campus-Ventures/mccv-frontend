@@ -46,7 +46,6 @@ class StudentTiming extends Component {
   }
 
   checkDateRange = () => {
-    console.log(this.state.student);
     const start = new Date(this.state.student.desired_start_date);
     const end = new Date(this.state.student.desired_end_date);
     const diff = (end.getTime() - start.getTime())/(1000 * 3600 * 24 * 7);

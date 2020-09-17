@@ -22,6 +22,8 @@ import {
   fetchUser,
   updateSubmittedApplication,
 } from '../../actions';
+import WorkExperience from '../student-components/work-experience';
+import OtherExperience from '../student-components/other-experience';
 import '../../styles/startup-submitted-application.scss';
 
 function isEmpty(obj) {
@@ -56,6 +58,18 @@ class StartupApplicationListItem extends Component {
     }
   }
 
+  renderClassYearAffiliation() {
+    if (this.props.student?.affiliation) {
+      return (
+        <div id="class-year">{`Class of ${this.props.student?.grad_year}`} ({this.props.student?.affiliation})</div>
+      );
+    } else {
+      return (
+        <div id="class-year">{`Class of ${this.props.student?.grad_year}`}</div>
+      );
+    }
+  }
+
   renderMajMin = (array) => {
     if (array) {
       return array.map((elem, index) => {
@@ -72,15 +86,113 @@ class StartupApplicationListItem extends Component {
     } else return null;
   }
 
-  renderPills = (pillsArray) => {
+  renderMajors = () => {
+    if (this.props.student?.majors?.length > 0 && this.props.student?.majors[0] != "") {
+      return (
+        <div id="major-row">
+          <div className="student-major-title">Major in </div>
+          {this.renderMajMin(this.props.student.majors)}
+        </div>
+      );
+    } else {
+      return (<div/>);
+    }
+  }
+
+  renderMinors = () => {
+    if (this.props.student?.minors?.length > 0 && this.props.student?.minors[0] != "") {
+      return (
+        <div id="minor-row">
+          <div className="student-minor-title">Minor in </div>
+          {this.renderMajMin(this.props.student.minors)}
+        </div>
+      );
+    } else {
+      return (<div/>);
+    }
+  }
+
+  startDate = () => {
+    if (this.props.student?.desired_start_date != null) {
+      const start = new Date(this.props.student.desired_start_date);
+      return (
+        <span className="student-start-date">Desired Start Date: {`${start.getMonth()}/${start.getDate()}/${start.getFullYear()}`}</span>
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  endDate = () => {
+    if (this.props.student?.desired_end_date != null) {
+      const end = new Date(this.props.student.desired_end_date);
+      return (
+        <span className="student-end-date">Desired End Date: {`${end.getMonth()}/${end.getDate()}/${end.getFullYear()}`}</span>
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  renderGreenPills = (pillsArray) => {
     if (pillsArray && pillsArray.length > 0) {
       return pillsArray.map((elem, index) => {
-        return <div key={index} id="profile-pill">{elem.name}</div>;
+        return <div key={index} className="student-profile-pill-green">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderRedPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-red">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderYellowPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-yellow">{elem.name}</div>;
       });
     } else return <div>None</div>;
   }
 
   renderWorkExperiences = () => {
+    if (this.props.workExps !== []) {
+      return this.props.workExps.map((workExp, index) => {
+        return (
+          <WorkExperience key={index}
+            className="work-exp"
+            isEditing={false}
+            workExp={workExp}
+            index={index}
+          />
+        );
+      });
+    } else return null;
+  }
+
+  renderOtherExperiences = () => {
+    if (this.props.otherExps !== []) {
+      return this.props.otherExps.map((otherExp, index) => {
+        return (
+          <OtherExperience key={index}
+            className="work-exp"
+            isEditing={false}
+            otherExp={otherExp}
+            index={index}
+          />
+        );
+      });
+    } else return null;
+  }
+
+  /*renderWorkExperiences = () => {
     if (this.props.workExps !== []) {
       return this.props.workExps.map((workExp, index) => {
         return (
@@ -112,7 +224,7 @@ class StartupApplicationListItem extends Component {
         );
       });
     } else return null;
-  }
+  }*/
 
   renderQuestions= () => {
     const items = [];
@@ -120,9 +232,9 @@ class StartupApplicationListItem extends Component {
       this.props.questions.map((question) => {
         if (this.props.current.responses[question._id]) {
           items.push(
-            <div key={question._id} id="question">
-              <h3 id="question-title">{question.question}</h3>
-              <h2 id="answer">{this.props.current.responses[question._id]}</h2>
+            <div key={question._id} className="work-exp">
+              <div className="exp-title">{question.question}</div>
+              <div className="exp-text">{this.props.current.responses[question._id]}</div>
             </div>,
           );
         }
@@ -173,7 +285,7 @@ class StartupApplicationListItem extends Component {
     if (this.props.current.status === 'pending') {
       return (
         <div id="action-btns">
-          <button type="submit" onClick={this.showConfirmApprove} style={{ cursor: 'pointer' }}>Approve</button>
+          <button id="action-btn-green" type="submit" onClick={this.showConfirmApprove} style={{ cursor: 'pointer' }}>Approve</button>
           <Confirm
             id="confirmation-popup"
             open={this.state.openConfirmApprove}
@@ -181,7 +293,7 @@ class StartupApplicationListItem extends Component {
             onCancel={this.handleCancel}
             onConfirm={this.handleApprove}
           />
-          <button type="submit" onClick={this.showConfirmDecline} style={{ cursor: 'pointer' }}>Decline</button>
+          <button id="action-btn-red" type="submit" onClick={this.showConfirmDecline} style={{ cursor: 'pointer' }}>Decline</button>
           <Confirm
             id="confirmation-popup"
             open={this.state.openConfirmDecline}
@@ -202,10 +314,46 @@ class StartupApplicationListItem extends Component {
       );
     }
   }
-
+  
   renderBody = () => {
     return (
       <div className="profile-fixed">
+        <div id="profile-header">
+          <h1 id="student-profile-name">{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
+          {this.renderClassYearAffiliation()}
+          {this.renderMajors()}
+          {this.renderMinors()}
+          <div className="space"/>
+          <div className="student-contact">{this.props.email}</div>
+          <div className="student-contact">{this.props.student?.phone_number ? this.props.student?.phone_number : null}</div>
+          <div className="space"/>
+          <div className="student-start-date">
+              {this.startDate()}
+          </div>
+          <div className="student-end-date">
+            {this.endDate()}
+          </div>
+          <div className="post-time-commitment">
+            {this.props.student.time_commitment ? 'Time Commitment'.concat(': ', this.props.student.time_commitment.toString()).concat(' ', 'hrs/week') : null}
+            </div>
+          <hr className="profile-divider" />
+          <div id="lists-row">
+            <div className="list-section">
+              <h2>Industries</h2>
+              {this.renderYellowPills(this.props.student?.interested_industries)}
+            </div>
+            <div className="list-section" >
+              <h2>Classes</h2>
+              {this.renderRedPills(this.props.student?.relevant_classes)}
+            </div>
+            <div className="list-section">
+              <h2>Skills</h2>
+              {this.renderGreenPills(this.props.student?.skills)}
+            </div>
+          </div>
+        </div>
+      </div>
+      /*<div className="profile-fixed">
         <div id="profile-header">
           <h1>{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
           <div>{`Class of ${this.props.student?.grad_year}`}</div>
@@ -232,14 +380,33 @@ class StartupApplicationListItem extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </div>*/
     );
   }
 
   render() {
     if (this.props.post != null && !isEmpty(this.props.post) && this.props.student != null && !isEmpty(this.props.student)) {
       return (
-        <div>
+        <div className="student-profile">
+          {this.renderBody()}
+          <hr className="profile-divider" />
+          <div className="exps-fixed">
+            <h2>Work Experience</h2>
+            {this.renderWorkExperiences()}
+          </div>
+          <hr className="profile-divider" />
+          <div className="exps-fixed">
+            <h2>Other Experience</h2>
+            {this.renderOtherExperiences()}
+          </div>
+          <hr className="profile-divider" />
+          <div className="exps-fixed">
+            <h2>Questions</h2>
+            {this.renderQuestions()}
+          </div>
+          {this.renderActionBtns()}
+        </div>
+        /*<div>
           <div id="page-wrap">
             {this.renderBody()}
             <div id="work-exps">
@@ -254,7 +421,7 @@ class StartupApplicationListItem extends Component {
             </div>
           </div>
           {this.renderActionBtns()}
-        </div>
+        </div>*/
       );
     } else {
       return <div />;

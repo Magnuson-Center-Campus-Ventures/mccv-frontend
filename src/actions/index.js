@@ -85,7 +85,6 @@ export function createPost(post, startup, history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/posts`, post, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        console.log(response.data.id);
         dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
         // Update the student with the newly created post
         startup.posts.push(response.data);

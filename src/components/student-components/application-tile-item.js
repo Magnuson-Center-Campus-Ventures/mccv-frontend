@@ -43,13 +43,13 @@ const ApplicationTileItem = (props) => {
     <div />
   );
 
-  const statusPill = (props.post.status === "Approved") ? (
+  const statusPill = (props.status === "Approved") ? (
     <div id="statusGreenPill">Approved</div>
   ) : (
-    (props.post.status === "Declined") ? (
+    (props.status === "Declined") ? (
       <div id="statusRedPill">Declined</div>
     ) : (
-      <div id="statusGrayPill">Pending Review</div>
+      <div id="statusYellowPill">Pending Review</div>
     )
   );
 
