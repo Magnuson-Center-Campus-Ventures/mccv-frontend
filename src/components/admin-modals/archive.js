@@ -15,6 +15,7 @@ class Archive extends Component {
       filled: false,
       applicantOptions: [],
       studentsSelected: [],
+      answeredSelected: false,
     };
     this.notFilled = this.notFilled.bind(this);
     this.filled = this.filled.bind(this);
@@ -28,14 +29,34 @@ class Archive extends Component {
       });
       this.setState({ applicantOptions: names });
     }
+    if ( !this.props.post){
+      this.setState({answeredSelected: true}); 
+    }
+  }
+
+  toggleFilled = (e) =>{
+    const { filled, answeredSelected } = this.state; 
+    this.setState({ 
+      filled: !filled, 
+      answeredSelected: !answeredSelected
+    })
   }
 
   notFilled = (e) => {
-    this.setState({ filled: false });
+    this.setState({ 
+      filled: false, 
+      answeredSelected: true, 
+     });
+     console.log(this.state.answeredSelected)
+
   }
 
   filled = (e) => {
-    this.setState({ filled: true });
+    this.setState({ 
+      filled: true, 
+      answeredSelected: true, 
+    });
+    console.log(this.state.answeredSelected)
   }
 
   onArchive = (e) => {
@@ -113,7 +134,8 @@ class Archive extends Component {
               id="noarchive"
               style={{ cursor: 'pointer' }}
               onClick={(e) => {
-                this.notFilled();
+                this.notFilled(); 
+                // this.setState({answeredSelected: true})
               }}
             >
               No
@@ -122,7 +144,8 @@ class Archive extends Component {
               id="archive"
               style={{ cursor: 'pointer' }}
               onClick={(e) => {
-                this.filled();
+                // this.filled();
+                this.filled(); 
               }}
             >
               Yes
@@ -153,7 +176,8 @@ class Archive extends Component {
               }}
             />
             {this.postArchive()}
-            <div className="modalContent">
+            {this.state.answeredSelected ? (
+              <div className="modalContent">
               <p> Are you sure you want to archive this?</p>
               <div className="archiveOptions">
                 <button type="submit"
@@ -176,7 +200,9 @@ class Archive extends Component {
                 </button>
               </div>
             </div>
-
+            ): (
+              <div />
+            )}
           </div>
         </div>
       );
