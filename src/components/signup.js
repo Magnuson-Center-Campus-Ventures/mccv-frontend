@@ -28,7 +28,7 @@ class Signup extends Component {
 
   onEmailChange = (event) => {
     this.setState({ email: event.target.value });
-    this.props.emailExists({ email: event.target.value});
+    this.props.emailExists({ email: event.target.value.toLowerCase()});
   }
 
   onPasswordChange = (event) => {
@@ -48,7 +48,7 @@ class Signup extends Component {
   signupNow() {
     // create new user
     const newUser = { ...this.state };
-    newUser.email = this.state.email;
+    newUser.email = this.state.email.toLowerCase(); 
     newUser.password = this.state.password;
     newUser.role = this.state.role;
     newUser.student_profile_id = this.state.student_profile_id;

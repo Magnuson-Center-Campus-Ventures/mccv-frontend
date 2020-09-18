@@ -7,6 +7,8 @@ const ROOT_URL = 'http://localhost:9090/api';
 export const ActionTypes = {
   // user actions
   FETCH_USER: 'FETCH_USER',
+  FETCH_USERS: 'FETCH_USERS',
+  ADD_USER: 'ADD_USER',
   LOGOUT_USER: 'LOGOUT_USER',
   AUTH_ERROR: 'AUTH_ERROR',
   UPDATE_USER: 'UPDATE_USER',
@@ -90,7 +92,7 @@ export function createPost(post, startup, history) {
         // Update the student with the newly created post
         startup.posts.push(response.data);
         axios.put(`${ROOT_URL}/startups/${startup._id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
-          dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response2.data });
+          dispatch({ type: ActionTypes.UPDATE_STARTUP, payload: response2.data });
         }).catch((error2) => {
           dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
         });
@@ -191,7 +193,7 @@ export function fetchStartups() {
 export function updateStartup(id, startup) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/startups/${id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
+      dispatch({ type: ActionTypes.UPDATE_STARTUP, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
@@ -746,7 +748,6 @@ export function signinUser({ email, password }, history) {
 }
 
 export function signupUser({
-  // eslint-disable-next-line camelcase
   email, password, role, student_profile_id, startup_id,
 }, history) {
   // takes in an object with email and password (minimal user object)
@@ -760,7 +761,7 @@ export function signupUser({
       localStorage.setItem('userID', response.data.user.id);
       localStorage.setItem('role', response.data.user.role);
       // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
-      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
+      dispatch({ type: ActionTypes.ADD_USER, payload: response.data.user });
       if (response.data.user.role === 'student') {
         history.push('/student-signup');
       } else if (response.data.user.role === 'startup') {
@@ -769,7 +770,6 @@ export function signupUser({
         history.push('/posts');
       }
     }).catch((error) => {
-      // eslint-disable-next-line no-alert
       dispatch(authError(`Sign Up Failed: ${error.response.data}`));
     });
   };
@@ -799,7 +799,7 @@ export function fetchUser(id) {
 export function fetchUsers() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/users`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
+      dispatch({ type: ActionTypes.FETCH_USERS, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
@@ -809,7 +809,7 @@ export function fetchUsers() {
 export function updateUser(id, user) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/users/${id}`, user, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
+      dispatch({ type: ActionTypes.UPDATE_USER, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
