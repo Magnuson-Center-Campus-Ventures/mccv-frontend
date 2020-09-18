@@ -67,7 +67,6 @@ class Archive extends Component {
 
   // add student who filled position to selected array
   addFilled = (student) => {
-    console.log(student);
     const selected = this.state.studentsSelected.map((selectedStudent) => {
       return { selectedStudent };
     });

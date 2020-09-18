@@ -39,7 +39,7 @@ class Signin extends Component {
       <div className="signinPage">
         <div className="signinBoard">
           <div className="signinLeft">
-            <h1>Login to access Magnuson Campus Ventures</h1>
+            <h1>Login to access Magnuson Center Campus Ventures</h1>
           </div>
 
           <div className="signinRight">

@@ -314,6 +314,18 @@ class StudentProfile extends Component {
     }
   }
 
+  renderClassYearAffiliation() {
+    if (this.props.student?.affiliation) {
+      return (
+        <div id="class-year">{`Class of ${this.props.student?.grad_year}`} ({this.props.student?.affiliation})</div>
+      );
+    } else {
+      return (
+        <div id="class-year">{`Class of ${this.props.student?.grad_year}`}</div>
+      );
+    }
+  }
+
   renderMajMin = (array) => {
     if (array) {
       return array.map((elem, index) => {
@@ -328,6 +340,32 @@ class StudentProfile extends Component {
         }
       });
     } else return null;
+  }
+  
+  renderMajors = () => {
+    if (this.state.majors?.length > 0 && this.state.majors[0] != "") {
+      return (
+        <div id="major-row">
+          <div className="student-major-title">Major in </div>
+          {this.renderMajMin(this.state.majors)}
+        </div>
+      );
+    } else {
+      return (<div/>);
+    }
+  }
+
+  renderMinors = () => {
+    if (this.state.minors?.length > 0 && this.state.minors[0] != "") {
+      return (
+        <div id="minor-row">
+          <div className="student-minor-title">Minor in </div>
+          {this.renderMajMin(this.state.minors)}
+        </div>
+      );
+    } else {
+      return (<div/>);
+    }
   }
 
   renderEditMajors = () => {
@@ -402,12 +440,54 @@ class StudentProfile extends Component {
     });
   }
 
-  renderPills = (pillsArray) => {
+  renderGreenPills = (pillsArray) => {
     if (pillsArray && pillsArray.length > 0) {
       return pillsArray.map((elem, index) => {
-        return <div key={index} className="student-profile-pill">{elem.name}</div>;
+        return <div key={index} className="student-profile-pill-green">{elem.name}</div>;
       });
     } else return <div>None</div>;
+  }
+
+  renderRedPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-red">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderYellowPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-yellow">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  startDate = () => {
+    if (this.state.student?.desired_start_date != null) {
+      this.state.start = new Date(this.state.student.desired_start_date);
+      return (
+        <span className="student-start-date">Desired Start Date: {`${this.state.start.getMonth()}/${this.state.start.getDate()}/${this.state.start.getFullYear()}`}</span>
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  endDate = () => {
+    if (this.state.student?.desired_end_date != null) {
+      this.state.end = new Date(this.state.student.desired_end_date);
+      return (
+        <span className="student-end-date">Desired End Date: {`${this.state.end.getMonth()}/${this.state.end.getDate()}/${this.state.end.getFullYear()}`}</span>
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
   }
 
   renderBody = () => {
@@ -580,30 +660,26 @@ class StudentProfile extends Component {
               />
             </div>
           </div>
-        </div>
+          </div>
       );
     } else {
       return (
         <div className="profile-fixed">
           <div id="profile-header">
-            <h1>{`${this.state.student?.first_name} ${this.state.student?.last_name}`}</h1>
-            <div id="class-year">{`Class of ${this.props.student?.grad_year}`} ({this.props.student?.affiliation})</div>
-            <div id="major-row">
-              <div>Major in</div>
-              {this.renderMajMin(this.state.majors)}
-            </div>
-            <div id="minor-row">
-              <div>Minor in</div>
-              {this.renderMajMin(this.state.minors)}
-            </div>
+            <h1 id="student-profile-name">{`${this.state.student?.first_name} ${this.state.student?.last_name}`}</h1>
+            {this.renderClassYearAffiliation()}
+            {this.renderMajors()}
+            {this.renderMinors()}
+            <div className="space"/>
             <div className="student-contact">{this.props.email}</div>
             <div className="student-contact">{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
+            <div className="space"/>
             <div className="student-start-date">
-              {this.state.student.desired_start_date ? 'Desired Start Date'.concat(': ', this.state.student.desired_start_date.toString().substring(0, 10)) : null}
-              </div>
+              {this.startDate()}
+            </div>
             <div className="student-end-date">
-              {this.state.student.desired_end_date ? 'Desired End Date'.concat(': ', this.state.student.desired_end_date.toString().substring(0, 10)) : null}
-              </div>
+              {this.endDate()}
+            </div>
             <div className="post-time-commitment">
               {this.state.student.time_commitment ? 'Time Commitment'.concat(': ', this.state.student.time_commitment.toString()).concat(' ', 'hrs/week') : null}
               </div>
@@ -611,15 +687,15 @@ class StudentProfile extends Component {
             <div id="lists-row">
               <div className="list-section">
                 <h2>Industries</h2>
-                {this.renderPills(this.state.ownIndustries)}
+                {this.renderYellowPills(this.state.ownIndustries)}
               </div>
               <div className="list-section" >
                 <h2>Classes</h2>
-                {this.renderPills(this.state.ownClasses)}
+                {this.renderRedPills(this.state.ownClasses)}
               </div>
               <div className="list-section">
                 <h2>Skills</h2>
-                {this.renderPills(this.state.ownSkills)}
+                {this.renderGreenPills(this.state.ownSkills)}
               </div>
             </div>
           </div>

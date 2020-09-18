@@ -38,11 +38,9 @@ class ApplicationListItem extends Component {
       this.props.questions.map((question) => {
         if (this.props.current.responses[question._id]) {
           items.push(
-            <div key={question._id} className="question">
-              <div id="question">
-                <h3>{question.question}</h3>
-                <h2 id="answer">{this.props.current.responses[question._id]}</h2>
-              </div>
+            <div key={question._id} className="work-exp">
+              <div className="exp-title">{question.question}</div>
+              <div className="exp-text">{this.props.current.responses[question._id]}</div>
             </div>,
           );
         }
@@ -69,7 +67,7 @@ class ApplicationListItem extends Component {
             </div>
             <h1>Questions</h1>
           </div>
-          <div id="questions">
+          <div className="exps-fixed">
             {this.renderQuestions()}
           </div>
         </div>

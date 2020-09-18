@@ -31,8 +31,8 @@ body{
 .listItem{
     background-color: #FFFFFF;
     margin-top: 4%;
-    height: 275px;
-    width: 275px;
+    height: 280px;
+    width: 280px;
     border: 1px solid rgba(0, 0, 0, 0.25);
     box-shadow: 2px 6px 6px rgba(0, 0, 0, 0.25);
 }
@@ -43,8 +43,8 @@ body{
 
 .postBody{
     background-color: #FFFFFF;
-    height: 275px;
-    width: 275px;
+    height: 280px;
+    width: 280px;
     display: flex;
     flex-direction: column;
 }
@@ -62,16 +62,26 @@ body{
     margin: .25em;
 }
 
-.startupName{ 
+.studentName{ 
+  font-weight: 600;
+  font-size: 120%;
+  margin: .25em;
+}
+
+.startupName, .gradYear{ 
     font-weight: 500;
     font-size: 110%;
     margin: .25em;
     width: 100%;
-    // overflow: hidden;
-    // text-overflow: ellipsis;
-    // white-space: nowrap;
 }
 
+.major{
+    font-style: italic;
+}
+
+.majorWrapper {
+    margin-left: .25em;
+}
 .postLocation{
     font-size: .8em;
     font-style: italic;
@@ -94,7 +104,7 @@ body{
     border: .5px solid #C2C8CB;
     border-radius: 5px;
     padding: .25em;
-    background-color: #EFEFF0;;
+    background-color: #EFEFF0;
 }
 
 .companyInfo{
@@ -182,8 +192,8 @@ body{
     font-size: .9em;
 }
 
-.grayPill{
-    background-color:#DEDEDE;
+.yellowPill{
+    background-color:rgba(221, 192, 88, 0.514);
     border-radius: 10px;
     width: fit-content;
     padding-right: .5vw;
@@ -193,6 +203,9 @@ body{
     font-size: .9em;
 }
 
+.postSpace{
+  height: 3em;
+}
 // .companyInfo{
 //     display: flex;
 //     justify-content: space-between;
@@ -263,16 +276,16 @@ body{
     display: block;
 }
 
-#postings{
-  margin-left: 0;
-  margin-bottom: 1vh;
-  margin-right: 1vw;
-}
+// #postings{
+//   margin-left: 0;
+//   margin-bottom: 1vh;
+//   margin-right: 1vw;
+// }
 
-.postings{
-display: flex;
-flex-wrap: wrap;
-}
+// .postings{
+//   display: flex;
+//   flex-wrap: wrap;
+// }
 
 // .postings > h2{
 //     font-weight: normal;
@@ -369,8 +382,8 @@ flex-wrap: wrap;
     margin-bottom: .5vh;
     font-size: 1.2em;
 }
-#statusGrayPill {
-  background-color:#DEDEDE;
+#statusYellowPill {
+  background-color:rgba(221, 192, 88, 0.514);
   border-radius: 10px;
   width: fit-content;
   padding-right: .5vw;
@@ -379,8 +392,9 @@ flex-wrap: wrap;
   margin-bottom: .5vh;
   font-size: 1.2em;
 }
+
 #statusRedPill {
-  background-color:rgba(231, 118, 109, 0.815);
+  background-color:rgba(224, 133, 127, 0.699);
   border-radius: 10px;
   width: fit-content;
   padding-right: .5vw;
@@ -464,7 +478,7 @@ flex-wrap: wrap;
 //     margin-right: 2vw;
 // }
 
-.descriptionText {
+.descriptionText, .bioText {
     font-size: .8em;
     margin: 0;
 }
