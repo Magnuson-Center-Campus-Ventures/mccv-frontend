@@ -323,18 +323,22 @@ class Students extends Component {
     if (this.props.user.role === 'startup') {
       return (
         <div id="filters">
-          <h3>View Recommended Students: </h3>
-          <div id="archiveToggle">
-            <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
+          <div className="toggleGroup">
+            <span>View Recommended Students: </span>
+            <div id="toggle">
+              <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
+            </div>
           </div>
         </div>
       );
     } else if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          <h3>Show Archived Students: </h3>
-          <div id="archiveToggle">
-            <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+          <div className="toggleGroup">
+            <span>View Archived Students: </span>
+            <div id="toggle">
+              <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+            </div>
           </div>
         </div>
       );
@@ -353,7 +357,7 @@ class Students extends Component {
       (this.props.students !== undefined || null) && (this.state.results !== null || undefined)
         ? (
           <div className="pageContent">
-            <h1> View All Students</h1>
+            <h1 className="postingsTitle">View All Students</h1>
             <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />

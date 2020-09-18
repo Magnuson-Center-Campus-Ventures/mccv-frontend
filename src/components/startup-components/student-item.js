@@ -6,28 +6,38 @@ import { Link } from 'react-router-dom';
 import '../../styles/postings.scss';
 
 const StudentListItem = (props) => {
-  const majors = props.student.majors.length > 1
+  const affiliationGradYear = (props.student.affiliation && props.student.grad_year) ? (
+    <h2 className="gradYear">{`Class of ${props.student.grad_year} (${props.student.affiliation.charAt(0).toUpperCase() + 
+      props.student.affiliation.slice(1)})`} </h2>
+  ) : (
+    (props.student.grad_year) ? (
+      <h2 className="gradYear">{`Class of ${props.student.grad_year}`} </h2>
+    ) : (
+      <div/>
+    )
+  );
+
+  const majors = props.student.majors.length > 0
     ? (
       props.student.majors.map((major, index) => {
-        return (
-          <div key={index}>
-            {major}
-          </div>
-        );
+        if (index === 0) {
+          return (
+            <span key={index} className="major">
+              {`Major: ${major}`}
+            </span>
+          );
+        } else if (index === 1){
+          return (
+            <span key={index} className="major">{`, ...`}</span>
+            /*<span key={index} className="major">
+              {`, ${major}`}
+            </span>*/
+          );
+        }
       })
     ) : (
-      <div>
-        Major: {props.student.majors[0]}
-      </div>
+      <span className="major">Major Undecided</span>
     );
-
-  const industries = props.student.interested_industries.map((industry) => {
-    return (
-      <div key={industry.id} className="pill">
-        {industry.name}
-      </div>
-    );
-  });
 
   const classes = props.student.relevant_classes.map((singleClass) => {
     return (
@@ -37,27 +47,83 @@ const StudentListItem = (props) => {
     );
   });
 
-  const skills = props.student.skills.map((skill) => {
-    return (
-      <div key={skill.id} className="pill">
-        {skill.name}
-      </div>
-    );
+  const skills = props.student.skills?.map((skill, index) => {
+    if (index === 0) {
+      return (
+        <div id="pillsTitle" key={skill.id}>
+          Skills: <div className="greenPill"> {skill.name} </div>
+        </div>
+      );
+    } else if (index < 5){
+      return (
+        <div key={skill.id} className="greenPill">
+          {skill.name}
+        </div>
+      );
+    } else if (index === 5) {
+      return (
+        <div key={skill.id} className="greenPill">
+          ...
+        </div>
+      );
+    }
   });
+
+  const industries = props.student.interested_industries?.map((industry, index) => {
+    if (index === 0) {
+      return (
+        <div id="pillsTitle" key={industry.id}>
+          Industries: <div className="yellowPill"> {industry.name} </div>
+        </div>
+      );
+    } else if (index < 5) {
+      return (
+        <div key={industry.id} className="yellowPill">
+          {industry.name}
+        </div>
+      );
+    } else if (index === 5) {
+      return (
+        <div key={industry.id} className="yellowPill">
+          ...
+        </div>
+      );
+    }
+  });
+
+  const renderBio = (props.student.bio?.length > 100) ? (
+    <div className="postInfo">
+      <p className="bioText">{`${props.student.bio.substring(0, 99)}...`}</p>
+    </div>
+  ) : (
+    (props.student.bio) ? (
+      <div className="postInfo">
+        <p className="bioText">{props.student.bio}</p>
+      </div>
+    ) : (
+      <div className="postSpace"/>
+    )
+  );
 
   const route = `/students/${props.student._id}`;
 
   return (
     <Link to={route} key={props.student.id} className="listItem link">
-      <div className="basicInfo">
-        <h1 className="studentName">{`${props.student.first_name} ${props.student.last_name}`} </h1>
-        <h2 className="gradYear">Class of {props.student.grad_year} </h2>
-        <h2 className="major"> {majors} </h2>
-      </div>
-      <div className="extraInfo">
-        {/* <h3> Interests: {industries} </h3> */}
-        {/* <h3>Classes: {classes} </h3> */}
-        <h3 className="skills"> Skills: {skills} </h3>
+      <div className="postBody">
+        <div className="postText">
+          <h1 className="studentName">{`${props.student.first_name} ${props.student.last_name}`} </h1>
+          {affiliationGradYear}
+          <div className="majorWrapper">
+            {majors}
+          </div>
+          {renderBio}
+          <div className="pillsList">
+            {skills}
+          </div>
+          <div className="pillsList">
+            {industries}
+          </div>
+        </div>
       </div>
     </Link>
   );

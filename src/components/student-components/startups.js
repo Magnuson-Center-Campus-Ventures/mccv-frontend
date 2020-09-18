@@ -233,13 +233,17 @@ class Startups extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div id="filters">
-          <h3>Show Pending Startups:</h3>
-          <div id="pendingToggle">
-            <Switch onChange={this.handlePendingChange} checked={this.state.pending} />
+          <div className="toggleGroup">
+            <span>View Pending Startups: </span>
+            <div id="toggle">
+              <Switch onChange={this.handlePendingChange} checked={this.state.pending} />
+            </div>
           </div>
-          <h3>Show Archived Startups:</h3>
-          <div id="archiveToggle">
-            <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+          <div className="toggleGroup">
+            <span>View Archived Startups: </span>
+            <div id="toggle">
+              <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
+            </div>
           </div>
         </div>
       );

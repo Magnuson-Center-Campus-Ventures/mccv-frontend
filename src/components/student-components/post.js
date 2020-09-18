@@ -269,7 +269,6 @@ class Post extends Component {
 
   approvePost() {
     this.props.post.status = this.props.status;
-    console.log(this.props.post.status);
     this.props.updatePost(this.props.post.id, this.props.post);
     this.forceUpdate();
   }

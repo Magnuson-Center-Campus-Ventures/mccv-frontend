@@ -46,7 +46,6 @@ class StudentInfo extends Component {
             let genders = {}; 
             let affiliation = {}; 
             this.props.students.map((student) => {
-                // console.log(student); 
                 if (student.status == 'Approved'){
                     this.setState((prevState) => ({
                         active: prevState.active +1,
