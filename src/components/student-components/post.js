@@ -14,11 +14,9 @@ import CreateableSelect from 'react-select/creatable';
 import { DateRange } from 'react-date-range';
 import {
   fetchPost, updatePost, 
-  fetchApplication, fetchApplications, addPostApplicationQuestions,
   fetchUser, fetchStartup,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills,
   createIndustryForPost, createReqSkillForPost, createPrefSkillForPost, createClassForPost,
-  fetchQuestions, addQuestion, updateQuestion, deleteQuestion,
 } from '../../actions';
 import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
@@ -32,7 +30,6 @@ class Post extends Component {
     super(props);
     this.state = {
       post: {},
-      responsibilities: [],
       applyShow: false,
       archiveShow: false,
       isEditing: false,
@@ -51,7 +48,6 @@ class Post extends Component {
       end: new Date(),
       validDate: true,
       newResponsibility: '',
-      newQuestions: [],
       newQuestion: '',
     };
     this.showApplyModal = this.showApplyModal.bind(this);
@@ -65,10 +61,8 @@ class Post extends Component {
     if (window.location.search == '?edit') {
       this.state.isEditing = true;
     }
-    this.props.fetchQuestions();
     this.props.fetchPost(this.props.match.params.postID);
     this.props.fetchUser(localStorage.getItem('userID'));
-    this.props.fetchApplications();
     this.props.fetchAllIndustries();
     this.props.fetchAllSkills();
     this.props.fetchAllClasses();
@@ -77,18 +71,6 @@ class Post extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.user && this.props.user !== {} && prevProps.user !== this.props.user) {
       this.props.fetchStartup(this.props.user.startup_id);
-    }
-    if (this.props.application && this.props.application !== {} && prevProps.application !== this.props.application) {
-      this.state.newQuestions = [];
-      this.props.questions.forEach(element => {
-        if (this.props.application.questions.includes(element.id) && !this.state.newQuestions.includes(element.question)) {
-          this.state.newQuestions.push(element.question);
-        }
-      })
-      console.log(this.state.newQuestions);
-    }
-    if (this.props.post && prevProps.post !== this.props.post) {
-      this.props.fetchApplication(this.props.post.application_id);
     }
     if (this.props.post && this.props.post !== {} && prevProps.post !== this.props.post) {
       // Set initial dropdown options to be the indutries, skills, and classes the post already has
@@ -120,6 +102,7 @@ class Post extends Component {
       this.setState({
         post: this.props.post,
         responsibilities: this.props.post.responsibilities,
+        questions: this.props.post.questions,
         ownIndustries: this.props.post.industries,
         ownClasses: this.props.post.desired_classes,
         ownPrefSkills: this.props.post.preferred_skills,
@@ -157,7 +140,6 @@ class Post extends Component {
   // }
 
   showApplyModal = (e) => {
-    this.props.fetchApplication(this.props.post?.application_id);
     this.setState({
       applyShow: true,
     });
@@ -183,13 +165,10 @@ class Post extends Component {
 
   changePostField = (field, event) => {
     const value = event.target.value;
-
     this.setState((prevState) => {
-      const post = { ...prevState.post };
-      post[field] = value;
+      prevState.post[field] = value;
       return {
         ...prevState,
-        post,
       };
     });
   }
@@ -208,12 +187,11 @@ class Post extends Component {
   }
 
   submit = () => {
-    console.log(this.props.post.application_id);
     if (this.state.isEditing) {
       this.checkDateRange();
       if (this.state.validDate == true) {
-        this.state.post.responsibilities = this.state.responsibilities;
-        this.props.addPostApplicationQuestions(this.state.post, this.state.newQuestions, this.props.history);
+        // this.props.post = this.state.post;
+        this.props.updatePost(this.state.post.id, this.state.post);
         this.setState({ isEditing: false });
       }
     } else {
@@ -248,20 +226,6 @@ class Post extends Component {
         );
       }
       return preferredSkills;
-    } else {
-      return <div />;
-    }
-  }
-
-  responsibilitiesHelper = () => { 
-    const responsibilities = [];
-    if (this.props.post?.responsibilities) {
-      for (let i = 0; i < this.props.post.responsibilities.length; i++) {
-        responsibilities.push(
-          <li id="responsibility" key={this.props.post.responsibilities[i]}>{this.props.post.responsibilities[i]}</li>,
-        );
-      }
-      return responsibilities;
     } else {
       return <div />;
     }
@@ -396,29 +360,6 @@ class Post extends Component {
     }
   }
 
-  renderEditResponsibilities = () => { 
-    return this.state.responsibilities.map((resp, index) => {
-      return (
-        <div key={resp} className="resp-input">
-          <li id="responsibility" key={index}>{resp}</li>
-          <button className="del-button"
-            onClick={() => {
-              this.setState((prevState) => {
-                const responsibilities = [...prevState.responsibilities];
-                responsibilities.splice(index, 1);
-                return {
-                  ...prevState,
-                  responsibilities,
-                };
-              });
-            }}
-          ><i className="far fa-trash-alt delete-icon" />
-          </button>
-        </div>
-      );
-    });
-  }
-
   renderLocation = () => {
     return (
       <div className="location-wrapper">
@@ -460,39 +401,64 @@ class Post extends Component {
     }
   }
 
-  renderQuestionsNoEdit = (event) => {
-    if (this.props.user.role == 'student') {
-      return null;
-    } else { // not editing post
-      const items = [];
-      if (this.props.questions) {
-        this.props.questions.map((question) => {
-          if(this.props.application.questions.includes(question)){
-            items.push(
-              <li id="responsibility" key={question}>{question}</li>
-            );
-          };
-        });
-      return items;
+  renderResponsibilitiesNoEdit = () => { 
+    const responsibilities = [];
+    if (this.props.post?.responsibilities) {
+      for (let i = 0; i < this.props.post.responsibilities.length; i++) {
+        responsibilities.push(
+          <li id="responsibility" key={this.props.post.responsibilities[i]}>{this.props.post.responsibilities[i]}</li>,
+        );
       }
+      return responsibilities;
+    } else {
+      return <div />;
+    }
+  }
+  
+  renderEditResponsibilities = () => { 
+    return this.state.post.responsibilities.map((resp, index) => {
+      return (
+        <div key={resp} className="resp-input">
+          <li id="responsibility" key={index}>{resp}</li>
+          <button className="del-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                prevState.post.responsibilities.splice(index, 1);
+                return {
+                  ...prevState,
+                };
+              });
+            }}
+          ><i className="far fa-trash-alt delete-icon" />
+          </button>
+        </div>
+      );
+    });
+  }
+
+  renderQuestionsNoEdit = (event) => {
+    const questions = [];
+    if (this.props.post.questions) {
+      this.props.post.questions.map((question) => {
+        questions.push(
+          <li id="responsibility" key={question}>{question}</li>
+        );
+      });
+      return questions;
     }
   }
         
   renderQuestionsEdit = (event) => {
-    console.log(this.state.newQuestions);
-    return this.state.newQuestions.map((resp, index) => {
+    return this.state.post.questions.map((resp, index) => {
       return (
         <div key={index} className="resp-input">
           <li id="responsibility" key={resp}>{resp}</li>
           <button className="del-button"
             onClick={() => {
-              console.log(index);
               this.setState((prevState) => {
-                let newQuestions = [...prevState.newQuestions];
-                newQuestions.splice(index, 1);
+                prevState.post.questions.splice(index, 1);
                 return {
                   ...prevState,
-                  newQuestions,
                 };
               });
               this.forceUpdate();
@@ -536,14 +502,12 @@ class Post extends Component {
               <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newQuestion = event.target.value} />
               <button className="add-button"
                 onClick={() => {
-                  if (!this.state.newQuestions.includes(this.state.newQuestion)){
+                  if (!this.state.post.questions.includes(this.state.newQuestion)){
                     this.setState((prevState) => {
-                      const newQuestions = [...prevState.newQuestions];
-                      newQuestions.push(this.state.newQuestion);
+                      prevState.post.questions.push(this.state.newQuestion);
                       this.state.newQuestion = '';
                       return {
                         ...prevState,
-                        newQuestions,
                       };
                     });
                   }
@@ -683,14 +647,12 @@ class Post extends Component {
             <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newResponsibility = event.target.value} />
             <button className="add-button"
               onClick={() => {
-                  if (!this.state.responsibilities.includes(this.state.newResponsibility)){
+                  if (!this.state.post.responsibilities.includes(this.state.newResponsibility)){
                   this.setState((prevState) => {
-                    const responsibilities = [...prevState.responsibilities];
-                    responsibilities.push(this.state.newResponsibility);
+                    prevState.post.responsibilities.push(this.state.newResponsibility);
                     this.state.newResponsibility = '';
                     return {
                       ...prevState,
-                      responsibilities,
                     };
                   });
                 }
@@ -708,10 +670,10 @@ class Post extends Component {
   renderNoEdit = () => {
     return (
       <div id="wrap-content">
-        <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
+        {/* <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
         {(this.state.applyShow) && (
           <div id="confirmation-background" />
-        )}
+        )} */}
         <Archive post={this.props.post} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
         <h1 id="title">{this.props.post.title}</h1>
         <div className="bar">
@@ -750,7 +712,7 @@ class Post extends Component {
           <h3>Application Questions</h3>
           <ul id="skills">{this.renderQuestionsNoEdit()}</ul>
           <h3>Responsibilities</h3>
-          <ul id="skills">{this.responsibilitiesHelper()}</ul>
+          <ul id="skills">{this.renderResponsibilitiesNoEdit()}</ul>
         </div>
       </div>
     );
@@ -783,9 +745,6 @@ class Post extends Component {
 const mapStateToProps = (reduxState) => ({
   status: reduxState.startups.current.status,
   post: reduxState.posts.current,
-  questions: reduxState.questions.all,
-  applications: reduxState.applications.all,
-  application: reduxState.applications.current,
   user: reduxState.user.current,
   allIndustries: reduxState.industries.all,
   allSkills: reduxState.skills.all,
@@ -796,9 +755,6 @@ export default withRouter(connect(mapStateToProps, {
   fetchPost,
   updatePost,
   fetchUser,
-  fetchApplication,
-  fetchApplications,
-  addPostApplicationQuestions,
   fetchStartup,
   fetchAllIndustries,
   fetchAllClasses,
@@ -807,8 +763,4 @@ export default withRouter(connect(mapStateToProps, {
   createReqSkillForPost,
   createPrefSkillForPost,
   createClassForPost,
-  fetchQuestions,
-  addQuestion,
-  updateQuestion,
-  deleteQuestion,
 })(Post));
