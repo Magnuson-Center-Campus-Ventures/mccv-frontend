@@ -69,10 +69,8 @@ class Post extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.user && this.props.user !== {} && prevProps.user !== this.props.user) {
-      this.props.fetchStartup(this.props.user.startup_id);
-    }
     if (this.props.post && this.props.post !== {} && prevProps.post !== this.props.post) {
+      this.props.fetchStartup(this.props.post.startup_id.id);
       // Set initial dropdown options to be the indutries, skills, and classes the post already has
       let selectedIndustryOptions = [];
       if (this.props.post.industries) {
@@ -308,7 +306,6 @@ class Post extends Component {
               </button>
             )
             : null}
-
           {!this.state.isEditing
             ? (
               <button className="post-btn"
@@ -319,14 +316,12 @@ class Post extends Component {
               </button>
             )
             : null}
-
           {/*<button id="edit-post-btn"
             className="post-btn"
             type="submit"
             onClick={this.submit}
           >{this.state.isEditing ? 'Save Changes' : 'Edit Position'}
             </button>*/}
-          
           {!this.state.isEditing
             ? (
               <button className="post-btn"
@@ -670,10 +665,10 @@ class Post extends Component {
   renderNoEdit = () => {
     return (
       <div id="wrap-content">
-        {/* <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
+        <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
         {(this.state.applyShow) && (
           <div id="confirmation-background" />
-        )} */}
+        )}
         <Archive post={this.props.post} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
         <h1 id="title">{this.props.post.title}</h1>
         <div className="bar">
