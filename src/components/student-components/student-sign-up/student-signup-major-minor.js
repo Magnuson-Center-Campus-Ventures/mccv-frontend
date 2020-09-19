@@ -43,7 +43,7 @@ class StudentMajorMinors extends Component {
 }
 
   renderMajors() {
-    return this.state.student.majors.map((major, index) => {
+    return this.props.student.majors.map((major, index) => {
       return (
         <div key={major}>
           <li id="responsibility" key={index}>{major}</li>
@@ -51,6 +51,7 @@ class StudentMajorMinors extends Component {
             onClick={() => {
               this.setState((prevState) => {
                 prevState.student.majors.splice(index, 1);
+                this.props.student.majors = prevState.student.majors;
                 return {
                   ...prevState,
                 };
@@ -64,7 +65,7 @@ class StudentMajorMinors extends Component {
   }
 
   renderMinors() {
-    return this.state.student.minors.map((minor, index) => {
+    return this.props.student.minors.map((minor, index) => {
       return (
         <div key={minor}>
           <li id="responsibility" key={index}>{minor}</li>
@@ -72,6 +73,7 @@ class StudentMajorMinors extends Component {
             onClick={() => {
               this.setState((prevState) => {
                 prevState.student.minors.splice(index, 1);
+                this.props.student.minors = prevState.student.minors;
                 return {
                   ...prevState,
                 };
@@ -113,6 +115,7 @@ class StudentMajorMinors extends Component {
                     onClick={() => {
                       this.setState((prevState) => {
                         prevState.student.majors.push(this.state.newMajor);
+                        this.props.student.majors = prevState.student.majors;
                         return {
                           ...prevState,
                         };
@@ -129,6 +132,7 @@ class StudentMajorMinors extends Component {
                 onClick={() => {
                   this.setState((prevState) => {
                     prevState.student.minors.push(this.state.newMinor);
+                    this.props.student.minors = prevState.student.minors;
                     return {
                       ...prevState,
                     };
