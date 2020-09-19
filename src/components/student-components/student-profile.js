@@ -641,8 +641,14 @@ class StudentProfile extends Component {
           <div id="profile-header">
             <h1 id="student-profile-name">{`${this.state.student?.first_name} ${this.state.student?.last_name}`}</h1>
             {this.renderClassYearAffiliation()}
+            <div id="major-row">
+              <div className="student-major-title">Major in </div>
             {this.renderMajors()}
+            </div>
+            <div id="minor-row">
+              <div className="student-minor-title">Minor in </div>
             {this.renderMinors()}
+            </div>
             <div className="space"/>
             <div className="student-contact">{this.props.email}</div>
             <div className="student-contact">{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
