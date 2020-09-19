@@ -64,6 +64,8 @@ export const ActionTypes = {
   // password reset actions
   ADD_RESET_TOKEN: 'ADD_RESET_TOKEN',
   FETCH_RESET_TOKEN: 'FETCH_RESET_TOKEN',
+  // email confirmation actions
+  CONFIRM_EMAIL: 'CONFIRM_EMAIL',
   // s3 actions
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
   // general error
@@ -746,33 +748,33 @@ export function signinUser({ email, password }, history) {
   };
 }
 
-export function signupUser({
-  email, password, role, student_profile_id, startup_id,
-}, history) {
-  // takes in an object with email and password (minimal user object)
-  // returns a thunk method that takes dispatch as an argument (just like our create post method really)
-  // does an axios.post on the /signup endpoint (only difference from above)
-  return (dispatch) => {
-    axios.post(`${ROOT_URL}/signup`, {
-      email, password, role, student_profile_id, startup_id,
-    }).then((response) => {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userID', response.data.user.id);
-      localStorage.setItem('role', response.data.user.role);
-      // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
-      dispatch({ type: ActionTypes.ADD_USER, payload: response.data.user });
-      if (response.data.user.role === 'student') {
-        history.push('/student-signup');
-      } else if (response.data.user.role === 'startup') {
-        history.push('/startup-signup');
-      } else if (response.data.user.role === 'admin') { // likely not to reach here as no option to determine role of admin
-        history.push('/posts');
-      }
-    }).catch((error) => {
-      dispatch(authError(`Sign Up Failed: ${error.response.data}`));
-    });
-  };
-}
+// export function signupUser({
+//   email, password, role, student_profile_id, startup_id,
+// }, history) {
+//   // takes in an object with email and password (minimal user object)
+//   // returns a thunk method that takes dispatch as an argument (just like our create post method really)
+//   // does an axios.post on the /signup endpoint (only difference from above)
+//   return (dispatch) => {
+//     axios.post(`${ROOT_URL}/signup`, {
+//       email, password, role, student_profile_id, startup_id,
+//     }).then((response) => {
+//       localStorage.setItem('token', response.data.token);
+//       localStorage.setItem('userID', response.data.user.id);
+//       localStorage.setItem('role', response.data.user.role);
+//       // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
+//       dispatch({ type: ActionTypes.ADD_USER, payload: response.data.user });
+//       if (response.data.user.role === 'student') {
+//         history.push('/student-signup');
+//       } else if (response.data.user.role === 'startup') {
+//         history.push('/startup-signup');
+//       } else if (response.data.user.role === 'admin') { // likely not to reach here as no option to determine role of admin
+//         history.push('/posts');
+//       }
+//     }).catch((error) => {
+//       dispatch(authError(`Sign Up Failed: ${error.response.data}`));
+//     });
+//   };
+// }
 
 // deletes token from localstorage
 // and deauths
@@ -837,6 +839,21 @@ export function updatePassword({ token, password, } , history) {
       // history.push('/signin');
     }).catch((error) => {
       dispatch(authError(`Error: ${error.response.data}`));
+      // history.push('/signin');
+    });
+  };
+}
+
+// Signup and email confirmation
+export function createConfirmationToken({ 
+  email, password, role, student_profile_id, startup_id, } , history) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/emailconfirmation`, { email, password, role, student_profile_id, startup_id }).then((response) => {
+      dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
+      // dispatch({ type: ActionTypes.CONFIRM_EMAIL, payload: response.data });
+      // history.push('/signin');
+    }).catch((error) => {
+      dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
       // history.push('/signin');
     });
   };
