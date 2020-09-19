@@ -236,6 +236,9 @@ class Post extends Component {
   }
 
   checkDateRange = () => {
+    if (this.props.post.desired_start_date == null){
+      this.props.post.desired_start_date = new Date();
+    }
     const start = new Date(this.props.post.desired_start_date);
     const end = new Date(this.props.post.desired_end_date);
     const diff = (end.getTime() - start.getTime())/(1000 * 3600 * 24 * 7);
