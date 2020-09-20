@@ -1,14 +1,12 @@
 import axios from 'axios';
 
-const ROOT_URL = 'http://localhost:9090/api';
-// const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
+// const ROOT_URL = 'http://localhost:9090/api';
+const ROOT_URL = 'http://project-mcv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
   // user actions
   FETCH_USER: 'FETCH_USER',
-  FETCH_USERS: 'FETCH_USERS',
-  ADD_USER: 'ADD_USER',
   LOGOUT_USER: 'LOGOUT_USER',
   AUTH_ERROR: 'AUTH_ERROR',
   UPDATE_USER: 'UPDATE_USER',
@@ -37,12 +35,6 @@ export const ActionTypes = {
   ADD_OTHER_EXP: 'ADD_OTHER_EXP',
   UPDATE_OTHER_EXP: 'UPDATE_OTHER_EXP',
   DELETE_OTHER_EXP: 'DELETE_OTHER_EXP',
-  // application actions
-  FETCH_APPLICATIONS: 'FETCH_APPLICATIONS',
-  FETCH_APPLICATION: 'FETCH_APPLICATION',
-  // question actions
-  FETCH_QUESTIONS: 'FETCH_QUESTIONS',
-  FETCH_QUESTION: 'FETCH_QUESTION',
   // submitted application actions
   FETCH_SUBMITTED_APPLICATIONS: 'FETCH_SUBMITTED_APPLICATIONS',
   FETCH_SUBMITTED_APPLICATION: 'FETCH_SUBMITTED_APPLICATION',
@@ -93,7 +85,7 @@ export function createPost(post, startup, history) {
         // Update the student with the newly created post
         startup.posts.push(response.data);
         axios.put(`${ROOT_URL}/startups/${startup._id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response2) => {
-          dispatch({ type: ActionTypes.UPDATE_STARTUP, payload: response2.data });
+          dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response2.data });
         }).catch((error2) => {
           dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error2.message });
         });
@@ -140,11 +132,10 @@ export function fetchPost(id) {
   };
 }
 
-// this is broken btw
 export function updatePost(id, post) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_POST, payload: response.data });
+      dispatch({ type: ActionTypes.UPDATE_POST, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
@@ -194,7 +185,7 @@ export function fetchStartups() {
 export function updateStartup(id, startup) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/startups/${id}`, startup, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.UPDATE_STARTUP, payload: response.data });
+      dispatch({ type: ActionTypes.FETCH_STARTUP, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.SET_ERROR, errorMessage: error.message });
     });
@@ -762,7 +753,7 @@ export function signupUser({
       localStorage.setItem('userID', response.data.user.id);
       localStorage.setItem('role', response.data.user.role);
       // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
-      dispatch({ type: ActionTypes.ADD_USER, payload: response.data.user });
+      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
       if (response.data.user.role === 'student') {
         history.push('/student-signup');
       } else if (response.data.user.role === 'startup') {
@@ -800,7 +791,7 @@ export function fetchUser(id) {
 export function fetchUsers() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/users`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.FETCH_USERS, payload: response.data });
+      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, error });
     });
@@ -810,7 +801,7 @@ export function fetchUsers() {
 export function updateUser(id, user) {
   return (dispatch) => {
     axios.put(`${ROOT_URL}/users/${id}`, user, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
-      dispatch({ type: ActionTypes.UPDATE_USER, payload: response.data });
+      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
@@ -845,7 +836,7 @@ export function updatePassword({ token, password, } , history) {
 }
 
 // Signup and email confirmation
-export function createConfirmationToken({ 
+export function sendConfirmationEmail({ 
   email, password, role, student_profile_id, startup_id, } , history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/emailconfirmation`, { email, password, role, student_profile_id, startup_id }).then((response) => {
@@ -860,6 +851,28 @@ export function createConfirmationToken({
   };
 }
 
+export function confirmedSignup({ token, } , history) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/confirmemail`, { token, }).then((response) => {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userID', response.data.user.id);
+      localStorage.setItem('role', response.data.user.role);
+      // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
+      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
+      if (response.data.user.role === 'student') {
+        history.push('/student-signup');
+      } else if (response.data.user.role === 'startup') {
+        history.push('/startup-signup');
+      } else if (response.data.user.role === 'admin') { // likely not to reach here as no option to determine role of admin
+        history.push('/posts');
+      }
+    }).catch((error) => {
+      dispatch(authError(`Sign Up Failed: ${error}`));
+    });
+  };
+}
+
+// s3 routes
 function getSignedRequest(id, file) {
   const fileName = encodeURIComponent(file.name);
   return axios.get(`${ROOT_URL}/sign-s3?file-name=${id}/${fileName}&file-type=${file.type}`);
@@ -887,7 +900,7 @@ export function emailExists({ email, }) {
     axios.post(`${ROOT_URL}/emailexists`, { email, }).then((response) => {
       dispatch(authError(response.data));
     }).catch((error) => {
-      dispatch(authError(response.data));
+      dispatch(authError(error.data));
     });
   };
 

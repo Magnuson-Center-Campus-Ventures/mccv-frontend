@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  authError, signupUser, createStudent, updateUser, emailExists, createConfirmationToken,
+  authError, signupUser, createStudent, updateUser, 
+  emailExists, sendConfirmationEmail,
 } from '../actions';
 import '../styles/signup.scss';
 import StudentTerms from './student-components/student-modals/student-terms'
@@ -62,12 +63,10 @@ class Signup extends Component {
       student_profile_id: this.state.student_profile_id,
       startup_id: this.state.startup_id,
     }
-    this.createConfirmationToken(confirmation, this.props.history);
+    this.props.sendConfirmationEmail(confirmation, this.props.history);
   }
 
   showModal = (event) => {
-    console.log(this.state.error);
-    console.log(this.state.show_error);
     if (this.state.error != ''){
       this.state.show_error = true;
       this.state.displayed_error = this.state.error;
@@ -84,7 +83,7 @@ class Signup extends Component {
   signModal = (event) => {
     if (event.signature != ''){
       this.state.signed = new Date().getTime();
-      this.signupNow
+      this.signupNow();
     }
     this.setState({ show: false });
   }
@@ -203,5 +202,5 @@ function mapStateToProps(reduxState) {
 }
 
 export default withRouter(connect(mapStateToProps, {
-  authError, signupUser, createStudent, updateUser, emailExists, createConfirmationToken,
+  authError, signupUser, createStudent, updateUser, emailExists, sendConfirmationEmail,
 })(Signup));
