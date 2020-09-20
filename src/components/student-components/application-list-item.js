@@ -8,14 +8,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   fetchSubmittedApplication,
-  fetchQuestions,
   fetchPost,
   fetchStudentByID,
   fetchUserByStudentID,
   fetchUser,
 } from '../../actions';
 import '../../styles/startup-submitted-application.scss';
-
+ 
 function isEmpty(obj) {
   return Object.keys(obj).length === 0;
 }
@@ -23,7 +22,6 @@ function isEmpty(obj) {
 class ApplicationListItem extends Component {
   componentDidMount() {
     this.props.fetchSubmittedApplication(this.props.match.params.applicationID);
-    this.props.fetchQuestions();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -34,13 +32,13 @@ class ApplicationListItem extends Component {
 
   renderQuestions= () => {
     const items = [];
-    if (this.props.current.responses && this.props.questions.length > 0) {
-      this.props.questions.map((question) => {
-        if (this.props.current.responses[question._id]) {
+    if (this.props.post.questions && this.props.post.questions.length > 0) {
+      this.props.post.questions.map((question) => {
+        if (this.props.current.responses[question]) {
           items.push(
-            <div key={question._id} className="work-exp">
-              <div className="exp-title">{question.question}</div>
-              <div className="exp-text">{this.props.current.responses[question._id]}</div>
+            <div key={question} className="work-exp">
+              <div className="exp-title">{question}</div>
+              <div className="exp-text">{this.props.current.responses[question]}</div>
             </div>,
           );
         }
@@ -52,7 +50,7 @@ class ApplicationListItem extends Component {
   }
 
   render() {
-    if (this.props.post != null && !isEmpty(this.props.post) && this.props.questions != null && !isEmpty(this.props.questions)) {
+    if (this.props.post != null && !isEmpty(this.props.post)) {
       return (
         <div>
           <div className="job-info">
@@ -83,7 +81,6 @@ const mapStateToProps = (reduxState) => ({
   user: reduxState.user.current,
   current: reduxState.submittedApplications.current,
   post: reduxState.posts.current,
-  questions: reduxState.questions.all,
 });
 
 export default withRouter(connect(mapStateToProps, {
@@ -91,6 +88,5 @@ export default withRouter(connect(mapStateToProps, {
   fetchUserByStudentID,
   fetchUser,
   fetchSubmittedApplication,
-  fetchQuestions,
   fetchPost,
 })(ApplicationListItem));

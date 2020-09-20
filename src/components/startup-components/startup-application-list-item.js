@@ -9,7 +9,6 @@ import { withRouter } from 'react-router-dom';
 import { Confirm } from 'semantic-ui-react';
 import {
   fetchSubmittedApplication,
-  fetchQuestions,
   fetchPost,
   updatePost,
   fetchStudentByID,
@@ -39,7 +38,6 @@ class StartupApplicationListItem extends Component {
 
   componentDidMount() {
     this.props.fetchSubmittedApplication(this.props.match.params.applicationID);
-    this.props.fetchQuestions();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -228,16 +226,14 @@ class StartupApplicationListItem extends Component {
 
   renderQuestions= () => {
     const items = [];
-    if (this.props.current.responses && this.props.questions.length > 0) {
-      this.props.questions.map((question) => {
-        if (this.props.current.responses[question._id]) {
-          items.push(
-            <div key={question._id} className="work-exp">
-              <div className="exp-title">{question.question}</div>
-              <div className="exp-text">{this.props.current.responses[question._id]}</div>
-            </div>,
-          );
-        }
+    if (this.props.post.questions) {
+      this.props.post.questions.forEach((question) => {
+        items.push(
+          <div key={question} className="work-exp">
+            <div className="exp-title">{question}</div>
+            <div className="exp-text">{this.props.current.responses[question]}</div>
+          </div>,
+        );
       });
       return items;
     } else {
@@ -437,7 +433,6 @@ const mapStateToProps = (reduxState) => ({
   user: reduxState.user.current,
   current: reduxState.submittedApplications.current,
   post: reduxState.posts.current,
-  questions: reduxState.questions.all,
 });
 
 export default withRouter(connect(mapStateToProps, {
@@ -450,7 +445,6 @@ export default withRouter(connect(mapStateToProps, {
   fetchAllSkills,
   fetchUser,
   fetchSubmittedApplication,
-  fetchQuestions,
   fetchPost,
   updatePost,
   updateSubmittedApplication,
