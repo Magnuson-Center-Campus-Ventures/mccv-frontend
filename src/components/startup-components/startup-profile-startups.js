@@ -412,7 +412,7 @@ class StartupProfile extends Component {
           ? (
             <div className="startup-postings">
               <div className="startup-add-posting-box">
-                <span className="startup-postings-h1">Volunteer Positions:</span>
+                <span className="startup-postings-h1">Add Volunteer Positions:</span>
                 <button type="button"
                   className="startup-add-posting-btn"
                   onClick={() => {
@@ -433,7 +433,7 @@ class StartupProfile extends Component {
       return (
         <div className="startup-postings">
           <div className="startup-add-posting-box">
-            <span className="startup-postings-h1">Volunteer Positions:</span>
+            <span className="startup-postings-h1">Add Volunteer Positions:</span>
             <button type="button"
               className="startup-add-posting-btn"
               onClick={() => {

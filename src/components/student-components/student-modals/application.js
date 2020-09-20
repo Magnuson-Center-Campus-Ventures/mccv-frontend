@@ -8,12 +8,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   submitApplication,
-  fetchQuestions,
   fetchPost,
   fetchStudentByUserID,
   fetchUserByStudentID,
   fetchUser,
-  fetchApplication,
   updatePost,
 } from '../../../actions';
 import close from '../../../../static/img/close.png';
@@ -35,13 +33,6 @@ class Application extends React.Component {
   componentDidMount() {
     this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchPost(this.props.match.params.postID);
-    this.props.fetchQuestions();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.post !== null && !isEmpty(this.props.post) && prevProps.post !== this.props.post) {
-      this.props.fetchApplication(this.props.post?.application_id);
-    }
   }
 
   onSubmit = (e) => {
@@ -70,16 +61,14 @@ class Application extends React.Component {
 
   renderHelper= () => {
     const items = [];
-    if (this.props.questions && this.props.application.questions) {
-      this.props.questions.map((question) => {
-        if (this.props.application.questions.includes(question._id)) {
-          items.push(
-            <div key={question._id}>
-              <h3 id="question-title" key={question._id}>{question.question}</h3>
-              <textarea name={question._id} onChange={this.onAnswerChange} value={this.state.questionToAnswer[question._id]} />
-            </div>,
-          );
-        }
+    if (this.props.post) {
+      this.props.post.questions.map((question) => {
+        items.push(
+          <div key={question}>
+            <h3 id="question-title" >{question}</h3>
+            <textarea name={question} onChange={this.onAnswerChange} value={this.state.questionToAnswer[question]} />
+          </div>,
+        );
       });
       return items;
     } else {
@@ -134,11 +123,9 @@ const mapStateToProps = (reduxState) => ({
 
 export default withRouter(connect(mapStateToProps, {
   submitApplication,
-  fetchQuestions,
   fetchPost,
   fetchStudentByUserID,
   fetchUserByStudentID,
   fetchUser,
-  fetchApplication,
   updatePost,
 })(Application));

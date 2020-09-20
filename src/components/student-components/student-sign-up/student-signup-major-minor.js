@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import TextareaAutosize from 'react-textarea-autosize';
 import {
   fetchStudentByUserID, fetchUser, updateStudent,
 } from '../../../actions';
@@ -13,14 +14,9 @@ class StudentMajorMinors extends Component {
     this.state = {
       student: {},
       affiliation: '',
-      major: '',
-      minor: '',
+      newMajor: '',
+      newMinor: '',
     };
-
-    this.onMajorChange = this.onMajorChange.bind(this);
-    this.onMinorChange = this.onMinorChange.bind(this);
-    this.deleteMajor = this.deleteMajor.bind(this);
-    this.deleteMinor = this.deleteMinor.bind(this);
   }
 
   // Get profile info
@@ -46,78 +42,48 @@ class StudentMajorMinors extends Component {
     this.forceUpdate(); 
 }
 
-  onMajorChange(event) {
-    this.setState({
-      major: event.target.value,
-    });
-  }
-
-  onMinorChange(event) {
-    this.setState({
-      minor: event.target.value,
-    });
-  }
-
-  addMajor = () => {
-    if (!this.state.student.majors.includes(this.state.major)) {
-      this.state.student.majors.push(this.state.major);
-    }
-    this.state.major = '';
-    this.forceUpdate();
-  }
-
-  addMinor = () => {
-    if (!this.state.student.minors.includes(this.state.minor)) {
-      this.state.student.minors.push(this.state.minor);
-    }
-    this.state.minor = '';
-    this.forceUpdate();
-  }
-
-  deleteMajor = (major) => {
-    const majors = this.state.student.majors.filter((value) => {
-      return (value !== major.major);
-    });
-    this.state.student.majors = majors;
-    this.forceUpdate();
-  }
-
-  deleteMinor = (minor) => {
-    const minors = this.state.student.minors.filter((value) => {
-      return (value !== minor.minor);
-    });
-    this.state.student.minors = minors;
-    this.forceUpdate();
-  }
-
   renderMajors() {
-    return (
-      this.props.student.majors.map((value) => {
-        return (
-          <li className="question-fields-resp" key={value}>
-            {value}
-            <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteMajor({ value }); }}>
-              <i className="far fa-trash-alt" id="icon" />
-            </button>
-          </li>
-        );
-      })
-    );
+    return this.props.student.majors.map((major, index) => {
+      return (
+        <div key={major}>
+          <li id="responsibility" key={index}>{major}</li>
+          <button className="del-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                prevState.student.majors.splice(index, 1);
+                this.props.student.majors = prevState.student.majors;
+                return {
+                  ...prevState,
+                };
+              });
+            }}
+          ><i className="far fa-trash-alt delete-icon" />
+          </button>
+        </div>
+      );
+    });
   }
 
   renderMinors() {
-    return (
-      this.state.student.minors.map((value) => {
-        return (
-          <li className="question-fields-resp" key={value}>
-            {value}
-            <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteMinor({ value }); }}>
-              <i className="far fa-trash-alt" id="icon" />
-            </button>
-          </li>
-        );
-      })
-    );
+    return this.props.student.minors.map((minor, index) => {
+      return (
+        <div key={minor}>
+          <li id="responsibility" key={index}>{minor}</li>
+          <button className="del-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                prevState.student.minors.splice(index, 1);
+                this.props.student.minors = prevState.student.minors;
+                return {
+                  ...prevState,
+                };
+              });
+            }}
+          ><i className="far fa-trash-alt delete-icon" />
+          </button>
+        </div>
+      );
+    });
   }
 
   render() {
@@ -144,17 +110,39 @@ class StudentMajorMinors extends Component {
           <div className="question-fields">
             <p className="question-fields-title">Majors <span></span></p>
             <p className="imptMessage">please make sure to write the full name of your major (e.x. "Computer Science" instead of "CS")</p>
-            <input className="question-fields-text" onChange={this.onMajorChange} value={this.state.major} />
-            <button className="question-fields-button" type="submit" style={{ cursor: 'pointer' }} onClick={this.addMajor} value={this.major}>
-              <i className="far fa-plus-square" id="icon" />
-            </button>
-            <ul className="question-fields-list-mm">{this.renderMajors()}</ul>
+            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newMajor = event.target.value} />
+                  <button className="add-button"
+                    onClick={() => {
+                      this.setState((prevState) => {
+                        prevState.student.majors.push(this.state.newMajor);
+                        this.props.student.majors = prevState.student.majors;
+                        return {
+                          ...prevState,
+                        };
+                      });
+                    }}
+                  ><i className="fa fa-plus add-icon" aria-hidden="true" />
+                  </button>
+            <ul className="question-fields-list-mm">
+              {this.renderMajors()}
+              </ul>
             <p className="question-fields-title">Minors</p>
-            <input className="question-fields-text" onChange={this.onMinorChange} value={this.state.minor} />
-            <button className="question-fields-button" type="submit" style={{ cursor: 'pointer' }} onClick={this.addMinor} value={this.minor}>
-              <i className="far fa-plus-square" id="icon" />
-            </button>
-            <ul className="question-fields-list-mm">{this.renderMinors()}</ul>
+            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newMinor = event.target.value} />
+              <button className="add-button"
+                onClick={() => {
+                  this.setState((prevState) => {
+                    prevState.student.minors.push(this.state.newMinor);
+                    this.props.student.minors = prevState.student.minors;
+                    return {
+                      ...prevState,
+                    };
+                  });
+                }}
+              ><i className="fa fa-plus add-icon" aria-hidden="true" />
+              </button>
+            <ul className="question-fields-list-mm">
+              {this.renderMinors()}
+            </ul>
           </div>
         </div>
       );

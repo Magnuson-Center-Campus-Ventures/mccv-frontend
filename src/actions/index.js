@@ -137,6 +137,7 @@ export function updatePost(id, post) {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.UPDATE_POST, payload: response.data });
     }).catch((error) => {
+      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -575,29 +576,6 @@ export function createClassForPost(_class, post) {
   };
 }
 
-// applications functions
-export function fetchApplications() {
-  return (dispatch) => {
-    axios.get(`${ROOT_URL}/applications`, { headers: { authorization: localStorage.getItem('token') } })
-      .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_APPLICATIONS, payload: response.data });
-      }).catch((error) => {
-        dispatch({ type: ActionTypes.ERROR_SET, error });
-      });
-  };
-}
-
-export function fetchApplication(id) {
-  return (dispatch) => {
-    axios.get(`${ROOT_URL}/applications/${id}`, { headers: { authorization: localStorage.getItem('token') } })
-      .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_APPLICATION, payload: response.data });
-      }).catch((error) => {
-        dispatch({ type: ActionTypes.ERROR_SET, error });
-      });
-  };
-}
-
 export function submitApplication(newApplication) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/submittedapplications`, newApplication, { headers: { authorization: localStorage.getItem('token') } })
@@ -612,17 +590,6 @@ export function submitApplication(newApplication) {
 export function clearApplication() {
   return (dispatch) => {
     dispatch({ type: ActionTypes.CLEAR_APPLICATION });
-  };
-}
-
-export function fetchQuestions() {
-  return (dispatch) => {
-    axios.get(`${ROOT_URL}/questions`, { headers: { authorization: localStorage.getItem('token') } })
-      .then((response) => {
-        dispatch({ type: ActionTypes.FETCH_QUESTIONS, payload: response.data });
-      }).catch((error) => {
-        dispatch({ type: ActionTypes.ERROR_SET, error });
-      });
   };
 }
 
