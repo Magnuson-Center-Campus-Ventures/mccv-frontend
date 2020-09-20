@@ -83,7 +83,7 @@ class StartupDesc extends Component {
           <i className="far fa-id-badge question-header-icon" id="icon" />
         </div>
         <div className="question-fields-desc">
-          <p className="question-fields-title">Logo (Use company's name for filename)</p>
+          <p className="question-fields-title">Logo</p>
           {this.renderLogo()}
           <input type="file" name="coverImage" onChange={this.onImageUpload} />
         </div>

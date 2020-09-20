@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  authError, signupUser, createStudent, updateUser, emailExists,
+  authError, signupUser, createStudent, updateUser, 
+  emailExists, sendConfirmationEmail,
 } from '../actions';
 import '../styles/signup.scss';
 import StudentTerms from './student-components/student-modals/student-terms'
@@ -28,7 +29,7 @@ class Signup extends Component {
 
   onEmailChange = (event) => {
     this.setState({ email: event.target.value });
-    this.props.emailExists({ email: event.target.value});
+    this.props.emailExists({ email: event.target.value.toLowerCase()});
   }
 
   onPasswordChange = (event) => {
@@ -47,19 +48,25 @@ class Signup extends Component {
 
   signupNow() {
     // create new user
-    const newUser = { ...this.state };
-    newUser.email = this.state.email;
-    newUser.password = this.state.password;
-    newUser.role = this.state.role;
-    newUser.student_profile_id = this.state.student_profile_id;
-    newUser.startup_id = this.state.startup_id;
-    newUser.signed = this.state.signed;
-    this.props.signupUser(newUser, this.props.history);
+    // const newUser = { ...this.state };
+    // newUser.email = this.state.email.toLowerCase(); 
+    // newUser.password = this.state.password;
+    // newUser.role = this.state.role;
+    // newUser.student_profile_id = this.state.student_profile_id;
+    // newUser.startup_id = this.state.startup_id;
+    // newUser.signed = this.state.signed;
+    // this.props.signupUser(newUser, this.props.history);
+    const confirmation = {
+      email: this.state.email.toLowerCase(),
+      password: this.state.password,
+      role: this.state.role,
+      student_profile_id: this.state.student_profile_id,
+      startup_id: this.state.startup_id,
+    }
+    this.props.sendConfirmationEmail(confirmation, this.props.history);
   }
 
   showModal = (event) => {
-    console.log(this.state.error);
-    console.log(this.state.show_error);
     if (this.state.error != ''){
       this.state.show_error = true;
       this.state.displayed_error = this.state.error;
@@ -195,5 +202,5 @@ function mapStateToProps(reduxState) {
 }
 
 export default withRouter(connect(mapStateToProps, {
-  authError, signupUser, createStudent, updateUser, emailExists,
+  authError, signupUser, createStudent, updateUser, emailExists, sendConfirmationEmail,
 })(Signup));

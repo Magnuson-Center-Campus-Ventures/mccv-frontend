@@ -56,6 +56,8 @@ export const ActionTypes = {
   // password reset actions
   ADD_RESET_TOKEN: 'ADD_RESET_TOKEN',
   FETCH_RESET_TOKEN: 'FETCH_RESET_TOKEN',
+  // email confirmation actions
+  CONFIRM_EMAIL: 'CONFIRM_EMAIL',
   // s3 actions
   UPLOAD_IMAGE: 'UPLOAD_IMAGE',
   // general error
@@ -705,7 +707,6 @@ export function signinUser({ email, password }, history) {
 }
 
 export function signupUser({
-  // eslint-disable-next-line camelcase
   email, password, role, student_profile_id, startup_id,
 }, history) {
   // takes in an object with email and password (minimal user object)
@@ -728,7 +729,6 @@ export function signupUser({
         history.push('/posts');
       }
     }).catch((error) => {
-      // eslint-disable-next-line no-alert
       dispatch(authError(`Sign Up Failed: ${error.response.data}`));
     });
   };
@@ -802,12 +802,51 @@ export function updatePassword({ token, password, } , history) {
   };
 }
 
-function getSignedRequest(file) {
+// Signup and email confirmation
+export function sendConfirmationEmail({ 
+  email, password, role, student_profile_id, startup_id, } , history) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/emailconfirmation`, { email, password, role, student_profile_id, startup_id }).then((response) => {
+      dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
+      // dispatch({ type: ActionTypes.CONFIRM_EMAIL, payload: response.data });
+      history.push('/emailconfirmation');
+    }).catch((error) => {
+      // dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
+      dispatch(authError(error));
+      history.push('/emailconfirmation');
+    });
+  };
+}
+
+export function confirmedSignup({ token, } , history) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/confirmemail`, { token, }).then((response) => {
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userID', response.data.user.id);
+      localStorage.setItem('role', response.data.user.role);
+      // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
+      dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
+      if (response.data.user.role === 'student') {
+        history.push('/student-signup');
+      } else if (response.data.user.role === 'startup') {
+        history.push('/startup-signup');
+      } else if (response.data.user.role === 'admin') { // likely not to reach here as no option to determine role of admin
+        history.push('/posts');
+      }
+    }).catch((error) => {
+      dispatch(authError(`Sign Up Failed: ${error}`));
+    });
+  };
+}
+
+// s3 routes
+function getSignedRequest(id, file) {
   const fileName = encodeURIComponent(file.name);
-  return axios.get(`${ROOT_URL}/sign-s3?file-name=${fileName}&file-type=${file.type}`);
+  return axios.get(`${ROOT_URL}/sign-s3?file-name=${id}/${fileName}&file-type=${file.type}`);
 }
 
 function uploadFileToS3(signedRequest, file, url) {
+  console.log(signedRequest,file,url);
   return new Promise((fulfill, reject) => {
     axios.put(signedRequest, file, { headers: { 'Content-Type': file.type } }).then((response) => {
       fulfill(url);
@@ -817,8 +856,8 @@ function uploadFileToS3(signedRequest, file, url) {
   });
 }
 
-export function uploadImage(file) {
-  return getSignedRequest(file).then((response) => {
+export function uploadImage(id, file) {
+  return getSignedRequest(id, file).then((response) => {
     return uploadFileToS3(response.data.signedRequest, file, response.data.url);
   });
 }
@@ -828,7 +867,7 @@ export function emailExists({ email, }) {
     axios.post(`${ROOT_URL}/emailexists`, { email, }).then((response) => {
       dispatch(authError(response.data));
     }).catch((error) => {
-      dispatch(authError(response.data));
+      dispatch(authError(error.data));
     });
   };
 
