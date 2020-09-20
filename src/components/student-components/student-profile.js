@@ -311,6 +311,23 @@ class StudentProfile extends Component {
           // </div>  
         )
       }
+    } else{
+      return(
+        <select value={this.state.affiliation} onChange={(event) => {
+          this.props.student.affiliation = event.target.value;
+          this.changeStudentField('affiliation', event);
+          this.setState({
+            affiliation: event.target.value, 
+          });
+        }}>
+          {/* <option value={this.state.affiliation}>{this.props.student.affiliation}</option> */}
+          <option value="Undergrad">Dartmouth College</option>
+          <option value="Geisel">Geisel School of Medicine </option>
+          <option value="Tuck">Tuck School of Business</option>
+          <option value="Thayer">Thayer School of Engineering</option>
+          <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+        </select>
+      )
     }
   }
 
