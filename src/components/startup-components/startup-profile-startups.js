@@ -83,7 +83,7 @@ class StartupProfile extends Component {
     if (file) {
       this.state.preview = window.URL.createObjectURL(file);
       if (file) {
-        uploadImage(file).then(url => {
+        uploadImage(this.props.startup.id, file).then(url => {
           this.state.startup.logo = url;
         }).catch(error => {
           this.state.error = 'error';
@@ -317,7 +317,6 @@ class StartupProfile extends Component {
               <p>Logo</p>
               <img className="startup-logo" id="preview" alt="preview" src={this.state.preview} />
               <input type="file" name="coverImage" onChange={this.onImageUpload} />
-              <p>(Use company's name for filename)</p>
             </div>
             <div className="startup-header">
               <p>Name</p>
@@ -413,7 +412,7 @@ class StartupProfile extends Component {
           ? (
             <div className="startup-postings">
               <div className="startup-add-posting-box">
-                <span className="startup-postings-h1">Volunteer Positions:</span>
+                <span className="startup-postings-h1">Add Volunteer Positions:</span>
                 <button type="button"
                   className="startup-add-posting-btn"
                   onClick={() => {
@@ -434,7 +433,7 @@ class StartupProfile extends Component {
       return (
         <div className="startup-postings">
           <div className="startup-add-posting-box">
-            <span className="startup-postings-h1">Volunteer Positions:</span>
+            <span className="startup-postings-h1">Add Volunteer Positions:</span>
             <button type="button"
               className="startup-add-posting-btn"
               onClick={() => {

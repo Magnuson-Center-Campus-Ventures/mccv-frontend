@@ -13,7 +13,8 @@ import TextareaAutosize from 'react-textarea-autosize';
 import CreateableSelect from 'react-select/creatable';
 import { DateRange } from 'react-date-range';
 import {
-  fetchPost, updatePost, fetchApplication, fetchUser, clearApplication, clearPost,
+  fetchPost, updatePost, 
+  fetchUser, fetchStartup,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills,
   createIndustryForPost, createReqSkillForPost, createPrefSkillForPost, createClassForPost,
 } from '../../actions';
@@ -29,7 +30,6 @@ class Post extends Component {
     super(props);
     this.state = {
       post: {},
-      responsibilities: [],
       applyShow: false,
       archiveShow: false,
       isEditing: false,
@@ -47,6 +47,8 @@ class Post extends Component {
       start: new Date(),
       end: new Date(),
       validDate: true,
+      newResponsibility: '',
+      newQuestion: '',
     };
     this.showApplyModal = this.showApplyModal.bind(this);
     this.hideApplyModal = this.hideApplyModal.bind(this);
@@ -68,6 +70,7 @@ class Post extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.post && this.props.post !== {} && prevProps.post !== this.props.post) {
+      this.props.fetchStartup(this.props.post.startup_id.id);
       // Set initial dropdown options to be the indutries, skills, and classes the post already has
       let selectedIndustryOptions = [];
       if (this.props.post.industries) {
@@ -97,6 +100,7 @@ class Post extends Component {
       this.setState({
         post: this.props.post,
         responsibilities: this.props.post.responsibilities,
+        questions: this.props.post.questions,
         ownIndustries: this.props.post.industries,
         ownClasses: this.props.post.desired_classes,
         ownPrefSkills: this.props.post.preferred_skills,
@@ -134,7 +138,6 @@ class Post extends Component {
   // }
 
   showApplyModal = (e) => {
-    this.props.fetchApplication(this.props.post?.application_id);
     this.setState({
       applyShow: true,
     });
@@ -160,13 +163,10 @@ class Post extends Component {
 
   changePostField = (field, event) => {
     const value = event.target.value;
-
     this.setState((prevState) => {
-      const post = { ...prevState.post };
-      post[field] = value;
+      prevState.post[field] = value;
       return {
         ...prevState,
-        post,
       };
     });
   }
@@ -188,9 +188,8 @@ class Post extends Component {
     if (this.state.isEditing) {
       this.checkDateRange();
       if (this.state.validDate == true) {
-        const post = { ...this.state.post };
-        post.responsibilities = this.state.responsibilities;
-        this.props.updatePost(this.state.post.id, post);
+        // this.props.post = this.state.post;
+        this.props.updatePost(this.state.post.id, this.state.post);
         this.setState({ isEditing: false });
       }
     } else {
@@ -230,20 +229,6 @@ class Post extends Component {
     }
   }
 
-  responsibilitiesHelper = () => {
-    const responsibilities = [];
-    if (this.props.post?.responsibilities) {
-      for (let i = 0; i < this.props.post.responsibilities.length; i++) {
-        responsibilities.push(
-          <li id="responsibility" key={this.props.post.responsibilities[i]}>{this.props.post.responsibilities[i]}</li>,
-        );
-      }
-      return responsibilities;
-    } else {
-      return <div />;
-    }
-  }
-
   approvePost() {
     this.props.post.status = this.props.status;
     this.props.updatePost(this.props.post.id, this.props.post);
@@ -251,6 +236,9 @@ class Post extends Component {
   }
 
   checkDateRange = () => {
+    if (this.props.post.desired_start_date == null){
+      this.props.post.desired_start_date = new Date();
+    }
     const start = new Date(this.props.post.desired_start_date);
     const end = new Date(this.props.post.desired_end_date);
     const diff = (end.getTime() - start.getTime())/(1000 * 3600 * 24 * 7);
@@ -321,7 +309,6 @@ class Post extends Component {
               </button>
             )
             : null}
-
           {!this.state.isEditing
             ? (
               <button className="post-btn"
@@ -332,14 +319,12 @@ class Post extends Component {
               </button>
             )
             : null}
-
           {/*<button id="edit-post-btn"
             className="post-btn"
             type="submit"
             onClick={this.submit}
           >{this.state.isEditing ? 'Save Changes' : 'Edit Position'}
             </button>*/}
-          
           {!this.state.isEditing
             ? (
               <button className="post-btn"
@@ -371,42 +356,6 @@ class Post extends Component {
         </button>
       );
     }
-  }
-
-  renderEditResponsibilities = () => {
-    return this.state.responsibilities.map((resp, index) => {
-      return (
-        <div key={resp} className="resp-input">
-          <TextareaAutosize className="short-input-post"
-            defaultValue={resp}
-            onBlur={(event) => {
-              const value = event.target.value;
-              this.setState((prevState) => {
-                const responsibilities = [...prevState.responsibilities];
-                responsibilities[index] = value;
-                return {
-                  ...prevState,
-                  responsibilities,
-                };
-              });
-            }}
-          />
-          <button className="del-button"
-            onClick={() => {
-              this.setState((prevState) => {
-                const responsibilities = [...prevState.responsibilities];
-                responsibilities.splice(index, 1);
-                return {
-                  ...prevState,
-                  responsibilities,
-                };
-              });
-            }}
-          ><i className="far fa-trash-alt delete-icon" />
-          </button>
-        </div>
-      );
-    });
   }
 
   renderLocation = () => {
@@ -450,6 +399,75 @@ class Post extends Component {
     }
   }
 
+  renderResponsibilitiesNoEdit = () => { 
+    const responsibilities = [];
+    if (this.props.post?.responsibilities) {
+      for (let i = 0; i < this.props.post.responsibilities.length; i++) {
+        responsibilities.push(
+          <li id="responsibility" key={this.props.post.responsibilities[i]}>{this.props.post.responsibilities[i]}</li>,
+        );
+      }
+      return responsibilities;
+    } else {
+      return <div />;
+    }
+  }
+  
+  renderEditResponsibilities = () => { 
+    return this.state.post.responsibilities.map((resp, index) => {
+      return (
+        <div key={resp} className="resp-input">
+          <li id="responsibility" key={index}>{resp}</li>
+          <button className="del-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                prevState.post.responsibilities.splice(index, 1);
+                return {
+                  ...prevState,
+                };
+              });
+            }}
+          ><i className="far fa-trash-alt delete-icon" />
+          </button>
+        </div>
+      );
+    });
+  }
+
+  renderQuestionsNoEdit = (event) => {
+    const questions = [];
+    if (this.props.post.questions) {
+      this.props.post.questions.map((question) => {
+        questions.push(
+          <li id="responsibility" key={question}>{question}</li>
+        );
+      });
+      return questions;
+    }
+  }
+        
+  renderQuestionsEdit = (event) => {
+    return this.state.post.questions.map((resp, index) => {
+      return (
+        <div key={index} className="resp-input">
+          <li id="responsibility" key={resp}>{resp}</li>
+          <button className="del-button"
+            onClick={() => {
+              this.setState((prevState) => {
+                prevState.post.questions.splice(index, 1);
+                return {
+                  ...prevState,
+                };
+              });
+              this.forceUpdate();
+            }}>
+          <i className="far fa-trash-alt delete-icon" />
+          </button>
+        </div>
+      );
+    });
+  }
+
   renderEdit = () => {
     const dropdownStyles = {
       control: (base) => ({
@@ -474,6 +492,29 @@ class Post extends Component {
             </div>
             <p className="question-fields-title">Hours/Week</p>
             <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changePostField('time_commitment', event)} defaultValue={this.props.post?.time_commitment} />
+          </div>
+          <hr className="post-edit-divider" />
+          <div className="edits-resps">
+            <div className="resps-header">
+              <div className="input-title">Application Questions</div>
+              <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newQuestion = event.target.value} />
+              <button className="add-button"
+                onClick={() => {
+                  if (!this.state.post.questions.includes(this.state.newQuestion)){
+                    this.setState((prevState) => {
+                      prevState.post.questions.push(this.state.newQuestion);
+                      this.state.newQuestion = '';
+                      return {
+                        ...prevState,
+                      };
+                    });
+                  }
+                }}
+              >
+              <i className="fa fa-plus add-icon" aria-hidden="true" />
+              </button>
+            </div>
+            {this.renderQuestionsEdit()}
           </div>
         </div>
         <hr className="post-edit-divider" />
@@ -601,18 +642,20 @@ class Post extends Component {
         <div className="edits-resps">
           <div className="resps-header">
             <div className="input-title">Responsibilities</div>
+            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newResponsibility = event.target.value} />
             <button className="add-button"
               onClick={() => {
-                this.setState((prevState) => {
-                  const responsibilities = [...prevState.responsibilities];
-                  responsibilities.push('');
-                  return {
-                    ...prevState,
-                    responsibilities,
-                  };
-                });
-              }}
-            ><i className="fa fa-plus add-icon" aria-hidden="true" />
+                  if (!this.state.post.responsibilities.includes(this.state.newResponsibility)){
+                  this.setState((prevState) => {
+                    prevState.post.responsibilities.push(this.state.newResponsibility);
+                    this.state.newResponsibility = '';
+                    return {
+                      ...prevState,
+                    };
+                  });
+                }
+              }}>
+            <i className="fa fa-plus add-icon" aria-hidden="true" />
             </button>
           </div>
           {this.renderEditResponsibilities()}
@@ -664,8 +707,10 @@ class Post extends Component {
           </div>
         </div>
         <div className="bottom">
+          <h3>Application Questions</h3>
+          <ul id="skills">{this.renderQuestionsNoEdit()}</ul>
           <h3>Responsibilities</h3>
-          <ul id="skills">{this.responsibilitiesHelper()}</ul>
+          <ul id="skills">{this.renderResponsibilitiesNoEdit()}</ul>
         </div>
       </div>
     );
@@ -694,6 +739,7 @@ class Post extends Component {
   }
 }
 
+
 const mapStateToProps = (reduxState) => ({
   status: reduxState.startups.current.status,
   post: reduxState.posts.current,
@@ -707,7 +753,7 @@ export default withRouter(connect(mapStateToProps, {
   fetchPost,
   updatePost,
   fetchUser,
-  fetchApplication,
+  fetchStartup,
   fetchAllIndustries,
   fetchAllClasses,
   fetchAllSkills,

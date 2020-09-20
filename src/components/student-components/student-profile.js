@@ -35,8 +35,8 @@ class StudentProfile extends Component {
       student: {},
       gender: '',
       affiliation: '',
-      majors: [],
-      minors: [],
+      newMajor: '',
+      newMinor: '',
       workExps: [],
       otherExps: [],
       ownIndustries: [],
@@ -204,7 +204,7 @@ class StudentProfile extends Component {
   submit = () => {
     if (this.state.isEditing) {
       this.checkDateRange();
-      if (this.state.validDate == true) {
+      if (this.state.validDate) {
         const student = { ...this.state.student };
         student.majors = this.state.majors;
         student.minors = this.state.minors;
@@ -224,15 +224,21 @@ class StudentProfile extends Component {
   }
 
   checkDateRange = () => {
+    if (this.state.student.desired_start_date == null){
+      this.state.student.desired_start_date = new Date();
+    }
     const start = new Date(this.state.student.desired_start_date);
     const end = new Date(this.state.student.desired_end_date);
     const diff = (end.getTime() - start.getTime())/(1000 * 3600 * 24 * 7);
     if (diff > 3.5 && diff <= 10) {
+      console.log('true');
       this.state.validDate = true;
-      this.props.updateStudent(this.props.student.id, this.state.student);
     } else {
+      console.log('false');
       this.state.validDate = false;
+      console.log(this.state.student.desired_end_date);
       this.state.student.desired_end_date = new Date(start.getTime() + (1000 * 3600 * 24 * 7 * 4));
+      console.log(this.state.student.desired_end_date);
     }
   }
 
@@ -245,10 +251,15 @@ class StudentProfile extends Component {
   renderDateRange = () => {
     if (this.state.student.desired_start_date != null){
       this.state.start = new Date(this.state.student.desired_start_date);
-    } 
+    } else {
+      this.state.start = new Date();
+    }
     if (this.state.student.desired_end_date != null){
       this.state.end = new Date(this.state.student.desired_end_date);
+    } else {
+      this.state.start = new Date();
     }
+
     return (
       <DateRange
         editableDateInputs={true}
@@ -342,75 +353,54 @@ class StudentProfile extends Component {
       );
     }
   }
-
-  renderMajMin = (array) => {
-    if (array) {
-      return array.map((elem, index) => {
-        if (index < array.length - 1) {
-          return (
-            <div key={index} className="majors">{`${elem},`}</div>
+  
+  renderMajors = () => {
+    const majors = [];
+    if (this.state.student.majors) {
+      this.state.student.majors.map((major, index) => {
+        if (index < this.state.student.majors.length - 1) {
+          majors.push(
+          <div key={index} className="majors">{`${major},`}</div>
           );
         } else {
-          return (
-            <div key={index} className="majors">{elem}</div>
+          majors.push(
+            <div key={index} className="majors">{major}</div>
           );
         }
       });
-    } else return null;
-  }
-  
-  renderMajors = () => {
-    if (this.state.majors?.length > 0 && this.state.majors[0] != "") {
-      return (
-        <div id="major-row">
-          <div className="student-major-title">Major in </div>
-          {this.renderMajMin(this.state.majors)}
-        </div>
-      );
-    } else {
-      return (<div/>);
+      return majors;
     }
   }
 
   renderMinors = () => {
-    if (this.state.minors?.length > 0 && this.state.minors[0] != "") {
-      return (
-        <div id="minor-row">
-          <div className="student-minor-title">Minor in </div>
-          {this.renderMajMin(this.state.minors)}
-        </div>
-      );
-    } else {
-      return (<div/>);
+    const minors = [];
+    if (this.state.student.minors) {
+      this.state.student.minors.map((minor, index) => {
+        if (index < this.state.student.minors.length - 1) {
+          minors.push(
+          <div key={index} className="majors">{`${minor},`}</div>
+          );
+        } else {
+          minors.push(
+            <div key={index} className="majors">{minor}</div>
+          );
+        }
+      });
+      return minors;
     }
   }
 
   renderEditMajors = () => {
-    return this.state.majors.map((major, index) => {
+    return this.state.student.majors.map((major, index) => {
       return (
         <div key={major}>
-          <input className="short-input"
-            defaultValue={major}
-            onBlur={(event) => {
-              const value = event.target.value;
-              this.setState((prevState) => {
-                const majors = [...prevState.majors];
-                majors[index] = value;
-                return {
-                  ...prevState,
-                  majors,
-                };
-              });
-            }}
-          />
+          <li id="responsibility" key={index}>{major}</li>
           <button className="del-button"
             onClick={() => {
               this.setState((prevState) => {
-                const majors = [...prevState.majors];
-                majors.splice(index, 1);
+                prevState.student.majors.splice(index, 1);
                 return {
                   ...prevState,
-                  majors,
                 };
               });
             }}
@@ -422,31 +412,16 @@ class StudentProfile extends Component {
   }
 
   renderEditMinors = () => {
-    return this.state.minors.map((minor, index) => {
+    return this.state.student.minors.map((minor, index) => {
       return (
         <div key={minor}>
-          <input className="short-input"
-            defaultValue={minor}
-            onBlur={(event) => {
-              const value = event.target.value;
-              this.setState((prevState) => {
-                const minors = [...prevState.minors];
-                minors[index] = value;
-                return {
-                  ...prevState,
-                  minors,
-                };
-              });
-            }}
-          />
+          <li id="responsibility" key={index}>{minor}</li>
           <button className="del-button"
             onClick={() => {
               this.setState((prevState) => {
-                const minors = [...prevState.minors];
-                minors.splice(index, 1);
+                prevState.student.minors.splice(index, 1);
                 return {
                   ...prevState,
-                  minors,
                 };
               });
             }}
@@ -550,14 +525,13 @@ class StudentProfile extends Component {
               <div className="majmin-section">
                 <div className="majmin-header">
                   <div className="input-title">Majors</div>
+                  <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newMajor = event.target.value} />
                   <button className="add-button"
                     onClick={() => {
                       this.setState((prevState) => {
-                        const majors = [...prevState.majors];
-                        majors.push('');
+                        prevState.student.majors.push(this.state.newMajor);
                         return {
                           ...prevState,
-                          majors,
                         };
                       });
                     }}
@@ -569,14 +543,13 @@ class StudentProfile extends Component {
               <div className="majmin-section">
                 <div className="majmin-header">
                   <div className="input-title">Minors</div>
+                  <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newMinor = event.target.value} />
                   <button className="add-button"
                     onClick={() => {
                       this.setState((prevState) => {
-                        const minors = [...prevState.minors];
-                        minors.push('');
+                        prevState.student.minors.push(this.state.newMinor);
                         return {
                           ...prevState,
-                          minors,
                         };
                       });
                     }}
@@ -685,8 +658,14 @@ class StudentProfile extends Component {
           <div id="profile-header">
             <h1 id="student-profile-name">{`${this.state.student?.first_name} ${this.state.student?.last_name}`}</h1>
             {this.renderClassYearAffiliation()}
+            <div id="major-row">
+              <div className="student-major-title">Major in </div>
             {this.renderMajors()}
+            </div>
+            <div id="minor-row">
+              <div className="student-minor-title">Minor in </div>
             {this.renderMinors()}
+            </div>
             <div className="space"/>
             <div className="student-contact">{this.props.email}</div>
             <div className="student-contact">{this.state.student.phone_number ? this.state.student.phone_number : null}</div>

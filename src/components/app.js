@@ -32,6 +32,7 @@ import AdminRoute from './admin-components/admin-route';
 import ApplicationListItem from './student-components/application-list-item';
 import StartupSubmittedApplications from './startup-components/startup-submitted-applications';
 import AdminDashboard from './admin-components/dashboard';
+import EmailConfirmation from './email-confirmation';
 
 const App = (props) => {
   return (
@@ -44,6 +45,7 @@ const App = (props) => {
           <Route path="/startupslanding" component={StartupsLanding} />
           <Route path="/signin" component={Signin} />
           <Route path="/signup" component={Signup} />
+          <Route path="/emailconfirmation" component={EmailConfirmation} />
           <Route path="/forgotpassword" component={ForgotPassword} />
           <Route path="/resetpassword" component={ResetPassword} />
           <Route path="/credits" component={Credits} />
