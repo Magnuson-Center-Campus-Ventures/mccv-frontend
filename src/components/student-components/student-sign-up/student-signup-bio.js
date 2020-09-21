@@ -37,6 +37,7 @@ class StudentBio extends Component {
       };
     });
   }
+  // check this.props.students.req fields ...
 
   renderBioQuestions() {
     return (

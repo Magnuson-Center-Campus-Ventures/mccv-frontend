@@ -297,7 +297,7 @@ class Post extends Component {
     } else if (this.props.user.role === 'startup') {
       return (
         <div className="post-startup-buttons">
-          {!this.state.isEditing
+          {!this.state.isEditing && this.props.post.status != "Archived"
             ? (
               <button className="post-btn"
                 type="submit"
@@ -309,7 +309,7 @@ class Post extends Component {
               </button>
             )
             : null}
-          {!this.state.isEditing
+          {!this.state.isEditing && this.props.post.status != "Approved"
             ? (
               <button className="post-btn"
                 type="submit"
