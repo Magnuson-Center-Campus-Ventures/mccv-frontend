@@ -76,7 +76,7 @@ class Post extends Component {
       if (this.props.post.industries) {
         selectedIndustryOptions = this.props.post.industries.map((industry) => {
           return { value: industry.name, label: industry.name, industry };
-        });
+        }); 
       }
       let selectedClassOptions = [];
       if (this.props.post.desired_classes) {
@@ -414,24 +414,26 @@ class Post extends Component {
   }
   
   renderEditResponsibilities = () => { 
-    return this.state.post.responsibilities.map((resp, index) => {
-      return (
-        <div key={resp} className="resp-input">
-          <li id="responsibility" key={index}>{resp}</li>
-          <button className="del-button"
-            onClick={() => {
-              this.setState((prevState) => {
-                prevState.post.responsibilities.splice(index, 1);
-                return {
-                  ...prevState,
-                };
-              });
-            }}
-          ><i className="far fa-trash-alt delete-icon" />
-          </button>
-        </div>
-      );
-    });
+    if (this.state.post.responsibilities){
+      return this.state.post.responsibilities.map((resp, index) => {
+        return (
+          <div key={resp} className="resp-input">
+            <li id="responsibility" key={index}>{resp}</li>
+            <button className="del-button"
+              onClick={() => {
+                this.setState((prevState) => {
+                  prevState.post.responsibilities.splice(index, 1);
+                  return {
+                    ...prevState,
+                  };
+                });
+              }}
+            ><i className="far fa-trash-alt delete-icon" />
+            </button>
+          </div>
+        );
+      });
+    }
   }
 
   renderQuestionsNoEdit = (event) => {
@@ -447,25 +449,29 @@ class Post extends Component {
   }
         
   renderQuestionsEdit = (event) => {
-    return this.state.post.questions.map((resp, index) => {
-      return (
-        <div key={index} className="resp-input">
-          <li id="responsibility" key={resp}>{resp}</li>
-          <button className="del-button"
-            onClick={() => {
-              this.setState((prevState) => {
-                prevState.post.questions.splice(index, 1);
-                return {
-                  ...prevState,
-                };
-              });
-              this.forceUpdate();
-            }}>
-          <i className="far fa-trash-alt delete-icon" />
-          </button>
-        </div>
-      );
-    });
+    if (this.state.post.questions){
+      return this.state.post.questions.map((resp, index) => {
+        return (
+          <div key={index} className="resp-input">
+            <li id="responsibility" key={resp}>{resp}</li>
+            <button className="del-button"
+              onClick={() => {
+                this.setState((prevState) => {
+                  prevState.post.questions.splice(index, 1);
+                  return {
+                    ...prevState,
+                  };
+                });
+                this.forceUpdate();
+              }}>
+            <i className="far fa-trash-alt delete-icon" />
+            </button>
+          </div>
+        );
+      });
+    } else {
+      return <div></div>
+    }
   }
 
   renderEdit = () => {
