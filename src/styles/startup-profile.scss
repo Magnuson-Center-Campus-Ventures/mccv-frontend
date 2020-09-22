@@ -22,7 +22,7 @@
 .startup-postings-h1{
   margin-top: 30px;
   font-size: medium;
-  font-weight: bolder;
+  font-weight: 550;
   text-align: center;
   margin: 0px;
 }
@@ -82,7 +82,7 @@
 }
 
 .startup-posting-title {
-  font-weight: bolder;
+  font-weight: 550;
 }
 
 .startup-posting-description {
@@ -122,13 +122,13 @@
   top: 5em;
   bottom: 4rem;
   right: 0;
-  padding-left: 10vw;
-  padding-right: 10vw;
-  width: 45vw;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  width: 55vw;
   text-align: center;
   overflow-y: scroll;
-  margin-bottom: 0vh;
-  margin-left: 35vw;
+  //margin-bottom: 0vh;
+  //margin-left: 35vw;
 }
 
 .startup-location{
@@ -229,17 +229,51 @@ br{
   color: black
 }
 
-.startup-profile-admin-buttons > button{
-  font-size: large;
+.startup-profile-admin-button-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.startup-profile-admin-button {
+  background-color: #45B990;
+  width: 120px;
+  height: 45px;
   color: white;
-  width: fit-content;
+  border: none;
+  font-size: 1em;
+  font-family: Avenir Next;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 12px;
+  padding-right: 12px;
   border-radius: 20px;
-  background-color: #4cb184;
-  padding: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  box-shadow: 0px 10px;
-  margin-left: 1vw;
-  margin-right: 1vw;
-  margin-bottom: 2vh;
+  margin-top: 1em;
+  margin-bottom: 2em;
+}
+
+.startup-profile-admin-button:hover {
+  background-color: #015E36;
+}
+
+.embed-instructions-image, .embed-startup-video {
+  max-width: 100%;
+  max-height: 60%;
+}
+
+.startup-edit-button {
+  background-color: #45B990;
+  color: white;
+  border: none;
+  margin-top: 1em;
+  margin-bottom: 2em;
+  text-decoration: none;
+  font-size: 1em;
+  border-radius: .85em;
+  width: 8em;
+  height: 2.5em;
+  font-family: Avenir Next;
+}
+
+.startup-video {
+  width: 100%;
 }

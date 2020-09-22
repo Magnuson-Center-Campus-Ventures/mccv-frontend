@@ -117,7 +117,10 @@ class Startup extends Component {
       return (
         this.props.startup.industries.map((industry) => {
           return (
-            <div className="startup-industry" key={industry.name}>{industry.name}</div>
+            <div className="yellowPill" key={industry.id}> 
+              {industry.name} 
+            </div>
+            //<div className="startup-industry" key={industry.name}>{industry.name}</div>
           );
         })
       );
@@ -128,8 +131,8 @@ class Startup extends Component {
     if (this.props.user.role === 'admin') {
       if (this.props.startup?.status === 'Approved') {
         return (
-          <div className="startup-profile-admin-buttons">
-            <button
+          <div className="startup-profile-admin-button-row">
+            <button className="startup-profile-admin-button"
               type="submit"
               onClick={(e) => {
                 this.showArchiveModal();
@@ -141,8 +144,8 @@ class Startup extends Component {
         );
       } else if (this.props.startup?.status === 'Pending') {
         return (
-          <div className="startup-profile-admin-buttons">
-            <button
+          <div className="startup-profile-admin-button-row">
+            <button className="startup-profile-admin-button"
               type="submit"
               onClick={(e) => {
                 this.showApproveModal();
@@ -150,7 +153,7 @@ class Startup extends Component {
             >
               Approve
             </button>
-            <button
+            <button className="startup-profile-admin-button"
               type="submit"
               onClick={(e) => {
                 this.showDenyModal();
@@ -175,9 +178,36 @@ class Startup extends Component {
 
   renderVideo(){
     if (this.props.startup?.video) {
-      return (<iframe title="videoLarge" className="embed-responsive-item" src={this.props.startup.video} />);
+      return (
+        <iframe 
+          title="videoLarge" 
+          className="embed-responsive-item" 
+          allow="fullscreen"
+          src={this.props.startup.video} 
+        />
+      );
     }
+  }
 
+  logoCompanyName = () => {
+    if (this.props.startup.logo) {
+      return (
+        <div className="profileCompanyInfo">
+          <div className="profileCompanyLeft">
+            <img src={this.props.startup.logo} alt="no logo" className="profileCompanyLogo"/>
+          </div>
+          <div className="profileCompanyRight">
+            <div className="profileCompanyTitle"> { this.props.startup.name} </div>
+          </div>  
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <div className="profileCompanyTitle"> { this.props.startup.name} </div>
+        </div>
+      );
+    }
   }
 
   renderStartup() {
@@ -185,6 +215,21 @@ class Startup extends Component {
       return (
         <div className="startup-body">
           <div className="startup-header">
+            {this.logoCompanyName()}
+          </div>
+        
+          <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
+          <div className="startup-industries">Industries: {this.renderIndustries()}</div>
+
+          <div className="startup-description">
+            <h3>About {`${this.props.startup.name}`}:</h3>
+            <div className="startup-description">{`${this.props.startup.description}`}</div>
+          </div>
+          <div className="startup-video">
+            {this.renderVideo()}
+          </div>
+          
+          {/* <div className="startup-header">
             {this.renderLogo()}
             <h1>{`${this.props.startup.name}`}</h1>
           </div>
@@ -200,7 +245,7 @@ class Startup extends Component {
           </div>
           <div className="startup-video">
             {this.renderVideo()}
-            </div>
+          </div> */}
           {this.renderButtons()}
         </div>
       );
