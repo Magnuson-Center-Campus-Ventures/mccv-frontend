@@ -13,8 +13,6 @@ class StartupBio extends Component {
       startup: {},
       selected: '',
       affiliation: '',
-      badGender: true, 
-      badAffiliation: true, 
     };
   }
 
@@ -69,6 +67,7 @@ class StartupBio extends Component {
              <p className="question-fields-title">Founder's Gender <span className="imptMessage">*</span></p>
               <select value={this.props.selected} onChange={(event) => {
                 this.changeStartupField('founder_gender', event);
+                this.setState({selected: event.target.value});
                 }}>
                 <option value="status">Select...</option>
                 <option value="male">Male</option>
@@ -79,8 +78,8 @@ class StartupBio extends Component {
               <p className="question-fields-title">Dartmouth Affiliation <span className="imptMessage">*</span></p>
               <select value={this.state.affiliation} onChange={(event) => {
                 this.changeStartupField('affiliation', event);
+                this.setState({affiliation: event.target.value});
               }}>
-              {/* Dartmouth, geisel, tuck, thayer, guarini */}
                 <option value="Select">Select...</option>
                 <option value="Undergrad">Dartmouth College</option>
                 <option value="Geisel">Geisel School of Medicine </option>
