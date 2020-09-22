@@ -442,7 +442,7 @@
     "npm_package_license": "MIT",
     "npm_package_devDependencies_postcss_loader": "^3.0.0",
     "npm_package_devDependencies_eslint_loader": "^4.0.2",
-    "npm_package_scripts_deploy": "yarn build; surge -p dist -d cs52-mcv.surge.sh; yarn clean",
+    "npm_package_scripts_deploy": "yarn build; surge -p dist -d dartmouth-mccv.surge.sh; yarn clean",
     "npm_package_devDependencies_webpack_dev_server": "^3.10.3",
     "npm_package_devDependencies__babel_core": "^7.9.0",
     "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.kq7OeHYRNT/Listeners",

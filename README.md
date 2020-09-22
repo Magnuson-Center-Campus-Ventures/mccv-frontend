@@ -2,7 +2,8 @@
 
 Magnuson Campus Ventures is an online platform for matching Dartmouth student volunteers with local startups. A student can create a profile showcasing their interests, skills, and experiences. A startup can create a profile explaining their company's mission, and can post job opportunities explaining what skills they are looking for in student volunteers. Students and startups receive recommendations for job pairings, students can apply directly to job postings, and both parties can contact each other to talk further about opportunities.
 
-currently live at http://cs52-mcv.surge.sh/
+now live at http://dartmouth-mccv.surge.sh/
+was live during 20S at http://cs52-mcv.surge.sh/
 
 ![](https://i.imgur.com/w7FVtXj.png)
 ![](https://i.imgur.com/sHekLkE.png)
@@ -56,7 +57,7 @@ yarn start
 
 This repo is currently set up to auto-deploy from master with travis ci and surge integration.
 The site can otherwise be deployed by running `yarn deploy` from a local terminal in the project directory. 
-Live project can be found [here](http://cs52-mcv.surge.sh/)
+Live project can be found [here](http://dartmouth-mccv.surge.sh/)
 
 ## Authors 📝
 
