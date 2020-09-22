@@ -15,7 +15,6 @@ class EmailConfirmation extends Component {
   componentDidMount(){
     const urlParams = new URLSearchParams(window.location.search);
     this.setState({ token: urlParams.get('token'), });
-    console.log(this.state.token);
   }
 
   renderError = () => {
@@ -26,7 +25,6 @@ class EmailConfirmation extends Component {
   }
 
   render() { 
-    console.log(this.state.token);
     if (!this.state.token){
       return (
         <div className="signinPage">

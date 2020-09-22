@@ -137,7 +137,6 @@ export function updatePost(id, post) {
     axios.put(`${ROOT_URL}/posts/${id}`, post, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.UPDATE_POST, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch({ type: ActionTypes.ERROR_SET, errorMessage: error.message });
     });
   };
@@ -846,7 +845,6 @@ function getSignedRequest(id, file) {
 }
 
 function uploadFileToS3(signedRequest, file, url) {
-  console.log(signedRequest,file,url);
   return new Promise((fulfill, reject) => {
     axios.put(signedRequest, file, { headers: { 'Content-Type': file.type } }).then((response) => {
       fulfill(url);

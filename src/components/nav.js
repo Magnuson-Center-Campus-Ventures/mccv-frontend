@@ -11,10 +11,14 @@ class Nav extends Component {
     super(props);
     this.state = {
       isMounted: false,
+      show: true,
     };
   }
 
   componentDidMount() {
+    // console.log(window.location.href.indexOf("startup-signup"));
+    // console.log(window.location.href.indexOf("student-signup"));
+
     const role = localStorage.getItem('role');
     const userID = localStorage.getItem('userID');
     if (userID) {
@@ -26,6 +30,14 @@ class Nav extends Component {
     this.setState({ isMounted: true });
   }
 
+  componentDidUpdate() {
+    if (window.location.href.indexOf("startup-signup") > -1 || window.location.href.indexOf("student-signup") > -1) {
+      this.state.show = false;
+    } else {
+      this.state.show = true;
+    }
+  }
+
   signout = (event) => {
     // localStorage.clear(); put this in signoutUser function
     this.props.signoutUser(this.props.history);
@@ -35,7 +47,11 @@ class Nav extends Component {
   navRender() {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
-    const firstName = localStorage.getItem('firstName');
+    let firstName = '';
+    if (localStorage.getItem('firstName') !== 'undefined'){
+      firstName = localStorage.getItem('firstName');
+    }
+    console.log(firstName);
     if (token && role && role === 'admin') { // if logged in user is an admin
       return (
         <ul id="nav-bar">
@@ -109,7 +125,8 @@ class Nav extends Component {
   }
 
   render() {
-    return this.state.isMounted ? (
+    console.log(this.state.show);
+    return this.state.isMounted && this.state.show ? (
       <nav>
         {this.navRender()}
       </nav>
