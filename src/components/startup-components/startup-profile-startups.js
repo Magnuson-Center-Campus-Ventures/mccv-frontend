@@ -250,6 +250,28 @@ class StartupProfile extends Component {
           
         )
       }
+    } else{
+      if (this.state.isEditing === true){
+        return(
+          // <div>
+            <select value={this.state.affiliation} onChange={(event) => {
+              this.props.startup.affiliation = event.target.value;
+              this.changeStartupField('affiliation', event);
+              this.setState({
+                affiliation: event.target.value, 
+              });
+            }}>
+              <option value="Undergrad">Dartmouth College</option>
+              <option value="Geisel">Geisel School of Medicine </option>
+              <option value="Tuck">Tuck School of Business</option>
+              <option value="Thayer">Thayer School of Engineering</option>
+              <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+              <option value="Other">Other</option>
+            </select>
+          // </div>
+          
+        )
+      }
     }
   }
 

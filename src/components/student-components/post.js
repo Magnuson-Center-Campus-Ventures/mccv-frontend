@@ -49,6 +49,7 @@ class Post extends Component {
       validDate: true,
       newResponsibility: '',
       newQuestion: '',
+      showApproveError: false, 
     };
     this.showApplyModal = this.showApplyModal.bind(this);
     this.hideApplyModal = this.hideApplyModal.bind(this);
@@ -231,6 +232,9 @@ class Post extends Component {
 
   approvePost() {
     this.props.post.status = this.props.status;
+    if (this.props.post.status == "Pending"){
+      this.setState({showApproveError : true})
+    }
     this.props.updatePost(this.props.post.id, this.props.post);
     this.forceUpdate();
   }
@@ -297,7 +301,7 @@ class Post extends Component {
     } else if (this.props.user.role === 'startup') {
       return (
         <div className="post-startup-buttons">
-          {!this.state.isEditing
+          {!this.state.isEditing && this.props.post.status != "Archived"
             ? (
               <button className="post-btn"
                 type="submit"
@@ -309,7 +313,15 @@ class Post extends Component {
               </button>
             )
             : null}
-          {!this.state.isEditing
+            {/* {!this.state.isEditing && this.state.showApproveError ? (
+                <div>
+                  Your startup isn't approved yet, so this posting can't be approved
+                  </div>
+              ) : (
+                <div />
+              )
+            } */}
+          {!this.state.isEditing && this.props.post.status != "Approved"
             ? (
               <button className="post-btn"
                 type="submit"

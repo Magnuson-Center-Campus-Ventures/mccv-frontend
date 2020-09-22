@@ -297,6 +297,23 @@ class StudentProfile extends Component {
           </select>
         )
       }
+    }else{
+      if (this.state.isEditing === true){
+        return(
+          <select value={this.state.gender} onChange={(event) => {
+            this.props.student.gender = event.target.value;
+            this.changeStudentField('gender', event);
+            this.setState({
+              gender: event.target.value, 
+            });
+          }}>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            <option value="prefer not to say">Prefer Not to Say</option>
+          </select>
+        )
+      }
     }
   }
 
@@ -320,6 +337,25 @@ class StudentProfile extends Component {
               <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
             </select>
           // </div>  
+        )
+      }
+    } else{
+      if (this.state.isEditing){
+        return(
+          <select value={this.state.affiliation} onChange={(event) => {
+            this.props.student.affiliation = event.target.value;
+            this.changeStudentField('affiliation', event);
+            this.setState({
+              affiliation: event.target.value, 
+            });
+          }}>
+            {/* <option value={this.state.affiliation}>{this.props.student.affiliation}</option> */}
+            <option value="Undergrad">Dartmouth College</option>
+            <option value="Geisel">Geisel School of Medicine </option>
+            <option value="Tuck">Tuck School of Business</option>
+            <option value="Thayer">Thayer School of Engineering</option>
+            <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+          </select>
         )
       }
     }
