@@ -21,8 +21,9 @@ import {
   fetchUser,
   updateSubmittedApplication,
 } from '../../actions';
-import WorkExperience from '../student-components/work-experience';
-import OtherExperience from '../student-components/other-experience';
+import StudentProfileStartup from './student-profile-startups';
+// import WorkExperience from '../student-components/work-experience';
+// import OtherExperience from '../student-components/other-experience';
 import '../../styles/startup-submitted-application.scss';
 
 function isEmpty(obj) {
@@ -56,6 +57,8 @@ class StartupApplicationListItem extends Component {
     }
   }
 
+  // not needed anymore since using student-profile-startups component
+  /*
   renderClassYearAffiliation() {
     if (this.props.student?.affiliation) {
       return (
@@ -160,7 +163,7 @@ class StartupApplicationListItem extends Component {
     } else return <div>None</div>;
   }
 
-  renderWorkExperiences = () => {
+   renderWorkExperiences = () => {
     if (this.props.workExps !== []) {
       return this.props.workExps.map((workExp, index) => {
         return (
@@ -188,8 +191,9 @@ class StartupApplicationListItem extends Component {
         );
       });
     } else return null;
-  }
+  } */
 
+  // old styling
   /*renderWorkExperiences = () => {
     if (this.props.workExps !== []) {
       return this.props.workExps.map((workExp, index) => {
@@ -222,7 +226,7 @@ class StartupApplicationListItem extends Component {
         );
       });
     } else return null;
-  }*/
+  } */
 
   renderQuestions= () => {
     const items = [];
@@ -277,6 +281,46 @@ class StartupApplicationListItem extends Component {
     this.setState({ openConfirmDecline: true });
   }
 
+  renderGrayPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-gray">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderRedPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-red">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderYellowPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-yellow">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderStatusPill = () => {
+    if (this.props.current.status === "approved") {
+      return (
+        <div id="app-status-green-pill">Approved</div>
+      );
+    } else if (this.props.current.status === "declined") {
+      return (
+        <div id="app-status-red-pill">Declined</div>
+      );
+    } else {
+      return (
+        <div id="app-status-yellow-pill">Pending</div>
+      );
+    }
+  }
+
   renderActionBtns = () => {
     if (this.props.current.status === 'pending') {
       return (
@@ -303,17 +347,30 @@ class StartupApplicationListItem extends Component {
         </div>
       );
     } else {
-      return (
-        <div id="action-btns">
-          <div id="static-status">{this.props.current.status[0].toUpperCase() + this.props.current.status.slice(1)}</div>
+      return ( 
+        <div className="startup-app-status-row">
+          <div id="app-status-title">Status: </div>
+          {this.renderStatusPill()}
         </div>
+
+        // <div id="action-btns">
+        //   <div id="static-status">{this.props.current.status[0].toUpperCase() + this.props.current.status.slice(1)}</div>
+        // </div>
       );
     }
   }
   
   renderBody = () => {
     return (
-      <div className="profile-fixed">
+      <StudentProfileStartup 
+        student={this.props.student} 
+        email={this.props.email} 
+        workExps={this.props.workExps} 
+        otherExps={this.props.otherExps}
+        user={this.props.user}
+      />
+      // styling before deciding to use student-profile-startups component
+      /*<div className="profile-fixed">
         <div id="profile-header">
           <h1 id="student-profile-name">{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
           {this.renderClassYearAffiliation()}
@@ -348,7 +405,9 @@ class StartupApplicationListItem extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </div>*/
+
+      // old styling
       /*<div className="profile-fixed">
         <div id="profile-header">
           <h1>{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
@@ -385,7 +444,8 @@ class StartupApplicationListItem extends Component {
       return (
         <div className="student-profile">
           {this.renderBody()}
-          <hr className="profile-divider" />
+          
+          {/*<hr className="profile-divider" />
           <div className="exps-fixed">
             <h2>Work Experience</h2>
             {this.renderWorkExperiences()}
@@ -394,14 +454,17 @@ class StartupApplicationListItem extends Component {
           <div className="exps-fixed">
             <h2>Other Experience</h2>
             {this.renderOtherExperiences()}
-          </div>
+          </div>*/}
+          
           <hr className="profile-divider" />
           <div className="exps-fixed">
             <h2>Questions</h2>
             {this.renderQuestions()}
+            {this.renderActionBtns()}
           </div>
-          {this.renderActionBtns()}
         </div>
+
+        // old styling
         /*<div>
           <div id="page-wrap">
             {this.renderBody()}

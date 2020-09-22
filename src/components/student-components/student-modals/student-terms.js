@@ -103,7 +103,7 @@ class StudentTerms extends React.Component {
       <div className="terms-signature-container">
         <div className="new-work-exp-body">
           <div className="input-title">Sign your name here</div>
-          <input className="short-input" onInput={(event) => this.setState({ signature: event.target.value })} />
+          <input className="terms-short-input" onInput={(event) => this.setState({ signature: event.target.value })} />
           {this.renderAcceptTC()}
         </div>
       </div>
