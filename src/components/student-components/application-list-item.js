@@ -146,7 +146,6 @@ class ApplicationListItem extends Component {
               <h2> {`${this.props.post.city}, ${this.props.post.state}`} </h2>
             </div> */}
 
-          
           <div className="profileBody">
             <div className="profileText">
               <div className="company-position-info">
@@ -165,16 +164,15 @@ class ApplicationListItem extends Component {
                 </div>
               </div>
             </div>
-            
-            <div className="app-status-row">
-              <div id="app-status-title">Status: </div>
-              {this.renderStatusPill()}
-            </div>
 
             <hr className="profile-divider" />
             <div className="exps-fixed">
               <h2>Questions</h2>
               {this.renderQuestions()}
+              <div className="app-status-row">
+                <div id="app-status-title">Status: </div>
+                {this.renderStatusPill()}
+              </div>
             </div>
           </div>
         </div>
