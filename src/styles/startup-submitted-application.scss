@@ -1,44 +1,108 @@
 .job-info{
   text-align: center;
 }
-  #profile-header {
-    text-align: center;
-    align-items: center;
-  }
+
+.questions {
+  margin-left: 1em;
+}
+#app-status-title {
+  font-weight: 500;
+  font-size: 1.5em;
+}
+
+#app-status-green-pill {
+  background-color:rgba(69, 185, 144, 0.5);
+  border-radius: .75em;
+  width: fit-content;
+  padding-right: .5em;
+  padding-left: .5em;
+  padding-top: .25em;
+  padding-bottom: .25em;
+  margin-left: .5em;
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+#app-status-yellow-pill {
+  background-color:rgba(221, 192, 88, 0.514);
+  border-radius: .75em;
+  width: fit-content;
+  padding-right: .5em;
+  padding-left: .5em;
+  padding-top: .25em;
+  padding-bottom: .25em;
+  margin-left: .5em;
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+.app-status-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5em;
+}
+
+.startup-app-status-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5em;
+  margin-bottom: 2em;
+}
+
+#app-status-red-pill {
+  background-color:rgba(224, 133, 127, 0.699);
+  border-radius: .75em;
+  width: fit-content;
+  padding-right: .5em;
+  padding-left: .5em;
+  padding-top: .25em;
+  padding-bottom: .25em;
+  margin-left: .5em;
+  font-size: 1.5em;
+  font-weight: 500;
+}
+  // #profile-header {
+  //   text-align: center;
+  //   align-items: center;
+  // }
   
-  #major-row, #minor-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
+  // #major-row, #minor-row {
+  //   display: flex;
+  //   flex-direction: row;
+  //   justify-content: center;
+  // }
   
-  .majors, .minors {
-    padding-left: 5px,
-  }
+  // .majors, .minors {
+  //   padding-left: 5px,
+  // }
   
-  #lists-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin-top: 20px;
-  }
-  #list-industries > #profile-pill{
-    background-color: rgba(252, 215, 85, 0.57);
-  }
-  #list-classes > #profile-pill{
-    background-color: rgba(185, 90, 69, 0.57);
-  }
-  #list-skills > #profile-pill{
-    background-color: rgba(69, 185, 144, 0.57);
-  }
-  #profile-pill {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-radius: 20px;
-    margin: 5px;
-  }
+  // #lists-row {
+  //   display: flex;
+  //   flex-direction: row;
+  //   justify-content: space-around;
+  //   margin-top: 20px;
+  // }
+  // #list-industries > #profile-pill{
+  //   background-color: rgba(252, 215, 85, 0.57);
+  // }
+  // #list-classes > #profile-pill{
+  //   background-color: rgba(185, 90, 69, 0.57);
+  // }
+  // #list-skills > #profile-pill{
+  //   background-color: rgba(69, 185, 144, 0.57);
+  // }
+  // #profile-pill {
+  //   padding-left: 10px;
+  //   padding-right: 10px;
+  //   padding-top: 5px;
+  //   padding-bottom: 5px;
+  //   border-radius: 20px;
+  //   margin: 5px;
+  // }
   // #work-exps {
   //   text-align: center;
   //   margin-top: 30px;
@@ -113,10 +177,10 @@
   }
 
   #action-btns{
+    width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    
+    justify-content: space-evenly;
   }
   // #action-btns button{
     // color: white;
@@ -136,7 +200,9 @@
     width: 6em;
     height: 2.5em;
     border-radius: 1em;
-    margin: 4vw;
+    // margin: 4vw;
+    margin-top: 1em;
+    margin-bottom: 2em;
     font-size: 1.25em;
     font-family: Avenir Next;
   }
@@ -153,7 +219,9 @@
     width: 6em;
     height: 2.5em;
     border-radius: 1em;
-    margin: 4vw;
+    // margin: 4vw;
+    margin-top: 1em;
+    margin-bottom: 2em;
     font-size: 1.25em;
     font-family: Avenir Next;
   }

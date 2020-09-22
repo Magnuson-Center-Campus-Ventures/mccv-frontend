@@ -23,20 +23,17 @@ const StudentListItem = (props) => {
         if (index === 0) {
           return (
             <span key={index} className="major">
-              {`Major: ${major}`}
+              {`Major in ${major}`}
             </span>
           );
         } else if (index === 1){
           return (
             <span key={index} className="major">{`, ...`}</span>
-            /*<span key={index} className="major">
-              {`, ${major}`}
-            </span>*/
           );
         }
       })
     ) : (
-      <span className="major">Major Undecided</span>
+      <span className="major">Major Undeclared</span>
     );
 
   const classes = props.student.relevant_classes.map((singleClass) => {
@@ -105,13 +102,27 @@ const StudentListItem = (props) => {
     )
   );
 
+  const renderStudentName = (props.student?.first_name && props.student?.last_name) ? (
+    <h1 className="studentName">{`${props.student?.first_name} ${props.student?.last_name}`}</h1>
+  ) : (
+    (props.student?.first_name) ? (
+      <h1 className="studentName">{`${props.student?.first_name}`}</h1>
+    ) : (
+      (props.student?.last_name) ? (
+        <h1 className="studentName">{`${props.student?.last_name}`}</h1>
+      ) : (
+        <h1 className="studentName">No Name</h1>
+      )
+    )
+  );
+
   const route = `/students/${props.student._id}`;
 
   return (
     <Link to={route} key={props.student.id} className="listItem link">
       <div className="postBody">
         <div className="postText">
-          <h1 className="studentName">{`${props.student.first_name} ${props.student.last_name}`} </h1>
+          {renderStudentName}
           {affiliationGradYear}
           <div className="majorWrapper">
             {majors}

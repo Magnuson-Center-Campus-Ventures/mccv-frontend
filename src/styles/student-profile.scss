@@ -62,6 +62,16 @@
   margin: 5px;
 }
 
+.student-profile-pill-gray {
+  background-color:#C2C8CB;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 20px;
+  margin: 5px;
+}
+
 .student-profile-pill-yellow {
   background-color:rgba(221, 192, 88, 0.514);
   padding-top: 5px;
@@ -85,6 +95,7 @@
 .space {
   height: 1.5em;
 }
+
 .exps-fixed, .questions-fixed {
   text-align: center;
   margin-top: 30px;
@@ -92,12 +103,17 @@
   flex-direction: column;
   align-items: center;
 }
+
 .exps-edit {
   text-align: center;
   margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.exps-fixed > h2 {
+  margin: 0;
 }
 .work-exp {
   display: flex;
@@ -131,12 +147,15 @@
   font-style: italic;
 }
 .exp-text {
-  margin-top: 10px;
+  margin: 0px;
 }
-
+.list-no-margin{
+  margin: 0px;
+}
 .date-row {
   display: flex;
   flex-direction: row;
+  margin-bottom: .75em;
 }
 
 .edit-button {
@@ -275,10 +294,18 @@
   background-color: #2D7D61;
 }
 
+.input-title {
+  margin-right: 1em;
+}
+
+.input-instruction {
+  font-style: italic;
+  color: red;
+}
 #first-student-input {
   margin-top: 20px;
 }
-.short-input {
+.student-short-input {
   width: 200px;
   height: 30px;
   margin-bottom: 5px;

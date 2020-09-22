@@ -79,13 +79,13 @@ const PostListItem = (props) => {
   const end = new Date(props.post.desired_end_date);
 
   const startDate = (start) ? (
-    <span className="dateText">Starts {`${start.getMonth()}/${start.getDate()}/${start.getFullYear()}`}</span>
+    <span className="dateText">Starts {`${start.getMonth()+1}/${start.getDate()}/${start.getFullYear()}`}</span>
   ) : (
     <div />
   );
 
   const endDate = (end) ? (
-    <span className="dateText">Ends {`${end.getMonth()}/${end.getDate()}/${end.getFullYear()}`}</span>
+    <span className="dateText">Ends {`${end.getMonth()+1}/${end.getDate()}/${end.getFullYear()}`}</span>
   ) : (
     <div />
   );

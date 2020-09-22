@@ -142,12 +142,14 @@ class Post extends Component {
     this.setState({
       applyShow: true,
     });
+    window.scrollTo(0, 0);
   };
 
   showArchiveModal = (e) => {
     this.setState({
       archiveShow: true,
     });
+    window.scrollTo(0, 0);
   }
 
   hideApplyModal = (e) => {
@@ -200,7 +202,7 @@ class Post extends Component {
     this.forceUpdate();
   }
 
-  requiredSkillsHelper= () => {
+  /*requiredSkillsHelper= () => {
     const requiredSkills = [];
     if (this.props.post?.required_skills) {
       for (const [index, value] of this.props.post.required_skills.entries()) {
@@ -228,11 +230,11 @@ class Post extends Component {
     } else {
       return <div />;
     }
-  }
+  }*/
 
   approvePost() {
     this.props.post.status = this.props.status;
-    if (this.props.post.status == "Pending"){
+    if (this.props.post.status === "Pending"){
       this.setState({showApproveError : true})
     }
     this.props.updatePost(this.props.post.id, this.props.post);
@@ -289,19 +291,8 @@ class Post extends Component {
   renderButtons() {
     if (this.props.user.role === 'admin') {
       return (
-        <button className="post-btn"
-          type="submit"
-          onClick={(e) => {
-            this.showArchiveModal();
-          }}
-        >
-          Archive
-        </button>
-      );
-    } else if (this.props.user.role === 'startup') {
-      return (
         <div className="post-startup-buttons">
-          {!this.state.isEditing && this.props.post.status != "Archived"
+          {this.props.post.status != "Archived" 
             ? (
               <button className="post-btn"
                 type="submit"
@@ -313,31 +304,12 @@ class Post extends Component {
               </button>
             )
             : null}
-            {/* {!this.state.isEditing && this.state.showApproveError ? (
-                <div>
-                  Your startup isn't approved yet, so this posting can't be approved
-                  </div>
-              ) : (
-                <div />
-              )
-            } */}
-          {!this.state.isEditing && this.props.post.status != "Approved"
-            ? (
-              <button className="post-btn"
-                type="submit"
-                onClick={this.approvePost}
-              >
-                Approve
-              </button>
-            )
-            : null}
-          {/*<button id="edit-post-btn"
-            className="post-btn"
-            type="submit"
-            onClick={this.submit}
-          >{this.state.isEditing ? 'Save Changes' : 'Edit Position'}
-            </button>*/}
-          {!this.state.isEditing
+        </div>
+      );
+    } else if (this.props.user.role === 'startup') {
+      return (
+        <div className="post-startup-buttons">
+          {!this.state.isEditing && this.props.post.status != "Archived"
             ? (
               <button className="post-btn"
                 type="submit"
@@ -355,11 +327,39 @@ class Post extends Component {
                 Save Changes
               </button>
             )}
+          {(!this.state.isEditing && this.props.post.status != "Archived")
+            ? (
+              <button className="post-btn"
+                type="submit"
+                onClick={(e) => {
+                  this.showArchiveModal();
+                }}
+              >
+                Archive
+              </button>
+            )
+            : null}
+          {(!this.state.isEditing && this.props.post.status != "Approved")
+            ? (
+              <button className="post-btn"
+                type="submit"
+                onClick={this.approvePost}
+              >
+                Approve
+              </button>
+            )
+            : null}
+          {/*<button id="edit-post-btn"
+            className="post-btn"
+            type="submit"
+            onClick={this.submit}
+          >{this.state.isEditing ? 'Save Changes' : 'Edit Position'}
+            </button>*/}
         </div>
       );
     } else if (this.props.user.role === 'student') {
       return (
-        <button className="post-btn"
+        <button className="apply-btn"
           type="submit"
           onClick={(e) => {
             this.showApplyModal();
@@ -370,7 +370,7 @@ class Post extends Component {
     }
   }
 
-  renderLocation = () => {
+  renderEditLocation = () => {
     return (
       <div className="location-wrapper">
         <div className="input-title" id="location-type">How will volunteering be conducted? (Check all that apply)</div>
@@ -380,7 +380,7 @@ class Post extends Component {
             <label htmlFor="virtual">Virtually</label>
           </div>
           <div className="post-checkbox">
-            <input type="checkbox" id="inperson" onChange={(event) => this.renderCityState(event)} checked={this.state.post?.inperson}/>
+            <input type="checkbox" id="inperson" onChange={(event) => this.renderEditCityState(event)} checked={this.state.post?.inperson}/>
             <label htmlFor="inperson">In-Person</label>
           </div>
         </div>
@@ -399,7 +399,7 @@ class Post extends Component {
     );
   }
 
-  renderCityState = (event) => {
+  renderEditCityState = (event) => {
     this.changeCheckboxField('inperson', event);
     var inPersonCheckbox = document.getElementById("inperson");
     var cityStateRow = document.getElementById("city-state-row");
@@ -499,9 +499,7 @@ class Post extends Component {
           <h2>Basic Information</h2>
           <div className="input-title" id="first-position-input">Position Title</div>
           <TextareaAutosize className="short-input-post" defaultValue={this.props.post?.title} onBlur={(event) => this.changePostField('title', event)} />
-          <div className="input-title">Description</div>
-          <TextareaAutosize className="tall-input" defaultValue={this.props.post?.description} onBlur={(event) => this.changePostField('description', event)} />
-          {this.renderLocation()}
+          {this.renderEditLocation()}
           <div className="post-input-row">
             <div className="student-edit-dates">
               <div>Desired Start and End Date</div>
@@ -511,6 +509,35 @@ class Post extends Component {
             <p className="question-fields-title">Hours/Week</p>
             <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changePostField('time_commitment', event)} defaultValue={this.props.post?.time_commitment} />
           </div>
+
+          <hr className="post-edit-divider" />
+          <h2>Position Details</h2>
+          <div className="resps-header">
+            <div className="input-title">Description</div>
+            <TextareaAutosize className="tall-input" defaultValue={this.props.post?.description} onBlur={(event) => this.changePostField('description', event)} />
+          </div>
+          <div className="edits-resps">
+          <div className="resps-header">
+            <div className="input-title">Responsibilities</div>
+            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newResponsibility = event.target.value} />
+            <button className="add-button"
+              onClick={() => {
+                  if (!this.state.post.responsibilities.includes(this.state.newResponsibility)){
+                  this.setState((prevState) => {
+                    prevState.post.responsibilities.push(this.state.newResponsibility);
+                    this.state.newResponsibility = '';
+                    return {
+                      ...prevState,
+                    };
+                  });
+                }
+              }}>
+            <i className="fa fa-plus add-icon" aria-hidden="true" />
+            </button>
+          </div>
+          {this.renderEditResponsibilities()}
+        </div>
+
           <hr className="post-edit-divider" />
           <div className="edits-resps">
             <div className="resps-header">
@@ -657,41 +684,243 @@ class Post extends Component {
           </div>
         </div>
         <hr className="post-edit-divider" />
-        <div className="edits-resps">
-          <div className="resps-header">
-            <div className="input-title">Responsibilities</div>
-            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newResponsibility = event.target.value} />
-            <button className="add-button"
-              onClick={() => {
-                  if (!this.state.post.responsibilities.includes(this.state.newResponsibility)){
-                  this.setState((prevState) => {
-                    prevState.post.responsibilities.push(this.state.newResponsibility);
-                    this.state.newResponsibility = '';
-                    return {
-                      ...prevState,
-                    };
-                  });
-                }
-              }}>
-            <i className="fa fa-plus add-icon" aria-hidden="true" />
-            </button>
-          </div>
-          {this.renderEditResponsibilities()}
-        </div>
-        <hr className="post-edit-divider" />
       </div>
     );
   }
 
+
+  logoCompanyName = () => {
+    if (this.props.post.startup_id.logo) {
+      return (
+        <div className="profileCompanyInfo">
+          <div className="profileCompanyLeft">
+            <img src={this.props.post.startup_id.logo} alt="no logo" className="profileCompanyLogo"/>
+          </div>
+          <div className="profileCompanyRight">
+            <div className="profileCompanyTitle"> { this.props.post.startup_id.name} </div>
+          </div>  
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <div className="profileCompanyTitle"> { this.props.post.startup_id.name} </div>
+        </div>
+      );
+    }
+  }
+
+  dates = () => {
+    const start = new Date(this.props.post.desired_start_date);
+    const end = new Date(this.props.post.desired_end_date);
+    if (start) {
+      return (
+        <span className="dateText">Starts {`${start.getMonth() + 1}/${start.getDate()}/${start.getFullYear()}, 
+        Ends ${end.getMonth() + 1}/${end.getDate()}/${end.getFullYear()}`}</span>
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  renderVirtual = () => {
+    if (this.props.post.virtual==true) {
+      return (
+        <div className="position-location-row">
+          <span className="virtualIcon" />
+          <span className="position-location">Virtual</span>
+        </div>  
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  renderInPerson = () => {
+    if (this.props.post.city && this.props.post.state) {
+      return (
+        <div className="position-location-row">
+          <span className="locationIcon" />
+          <span className="position-location"> {`${this.props.post.city}, ${this.props.post.state}`} </span>
+        </div> 
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  renderGreenPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-green">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderGrayPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-gray">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderRedPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-red">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderYellowPills = (pillsArray) => {
+    if (pillsArray && pillsArray.length > 0) {
+      return pillsArray.map((elem, index) => {
+        return <div key={index} className="student-profile-pill-yellow">{elem.name}</div>;
+      });
+    } else return <div>None</div>;
+  }
+
+  renderStatusPill = () => {
+    if (this.props.post.status === "Approved") {
+      return (
+        <div id="app-status-green-pill">Live</div>
+      );
+    } else if (this.props.post.status === "Archived") {
+      return (
+        <div id="app-status-red-pill">Archived</div>
+      );
+    } else {
+      return (
+        <div id="app-status-yellow-pill">Pending</div>
+      );
+    }
+  }
+
   renderNoEdit = () => {
     return (
-      <div id="wrap-content">
+      //<div id="wrap-content">
+      <div>
         <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
         {(this.state.applyShow) && (
           <div id="confirmation-background" />
         )}
         <Archive post={this.props.post} onClose={this.hideArchiveModal} show={this.state.archiveShow} />
-        <h1 id="title">{this.props.post.title}</h1>
+
+        <div className="profileBody">
+          <div className="profileText">
+            <div className="company-position-info">
+              {this.logoCompanyName()}
+
+              <div className="position-info">
+                <div className="position-title">{this.props.post.title}</div>
+                {this.renderVirtual()}
+                {this.renderInPerson()}
+                <div className="position-dates">
+                  {this.dates()}
+                </div>
+                <div className="position-time-commitment">
+                  {this.props.post.time_commitment ? 'Expected Time Commitment'.concat(': ', this.props.post.time_commitment.toString()).concat(' ', 'hrs/week') : null}
+                </div>
+              </div>
+            </div>
+            
+            <hr className="profile-divider" />
+            <div className="lists-row">
+              <div className="list-section">
+                <h2>Required Skills</h2>
+                {this.renderGreenPills(this.props.post?.required_skills)}
+              </div>
+              <div className="list-section" >
+                <h2>Preferred Skills</h2>
+                {this.renderGrayPills(this.props.post?.preferred_skills)}
+              </div>
+              <div className="list-section">
+                <h2>Desired Classes</h2>
+                {this.renderRedPills(this.props.post?.desired_classes)}
+              </div> 
+              <div className="list-section">
+                <h2>Industries</h2>
+                {this.renderYellowPills(this.props.post?.industries)}
+              </div>
+            </div>
+
+            <hr className="profile-divider" />
+            <div className="bottom">
+              <div className="exps-fixed">
+                <h2>Position Details</h2>
+                <div className="work-exp">
+                  <div className="exp-title">Description</div>
+                  <div className="exp-text">{this.props.post.description}</div>
+                </div>
+
+                <div className="work-exp">
+                  <div className="exp-title">Responsibilities</div>
+                  <ul className="list-no-margin">{this.renderResponsibilitiesNoEdit()}</ul>
+                </div>
+
+                <div className="work-exp">
+                  <div className="exp-title">Application Questions</div>
+                  <ul className="list-no-margin">{this.renderQuestionsNoEdit()}</ul>
+                </div>
+              </div>
+            </div> 
+
+            <div className="app-status-row">
+              <div id="app-status-title">Status: </div>
+              {this.renderStatusPill()}
+            </div>
+            {/* <div className="bar">
+              <img src={this.props.post.startup_id.logo} alt="no logo" />
+              <h2 id="name">{this.props.post.startup_id.name}</h2>
+              <img src={pin} alt="location" />
+              <h2 id="state">{`${this.props.post.city}, ${this.props.post.state}`}</h2>
+              {this.props.user.role === 'startup'
+                ? <h2 id="post-status-view">{`Status: ${this.props.post.status}`}</h2>
+                : null }
+            </div>
+            <div className="bar">
+              <div className="post-start-date">
+                {this.props.post.desired_start_date ? 'Start Date'.concat(': ', this.props.post.desired_start_date.toString().substring(0, 10)) : null}
+                </div>
+              <div className="post-end-date">
+                {this.props.post.desired_end_date ? 'End Date'.concat(': ', this.props.post.desired_end_date.toString().substring(0, 10)) : null}
+                </div>
+              <div className="post-time-commitment">
+                {this.props.post.time_commitment ? 'Time Commitment'.concat(': ', this.props.post.time_commitment.toString()).concat(' ', 'hrs/week') : null}
+                </div>
+            </div> 
+
+            <div className="top">
+              <div id="project">
+                <h3>Project Description</h3>
+                <h2 id="post-description">{this.props.post.description}</h2>
+              </div>
+              <div id="skills-section">
+                <h2>Required Skills</h2>
+                <ul id="skills">{this.requiredSkillsHelper()}</ul>
+                <h2>Preferred Skills</h2>
+                <ul id="skills">{this.preferredSkillsHelper()}</ul>
+              </div>
+            </div>
+            
+            <div className="bottom">
+              <h3>Application Questions</h3>
+              <ul id="skills">{this.renderQuestionsNoEdit()}</ul>
+              <h3>Responsibilities</h3>
+              <ul id="skills">{this.renderResponsibilitiesNoEdit()}</ul>
+            </div> 
+            */}
+          </div>
+        </div>
+
+        {/* <h1 id="title">{this.props.post.title}</h1>
         <div className="bar">
           <img src={this.props.post.startup_id.logo} alt="no logo" />
           <h2 id="name">{this.props.post.startup_id.name}</h2>
@@ -729,7 +958,7 @@ class Post extends Component {
           <ul id="skills">{this.renderQuestionsNoEdit()}</ul>
           <h3>Responsibilities</h3>
           <ul id="skills">{this.renderResponsibilitiesNoEdit()}</ul>
-        </div>
+        </div> */}
       </div>
     );
   }
