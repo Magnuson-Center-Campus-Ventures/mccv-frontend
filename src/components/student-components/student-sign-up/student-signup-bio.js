@@ -52,18 +52,18 @@ class StudentBio extends Component {
         </div>
         <div className="question-fields">
           <p className="question-fields-title">First Name  <span className="imptMessage">*</span></p>
-          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('first_name', event)} defaultValue={this.props.student.first_name} />
+          <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('first_name', event)} defaultValue={this.props.student.first_name} />
           <p className="question-fields-title">Last Name  <span className="imptMessage">*</span></p>
-          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('last_name', event)} defaultValue={this.props.student.last_name} />
+          <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('last_name', event)} defaultValue={this.props.student.last_name} />
           <p className="question-fields-title">Graduation Year <span className="imptMessage">*</span></p>
-          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('grad_year', event)} defaultValue={this.props.student.grad_year} />
+          <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('grad_year', event)} defaultValue={this.props.student.grad_year} />
           <p className="question-fields-title">Phone Number  <span className="imptMessage">*</span></p>
-          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('phone_number', event)} defaultValue={this.props.student.phone_number} />
+          <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('phone_number', event)} defaultValue={this.props.student.phone_number} />
           <p className="question-fields-title">Gender <span className="imptMessage"> *</span></p>
           <select value={this.props.selected} onChange={(event) => {
             this.changeStudentField('gender', event);
             this.setState({selected: event.target.value}); 
-            this.props.ifFilled(); 
+            // this.props.ifFilled(); 
             }}>
               <option value="select">Select...</option>
             <option value="male">Male</option>
