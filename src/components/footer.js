@@ -21,7 +21,6 @@ class Footer extends Component {
   }
 
   render() {
-    console.log(this.state.show);
     return this.state.show ? (
       <ul id="footer">
         <li>

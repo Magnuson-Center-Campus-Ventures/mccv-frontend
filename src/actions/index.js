@@ -806,12 +806,12 @@ export function sendConfirmationEmail({
   email, password, role, student_profile_id, startup_id, } , history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/emailconfirmation`, { email, password, role, student_profile_id, startup_id }).then((response) => {
-      dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
+      // dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
       // dispatch({ type: ActionTypes.CONFIRM_EMAIL, payload: response.data });
       history.push('/emailconfirmation');
     }).catch((error) => {
       // dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
-      dispatch(authError(error));
+      // dispatch(authError(error));
       history.push('/emailconfirmation');
     });
   };
@@ -868,5 +868,16 @@ export function emailExists({ email, }) {
       dispatch(authError(error.data));
     });
   };
+}
 
+// email notification routes
+export function sendNotificationEmail({ 
+  user_id, type, info, }) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/emailnotification`, { user_id, type, info, }).then((response) => {
+      // dispatch({ type: ActionTypes.CONFIRM_EMAIL, payload: response.data });
+    }).catch((error) => {
+      dispatch(authError(error));;
+    });
+  };
 }

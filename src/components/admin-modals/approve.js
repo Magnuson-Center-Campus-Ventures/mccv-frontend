@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { updateStartup, updatePost } from '../../actions';
+import { updateStartup, updatePost, sendNotificationEmail } from '../../actions';
 // import close from '../../../static/img/close.png';
 import '../../styles/modal.scss';
 
@@ -15,6 +15,11 @@ const Approve = (props) => {
     if (props.startup) {
       const { startup } = props;
       startup.status = 'Approved';
+      props.sendNotificationEmail({
+        user_id: startup.user_id, 
+        type: 'startup approved',
+        info: '',
+      });
       props.updateStartup(startup.id, startup);
       startup.posts.map((post) => {
         const postCopy = post;
@@ -75,4 +80,4 @@ const Approve = (props) => {
   );
 };
 
-export default withRouter(connect(null, { updateStartup, updatePost })(Approve));
+export default withRouter(connect(null, { updateStartup, updatePost, sendNotificationEmail })(Approve));
