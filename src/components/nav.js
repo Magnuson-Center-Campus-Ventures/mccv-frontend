@@ -16,9 +16,6 @@ class Nav extends Component {
   }
 
   componentDidMount() {
-    // console.log(window.location.href.indexOf("startup-signup"));
-    // console.log(window.location.href.indexOf("student-signup"));
-
     const role = localStorage.getItem('role');
     const userID = localStorage.getItem('userID');
     if (userID) {
@@ -51,7 +48,6 @@ class Nav extends Component {
     if (localStorage.getItem('firstName') !== 'undefined'){
       firstName = localStorage.getItem('firstName');
     }
-    console.log(firstName);
     if (token && role && role === 'admin') { // if logged in user is an admin
       return (
         <ul id="nav-bar">
@@ -125,7 +121,6 @@ class Nav extends Component {
   }
 
   render() {
-    console.log(this.state.show);
     return this.state.isMounted && this.state.show ? (
       <nav>
         {this.navRender()}
