@@ -873,13 +873,10 @@ export function emailExists({ email, }) {
 // email notification routes
 export function sendNotificationEmail({ 
   user_id, type, info, }) {
-  console.log({ user_id, type, info, });
   return (dispatch) => {
     axios.post(`${ROOT_URL}/emailnotification`, { user_id, type, info, }).then((response) => {
-      console.log(response);
       // dispatch({ type: ActionTypes.CONFIRM_EMAIL, payload: response.data });
     }).catch((error) => {
-      console.log(error);
       dispatch(authError(error));;
     });
   };

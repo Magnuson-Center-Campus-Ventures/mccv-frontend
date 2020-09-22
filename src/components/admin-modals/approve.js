@@ -15,13 +15,12 @@ const Approve = (props) => {
     if (props.startup) {
       const { startup } = props;
       startup.status = 'Approved';
-      console.log(startup);
       props.sendNotificationEmail({
         user_id: startup.user_id, 
         type: 'startup approved',
         info: '',
       });
-      // props.updateStartup(startup.id, startup);
+      props.updateStartup(startup.id, startup);
       startup.posts.map((post) => {
         const postCopy = post;
         postCopy.status = 'Approved';
