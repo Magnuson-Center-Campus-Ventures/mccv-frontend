@@ -309,24 +309,6 @@ class Post extends Component {
     } else if (this.props.user.role === 'startup') {
       return (
         <div className="post-startup-buttons">
-          {!this.state.isEditing && this.props.post.status != "Archived"
-            ? (
-              <button className="post-btn"
-                type="submit"
-                onClick={this.submit}
-              >
-                Edit
-              </button>
-            )
-            : (
-              <button id="save-changes-btn"
-              className="post-btn"
-              type="submit"
-              onClick={this.submit}
-              >
-                Save Changes
-              </button>
-            )}
           {(!this.state.isEditing && this.props.post.status != "Archived")
             ? (
               <button className="post-btn"
@@ -349,6 +331,24 @@ class Post extends Component {
               </button>
             )
             : null}
+          {(!this.state.isEditing)
+            ? (
+              <button className="post-btn"
+                type="submit"
+                onClick={this.submit}
+              >
+                Edit
+              </button>
+            )
+            : (
+              <button id="save-changes-btn"
+              className="post-btn"
+              type="submit"
+              onClick={this.submit}
+              >
+                Save Changes
+              </button>
+            )}
           {/*<button id="edit-post-btn"
             className="post-btn"
             type="submit"
