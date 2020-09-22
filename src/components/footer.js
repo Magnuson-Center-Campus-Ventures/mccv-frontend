@@ -13,11 +13,11 @@ class Footer extends Component {
   }
 
   componentDidUpdate() {
-    if (window.location.href.indexOf("startup-signup") > -1 || window.location.href.indexOf("student-signup") > -1) {
-      this.state.show = false;
-    } else {
-      this.state.show = true;
-    }
+    if (this.state.show == true && (window.location.href.indexOf("startup-signup") > -1 || window.location.href.indexOf("student-signup") > -1)) {
+      this.setState({ show: false });
+    } else if (this.state.show == false && !(window.location.href.indexOf("startup-signup") > -1 || window.location.href.indexOf("student-signup") > -1)){
+      this.setState({ show: true });
+    } 
   }
 
   render() {
