@@ -313,14 +313,14 @@ class Post extends Component {
               </button>
             )
             : null}
-            {!this.state.isEditing && this.state.showApproveError ? (
+            {/* {!this.state.isEditing && this.state.showApproveError ? (
                 <div>
                   Your startup isn't approved yet, so this posting can't be approved
                   </div>
               ) : (
                 <div />
               )
-            }
+            } */}
           {!this.state.isEditing && this.props.post.status != "Approved"
             ? (
               <button className="post-btn"
