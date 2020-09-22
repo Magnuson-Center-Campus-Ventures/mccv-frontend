@@ -1,40 +1,40 @@
 html{
-    height: 100%;
+  height: 100%;
 }
 
 body{
-    min-height: 100%;
+  min-height: 100%;
 }
 
 #main{
-    min-height:80vh;
+  min-height:80vh;
 }
 
 #main-div{
-    min-height:90vh;
+  min-height:90vh;
 }
 
 .listContent{
-    display: flex;
-    justify-content: flex-start;
-    min-height:80vh;
+  display: flex;
+  justify-content: flex-start;
+  min-height:80vh;
 }
 
 .list{
-    display: flex; 
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    margin-bottom: 3%;
+  display: flex; 
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-bottom: 3%;
 }
 
 .listItem{
-    background-color: #FFFFFF;
-    margin-top: 4%;
-    height: 280px;
-    width: 280px;
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    box-shadow: 2px 6px 6px rgba(0, 0, 0, 0.25);
+  background-color: #FFFFFF;
+  margin-top: 4%;
+  height: 280px;
+  width: 280px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 6px 6px rgba(0, 0, 0, 0.25);
 }
 
 .listItem:hover{
@@ -42,24 +42,24 @@ body{
 }
 
 .postBody{
-    background-color: #FFFFFF;
-    height: 280px;
-    width: 280px;
-    display: flex;
-    flex-direction: column;
+  background-color: #FFFFFF;
+  height: 280px;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
 }
 
 .postText{
-    margin: 1em;
-    text-align: left;
-    height: 100%;
-    color: black;
+  margin: 1em;
+  text-align: left;
+  height: 100%;
+  color: black;
 }
 
 .postTitle{ 
-    font-weight: 600;
-    font-size: 110%;
-    margin: .25em;
+  font-weight: 600;
+  font-size: 110%;
+  margin: .25em;
 }
 
 .studentName{ 
@@ -69,142 +69,143 @@ body{
 }
 
 .startupName, .gradYear{ 
-    font-weight: 500;
-    font-size: 110%;
-    margin: .25em;
-    width: 100%;
+  font-weight: 500;
+  font-size: 110%;
+  margin: .25em;
+  width: 100%;
 }
 
 .major{
-    font-style: italic;
+  font-style: italic;
 }
 
 .majorWrapper {
-    margin-left: .25em;
+  margin-left: .25em;
 }
+
 .postLocation{
-    font-size: .8em;
-    font-style: italic;
-    margin: 0em;
-    padding: 0em;
+  font-size: .8em;
+  font-style: italic;
+  margin: 0em;
+  padding: 0em;
 }
 
 .location{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .postInfo {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin-top: .5em;
-    margin-bottom: .5em;
-    border: .5px solid #C2C8CB;
-    border-radius: 5px;
-    padding: .25em;
-    background-color: #EFEFF0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: .5em;
+  margin-bottom: .5em;
+  border: .5px solid #C2C8CB;
+  border-radius: 5px;
+  padding: .25em;
+  background-color: #EFEFF0;
 }
 
 .companyInfo{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 25%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 25%;
 }
 
 .companyLeft {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    width: 75%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 75%;
+  height: 100%;
 }
 
 .companyRight{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-    width: 30%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  width: 30%;
+  height: 100%;
 }
 
 .companyLogo{
-    max-width: 100%;
-    max-height: 100%;
-    display: block; /* remove extra space below image */
+  max-width: 100%;
+  max-height: 100%;
+  display: block; /* remove extra space below image */
 }
 
 .dates {
-    font-size: .8em;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-left: .25em;
-    margin-right: .25em;
+  font-size: .8em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-left: .25em;
+  margin-right: .25em;
 }
 
 .locationIcon{
-    background: url('../assets/location.png');
-    background-size: 1em 1em;
-    height: 1em;
-    width: 1em;
-    display: block;
-    margin-left: .25em;
-    margin-right: .25em;
+  background: url('../assets/location.png');
+  background-size: 1em 1em;
+  height: 1em;
+  width: 1em;
+  display: block;
+  margin-left: .25em;
+  margin-right: .25em;
 }
 
 .virtualIcon{
-    background: url('../assets/virtual-icon.png');
-    background-size: 1em 1em;
-    height: 1em;
-    width: 1em;
-    display: block;
-    margin-left: .25em;
-    margin-right: .25em;
+  background: url('../assets/virtual-icon.png');
+  background-size: 1em 1em;
+  height: 1em;
+  width: 1em;
+  display: block;
+  margin-left: .25em;
+  margin-right: .25em;
 }
 
 #pillsTitle{
-    font-size: 1em;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+  font-size: 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .pillsList{
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
 }
 
 .greenPill{
-    background-color:rgba(69, 185, 144, 0.5);
-    border-radius: 10px;
-    width: fit-content;
-    padding-right: .5vw;
-    padding-left: .5vw;
-    margin-left: .25vw;
-    margin-bottom: .5vh;
-    font-size: .9em;
+  background-color:rgba(69, 185, 144, 0.5);
+  border-radius: 10px;
+  width: fit-content;
+  padding-right: .5vw;
+  padding-left: .5vw;
+  margin-left: .25vw;
+  margin-bottom: .5vh;
+  font-size: .9em;
 }
 
 .yellowPill{
-    background-color:rgba(221, 192, 88, 0.514);
-    border-radius: 10px;
-    width: fit-content;
-    padding-right: .5vw;
-    padding-left: .5vw;
-    margin-left: .25vw;
-    margin-bottom: .5vh;
-    font-size: .9em;
+  background-color:rgba(221, 192, 88, 0.514);
+  border-radius: 10px;
+  width: fit-content;
+  padding-right: .5vw;
+  padding-left: .5vw;
+  margin-left: .25vw;
+  margin-bottom: .5vh;
+  font-size: .9em;
 }
 
 .postSpace{
-  height: 3em;
+height: 3em;
 }
 // .companyInfo{
 //     display: flex;
@@ -241,39 +242,39 @@ body{
 // }
 
 .extraInfo {
-    height: 60%;
-    margin-right: 5px;
-    margin-left: 15px;
+  height: 60%;
+  margin-right: 5px;
+  margin-left: 15px;
 }
 
 .extraInfo > h1{
-    font-weight: normal;
-    text-align: center;
-    font-size: 120%;
+  font-weight: normal;
+  text-align: center;
+  font-size: 120%;
 }
 
 .extraInfo > h2{
-    font-weight: normal;
-    border-bottom: 0;
-    font-size: 100%;
+  font-weight: normal;
+  border-bottom: 0;
+  font-size: 100%;
 }
 
 #lastOne > h1 {
-    margin-block-end: 0;
-    margin-block-start: 0;
-    font-weight: normal;
-    border-bottom: 0;
-    font-size: 120%;
-    margin-right: 2vw; 
+  margin-block-end: 0;
+  margin-block-start: 0;
+  font-weight: normal;
+  border-bottom: 0;
+  font-size: 120%;
+  margin-right: 2vw; 
 }
 
 .extraInfo > h3 {
-    font-weight: normal;
-    font-size: 90%
+  font-weight: normal;
+  font-size: 90%
 }
 
 .postIndustries{
-    display: block;
+  display: block;
 }
 
 // #postings{
@@ -373,14 +374,14 @@ body{
 }
 
 #statusGreenPill {
-    background-color:rgba(69, 185, 144, 0.5);
-    border-radius: 10px;
-    width: fit-content;
-    padding-right: .5vw;
-    padding-left: .5vw;
-    margin-left: .25vw;
-    margin-bottom: .5vh;
-    font-size: 1.2em;
+  background-color:rgba(69, 185, 144, 0.5);
+  border-radius: 10px;
+  width: fit-content;
+  padding-right: .5vw;
+  padding-left: .5vw;
+  margin-left: .25vw;
+  margin-bottom: .5vh;
+  font-size: 1.2em;
 }
 #statusYellowPill {
   background-color:rgba(221, 192, 88, 0.514);
@@ -412,52 +413,52 @@ body{
 
 .sideFilterBar{
     //background-color: #EFEFF0;
-    padding-left: 1.5%;
-    padding-right: 1.5%;
+  padding-left: 1.5%;
+  padding-right: 1.5%;
 }
 
 .rightSide{
-    //background-color: #EFEFF0;
-    width: 100%
+  //background-color: #EFEFF0;
+  width: 100%
 }
 
 #searchBar {
-    margin-bottom: 2vh;
-    margin-top: 3vh;
-    display: flex;
-  
-    input {
-      width: 190px;
-      font-size: 1.1em;
-      border-radius: .25em;
-      font-family: Avenir Next;
-    }
+  margin-bottom: 2vh;
+  margin-top: 3vh;
+  display: flex;
+
+  input {
+    width: 190px;
+    font-size: 1.1em;
+    border-radius: .25em;
+    font-family: Avenir Next;
+  }
 }
 
 #searchButton{
-    position: absolute;
-    margin-left: 170px;
-    margin-top: 5px;
+  position: absolute;
+  margin-left: 170px;
+  margin-top: 5px;
 }
 
 #filters{
-    //background-color: #EFEFF0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
+  //background-color: #EFEFF0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .toggleGroup {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .toggleGroup > span {
-    font-size: 130%;
-    font-weight: 500;
+  font-size: 130%;
+  font-weight: 500;
 }
 
 #toggle{
@@ -465,11 +466,11 @@ body{
 }
 
 #filters > h3{
-    font-weight: normal; 
+  font-weight: normal; 
 }
 
 .filter{
-    margin-top: 1em;
+  margin-top: 1em;
 }
 
 // #pendingToggle{
@@ -479,6 +480,6 @@ body{
 // }
 
 .descriptionText, .bioText {
-    font-size: .8em;
-    margin: 0;
+  font-size: .8em;
+  margin: 0;
 }

@@ -230,7 +230,8 @@ class StartupProfile extends Component {
     if (this.props.startup.affiliation){
       if (this.state.isEditing === true){
         return(
-          // <div>
+          <div className="startup-header">
+          <p>Affiliation</p>
             <select value={this.state.affiliation} onChange={(event) => {
               this.props.startup.affiliation = event.target.value;
               this.changeStartupField('affiliation', event);
@@ -246,8 +247,30 @@ class StartupProfile extends Component {
               <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
               <option value="Other">Other</option>
             </select>
-          // </div>
+          </div>
           
+        )
+      }
+    } else{
+      if (this.state.isEditing === true){
+        return(
+          <div className="startup-header">
+          <p>Affiliation</p>
+            <select value={this.state.affiliation} onChange={(event) => {
+              this.props.startup.affiliation = event.target.value;
+              this.changeStartupField('affiliation', event);
+              this.setState({
+                affiliation: event.target.value, 
+              });
+            }}>
+              <option value="Undergrad">Dartmouth College</option>
+              <option value="Geisel">Geisel School of Medicine </option>
+              <option value="Tuck">Tuck School of Business</option>
+              <option value="Thayer">Thayer School of Engineering</option>
+              <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
         )
       }
     }
@@ -328,7 +351,6 @@ class StartupProfile extends Component {
               <p>State</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
             </div>
-            <p>Affiliation:</p>
             {this.renderEditAffiliation()}
             {this.renderAddIndustry()}
             <div className="startup-industries">{this.renderIndustries()}</div>

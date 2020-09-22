@@ -98,28 +98,44 @@ class StudentSignUp extends Component {
   }
 
   render() {
+    console.log('first name: ', this.props.student.first_name);
+    console.log('last name: ', this.props.student.last_name);
+    console.log('grad: ', this.props.student.grad_year);
+    console.log('phone: ', this.props.student.phone_number);
+    console.log('gender: ', this.props.student.gender);
+
+    console.log((this.props.student.first_name !== '' || this.props.student.first_name !== undefined )  && 
+    (this.props.student.last_name != '' || this.props.student.last_name !== undefined)  && 
+    (this.props.student.grad_year != '' || this.props.student.grad_year !== undefined) && 
+    (this.props.student.phone_number != '' || this.props.student.phone_number !== undefined) && 
+    (this.props.student.gender != '' || this.props.student.gender !== undefined)); 
+
     switch (this.state.index) {
       case 0:
         return (
           <div className="paginator"> 
             {this.renderComponent()}
             {this.renderSubmit()}
-            { this.state.filled? (
-              <ReactPaginate
-              previousClassName="previous-hide"
-              previousLinkClassName="previous-link-hide"
-              breakLabel="..."
-              pageCount={8}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={8}
-              onPageChange={this.handlePageClick}
-            />
+            { (this.props.student.first_name === '' || this.props.student.first_name === undefined )  || 
+              (this.props.student.last_name === '' || this.props.student.last_name === undefined)  || 
+              (this.props.student.grad_year === '' || this.props.student.grad_year === undefined) ||
+              (this.props.student.phone_number === '' || this.props.student.phone_number === undefined) || 
+              (this.props.student.gender === '' || this.props.student.gender === undefined)
+            ? (
+              <div />
+            //   <ReactPaginate
+            //   previousClassName="previous-hide"
+            //   previousLinkClassName="previous-link-hide"
+            //   // nextClassName="next-hide"
+            //   // nextLinkClassName="next-link-hide"
+            //   breakLabel="..."
+            //   pageCount={8}
+            //   marginPagesDisplayed={2}
+            //   pageRangeDisplayed={8}
+            //   onPageChange={this.handlePageClick}
+            // />
             ) : (
                 <ReactPaginate
-                previousClassName="previous-hide"
-                previousLinkClassName="previous-link-hide"
-                nextClassName="next-hide"
-                nextLinkClassName="next-link-hide"
                 breakLabel="..."
                 pageCount={8}
                 marginPagesDisplayed={2}

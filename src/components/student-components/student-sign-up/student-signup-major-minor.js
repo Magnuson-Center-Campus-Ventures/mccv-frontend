@@ -109,7 +109,7 @@ class StudentMajorMinors extends Component {
           </div>
           <div className="question-fields">
             <p className="question-fields-title">Majors <span></span></p>
-            <p className="imptMessage">please make sure to write the full name of your major (e.x. "Computer Science" instead of "CS")</p>
+            <p className="imptMessage">Please write the full name of your major (e.x. "Computer Science" instead of "CS")</p>
             <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newMajor = event.target.value} />
                   <button className="add-button"
                     onClick={() => {

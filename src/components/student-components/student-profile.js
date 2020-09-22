@@ -34,6 +34,8 @@ class StudentProfile extends Component {
       showOtherExpModal: false,
       student: {},
       gender: '',
+      bio: '',
+      grad_year: '',
       affiliation: '',
       newMajor: '',
       newMinor: '',
@@ -297,6 +299,23 @@ class StudentProfile extends Component {
           </select>
         )
       }
+    } else {
+      if (this.state.isEditing === true){
+        return(
+          <select value={this.state.gender} onChange={(event) => {
+            this.props.student.gender = event.target.value;
+            this.changeStudentField('gender', event);
+            this.setState({
+              gender: event.target.value, 
+            });
+          }}>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            <option value="prefer not to say">Prefer Not to Say</option>
+          </select>
+        )
+      }
     }
   }
 
@@ -304,29 +323,51 @@ class StudentProfile extends Component {
     if (this.props.student.affiliation){
       if (this.state.isEditing === true){
         return(
-          // <div>
-            <select value={this.state.affiliation} onChange={(event) => {
-              this.props.student.affiliation = event.target.value;
-              this.changeStudentField('affiliation', event);
-              this.setState({
-                affiliation: event.target.value, 
-              });
-            }}>
-              <option value={this.state.affiliation}>{this.props.student.affiliation}</option>
-              <option value="Undergrad">Dartmouth College</option>
-              <option value="Geisel">Geisel School of Medicine </option>
-              <option value="Tuck">Tuck School of Business</option>
-              <option value="Thayer">Thayer School of Engineering</option>
-              <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
-            </select>
-          // </div>  
+          <select value={this.state.affiliation} onChange={(event) => {
+            this.props.student.affiliation = event.target.value;
+            this.changeStudentField('affiliation', event);
+            this.setState({
+              affiliation: event.target.value, 
+            });
+          }}>
+            <option value={this.state.affiliation}>{this.props.student.affiliation}</option>
+            <option value="Undergrad">Dartmouth College</option>
+            <option value="Geisel">Geisel School of Medicine </option>
+            <option value="Tuck">Tuck School of Business</option>
+            <option value="Thayer">Thayer School of Engineering</option>
+            <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+          </select>
+        )
+      }
+    } else {
+      if (this.state.isEditing){
+        return(
+          <select value={this.state.affiliation} onChange={(event) => {
+            this.props.student.affiliation = event.target.value;
+            this.changeStudentField('affiliation', event);
+            this.setState({
+              affiliation: event.target.value, 
+            });
+          }}>
+            {/* <option value={this.state.affiliation}>{this.props.student.affiliation}</option> */}
+            <option value="Undergrad">Dartmouth College</option>
+            <option value="Geisel">Geisel School of Medicine </option>
+            <option value="Tuck">Tuck School of Business</option>
+            <option value="Thayer">Thayer School of Engineering</option>
+            <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+          </select>
         )
       }
     }
   }
 
   renderClassYearAffiliation() {
-    if (this.props.student?.affiliation) {
+    if (!this.props.student?.grad_year) {
+      return (
+        <div />
+      );
+    }
+    else if (this.props.student?.affiliation) {
       return (
         <div id="class-year">{`Class of ${this.props.student?.grad_year}`} ({this.props.student?.affiliation})</div>
       );
@@ -337,7 +378,7 @@ class StudentProfile extends Component {
     }
   }
   
-  renderMajors = () => {
+  renderMajorList = () => {
     const majors = [];
     if (this.state.student.majors) {
       this.state.student.majors.map((major, index) => {
@@ -355,7 +396,7 @@ class StudentProfile extends Component {
     }
   }
 
-  renderMinors = () => {
+  renderMinorList = () => {
     const minors = [];
     if (this.state.student.minors) {
       this.state.student.minors.map((minor, index) => {
@@ -370,6 +411,36 @@ class StudentProfile extends Component {
         }
       });
       return minors;
+    }
+  }
+
+  renderMajors = () => {
+    if (this.state.student.majors?.length > 0 && this.state.student.majors[0] != "") {
+      return (
+        <div id="major-row">
+          <div className="student-major-title">Major in </div>
+          {this.renderMajorList()}
+        </div>
+      );
+    } else {
+      return (
+        <div id="major-row">
+          <div className="student-major-title">Major Undeclared </div>
+        </div>
+      );
+    }
+  }
+
+  renderMinors = () => {
+    if (this.state.student.minors?.length > 0 && this.state.student.minors[0] != "") {
+      return (
+        <div id="minor-row">
+          <div className="student-minor-title">Minor in </div>
+          {this.renderMinorList()}
+        </div>
+      );
+    } else {
+      return (<div/>);
     }
   }
 
@@ -443,7 +514,7 @@ class StudentProfile extends Component {
     if (this.state.student?.desired_start_date != null) {
       this.state.start = new Date(this.state.student.desired_start_date);
       return (
-        <span className="student-start-date">Desired Start Date: {`${this.state.start.getMonth()}/${this.state.start.getDate()}/${this.state.start.getFullYear()}`}</span>
+        <span className="student-start-date">Desired Start Date: {`${this.state.start.getMonth()+1}/${this.state.start.getDate()}/${this.state.start.getFullYear()}`}</span>
       );
     } else {
       return (
@@ -456,11 +527,31 @@ class StudentProfile extends Component {
     if (this.state.student?.desired_end_date != null) {
       this.state.end = new Date(this.state.student.desired_end_date);
       return (
-        <span className="student-end-date">Desired End Date: {`${this.state.end.getMonth()}/${this.state.end.getDate()}/${this.state.end.getFullYear()}`}</span>
+        <span className="student-end-date">Desired End Date: {`${this.state.end.getMonth()+1}/${this.state.end.getDate()}/${this.state.end.getFullYear()}`}</span>
       );
     } else {
       return (
         <div />
+      );
+    }
+  }
+
+  renderStudentName = () => {
+    if (this.state.student?.first_name && this.state.student?.last_name) {
+      return (
+        <h1 id="student-profile-name">{`${this.state.student?.first_name} ${this.state.student?.last_name}`}</h1>
+      );
+    } else if (this.state.student?.first_name) {
+      return (
+        <h1 id="student-profile-name">{`${this.state.student?.first_name}`}</h1>
+      )
+    } else if (this.state.student?.last_name) {
+      return (
+        <h1 id="student-profile-name">{`${this.state.student?.last_name}`}</h1>
+      );
+    } else {
+      return (
+        <h1 id="student-profile-name">No Name</h1>
       );
     }
   }
@@ -478,18 +569,28 @@ class StudentProfile extends Component {
           <div id="student-edit-info">
             <h2>Personal Information</h2>
             <div className="input-title" id="first-student-input">First Name</div>
-            <input className="short-input" defaultValue={this.props.student?.first_name} onBlur={(event) => this.changeStudentField('first_name', event)} />
+            <input className="student-short-input" 
+              defaultValue={this.props.student?.first_name} 
+              onBlur={(event) => this.changeStudentField('first_name', event)} 
+            />
+
             <div className="input-title">Last Name</div>
-            <input className="short-input" defaultValue={this.props.student?.last_name} onBlur={(event) => this.changeStudentField('last_name', event)} />
+            <input className="student-short-input" 
+              defaultValue={this.props.student?.last_name} 
+              onBlur={(event) => this.changeStudentField('last_name', event)} 
+            />
+
             <div className="input-title">Phone Number</div>
-            <input className="short-input"
+            <input className="student-short-input"
               defaultValue={this.props.student?.phone_number ? this.props.student?.phone_number : null}
               onBlur={(event) => this.changeStudentField('phone_number', event)}
             />
             <div>
+              
             <div className="input-title">Gender</div>
             {this.renderEditGender()}
             </div>
+
             <div className="student-edit-dates">
               <div>Desired Start and End Date</div>
               {this.renderDateError()}
@@ -498,16 +599,33 @@ class StudentProfile extends Component {
               <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('time_commitment', event)} defaultValue={this.props.student?.time_commitment} />
             </div>
           </div>
+
           <hr className="profile-divider" />
           <div id="student-edit-majmin">
             <h2>Academic Information</h2>
             <div className="lists-row">
               <div className="majmin-section">
-                Affiliation: {this.renderEditAffiliation()}
+                <div className="majmin-header">
+                  <div className="input-title">Affiliation </div>
+                  {this.renderEditAffiliation()}
+                </div>
               </div>
               <div className="majmin-section">
                 <div className="majmin-header">
-                  <div className="input-title">Majors</div>
+                  <div className="input-title">Graduation Year</div>
+                  <input className="student-short-input" 
+                    defaultValue={this.props.student?.grad_year} 
+                    onBlur={(event) => this.changeStudentField('grad_year', event)} 
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="input-instruction">Please write the full name of your major or minor (e.x. "Computer Science" instead of "CS")</div>
+            <div className="lists-row">
+              <div className="majmin-section">
+                <div className="majmin-header">
+                  <div className="input-title">Majors </div>
                   <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newMajor = event.target.value} />
                   <button className="add-button"
                     onClick={() => {
@@ -525,7 +643,7 @@ class StudentProfile extends Component {
               </div>
               <div className="majmin-section">
                 <div className="majmin-header">
-                  <div className="input-title">Minors</div>
+                  <div className="input-title">Minors </div>
                   <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newMinor = event.target.value} />
                   <button className="add-button"
                     onClick={() => {
@@ -543,6 +661,16 @@ class StudentProfile extends Component {
               </div>
             </div>
           </div>
+
+          <hr className="profile-divider" />
+          <div>
+            <h2>Bio</h2>
+            <TextareaAutosize className="question-fields-text" 
+              onBlur={(event) => this.changeStudentField('bio', event)} 
+              defaultValue={this.props.student?.bio} 
+            />
+          </div>
+
           <hr className="profile-divider" />
           <div className="lists-row">
             <div className="list-section">
@@ -639,16 +767,10 @@ class StudentProfile extends Component {
       return (
         <div className="profile-fixed">
           <div id="profile-header">
-            <h1 id="student-profile-name">{`${this.state.student?.first_name} ${this.state.student?.last_name}`}</h1>
+            {this.renderStudentName()}
             {this.renderClassYearAffiliation()}
-            <div id="major-row">
-              <div className="student-major-title">Major in </div>
             {this.renderMajors()}
-            </div>
-            <div id="minor-row">
-              <div className="student-minor-title">Minor in </div>
             {this.renderMinors()}
-            </div>
             <div className="space"/>
             <div className="student-contact">{this.props.email}</div>
             <div className="student-contact">{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
@@ -663,7 +785,7 @@ class StudentProfile extends Component {
               {this.state.student.time_commitment ? 'Time Commitment'.concat(': ', this.state.student.time_commitment.toString()).concat(' ', 'hrs/week') : null}
               </div>
             <hr className="profile-divider" />
-            <div id="lists-row">
+            <div className="lists-row">
               <div className="list-section">
                 <h2>Industries</h2>
                 {this.renderYellowPills(this.state.ownIndustries)}
@@ -677,6 +799,15 @@ class StudentProfile extends Component {
                 {this.renderGreenPills(this.state.ownSkills)}
               </div>
             </div>
+
+            <hr className="profile-divider" />
+            <div className="exps-fixed">
+              <h2>Bio</h2>
+              <div className="work-exp">
+                <div className="exp-text">{this.props.student?.bio}</div>
+              </div>
+            </div>
+
           </div>
         </div>
       );

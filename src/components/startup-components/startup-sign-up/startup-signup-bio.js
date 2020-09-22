@@ -67,15 +67,8 @@ class StartupBio extends Component {
              <p className="question-fields-title">State <span className="imptMessage">*</span></p>
              <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
              <p className="question-fields-title">Founder's Gender <span className="imptMessage">*</span></p>
-              <select value={this.props.selected} onBlur={(event) => {
+              <select value={this.props.selected} onChange={(event) => {
                 this.changeStartupField('founder_gender', event);
-                this.setState({
-                  selected: event.target.value, 
-                  badGender: false, 
-                });
-                if (!this.state.badAffiliation){
-                  this.props.ifFilled(); 
-                }
                 }}>
                 <option value="status">Select...</option>
                 <option value="male">Male</option>
@@ -86,14 +79,6 @@ class StartupBio extends Component {
               <p className="question-fields-title">Dartmouth Affiliation <span className="imptMessage">*</span></p>
               <select value={this.state.affiliation} onChange={(event) => {
                 this.changeStartupField('affiliation', event);
-                this.setState({
-                  affiliation: event.target.value, 
-                  badAffiliation: false, 
-                });
-                if (!this.state.badGender){
-                  this.props.ifFilled();
-                  // console.log('in affiliation IF');
-                }
               }}>
               {/* Dartmouth, geisel, tuck, thayer, guarini */}
                 <option value="Select">Select...</option>

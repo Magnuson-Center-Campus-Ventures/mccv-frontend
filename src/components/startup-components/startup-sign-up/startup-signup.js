@@ -81,22 +81,28 @@ class StartupSignUp extends Component {
           <div className="paginator"> 
             {this.renderComponent()}
             {this.renderSubmit()}
-            {this.state.filled ? (
-              <ReactPaginate
-              previousClassName="previous-hide"
-              previousLinkClassName="previous-link-hide"
-              breakLabel="..."
-              pageCount={3}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={3}
-              onPageChange={this.handlePageClick}
-            />
+            {(this.props.startup.name === ''|| this.props.startup.name === undefined) ||
+              (this.props.startup.city === '' || this.props.startup.city === undefined ) ||
+              (this.props.startup.state === '' || this.props.startup.state === undefined ) ||
+              (this.props.startup.founder_gender === '' || this.props.startup.founder_gender === undefined ) ||
+              (this.props.startup.affiliation === '' || this.props.startup.affiliation === undefined ) 
+            ? (
+              <div />
+            //   <ReactPaginate
+            //   previousClassName="previous-hide"
+            //   previousLinkClassName="previous-link-hide"
+            //   breakLabel="..."
+            //   pageCount={3}
+            //   marginPagesDisplayed={2}
+            //   pageRangeDisplayed={3}
+            //   onPageChange={this.handlePageClick}
+            // />
             ) : (
               <ReactPaginate
-              nextClassName="next-hide"
-              nextLinkClassName="next-link-hide"
-              previousClassName="previous-hide"
-              previousLinkClassName="previous-link-hide"
+              // nextClassName="next-hide"
+              // nextLinkClassName="next-link-hide"
+              // previousClassName="previous-hide"
+              // previousLinkClassName="previous-link-hide"
               breakLabel="..."
               pageCount={3}
               marginPagesDisplayed={2}

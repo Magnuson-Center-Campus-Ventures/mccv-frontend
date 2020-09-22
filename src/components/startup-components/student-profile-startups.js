@@ -72,7 +72,12 @@ class StudentProfileStartup extends Component {
   }
 
   renderClassYearAffiliation() {
-    if (this.props.student?.affiliation) {
+    if (!this.props.student?.grad_year) {
+      return (
+        <div />
+      );
+    }
+    else if (this.props.student?.affiliation) {
       return (
         <div id="class-year">{`Class of ${this.props.student?.grad_year}`} ({this.props.student?.affiliation})</div>
       );
@@ -108,7 +113,11 @@ class StudentProfileStartup extends Component {
         </div>
       );
     } else {
-      return (<div/>);
+      return (
+        <div id="major-row">
+          <div className="student-major-title">Major Undeclared </div>
+        </div>
+      );
     }
   }
 
@@ -129,7 +138,7 @@ class StudentProfileStartup extends Component {
     if (this.props.student?.desired_start_date != null) {
       const start = new Date(this.props.student.desired_start_date);
       return (
-        <span className="student-start-date">Desired Start Date: {`${start.getMonth()}/${start.getDate()}/${start.getFullYear()}`}</span>
+        <span className="student-start-date">Desired Start Date: {`${start.getMonth()+1}/${start.getDate()}/${start.getFullYear()}`}</span>
       );
     } else {
       return (
@@ -142,7 +151,7 @@ class StudentProfileStartup extends Component {
     if (this.props.student?.desired_end_date != null) {
       const end = new Date(this.props.student.desired_end_date);
       return (
-        <span className="student-end-date">Desired End Date: {`${end.getMonth()}/${end.getDate()}/${end.getFullYear()}`}</span>
+        <span className="student-end-date">Desired End Date: {`${end.getMonth()+1}/${end.getDate()}/${end.getFullYear()}`}</span>
       );
     } else {
       return (
@@ -175,11 +184,31 @@ class StudentProfileStartup extends Component {
     } else return <div>None</div>;
   }
 
+  renderStudentName = () => {
+    if (this.props.student?.first_name && this.props.student?.last_name) {
+      return (
+        <h1 id="student-profile-name">{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
+      );
+    } else if (this.props.student?.first_name) {
+      return (
+        <h1 id="student-profile-name">{`${this.props.student?.first_name}`}</h1>
+      )
+    } else if (this.props.student?.last_name) {
+      return (
+        <h1 id="student-profile-name">{`${this.props.student?.last_name}`}</h1>
+      );
+    } else {
+      return (
+        <h1 id="student-profile-name">No Name</h1>
+      );
+    }
+  }
+  
   renderBody = () => {
     return (
       <div className="profile-fixed">
         <div id="profile-header">
-          <h1 id="student-profile-name">{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
+          {this.renderStudentName()}
           {this.renderClassYearAffiliation()}
           {this.renderMajors()}
           {this.renderMinors()}
@@ -197,7 +226,7 @@ class StudentProfileStartup extends Component {
             {this.props.student.time_commitment ? 'Time Commitment'.concat(': ', this.props.student.time_commitment.toString()).concat(' ', 'hrs/week') : null}
             </div>
           <hr className="profile-divider" />
-          <div id="lists-row">
+          <div className="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
               {this.renderYellowPills(this.props.student?.interested_industries)}
