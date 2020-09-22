@@ -158,6 +158,7 @@ class Signup extends Component {
                 <span className="roleStartupCta">Startup</span>
               </button>
             </div>
+            {this.renderError()}
           </div>
 
           <div className="signupRight">
@@ -189,7 +190,7 @@ class Signup extends Component {
             <span>Sign Up</span>
           </button>
         </div> */}
-        {this.renderError()}
+        {/* {this.renderError()} */}
       </div>
     );
   }

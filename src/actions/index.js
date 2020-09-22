@@ -792,7 +792,7 @@ export function createResetToken({ email, } , history) {
 export function updatePassword({ token, password, } , history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/updatepassword`, { token, password, }).then((response) => {
-      dispatch(authError(`Success: ${response.data}`));
+      dispatch(authError(`Update Password: ${response.data}`));
       // history.push('/signin');
     }).catch((error) => {
       dispatch(authError(`Error: ${error.response.data}`));

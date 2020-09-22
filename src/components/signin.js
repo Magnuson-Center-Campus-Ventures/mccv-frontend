@@ -40,6 +40,7 @@ class Signin extends Component {
         <div className="signinBoard">
           <div className="signinLeft">
             <h1>Login to access Magnuson Center Campus Ventures</h1>
+            {this.renderError()}
           </div>
 
           <div className="signinRight">
@@ -74,7 +75,7 @@ class Signin extends Component {
           </button>
         </div> */}
 
-        {this.renderError()}
+        {/* {this.renderError()} */}
       </div>
     );
   }
