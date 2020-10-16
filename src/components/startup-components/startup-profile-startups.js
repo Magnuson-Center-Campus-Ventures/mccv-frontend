@@ -11,6 +11,7 @@ import {
   fetchAllIndustries, createIndustryForStartup,
   uploadImage,
 } from '../../actions';
+import embedInstructions from '../../assets/embed-instructions.png';
 import '../../styles/startup-profile.scss';
 
 class StartupProfile extends Component {
@@ -219,14 +220,10 @@ class StartupProfile extends Component {
           />
         </div>
       );
-    } else {
-      return (
-        <div className="startup-header">Industries:</div>
-      );
-    }
+    } 
   }
 
-  renderEditAffiliation(){
+  renderEditAffiliation() {
     if (this.props.startup.affiliation){
       if (this.state.isEditing === true){
         return(
@@ -282,12 +279,18 @@ class StartupProfile extends Component {
         return (
           this.props.startup.industries.map((industry) => {
             return (
-              <div className="startup-industry" key={industry.name}>
-                {industry.name}
+              <div className="yellowPill" key={industry.id}> 
+                {industry.name} 
                 <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
                   <i className="far fa-trash-alt" id="icon" />
                 </button>
               </div>
+              // <div className="startup-industry" key={industry.name}>
+              //   {industry.name}
+              //   <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
+              //     <i className="far fa-trash-alt" id="icon" />
+              //   </button>
+              // </div>
             );
           })
         );
@@ -295,7 +298,10 @@ class StartupProfile extends Component {
         return (
           this.props.startup.industries.map((industry) => {
             return (
-              <div className="startup-industry" key={industry.name}>{industry.name}</div>
+              <div className="yellowPill" key={industry.id}> 
+                {industry.name} 
+              </div>
+              // <div className="startup-industry" key={industry.name}>{industry.name}</div>
             );
           })
         );
@@ -307,66 +313,174 @@ class StartupProfile extends Component {
     }
   }
 
+  logoCompanyName = () => {
+    if (this.props.startup.logo) {
+      return (
+        <div className="profileCompanyInfo">
+          <div className="profileCompanyLeft">
+            <img src={this.props.startup.logo} alt="no logo" className="profileCompanyLogo"/>
+          </div>
+          <div className="profileCompanyRight">
+            <div className="profileCompanyTitle"> { this.props.startup.name} </div>
+          </div>  
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <div className="profileCompanyTitle"> { this.props.startup.name} </div>
+        </div>
+      );
+    }
+  }
+
+  renderStartupProfileDescription = () => {
+    if (this.props.startup.description) {
+      return (
+        <div>{this.props.startup.description}</div>
+      );
+    } else {
+      return (<div/>);
+    }
+  }
+
+  renderVideo(){
+    if (this.props.startup?.video) {
+      return (
+        <div className="startup-video">
+          <iframe 
+            title="videoLarge" 
+            className="embed-responsive-item" 
+            allow="fullscreen"
+            src={this.props.startup.video} 
+          />
+        </div>
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  renderEmail(){
+    if (this.props.startup.contact_email) {
+      return (
+        <div className="startup-header">Email: {this.props.startup.contact_email}</div>
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
+  renderLocation = () => {
+    if (this.props.startup.city && this.props.startup.state) {
+      return (
+        <div className="startup-header">
+          <span className="locationIcon" />
+          <span className="position-location"> {`${this.props.startup.city}, ${this.props.startup.state}`} </span>
+        </div> 
+      );
+    } else {
+      return (
+        <div />
+      );
+    }
+  }
+
   renderStartup() {
     if (typeof this.props.startup !== 'undefined') {
       if (this.state.isEditing === false) {
         return (
           <div className="startup-body">
-            <div className="startup-header">
-              <img className="startup-logo" id="logo" alt="preview" src={this.state.startup.logo} />
-              <h1>{`${this.props.startup.name}`}</h1>
+            <div className="startup-body-text">
+              <div className="startup-header">
+                {this.logoCompanyName()}
+              </div>
+            
+              <div className="startup-profile-info">
+                {/* <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div> */}
+                {this.renderLocation()}
+                {this.renderEmail()}
+                <div className="startup-industries">Industries: {this.renderIndustries()}</div>
+              </div>
+
+              <div className="startup-description">
+                <h3>About {`${this.props.startup.name}`}:</h3>
+                {this.renderStartupProfileDescription()}
+              </div>
+
+              {this.renderVideo()}
+
+              <div className="startup-header">
+                <button className="startup-edit-button"
+                  onClick={this.submit}
+                >
+                  {this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
+                </button>
+              </div>
+
             </div>
-            <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
-            {this.renderAddIndustry()}
-            {/* <div>Affiliated with {this.props.startup.affiliation}</div> */}
-            <div className="startup-industries">{this.renderIndustries()}</div>
-            <div className="startup-description">
-              <p>About {`${this.props.startup.name}`}:</p>
-              <div className="startup-description">{`${this.props.startup.description}`}</div>
-            </div>
-            <div className="startup-video">
-              <iframe title="videoLarge" className="embed-responsive-item" src={this.state.startup.video} />
-            </div>
-            <button className="startup-edit-button edit-button"
-              onClick={this.submit}
-            >{this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
-            </button>
           </div>
         );
       } else {
         return (
           <div className="startup-body">
-            <div className="startup-header startup-logo-container">
-              <p>Logo</p>
-              <img className="startup-logo" id="preview" alt="preview" src={this.state.preview} />
-              <input type="file" name="coverImage" onChange={this.onImageUpload} />
-            </div>
             <div className="startup-header">
               <p>Name</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
             </div>
-            <div className="startup-location startup-header">
+
+            <div className="startup-header startup-logo-container">
+              <p>Logo</p>
+              <input type="file" name="coverImage" onChange={this.onImageUpload} />
+              <img className="startup-logo" id="preview" alt="preview" src={this.state.preview} />
+            </div>
+            
+            <div className="startup-header">
               <p>City</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
               <p>State</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
             </div>
+
+            <div className="startup-header">
+              <p>Contact Email</p>
+              <TextareaAutosize onBlur={(event) => this.changeStartupField('contact_email', event)} defaultValue={this.props.startup.contact_email} />
+            </div>
+
             {this.renderEditAffiliation()}
+
+            <hr className="post-edit-divider" />
             {this.renderAddIndustry()}
             <div className="startup-industries">{this.renderIndustries()}</div>
-            <div className="startup-description">
+
+            <hr className="post-edit-divider" />
+            <div className="startup-header">
               <p>Description</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
             </div>
+
             <div className="startup-video">
               <p>Link to your startup's pitch! (use the embed link for the video)</p>
+              <img
+                  alt="Embed Link Example"
+                  src={embedInstructions}
+                  className="embed-instructions-image"
+              />
               <TextareaAutosize onBlur={(event) => this.changeStartupField('video', event)} defaultValue={this.props.startup.video} />
-              <iframe title="videoLarge" className="embed-responsive-item" src={this.state.startup.video} />
+              {this.renderVideo()}
             </div>
-            <button className="startup-edit-button edit-button"
-              onClick={this.submit}
-            >{this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
-            </button>
+
+            <div className="startup-header">
+              <button className="startup-edit-button"
+                onClick={this.submit}
+              >
+                {this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
+              </button>
+            </div>
           </div>
         );
       }
@@ -415,8 +529,52 @@ class StartupProfile extends Component {
   renderPostings = (e) => {
     if (this.props.startup.posts && this.props.startup.posts.length && typeof this.props.startup !== 'undefined') {
       const mappingPostings = this.state.posts.map((post) => {
+
+        const virtual = (post.virtual==true) ? (
+          <div className="location">
+            <span className="virtualIcon" />
+            <span className="postLocation">Virtual</span>
+          </div>  
+        ) : (
+          <div />
+        );
+      
+        const inperson = (post.city && post.state) ? (
+          <div className="location">
+            <span className="locationIcon" />
+            <span className="postLocation"> {`${post.city}, ${post.state}`} </span>
+          </div>  
+        ) : (
+          <div />
+        );
+      
+        const start = new Date(post.desired_start_date);
+        const end = new Date(post.desired_end_date);
+      
+        const startDate = (start) ? (
+          <span className="dateText">Starts {`${start.getMonth()+1}/${start.getDate()}/${start.getFullYear()}`}</span>
+        ) : (
+          <div />
+        );
+      
+        const endDate = (end) ? (
+          <span className="dateText">Ends {`${end.getMonth()+1}/${end.getDate()}/${end.getFullYear()}`}</span>
+        ) : (
+          <div />
+        );
+        
+        const statusPill = (post.status === "Approved") ? (
+          <div className="greenPill">Approved</div>
+        ) : (
+          (post.status === "Archived") ? (
+            <div className="redPill">Archived</div>
+          ) : (
+            <div className="yellowPill">Pending Review</div>
+          )
+        );
+
         return (
-          <li className="startup-posting" key={post._id}>
+          /* <li className="startup-posting" key={post._id}>
             <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
               <div className="startup-posting-title">{post.title}</div>
               <br />
@@ -425,6 +583,25 @@ class StartupProfile extends Component {
               <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
               <br />
               <div className="startup-posting-status">Status: {post.status}</div>
+            </Link>
+          </li> */
+          <li className="startup-posting" key={post._id}>
+            <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
+              <div className="postInfo">
+                <h1 className="postTitle">{ post.title}</h1>
+                {virtual}
+                {inperson}
+                <div className="dates">
+                  {startDate}
+                  {endDate}
+                </div>
+                <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
+                {/* <div className="startup-posting-status">Status: {post.status}</div> */}
+                <div className="applicationStatusRow">
+                  <div id="pillsTitle">Status: </div>
+                    {statusPill}
+                </div>
+              </div>
             </Link>
           </li>
         );
