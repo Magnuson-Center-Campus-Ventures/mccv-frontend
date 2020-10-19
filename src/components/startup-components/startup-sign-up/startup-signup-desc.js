@@ -94,12 +94,7 @@ class StartupDesc extends Component {
         <div className="question-fields-desc">
           <p className="question-fields-title">Link to your startup's pitch! (use the embed link for the video)</p>
           <TextareaAutosize onBlur={(event) => this.changeStartupField('video', event)} defaultValue={this.props.startup.video} />
-          <iframe 
-            title="videoLarge" 
-            className="embed-responsive-item" 
-            allow="fullscreen"
-            src={this.state.startup.video} 
-          />
+          <iframe title="videoLarge" className="embed-responsive-item" src={this.state.startup.video} />
         </div>
       </div>
     );

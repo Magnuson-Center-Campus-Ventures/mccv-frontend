@@ -792,7 +792,7 @@ export function createResetToken({ email, } , history) {
 export function updatePassword({ token, password, } , history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/updatepassword`, { token, password, }).then((response) => {
-      dispatch(authError(`Update Password: ${response.data}`));
+      dispatch(authError(`Success: ${response.data}`));
       // history.push('/signin');
     }).catch((error) => {
       dispatch(authError(`Error: ${error.response.data}`));
@@ -806,11 +806,11 @@ export function sendConfirmationEmail({
   email, password, role, student_profile_id, startup_id, } , history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/emailconfirmation`, { email, password, role, student_profile_id, startup_id }).then((response) => {
-      dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
+      // dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
       // dispatch({ type: ActionTypes.CONFIRM_EMAIL, payload: response.data });
       history.push('/emailconfirmation');
     }).catch((error) => {
-      dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
+      // dispatch(authError(`Check your email to signup! (expires in 1 hour)`));
       // dispatch(authError(error));
       history.push('/emailconfirmation');
     });
