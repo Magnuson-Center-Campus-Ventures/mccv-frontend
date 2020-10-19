@@ -17,18 +17,18 @@ const StartupListItem = (props) => {
     if (index === 0) {
       return (
         <div id="pillsTitle" key={industry.id}>
-          Industries: <div className="yellowPill" key={industry.id}> {industry.name} </div>
+          Industries: <div className="yellowPill"> {industry.name} </div>
         </div>
       );
     } else if (index < 3) {
       return (
-        <div className="yellowPill" key={industry.id}>
+        <div key={industry.id} className="yellowPill">
           {industry.name}
         </div>
       );
     } else if (index === 3) {
       return (
-        <div className="yellowPill" key={industry.id}>
+        <div key={industry.id} className="yellowPill">
           ...
         </div>
       );
@@ -39,7 +39,7 @@ const StartupListItem = (props) => {
     if (index == 0) {
       return (
         <div id="pillsTitle" key={post.id}>
-          Positions: <div className="greenPill" key={post.id}>{post.title}</div>
+          Positions: <div className="greenPill">{post.title}</div>
         </div>
       )
     } else if (index < 2) {

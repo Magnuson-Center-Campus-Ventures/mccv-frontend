@@ -32,10 +32,9 @@ class EmailConfirmation extends Component {
             <div className="signinLeft">
               <h1>Thank you for signing up!</h1>
               <h2>Check your email for a link to sign in and fill out your profile</h2>
-              {this.renderError()}
             </div>
           </div>
-          {/* {this.renderError()} */}
+          {this.renderError()}
         </div>
       );
     } else {

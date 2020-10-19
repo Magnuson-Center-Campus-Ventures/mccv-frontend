@@ -48,18 +48,18 @@ const StudentListItem = (props) => {
     if (index === 0) {
       return (
         <div id="pillsTitle" key={skill.id}>
-          Skills: <div className="greenPill" key={skill.id}> {skill.name} </div>
+          Skills: <div className="greenPill"> {skill.name} </div>
         </div>
       );
     } else if (index < 5){
       return (
-        <div className="greenPill" key={skill.id}>
+        <div key={skill.id} className="greenPill">
           {skill.name}
         </div>
       );
     } else if (index === 5) {
       return (
-        <div className="greenPill" key={skill.id}>
+        <div key={skill.id} className="greenPill">
           ...
         </div>
       );
@@ -70,18 +70,18 @@ const StudentListItem = (props) => {
     if (index === 0) {
       return (
         <div id="pillsTitle" key={industry.id}>
-          Industries: <div className="yellowPill" key={industry.id}> {industry.name} </div>
+          Industries: <div className="yellowPill"> {industry.name} </div>
         </div>
       );
     } else if (index < 5) {
       return (
-        <div className="yellowPill" key={industry.id}>
+        <div key={industry.id} className="yellowPill">
           {industry.name}
         </div>
       );
     } else if (index === 5) {
       return (
-        <div className="yellowPill" key={industry.id}>
+        <div key={industry.id} className="yellowPill">
           ...
         </div>
       );
