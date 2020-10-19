@@ -2,7 +2,7 @@
   "name": "MCV",
   "version": "1.0.0",
   "main": "src/index.js",
-  "repository": "https://github.com/Magnuson-Center-Campus-Ventures/mccv-frontend/",
+  "repository": "http://github.com/Magnuson-Center-Campus-Ventures/mccv-frontend/",
   "author": "doniatung <donia.tung@dali.dartmouth.edu>",
   "license": "MIT",
   "scripts": {
