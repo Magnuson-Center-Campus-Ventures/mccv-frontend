@@ -36,7 +36,6 @@ class ForgotPassword extends Component {
           <div className="signinLeft">
             <h1>Forgot your password?</h1>
             <h2>Enter your email and we will send you a link to reset your password</h2>
-            {this.renderError()}
           </div>
 
           <div className="signinRight">
@@ -54,7 +53,7 @@ class ForgotPassword extends Component {
           </div>
 
         </div>
-        {/* {this.renderError()} */}
+        {this.renderError()}
       </div>
     );
   }
