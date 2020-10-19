@@ -38,7 +38,6 @@ class ResetPassword extends Component {
           <div className="signinLeft">
             <h1>Reset your password?</h1>
             <h2>Enter your new password</h2>
-            {this.renderError()}
           </div>
 
           <div className="signinRight">
@@ -56,7 +55,7 @@ class ResetPassword extends Component {
           </div>
 
         </div>
-        {/* {this.renderError()} */}
+        {this.renderError()}
       </div>
     );
   }

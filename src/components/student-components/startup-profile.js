@@ -78,63 +78,18 @@ class Startup extends Component {
   renderPostings() {
     if (this.props.startup.posts && this.props.startup.posts.length && typeof this.props.startup !== 'undefined') {
       const mappingPostings = this.props.startup.posts.map((post) => {
-        const virtual = (post.virtual==true) ? (
-          <div className="location">
-            <span className="virtualIcon" />
-            <span className="postLocation">Virtual</span>
-          </div>  
-        ) : (
-          <div />
+        const route = `/posts/${post._id}`;
+        return (
+          <li className="startup-posting" key={post._id}>
+            <Link to={route} key={post.id} className="postingLink">
+              <div className="startup-posting-title">{post.title}</div>
+              <br />
+              {this.renderDescription(post)}
+              <br />
+              <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
+            </Link>
+          </li>
         );
-      
-        const inperson = (post.city && post.state) ? (
-          <div className="location">
-            <span className="locationIcon" />
-            <span className="postLocation"> {`${post.city}, ${post.state}`} </span>
-          </div>  
-        ) : (
-          <div />
-        );
-      
-        const start = new Date(post.desired_start_date);
-        const end = new Date(post.desired_end_date);
-      
-        const startDate = (start) ? (
-          <span className="dateText">Starts {`${start.getMonth()+1}/${start.getDate()}/${start.getFullYear()}`}</span>
-        ) : (
-          <div />
-        );
-      
-        const endDate = (end) ? (
-          <span className="dateText">Ends {`${end.getMonth()+1}/${end.getDate()}/${end.getFullYear()}`}</span>
-        ) : (
-          <div />
-        );
-
-        if (post.status === "Approved") {
-          return (
-            <li className="startup-posting" key={post._id}>
-              <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
-                <div className="postInfo">
-                  <h1 className="postTitle">{ post.title}</h1>
-                  {virtual}
-                  {inperson}
-                  <div className="dates">
-                    {startDate}
-                    {endDate}
-                  </div>
-                  <div className="startup-posting-time">Time Commitment: {post.time_commitment} hours per week</div>
-                  {/* <div className="startup-posting-status">Status: {post.status}</div> */}
-                  <div className="applicationStatusRow">
-                    <div id="pillsTitle">Status: </div>
-                    <div className="greenPill">Approved</div>
-                  </div>
-                </div>
-              </Link>
-            </li>
-          );
-        }
-        
       });
       return (
         this.props.startup.posts !== undefined
@@ -162,10 +117,7 @@ class Startup extends Component {
       return (
         this.props.startup.industries.map((industry) => {
           return (
-            <div className="yellowPill" key={industry.id}> 
-              {industry.name} 
-            </div>
-            //<div className="startup-industry" key={industry.name}>{industry.name}</div>
+            <div className="startup-industry" key={industry.name}>{industry.name}</div>
           );
         })
       );
@@ -176,8 +128,8 @@ class Startup extends Component {
     if (this.props.user.role === 'admin') {
       if (this.props.startup?.status === 'Approved') {
         return (
-          <div className="startup-profile-admin-button-row">
-            <button className="startup-profile-admin-button"
+          <div className="startup-profile-admin-buttons">
+            <button
               type="submit"
               onClick={(e) => {
                 this.showArchiveModal();
@@ -189,8 +141,8 @@ class Startup extends Component {
         );
       } else if (this.props.startup?.status === 'Pending') {
         return (
-          <div className="startup-profile-admin-button-row">
-            <button className="startup-profile-admin-button"
+          <div className="startup-profile-admin-buttons">
+            <button
               type="submit"
               onClick={(e) => {
                 this.showApproveModal();
@@ -198,7 +150,7 @@ class Startup extends Component {
             >
               Approve
             </button>
-            <button className="startup-profile-admin-button"
+            <button
               type="submit"
               onClick={(e) => {
                 this.showDenyModal();
@@ -223,124 +175,33 @@ class Startup extends Component {
 
   renderVideo(){
     if (this.props.startup?.video) {
-      return (
-        <div className="startup-video">
-          <iframe 
-            title="videoLarge" 
-            className="embed-responsive-item" 
-            allow="fullscreen"
-            src={this.props.startup.video} 
-          />
-        </div>
-      );
-    } else {
-      return (
-        <div />
-      );
+      return (<iframe title="videoLarge" className="embed-responsive-item" src={this.props.startup.video} />);
     }
-  }
 
-  logoCompanyName = () => {
-    if (this.props.startup.logo) {
-      return (
-        <div className="profileCompanyInfo">
-          <div className="profileCompanyLeft">
-            <img src={this.props.startup.logo} alt="no logo" className="profileCompanyLogo"/>
-          </div>
-          <div className="profileCompanyRight">
-            <div className="profileCompanyTitle"> { this.props.startup.name} </div>
-          </div>  
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <div className="profileCompanyTitle"> { this.props.startup.name} </div>
-        </div>
-      );
-    }
-  }
-
-  renderStartupProfileDescription = () => {
-    if (this.props.startup.description) {
-      return (
-        <div>{this.props.startup.description}</div>
-      );
-    } else {
-      return (<div/>);
-    }
-  }
-
-  renderEmail(){
-    if (this.props.startup.contact_email) {
-      return (
-        <div className="startup-header">Email: {this.props.startup.contact_email}</div>
-      );
-    } else {
-      return (
-        <div />
-      );
-    }
-  }
-
-  renderLocation = () => {
-    if (this.props.startup.city && this.props.startup.state) {
-      return (
-        <div className="startup-header">
-          <span className="locationIcon" />
-          <span className="position-location"> {`${this.props.startup.city}, ${this.props.startup.state}`} </span>
-        </div> 
-      );
-    } else {
-      return (
-        <div />
-      );
-    }
   }
 
   renderStartup() {
     if (this.props.startup) {
       return (
         <div className="startup-body">
-          <div className="startup-body-text">
-            <div className="startup-header">
-              {this.logoCompanyName()}
-            </div>
-          
-            <div className="startup-profile-info">
-              {/* <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div> */}
-              {this.renderLocation()}
-              {this.renderEmail()}
-              <div className="startup-industries">Industries: {this.renderIndustries()}</div>
-            </div>
-
-            <div className="startup-description">
-              <h3>About {`${this.props.startup.name}`}:</h3>
-              {this.renderStartupProfileDescription()}
-            </div>
-
-            {this.renderVideo()}
-            
-            {/* <div className="startup-header">
-              {this.renderLogo()}
-              <h1>{`${this.props.startup.name}`}</h1>
-            </div>
-            <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
-            <div className="startup-header">Industries:</div>
-            <div className="startup-industries">{this.renderIndustries()}</div>
-            {this.props.user.role === 'admin' ? (
-              <div> Affiliation: {this.props.startup.affiliation}</div>
-            ): (<div/>)}
-            <div className="startup-description">
-              <p>About {`${this.props.startup.name}`}:</p>
-              <div className="startup-description">{`${this.props.startup.description}`}</div>
-            </div>
-            <div className="startup-video">
-              {this.renderVideo()}
-            </div> */}
-
-            {this.renderButtons()}
+          <div className="startup-header">
+            {this.renderLogo()}
+            <h1>{`${this.props.startup.name}`}</h1>
           </div>
+          <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div>
+          <div className="startup-header">Industries:</div>
+          <div className="startup-industries">{this.renderIndustries()}</div>
+          {this.props.user.role === 'admin' ? (
+            <div> Affiliation: {this.props.startup.affiliation}</div>
+          ): (<div/>)}
+          <div className="startup-description">
+            <p>About {`${this.props.startup.name}`}:</p>
+            <div className="startup-description">{`${this.props.startup.description}`}</div>
+          </div>
+          <div className="startup-video">
+            {this.renderVideo()}
+            </div>
+          {this.renderButtons()}
         </div>
       );
     } else {
