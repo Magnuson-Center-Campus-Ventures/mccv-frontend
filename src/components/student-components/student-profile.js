@@ -11,8 +11,9 @@ import CreateableSelect from 'react-select/creatable';
 import { DateRange } from 'react-date-range';
 import {
   fetchStudentByUserID, updateStudent, fetchUser,
-  fetchWorkExperiences, updateWorkExperience, deleteWorkExperience,
-  fetchOtherExperiences, updateOtherExperience, deleteOtherExperience,
+  // fetchWorkExperiences, fetchOtherExperiences, 
+  updateWorkExperience, deleteWorkExperience,
+  updateOtherExperience, deleteOtherExperience,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills,
   createIndustryForStudent, createSkillForStudent, createClassForStudent,
 } from '../../actions';
@@ -89,12 +90,14 @@ class StudentProfile extends Component {
         this.setState({ minors: this.props.student.minors });
       } else student.minors = this.state.minors;
 
-      if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
-        this.props.fetchWorkExperiences(this.props.student.work_exp);
-      }
-      if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
-        this.props.fetchOtherExperiences(this.props.student.other_exp);
-      }
+      // commenting this out bc work exp and other exp now populated by fetchStudent
+      // if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
+      //   this.props.fetchWorkExperiences(this.props.student.work_exp);
+      // }
+      // if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
+      //   this.props.fetchOtherExperiences(this.props.student.other_exp);
+      // }
+
       // Set initial dropdown options to be the indutries, skills, and classes the student already has
       let selectedIndustryOptions = prevState.selectedIndustryOptions;
       if (this.props.student.interested_industries && this.props.student.interested_industries !== prevProps.student.interested_industries) {
@@ -143,13 +146,14 @@ class StudentProfile extends Component {
       this.setState({ allSkillOptions });
     }
 
-    if (prevProps.workExps !== this.props.workExps) {
-      this.setState({ workExps: this.props.workExps });
-    }
+    // commenting this out bc work exp and other exp now populated by fetchStudent
+    // if (prevProps.workExps !== this.props.workExps) {
+    //   this.setState({ workExps: this.props.workExps });
+    // }
 
-    if (prevProps.otherExps !== this.props.otherExps) {
-      this.setState({ otherExps: this.props.otherExps });
-    }
+    // if (prevProps.otherExps !== this.props.otherExps) {
+    //   this.setState({ otherExps: this.props.otherExps });
+    // }
   }
   
   changeStudentField = (field, event) => {
@@ -921,12 +925,12 @@ const mapStateToProps = (reduxState) => ({
 
 export default withRouter(connect(mapStateToProps, {
   fetchStudentByUserID,
-  fetchWorkExperiences,
+  // fetchWorkExperiences,
   updateStudent,
   fetchUser,
   updateWorkExperience,
   deleteWorkExperience,
-  fetchOtherExperiences,
+  // fetchOtherExperiences,
   updateOtherExperience,
   deleteOtherExperience,
   fetchAllIndustries,

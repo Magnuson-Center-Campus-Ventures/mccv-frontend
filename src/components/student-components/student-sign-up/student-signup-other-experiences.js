@@ -10,7 +10,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  fetchStudentByUserID, fetchUser, updateStudent, updateOtherExperience, fetchOtherExperiences, deleteOtherExperience,
+  fetchStudentByUserID, fetchUser, updateStudent, updateOtherExperience, 
+  // fetchOtherExperiences, 
+  deleteOtherExperience,
 } from '../../../actions';
 import OtherExperience from '../other-experience';
 import NewOtherExp from '../student-modals/new-other-exp';
@@ -34,9 +36,10 @@ class StudentOtherExperiences extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student && this.props.student !== {} && prevProps.student !== this.props.student) {
-      if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
-        this.props.fetchOtherExperiences(this.props.student.other_exp);
-      }
+      // commenting this out bc other_exp now populated by fetchStudent
+      // if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
+      //   this.props.fetchOtherExperiences(this.props.student.other_exp);
+      // }
       this.setState({
         student: this.props.student,
       });
@@ -162,5 +165,7 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStudentByUserID, fetchUser, updateStudent, updateOtherExperience, fetchOtherExperiences, deleteOtherExperience,
+  fetchStudentByUserID, fetchUser, updateStudent, updateOtherExperience, 
+  // fetchOtherExperiences, 
+  deleteOtherExperience,
 })(StudentOtherExperiences));

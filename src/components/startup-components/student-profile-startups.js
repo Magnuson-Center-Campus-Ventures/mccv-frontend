@@ -7,7 +7,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  fetchStudentByID, fetchUserByStudentID, fetchWorkExperiences, fetchOtherExperiences,
+  fetchStudentByID, fetchUserByStudentID, 
+  // fetchWorkExperiences, fetchOtherExperiences,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills, fetchUser,
 } from '../../actions';
 import WorkExperience from '../student-components/work-experience';
@@ -34,12 +35,13 @@ class StudentProfileStartup extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student !== {} && prevProps.student !== this.props.student) {
       this.props.fetchUserByStudentID(this.props.student._id);
-      if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
-        this.props.fetchWorkExperiences(this.props.student.work_exp);
-      }
-      if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
-        this.props.fetchOtherExperiences(this.props.student.other_exp);
-      }
+      // commenting this out bc work_exp and other_exp now populated by fetchStudent
+      // if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
+      //   this.props.fetchWorkExperiences(this.props.student.work_exp);
+      // }
+      // if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
+      //   this.props.fetchOtherExperiences(this.props.student.other_exp);
+      // }
     }
   }
 
@@ -286,8 +288,8 @@ class StudentProfileStartup extends Component {
   }
 
   renderWorkExperiences = () => {
-    if (this.props.workExps !== []) {
-      return this.props.workExps.map((workExp, index) => {
+    if (this.props.student?.work_exp !== []) {
+      return this.props.student?.work_exp.map((workExp, index) => {
         return (
           <WorkExperience key={index}
             className="work-exp"
@@ -317,8 +319,8 @@ class StudentProfileStartup extends Component {
   }
 
   renderOtherExperiences = () => {
-    if (this.props.otherExps !== []) {
-      return this.props.otherExps.map((otherExp, index) => {
+    if (this.props.student?.other_exp !== []) {
+      return this.props.student?.other_exp.map((otherExp, index) => {
         return (
           <OtherExperience key={index}
             className="work-exp"
@@ -369,16 +371,17 @@ class StudentProfileStartup extends Component {
 const mapStateToProps = (reduxState) => ({
   student: reduxState.students.current_student,
   email: reduxState.students.current_email,
-  workExps: reduxState.students.current_work_exps,
-  otherExps: reduxState.students.current_other_exps,
+  // commenting out to because work_exp and other_exp now populated during fetch student
+  // workExps: reduxState.students.current_work_exps,
+  // otherExps: reduxState.students.current_other_exps,
   user: reduxState.user.current,
 });
 
 export default withRouter(connect(mapStateToProps, {
   fetchStudentByID,
   fetchUserByStudentID,
-  fetchWorkExperiences,
-  fetchOtherExperiences,
+  // fetchWorkExperiences,
+  // fetchOtherExperiences,
   fetchAllIndustries,
   fetchAllClasses,
   fetchAllSkills,

@@ -10,7 +10,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
-  fetchStudentByUserID, fetchUser, updateStudent, updateWorkExperience, fetchWorkExperiences, deleteWorkExperience,
+  fetchStudentByUserID, fetchUser, updateStudent, updateWorkExperience, 
+  // fetchWorkExperiences, 
+  deleteWorkExperience,
 } from '../../../actions';
 import WorkExperience from '../work-experience';
 import NewWorkExp from '../student-modals/new-work-exp';
@@ -34,9 +36,10 @@ class StudentWorkExperiences extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.student && this.props.student !== {} && prevProps.student !== this.props.student) {
-      if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
-        this.props.fetchWorkExperiences(this.props.student.work_exp);
-      }
+      // commenting this out bc work_exp now populated in fetchStudent
+      // if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
+      //   this.props.fetchWorkExperiences(this.props.student.work_exp);
+      // }
       this.setState({
         student: this.props.student,
       });
@@ -109,8 +112,8 @@ class StudentWorkExperiences extends Component {
   };
 
   renderWorkExperiences = () => {
-    if (this.state.workExps !== []) {
-      return this.state.workExps.map((workExp, index) => {
+    if (this.props.student?.work_exp !== []) {
+      return this.props.student?.work_exp.map((workExp, index) => {
         return (
           <WorkExperience key={index}
             className="work-exp"
@@ -163,5 +166,7 @@ const mapStateToProps = (reduxState) => ({
 });
 
 export default withRouter(connect(mapStateToProps, {
-  fetchStudentByUserID, fetchUser, updateStudent, updateWorkExperience, fetchWorkExperiences, deleteWorkExperience,
+  fetchStudentByUserID, fetchUser, updateStudent, updateWorkExperience, 
+  //fetchWorkExperiences, 
+  deleteWorkExperience,
 })(StudentWorkExperiences));

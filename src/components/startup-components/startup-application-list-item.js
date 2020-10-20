@@ -13,8 +13,8 @@ import {
   updatePost,
   fetchStudentByID,
   fetchUserByStudentID,
-  fetchWorkExperiences,
-  fetchOtherExperiences,
+  // fetchWorkExperiences,
+  // fetchOtherExperiences,
   fetchAllIndustries,
   fetchAllClasses,
   fetchAllSkills,
@@ -48,12 +48,13 @@ class StartupApplicationListItem extends Component {
     }
     if (this.props.student && !isEmpty(this.props.student) && prevProps.student !== this.props.student) {
       this.props.fetchUserByStudentID(this.props.student._id);
-      if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
-        this.props.fetchWorkExperiences(this.props.student.work_exp);
-      }
-      if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
-        this.props.fetchOtherExperiences(this.props.student.other_exp);
-      }
+      // commenting out to because work_exp and other exp_now populated during fetch student
+      // if (this.props.student.work_exp && this.props.student.work_exp.length > 0) {
+      //   this.props.fetchWorkExperiences(this.props.student.work_exp);
+      // }
+      // if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
+      //   this.props.fetchOtherExperiences(this.props.student.other_exp);
+      // }
     }
   }
 
@@ -364,9 +365,10 @@ class StartupApplicationListItem extends Component {
     return (
       <StudentProfileStartup 
         student={this.props.student} 
-        email={this.props.email} 
-        workExps={this.props.workExps} 
-        otherExps={this.props.otherExps}
+        email={this.props.email}
+        // commenting out to because work_exp and other_exp now populated during fetch student
+        // workExps={this.props.workExps} 
+        // otherExps={this.props.otherExps}
         user={this.props.user}
       />
       // styling before deciding to use student-profile-startups component
@@ -491,8 +493,8 @@ class StartupApplicationListItem extends Component {
 const mapStateToProps = (reduxState) => ({
   student: reduxState.students.current_student,
   email: reduxState.students.current_email,
-  workExps: reduxState.students.current_work_exps,
-  otherExps: reduxState.students.current_other_exps,
+  // workExps: reduxState.students.current_work_exps,
+  // otherExps: reduxState.students.current_other_exps,
   user: reduxState.user.current,
   current: reduxState.submittedApplications.current,
   post: reduxState.posts.current,
@@ -501,8 +503,8 @@ const mapStateToProps = (reduxState) => ({
 export default withRouter(connect(mapStateToProps, {
   fetchStudentByID,
   fetchUserByStudentID,
-  fetchWorkExperiences,
-  fetchOtherExperiences,
+  // fetchWorkExperiences,
+  // fetchOtherExperiences,
   fetchAllIndustries,
   fetchAllClasses,
   fetchAllSkills,
