@@ -13,7 +13,6 @@ const Deny = (props) => {
 
   //   const onDeny = (e) => {
   //     if (props.startup) {
-  //       // console.log('startup: ', props.startup);
   //       const { startup } = props;
   //       startup.status = 'Pending';
   //       props.updateStartup(startup.id, startup);

@@ -179,9 +179,6 @@ class Posts extends Component {
         tempPosts.sort((post1, post2) => {
           return postScores[post2._id] - postScores[post1._id];
         });
-        // tempPosts.forEach((post) => {
-        //   console.log(post.title, postScores[post._id]);
-        // });
         return {
           ...prevState,
           sortedPosts: tempPosts.slice(0, 6),

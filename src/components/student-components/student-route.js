@@ -11,15 +11,6 @@ class StudentRoute extends Component {
     };
   }
 
-  /*
-  componentDidUpdate(prevProps) {
-    if (this.props.user === {} || prevProps.user !== this.props.user) {
-      console.log('private didUpdate');
-      this.props.fetchUser(localStorage.getItem('userID'));
-    }
-  }
-  */
-
   routeCallback = (e) => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');

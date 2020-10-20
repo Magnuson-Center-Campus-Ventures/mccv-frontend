@@ -14,7 +14,6 @@ class StartupRoute extends Component {
   /*
   componentDidUpdate(prevProps) {
     if (this.props.user === {} || prevProps.user !== this.props.user) {
-      console.log('startup didUpdate');
       this.props.fetchUser(localStorage.getItem('userID'));
     }
   }

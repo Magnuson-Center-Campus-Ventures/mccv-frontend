@@ -63,13 +63,11 @@ class PositionInfo extends Component {
                     }
                     if (post.industries){
                         post.industries.map((industry) => {
-                            console.log(industry.name);
                             if (industries[industry.name] === undefined){
                                 industries[industry.name] = 1;
                             } else {
                                 industries[industry.name] = industries[industry.name] + 1;
                             }
-                            console.log(industries);
                         })
                     }
                     if (post.city && post.state){

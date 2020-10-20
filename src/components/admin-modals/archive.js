@@ -47,7 +47,6 @@ class Archive extends Component {
       filled: false, 
       answeredSelected: true, 
      });
-     console.log(this.state.answeredSelected)
 
   }
 
@@ -56,7 +55,6 @@ class Archive extends Component {
       filled: true, 
       answeredSelected: true, 
     });
-    console.log(this.state.answeredSelected)
   }
 
   onArchive = (e) => {

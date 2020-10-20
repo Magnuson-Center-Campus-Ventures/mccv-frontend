@@ -97,12 +97,8 @@ class StudentInfo extends Component {
             })
             let studentsMatched = new Set(this.state.studentsMatched); 
             this.props.posts.map((post) => {
-                // console.log(post); 
                 if (post.status === 'Archived'){
-                    // console.log('here'); 
-                    // console.log(post);
                     post.students_selected?.map((student) => {
-                        console.log(student); 
                         studentsMatched.add(student); 
                     })
                 }

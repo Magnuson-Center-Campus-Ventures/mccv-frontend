@@ -18,7 +18,6 @@ class StartupBio extends Component {
 
   // Get profile info
   componentDidMount() {
-    // console.log(this.props.match.params.startupID);
     this.props.fetchStartupByUserID(this.props.userID);
     this.props.fetchUser(this.props.userID);
   }

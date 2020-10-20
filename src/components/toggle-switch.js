@@ -65,7 +65,6 @@ class ToggleSwitch extends Component {
 static defaultProps = {
   Text: ['Yes', 'No'],
   Name: 'toggle',
-  onChange: () => (console.log('hi')),
   defaultChecked: false,
   Small: true,
   disabled: false,

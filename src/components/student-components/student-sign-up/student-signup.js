@@ -98,17 +98,6 @@ class StudentSignUp extends Component {
   }
 
   render() {
-    console.log('first name: ', this.props.student.first_name);
-    console.log('last name: ', this.props.student.last_name);
-    console.log('grad: ', this.props.student.grad_year);
-    console.log('phone: ', this.props.student.phone_number);
-    console.log('gender: ', this.props.student.gender);
-
-    console.log((this.props.student.first_name !== '' || this.props.student.first_name !== undefined )  && 
-    (this.props.student.last_name != '' || this.props.student.last_name !== undefined)  && 
-    (this.props.student.grad_year != '' || this.props.student.grad_year !== undefined) && 
-    (this.props.student.phone_number != '' || this.props.student.phone_number !== undefined) && 
-    (this.props.student.gender != '' || this.props.student.gender !== undefined)); 
 
     switch (this.state.index) {
       case 0:

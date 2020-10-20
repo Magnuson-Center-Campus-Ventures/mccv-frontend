@@ -10,7 +10,6 @@ export const fetchIndustriesFromID = (idArray, callback) => {
       callback(industry);
     });
   }).catch((error) => {
-    // console.log(error);
     return (error);
   });
 };
