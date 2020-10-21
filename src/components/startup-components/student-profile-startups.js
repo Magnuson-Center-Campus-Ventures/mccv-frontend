@@ -289,7 +289,7 @@ class StudentProfileStartup extends Component {
 
   renderWorkExperiences = () => {
     if (this.props.student?.work_exp !== []) {
-      return this.props.student?.work_exp.map((workExp, index) => {
+      return this.props.student?.work_exp?.map((workExp, index) => {
         return (
           <WorkExperience key={index}
             className="work-exp"
@@ -320,7 +320,7 @@ class StudentProfileStartup extends Component {
 
   renderOtherExperiences = () => {
     if (this.props.student?.other_exp !== []) {
-      return this.props.student?.other_exp.map((otherExp, index) => {
+      return this.props.student?.other_exp?.map((otherExp, index) => {
         return (
           <OtherExperience key={index}
             className="work-exp"
