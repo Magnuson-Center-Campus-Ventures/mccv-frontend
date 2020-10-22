@@ -99,7 +99,7 @@ import { deleteWorkExperience } from '../../actions';
               type="checkbox"
               // checked={this.state.currentlyWorking}
               onChange={(event) => {
-                this.setState({ currentlyWorking: event.target.checked, badEndDate: false });
+                // this.setState({ currentlyWorking: event.target.checked, badEndDate: false });
                 props.changeWorkExpField(props.index, 'currently_working', event.target.checked);
                 props.changeWorkExpField(props.index, 'end_date', null);
               }}
@@ -107,7 +107,7 @@ import { deleteWorkExperience } from '../../actions';
           </label>
         </form>
         <div className="input-title">Description</div>
-        <TextareaAutosize className="tall-input" defaultValue={props.workExp.description} onBlur={(event) => this.changeWorkExpField(props.index, 'description', event.target.value)} />
+        <TextareaAutosize className="tall-input" defaultValue={props.workExp.description} onBlur={(event) => props.changeWorkExpField(props.index, 'description', event.target.value)} />
       </div>
     )
       : (
