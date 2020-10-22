@@ -233,14 +233,10 @@ class StudentProfile extends Component {
     const end = new Date(this.state.student.desired_end_date);
     const diff = (end.getTime() - start.getTime())/(1000 * 3600 * 24 * 7);
     if (diff > 3.5 && diff <= 10) {
-      console.log('true');
       this.state.validDate = true;
     } else {
-      console.log('false');
       this.state.validDate = false;
-      console.log(this.state.student.desired_end_date);
       this.state.student.desired_end_date = new Date(start.getTime() + (1000 * 3600 * 24 * 7 * 4));
-      console.log(this.state.student.desired_end_date);
     }
   }
 
