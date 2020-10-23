@@ -59,6 +59,8 @@ class StudentBio extends Component {
           <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('grad_year', event)} defaultValue={this.props.student.grad_year} />
           <p className="question-fields-title">Phone Number  <span className="imptMessage">*</span></p>
           <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('phone_number', event)} defaultValue={this.props.student.phone_number} />
+          <p className="question-fields-title">Bio </p>
+          <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('bio', event)} defaultValue={this.props.student.bio} />
           <p className="question-fields-title">Gender <span className="imptMessage"> *</span></p>
           <select value={this.props.selected} onChange={(event) => {
             this.changeStudentField('gender', event);

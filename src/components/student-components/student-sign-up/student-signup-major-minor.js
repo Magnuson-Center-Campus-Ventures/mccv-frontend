@@ -45,7 +45,7 @@ class StudentMajorMinors extends Component {
   renderMajors() {
     return this.props.student.majors.map((major, index) => {
       return (
-        <div key={major}>
+        <div key={major} className="resp-input">
           <li id="responsibility" key={index}>{major}</li>
           <button className="del-button"
             onClick={() => {
@@ -67,7 +67,7 @@ class StudentMajorMinors extends Component {
   renderMinors() {
     return this.props.student.minors.map((minor, index) => {
       return (
-        <div key={minor}>
+        <div key={minor} className="resp-input">
           <li id="responsibility" key={index}>{minor}</li>
           <button className="del-button"
             onClick={() => {

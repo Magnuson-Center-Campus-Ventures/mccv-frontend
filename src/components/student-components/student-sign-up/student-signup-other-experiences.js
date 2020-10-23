@@ -142,13 +142,13 @@ class StudentOtherExperiences extends Component {
             </div>
             <div id="other-exps">
               {this.renderOtherExperiences()}
+              <div className="student-profile">
+                <NewOtherExp
+                  onClose={this.hideOtherExpModal}
+                  show={this.state.show}
+                />
+              </div>
             </div>
-          </div>
-          <div className="student-profile">
-            <NewOtherExp
-              onClose={this.hideOtherExpModal}
-              show={this.state.show}
-            />
           </div>
         </div>
       );

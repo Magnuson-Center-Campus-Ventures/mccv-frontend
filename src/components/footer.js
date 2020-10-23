@@ -33,7 +33,7 @@ class Footer extends Component {
           </a>
         </li>
         <li><NavLink to="/credits">Credit</NavLink></li>
-        <li><a href="mailto:magnuson.student.leadership.board@dartmouth.edu">Contact</a></li>
+        <li><a href="mailto:magnuson.center.campus.ventures@dartmouth.edu">Contact</a></li>
       </ul>
     )
     : (<nav />);
