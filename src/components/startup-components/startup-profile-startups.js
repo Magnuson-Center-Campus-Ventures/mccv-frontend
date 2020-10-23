@@ -447,7 +447,7 @@ class StartupProfile extends Component {
             </div>
 
             <div className="startup-header">
-              <p>Contact Email</p>
+              <p>Startup Contact Email</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('contact_email', event)} defaultValue={this.props.startup.contact_email} />
             </div>
 
