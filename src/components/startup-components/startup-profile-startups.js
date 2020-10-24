@@ -429,7 +429,7 @@ class StartupProfile extends Component {
         return (
           <div className="startup-body">
             <div className="startup-header">
-              <p>Name</p>
+              <p>Startup Name</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
             </div>
 
@@ -447,7 +447,7 @@ class StartupProfile extends Component {
             </div>
 
             <div className="startup-header">
-              <p>Contact Email</p>
+              <p>Startup Contact Email</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('contact_email', event)} defaultValue={this.props.startup.contact_email} />
             </div>
 
@@ -464,7 +464,7 @@ class StartupProfile extends Component {
             </div>
 
             <div className="startup-video">
-              <p>Link to your startup's pitch! (use the embed link for the video)</p>
+              <p>Link to your startup's pitch video! (use the embed link for the video)</p>
               <img
                   alt="Embed Link Example"
                   src={embedInstructions}

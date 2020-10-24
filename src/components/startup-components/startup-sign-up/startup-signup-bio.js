@@ -58,12 +58,14 @@ class StartupBio extends Component {
              <i className="far fa-id-badge question-header-icon" id="icon" />
            </div>
            <div className="question-fields">
-             <p className="question-fields-title">Name <span className="imptMessage">*</span></p>
+             <p className="question-fields-title">Startup Name <span className="imptMessage">*</span></p>
              <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('name', event)} defaultValue={this.props.startup.name} />
              <p className="question-fields-title">City <span className="imptMessage">*</span></p>
              <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
              <p className="question-fields-title">State <span className="imptMessage">*</span></p>
              <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('state', event)} defaultValue={this.props.startup.state} />
+             <p className="question-fields-title">Startup Contact Email <span className="imptMessage">*</span></p>
+             <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('contact_email', event)} defaultValue={this.props.startup.contact_email} />
              <p className="question-fields-title">Founder's Gender <span className="imptMessage">*</span></p>
               <select value={this.props.selected} onChange={(event) => {
                 this.changeStartupField('founder_gender', event);

@@ -5,6 +5,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import {
   fetchStartupByUserID, fetchUser, updateStartup, fetchStartup, uploadImage
 } from '../../../actions';
+import embedInstructions from '../../../assets/embed-instructions.png';
 
 class StartupDesc extends Component {
   constructor(props) {
@@ -92,8 +93,13 @@ class StartupDesc extends Component {
           <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStartupField('description', event)} defaultValue={this.props.startup.description} />
         </div>
         <div className="question-fields-desc">
-          <p className="question-fields-title">Link to your startup's pitch! (use the embed link for the video)</p>
+          <p className="question-fields-title">Link to your startup's pitch video! (use the embed link for the video)</p>
           <TextareaAutosize onBlur={(event) => this.changeStartupField('video', event)} defaultValue={this.props.startup.video} />
+          <img
+            alt="Embed Link Example"
+            src={embedInstructions}
+            className="embed-instructions-image"
+          />
           <iframe 
             title="videoLarge" 
             className="embed-responsive-item" 

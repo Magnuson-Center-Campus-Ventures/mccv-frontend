@@ -84,6 +84,7 @@ class StartupSignUp extends Component {
             {(this.props.startup.name === ''|| this.props.startup.name === undefined) ||
               (this.props.startup.city === '' || this.props.startup.city === undefined ) ||
               (this.props.startup.state === '' || this.props.startup.state === undefined ) ||
+              (this.props.startup.contact_email === '' || this.props.startup.contact_email === undefined ) ||
               (this.props.startup.founder_gender === '' || this.props.startup.founder_gender === undefined ) ||
               (this.props.startup.affiliation === '' || this.props.startup.affiliation === undefined ) 
             ? (
