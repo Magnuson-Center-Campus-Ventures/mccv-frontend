@@ -98,7 +98,7 @@ class StartupDesc extends Component {
           <img
             alt="Embed Link Example"
             src={embedInstructions}
-            className="embed-instructions-image"
+            className="embed-instructions-image-signup"
           />
           <iframe 
             title="videoLarge" 

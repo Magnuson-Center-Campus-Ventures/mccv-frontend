@@ -506,11 +506,15 @@ class Post extends Component {
               {this.renderDateError()}
               {this.renderDateRange()}
             </div>
-            <p className="question-fields-title">Hours/Week</p>
+          </div>
+
+          <div className="post-input-row">
+            <p className="question-fields-title">Max Expected Hours/Week (Please input a number, not a range)</p>
             <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changePostField('time_commitment', event)} defaultValue={this.props.post?.time_commitment} />
           </div>
 
           <hr className="post-edit-divider" />
+          
           <h2>Position Details</h2>
           <div className="resps-header">
             <div className="input-title">Description</div>
