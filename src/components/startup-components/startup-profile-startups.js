@@ -20,6 +20,7 @@ class StartupProfile extends Component {
     this.state = {
       startup: {},
       affiliation: '',
+      founder_gender: '',
       selectedIndustries: [],
       displayIndustries: [],
       industry: '',
@@ -225,51 +226,87 @@ class StartupProfile extends Component {
 
   renderEditAffiliation() {
     if (this.props.startup.affiliation){
-      if (this.state.isEditing === true){
-        return(
-          <div className="startup-header">
-          <p>Affiliation</p>
-            <select value={this.state.affiliation} onChange={(event) => {
-              this.props.startup.affiliation = event.target.value;
-              this.changeStartupField('affiliation', event);
-              this.setState({
-                affiliation: event.target.value, 
-              });
-            }}>
-              <option value={this.state.affiliation}>{this.props.startup.affiliation}</option>
-              <option value="Undergrad">Dartmouth College</option>
-              <option value="Geisel">Geisel School of Medicine </option>
-              <option value="Tuck">Tuck School of Business</option>
-              <option value="Thayer">Thayer School of Engineering</option>
-              <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          
-        )
-      }
+      return(
+        <div className="startup-header">
+        <p>Affiliation</p>
+          <select value={this.state.affiliation} onChange={(event) => {
+            this.props.startup.affiliation = event.target.value;
+            this.changeStartupField('affiliation', event);
+            this.setState({
+              affiliation: event.target.value, 
+            });
+          }}>
+            <option value={this.state.affiliation}>{this.props.startup.affiliation}</option>
+            <option value="Undergrad">Dartmouth College</option>
+            <option value="Geisel">Geisel School of Medicine </option>
+            <option value="Tuck">Tuck School of Business</option>
+            <option value="Thayer">Thayer School of Engineering</option>
+            <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        
+      )
     } else{
-      if (this.state.isEditing === true){
-        return(
-          <div className="startup-header">
-          <p>Affiliation</p>
-            <select value={this.state.affiliation} onChange={(event) => {
-              this.props.startup.affiliation = event.target.value;
-              this.changeStartupField('affiliation', event);
-              this.setState({
-                affiliation: event.target.value, 
-              });
+      return(
+        <div className="startup-header">
+        <p>Affiliation</p>
+          <select value={this.state.affiliation} onChange={(event) => {
+            this.props.startup.affiliation = event.target.value;
+            this.changeStartupField('affiliation', event);
+            this.setState({
+              affiliation: event.target.value, 
+            });
+          }}>
+            <option value="Undergrad">Dartmouth College</option>
+            <option value="Geisel">Geisel School of Medicine </option>
+            <option value="Tuck">Tuck School of Business</option>
+            <option value="Thayer">Thayer School of Engineering</option>
+            <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      )
+    }
+  }
+
+  renderEditStartupFounderGender() {
+    if (this.props.startup.founder_gender){
+      return(
+        <div className="startup-header">
+        <p>Startup Founder Gender</p>
+          <select value={this.state.founder_gender} onChange={(event) => {
+            this.props.startup.founder_gender = event.target.value;
+            this.changeStartupField('founder_gender', event);
+            this.setState({
+              founder_gender: event.target.value});
             }}>
-              <option value="Undergrad">Dartmouth College</option>
-              <option value="Geisel">Geisel School of Medicine </option>
-              <option value="Tuck">Tuck School of Business</option>
-              <option value="Thayer">Thayer School of Engineering</option>
-              <option value="Guarini">Guarini School of Graduate and Advanced Studies</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        )
-      }
+            <option value={this.state.founder_gender}>{this.props.startup.founder_gender}</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            <option value="prefer not to say">Prefer Not to Say</option>
+          </select>
+        </div>
+      )
+    } else {
+      return(
+        <div className="startup-header">
+        <p>Startup Founder Gender</p>
+          <select value={this.state.founder_gender} onChange={(event) => {
+            this.props.startup.founder_gender = event.target.value;
+            this.changeStartupField('founder_gender', event);
+            this.setState({
+              founder_gender: event.target.value});
+            }}>
+            <option value="status">Select...</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            <option value="prefer not to say">Prefer Not to Say</option>
+          </select>
+        </div>
+      )
     }
   }
 
@@ -390,6 +427,22 @@ class StartupProfile extends Component {
     }
   }
 
+  renderStatusPill = () => {
+    if (this.props.startup.status === "Approved") {
+      return (
+        <div id="app-status-green-pill">Approved</div>
+      );
+    } else if (this.props.startup.status === "Pending") {
+      return (
+        <div id="app-status-yellow-pill">Pending</div>
+      );
+    } else {
+      return (
+        <div id="app-status-red-pill">Declined</div>
+      );
+    }
+  }
+
   renderStartup() {
     if (typeof this.props.startup !== 'undefined') {
       if (this.state.isEditing === false) {
@@ -413,6 +466,11 @@ class StartupProfile extends Component {
               </div>
 
               {this.renderVideo()}
+
+              <div className="startup-app-status-row">
+                <div id="app-status-title">Status: </div>
+                {this.renderStatusPill()}
+              </div>
 
               <div className="startup-header">
                 <button className="startup-edit-button"
@@ -451,6 +509,7 @@ class StartupProfile extends Component {
               <TextareaAutosize onBlur={(event) => this.changeStartupField('contact_email', event)} defaultValue={this.props.startup.contact_email} />
             </div>
 
+            {this.renderEditStartupFounderGender()}
             {this.renderEditAffiliation()}
 
             <hr className="post-edit-divider" />
