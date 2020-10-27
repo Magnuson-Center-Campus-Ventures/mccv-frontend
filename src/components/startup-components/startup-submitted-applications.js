@@ -271,7 +271,9 @@ class SubmittedApplications extends Component {
           </div>
 
         ) : (
-          <div>Loading...</div>
+          <div className="pageContent">
+            <h1 className="postingsTitle"> No Applications Received </h1>
+          </div>
         )
     );
   }

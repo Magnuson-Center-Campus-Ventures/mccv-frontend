@@ -15,22 +15,32 @@ const PostListItem = (props) => {
 
   const industries = props.post.industries.map((industry, index) => {
     if (index === 0) {
+      if (industry.name.length > 18) {
+        return (
+          <div id="pillsTitle" key={industry.id}>
+            Industries: <div className="yellowPill" key={industry.id}> {industry.name.substring(0,17)}... </div>
+          </div>
+        );
+      } else {
+        return (
+          <div id="pillsTitle" key={industry.id}>
+            Industries: <div className="yellowPill" key={industry.id}> {industry.name} </div>
+          </div>
+        );
+      }
+    } else if (index < 3) {
+      if (industry.name.length > 18) {
+        return (
+          <div className="yellowPill" key={industry.id}>{industry.name.substring(0,17)}...</div>
+        );
+      } else {
+        return (
+          <div className="yellowPill" key={industry.id}>{industry.name}</div>
+        );
+      }
+    } else if (index === 3) {
       return (
-        <div id="pillsTitle" key={industry.id}>
-          Industries: <div className="yellowPill" key={industry.id}> {industry.name} </div>
-        </div>
-      );
-    } else if (index < 5) {
-      return (
-        <div className="yellowPill" key={industry.id}>
-          {industry.name}
-        </div>
-      );
-    } else if (index === 5) {
-      return (
-        <div className="yellowPill" key={industry.id}>
-          ...
-        </div>
+        <div className="yellowPill" key={industry.id}>...</div>
       );
     } 
   });
@@ -90,6 +100,12 @@ const PostListItem = (props) => {
     <div />
   );
 
+  const title = (props.post.title.length > 50) ? (
+    <h1 className="postTitle">{ props.post.title.substring(0,49) }...</h1>
+  ) : (
+    <h1 className="postTitle">{ props.post.title }</h1>
+  );
+
   return (
     <Link to={route} key={props.post.id} className="listItem link">
       <div className="postBody">
@@ -105,7 +121,7 @@ const PostListItem = (props) => {
           </div>
 
           <div className="postInfo">
-            <h1 className="postTitle">{ props.post.title}</h1>
+            {title}
             {virtual}
             {inperson}
             <div className="dates">

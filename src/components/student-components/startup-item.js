@@ -35,25 +35,43 @@ const StartupListItem = (props) => {
     }
   });
 
+  let liveCount = 0;
   const posts = props.startup.posts.map((post, index) => {
-    if (index == 0) {
-      return (
-        <div id="pillsTitle" key={post.id}>
-          Positions: <div className="greenPill" key={post.id}>{post.title}</div>
-        </div>
-      )
-    } else if (index < 2) {
-      return (
-        <div className="greenPill" key={post.id}>
-          {post.title}
-        </div>
-      );
-    } else if (index === 2) {
-      return (
-        <div className="greenPill" key={post.id}>
-          ...
-        </div>
-      );
+    if (post.status === 'Approved') {
+      if (liveCount == 0) {
+        liveCount += 1;
+        if (post.title.length > 40) {
+          return (
+            <div id="pillsTitle" key={post.id}>
+              Positions: <div className="greenPill" key={post.id}>{post.title.substring(0,39)}...</div>
+            </div>
+          )
+        } else {
+          return (
+            <div id="pillsTitle" key={post.id}>
+              Positions: <div className="greenPill" key={post.id}>{post.title}</div>
+            </div>
+          )
+        }
+      } else if (liveCount == 1) {
+        liveCount += 1;
+        if (post.title.length > 40) {
+          return (
+            <div className="greenPill" key={post.id}>{post.title.substring(0,39)}...</div>
+          );
+        } else {
+          return (
+            <div className="greenPill" key={post.id}>{post.title}</div>
+          );
+        }
+      } else if (liveCount === 2) {
+        liveCount += 1;
+        return (
+          <div className="greenPill" key={post.id}>
+            ...
+          </div>
+        );
+      }
     }
   });
 
