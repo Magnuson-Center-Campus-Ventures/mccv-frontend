@@ -115,6 +115,17 @@
 .exps-fixed > h2 {
   margin: 0;
 }
+
+.work-exp-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.work-exp-del {
+  height: 50px;
+  width: 50px;
+}
+
 .work-exp {
   display: flex;
   flex-direction: column;

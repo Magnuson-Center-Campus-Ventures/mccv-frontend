@@ -15,19 +15,19 @@ import { deleteWorkExperience } from '../../actions';
 //     };
 //   }
 
-//   // Date validation function modified from https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
-//   isValidDate = (dateString) => {
-//     // Check for yyyy-mm pattern
-//     if (!/^\d{4}-\d{2}$/.test(dateString)) { return false; }
+  // Date validation function modified from https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
+  let isValidDate = (dateString) => {
+    // Check for yyyy-mm pattern
+    if (!/^\d{4}-\d{2}$/.test(dateString)) { return false; }
 
-//     // Parse the date parts to integers
-//     const parts = dateString.split('-');
-//     const year = parseInt(parts[0], 10);
-//     const month = parseInt(parts[1], 10);
+    // Parse the date parts to integers
+    const parts = dateString.split('-');
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
 
-//     // Check the ranges of month and year
-//     return (year > 1000 && year < 3000 && month !== 0 && month <= 12);
-//   };
+    // Check the ranges of month and year
+    return (year > 1000 && year < 3000 && month !== 0 && month <= 12);
+  };
 
 //   render() {
   const WorkExperience = (props) => {
@@ -38,9 +38,9 @@ import { deleteWorkExperience } from '../../actions';
             <div className="input-title">Role</div>
             <input className="short-input" defaultValue={props.workExp.role} onBlur={(event) => props.changeWorkExpField(props.index, 'role', event.target.value)} />
           </div>
-          <button className="del-button" onClick={() => props.deleteWorkExperience(props.workExp._id)}>
+          {/* <button className="del-button" onClick={() => props.deleteWorkExperience(props.workExp._id)}>
             <i className="far fa-trash-alt delete-icon" />
-          </button>
+          </button> */}
         </div>
         <div className="input-title">Employer</div>
         <input className="short-input" defaultValue={props.workExp.employer} onBlur={(event) => props.changeWorkExpField(props.index, 'employer', event.target.value)} />
@@ -56,10 +56,11 @@ import { deleteWorkExperience } from '../../actions';
             ? `${new Date(props.workExp.start_date).getFullYear()}-0${new Date(props.workExp.start_date).getMonth() + 1}`
             : `${new Date(props.workExp.start_date).getFullYear()}-${new Date(props.workExp.start_date).getMonth() + 1}`}
           onBlur={(event) => {
+            props.changeWorkExpField(props.index, 'start_date', `${event.target.value}-15`);
             if (!this.isValidDate(event.target.value)) {
-              // this.setState({ badStartDate: true });
+              this.setState({ badStartDate: true });
             } else {
-              // this.setState({ badStartDate: false });
+              this.setState({ badStartDate: false });
               // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
               props.changeWorkExpField(props.index, 'start_date', `${event.target.value}-15`);
             }
