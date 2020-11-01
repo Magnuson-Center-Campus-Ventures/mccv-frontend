@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const ROOT_URL = 'http://localhost:9090/api';
-// const ROOT_URL = 'http://mccv.herokuapp.com/api';
+// const ROOT_URL = 'http://localhost:9090/api';
+const ROOT_URL = 'http://mccv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -303,12 +303,8 @@ export function submitPost(id, post, history) {
 
 // work experience functions
 export function fetchWorkExperiences(idArray) {
-  let workExp = [];
-  idArray.forEach((value) => {
-    workExp.push(value._id);
-  });
   return (dispatch) => {
-    axios.get(`${ROOT_URL}/workexperiences/${workExp}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+    axios.get(`${ROOT_URL}/workexperiences/${idArray}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.FETCH_WORK_EXPS, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, error });
@@ -317,7 +313,6 @@ export function fetchWorkExperiences(idArray) {
 }
 
 export function createWorkExperience(workExp) {
-  console.log(workExp);
   return (dispatch) => {
     axios.post(`${ROOT_URL}/workexperiences`, workExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.ADD_WORK_EXP, payload: response.data });
@@ -328,7 +323,6 @@ export function createWorkExperience(workExp) {
 }
 
 export function updateWorkExperience(id, workExp) {
-  console.log(id, workExp);
   return (dispatch) => {
     axios.put(`${ROOT_URL}/workexperiences/${id}`, workExp, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.UPDATE_WORK_EXP, payload: response.data });
@@ -339,7 +333,6 @@ export function updateWorkExperience(id, workExp) {
 }
 
 export function deleteWorkExperience(id) {
-  console.log(id);
   return (dispatch) => {
     axios.delete(`${ROOT_URL}/workexperiences/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
       dispatch({ type: ActionTypes.DELETE_WORK_EXP, payload: response.data });
