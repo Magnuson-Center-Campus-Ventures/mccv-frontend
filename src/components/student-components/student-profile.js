@@ -187,13 +187,6 @@ class StudentProfile extends Component {
     });
   }
 
-  deleteWorkExp = (workExpID) => {
-    let tempWorkExps = this.state.workExps.filter((value) => {
-      return (value._id !== workExpID);
-    });
-    this.setState({ workExps: tempWorkExps });
-  }
-
   showWorkExpModal = () => {
     this.setState({ showWorkExpModal: true });
   };
@@ -217,9 +210,13 @@ class StudentProfile extends Component {
         const student = { ...this.state.student };
         student.majors = this.state.majors;
         student.minors = this.state.minors;
-        student.work_exp = this.state.workExps;
-        student.other_exp = this.state.otherExps;
         this.props.updateStudent(this.state.student.id, student);
+        this.state.workExps.forEach((workExp) => {
+          this.props.updateWorkExperience(workExp._id, workExp);
+        });
+        this.state.otherExps.forEach((otherExp) => {
+          this.props.updateOtherExperience(otherExp._id, otherExp);
+        });
         this.setState({ isEditing: false });
       }
     } else {
@@ -815,39 +812,17 @@ class StudentProfile extends Component {
 
   renderWorkExperiences = () => {
     if (this.state.workExps !== []) {
-      if (this.state.isEditing){
-        return this.state.workExps.map((workExp) => {
-          return (
-            <div className="work-exp-container" key={workExp._id}>
-              <WorkExperience
-                className="work-exp"
-                isEditing={this.state.isEditing}
-                workExp={workExp}
-                changeWorkExpField={this.changeWorkExpField}
-              />
-              <button className="work-exp-del del-button" onClick={() => {
-                this.deleteWorkExp(workExp._id);
-                }}> 
-                <i className="far fa-trash-alt delete-icon" />
-              </button>
-            </div>
-          );
-        });
-      } else{
-        return this.state.workExps.map((workExp, index) => { 
-          return (
-            <div className="work-exp-container" key={index}>
-              <WorkExperience
-                className="work-exp"
-                isEditing={this.state.isEditing}
-                workExp={workExp}
-                index={index}
-                changeWorkExpField={this.changeWorkExpField}
-              />
-            </div>
-          );
-        });
-      }
+      return this.state.workExps.map((workExp, index) => {
+        return (
+          <WorkExperience key={index}
+            className="work-exp"
+            isEditing={this.state.isEditing}
+            workExp={workExp}
+            index={index}
+            changeWorkExpField={this.changeWorkExpField}
+          />
+        );
+      });
     } else return null;
   }
 
