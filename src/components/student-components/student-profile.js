@@ -71,9 +71,6 @@ class StudentProfile extends Component {
     if (this.props.student && this.props.student !== {} && prevProps.student !== this.props.student) {
       const student = this.props.student;
 
-      this.populateWorkExps();
-      this.populateOtherExps();
-
       if (this.props.student.first_name && this.props.student.first_name === prevProps.student.first_name && prevState.student.first_name) {
         student.first_name = prevState.student.first_name;
       }
@@ -165,25 +162,6 @@ class StudentProfile extends Component {
         ...prevState,
         student,
       };
-    });
-  }
-
-  populateWorkExps() {
-    let workexp = [];
-    this.props.student.work_exp.forEach((value) => {
-      if (!workexp.includes(value)) {
-        workexp.push(value);
-      }
-    });
-    this.setState({workExps: workexp})
-  }
-
-  populateOtherExps() {
-    this.state.otherExps = [];
-    this.props.student.other_exp.forEach((value) => {
-      if (!this.state.otherExps.includes(value)) {
-        this.state.otherExps.push(value);
-      }
     });
   }
 
