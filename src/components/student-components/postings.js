@@ -194,7 +194,7 @@ class Posts extends Component {
     this.setState({ sortedVirtualPosts: [] });
     if (this.state.recommend && this.state.virtualChecked) {
       this.props.sortedPosts.forEach((post) => {
-        if (post.virtual === true) {
+        if (post.virtual === true && post.status === 'Approved') {
           this.setState((prevState) => ({
             sortedVirtualPosts: [...prevState.sortedVirtualPosts, post],
           }));
@@ -207,7 +207,7 @@ class Posts extends Component {
     this.setState({ archivedVirtualPosts: [] });
     if (this.state.archive && this.state.virtualChecked) {
       this.props.archived.forEach((post) => {
-        if (post.virtual === true) {
+        if (post.virtual === true && post.status === 'Archived') {
           this.setState((prevState) => ({
             archivedVirtualPosts: [...prevState.archivedVirtualPosts, post],
           }));
@@ -341,7 +341,7 @@ class Posts extends Component {
     this.setState({ virtualPosts: [] });
     if (checked) {
       this.props.posts.forEach((post) => {
-        if (post.virtual === true) {
+        if (post.virtual === true && post.status === 'Approved' ) {
           this.setState((prevState) => ({
             virtualPosts: [...prevState.virtualPosts, post],
           }));
