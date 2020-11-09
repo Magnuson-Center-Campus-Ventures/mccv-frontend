@@ -204,6 +204,22 @@ class StudentProfileStartup extends Component {
     }
   }
   
+  renderBio = () => {
+    if (this.props.student?.bio) {
+      return (
+        <div>
+          <hr className="profile-divider" />
+          <div className="exps-fixed">
+            <h2>Bio</h2>
+            <div className="work-exp">
+              <div className="exp-text">{this.props.student?.bio}</div>
+            </div>
+          </div>  
+        </div>
+      );
+    } else return <div />;
+  }
+
   renderBody = () => {
     return (
       <div className="profile-fixed">
@@ -240,6 +256,7 @@ class StudentProfileStartup extends Component {
               {this.renderGreenPills(this.props.student?.skills)}
             </div>
           </div>
+          {this.renderBio()}
         </div>
       </div>
       /*<div className="profile-fixed">
@@ -287,7 +304,7 @@ class StudentProfileStartup extends Component {
 
   renderWorkExperiences = () => {
     if (this.props.workExps !== []) {
-      return this.props.workExps.map((workExp, index) => {
+      return this.props.workExps?.map((workExp, index) => {
         return (
           <WorkExperience key={index}
             className="work-exp"
