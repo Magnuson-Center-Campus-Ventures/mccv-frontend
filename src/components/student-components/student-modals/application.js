@@ -44,6 +44,7 @@ class Application extends React.Component {
     };
     const newPost = this.props.post;
     newPost.applicants.push(this.props.student);
+    console.log(newApplication);
     this.props.submitApplication(newApplication);
     this.props.updatePost(this.props.post._id, newPost);
     this.props.onClose && this.props.onClose(e);

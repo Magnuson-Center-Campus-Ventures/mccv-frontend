@@ -41,19 +41,19 @@
     "sass-loader": "^8.0.2",
     "style-loader": "^1.1.4",
     "surg": "^0.1.0",
-    "surge": "^0.21.3",
+    "surge": "^0.21.7",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.11.1"
   },
   "dependencies": {
     "@kenshooui/react-multi-select": "^1.1.6",
     "@material-ui/core": "^4.10.0",
     "@stardust-ui/docs-components": "latest",
     "aws-sdk": "^2.748.0",
-    "axios": "^0.19.2",
-    "dotenv": "^8.2.0",
+    "axios": "0.21.1",
     "date-fns": "^2.16.0",
+    "dotenv": "^8.2.0",
     "faker": "latest",
     "jquery": "^3.5.0",
     "lodash": "latest",
