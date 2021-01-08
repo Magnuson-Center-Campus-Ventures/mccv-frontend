@@ -4,3 +4,4 @@ yarn-error.log
 .DS_Store
 .env
 src/services/dartmouthAPI.js
+package-lock.json
