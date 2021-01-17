@@ -28,8 +28,7 @@ class StudentInfo extends Component {
             genders: {},
             affiliation: {},
             gradYear: {}, 
-            majors: {}, 
-            activeEmails: [], 
+            majors: {},  
         };
     }
 
@@ -46,13 +45,11 @@ class StudentInfo extends Component {
             let majors = {};
             let genders = {}; 
             let affiliation = {}; 
-            let activeEmails = [];
             this.props.students.map((student) => {
                 if (student.status == 'Approved'){
                     this.setState((prevState) => ({
                         active: prevState.active +1,
                     })); 
-                    //NEW to get emails
                     
                     if (this.checkDate(student.updatedAt)){
                         this.setState((prevState) => ({
