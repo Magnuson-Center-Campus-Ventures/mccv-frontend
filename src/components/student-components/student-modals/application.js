@@ -25,7 +25,7 @@ class Application extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      questionToAnswer: {},
+      answers: [],
     };
     this.onAnswerChange = this.onAnswerChange.bind(this);
   }
@@ -39,7 +39,8 @@ class Application extends React.Component {
     const newApplication = {
       student_id: this.props.student._id,
       post_id: this.props.post.id,
-      responses: this.state.questionToAnswer,
+      questions: this.props.post.questions,
+      answers: this.state.answers,
       status: 'pending',
     };
     const newPost = this.props.post;
@@ -47,6 +48,7 @@ class Application extends React.Component {
     console.log(newApplication);
     this.props.submitApplication(newApplication);
     this.props.updatePost(this.props.post._id, newPost);
+    this.setState({ answers: [] });
     this.props.onClose && this.props.onClose(e);
   };
 
@@ -56,8 +58,11 @@ class Application extends React.Component {
 
   onAnswerChange(event) {
     const { target: { name, value } } = event;
-    const newQuestionToAnswer = { ...this.state.questionToAnswer, [name]: value };
-    this.setState({ questionToAnswer: newQuestionToAnswer });
+    let answers = this.state.answers;
+    answers[this.props.post.questions.findIndex((temp) => {
+      return temp == name
+    })] = value;
+    this.setState({ answers: answers });
   }
 
   renderHelper= () => {
@@ -66,8 +71,16 @@ class Application extends React.Component {
       this.props.post.questions.map((question) => {
         items.push(
           <div key={question}>
-            <h3 id="question-title" >{question}</h3>
-            <textarea name={question} onChange={this.onAnswerChange} value={this.state.questionToAnswer[question]} />
+            <h3 id="question-title" >{question}</h3> 
+            <textarea 
+            name={question} 
+            onChange={this.onAnswerChange} 
+            value={this.state.answers[this.props.post.questions.findIndex(
+              (temp) => {
+                return temp == question
+              }
+            )]} 
+            />
           </div>,
         );
       });

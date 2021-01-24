@@ -114,13 +114,16 @@ class ApplicationListItem extends Component {
 
   renderQuestions = () => {
     const items = [];
-    if (this.props.post.questions && this.props.post.questions.length > 0) {
-      this.props.post.questions.map((question) => {
-        //if (this.props.current.responses[question]) {
+    if (this.props.current.questions && this.props.current.questions.length > 0) {
+      this.props.current.questions.map((question) => { 
         items.push(
           <div key={question} className="work-exp">
             <div className="exp-title">{question}</div>
-            <div className="exp-text">{this.props.current.responses[question]}</div>
+            <div className="exp-text">
+              {this.props.current.answers[this.props.current.questions.findIndex((temp) => {
+                return temp == question
+              })]}
+            </div>
           </div>,
         );
         //}
