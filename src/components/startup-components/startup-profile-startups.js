@@ -145,7 +145,9 @@ class StartupProfile extends Component {
       virtual: false,
       inperson: false,
     };
-    this.props.createPost(newPost, this.props.startup, this.props.history);
+    if (this.props.startup?._id) {
+      this.props.createPost(newPost, this.props.startup, this.props.history);
+    } 
   }
 
   handleApprovedToggle(checked) {
