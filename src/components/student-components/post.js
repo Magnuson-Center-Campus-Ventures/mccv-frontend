@@ -10,7 +10,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import CreateableSelect from 'react-select/creatable';
 import { DateRange } from 'react-date-range';
 import {
   fetchPost, updatePost, 
@@ -20,6 +19,7 @@ import {
 } from '../../actions';
 import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
+import FilteredSelect from '../select'
 import pin from '../../../static/img/pin.png';
 import '../../styles/post.scss';
 import 'react-date-range/dist/styles.css'; // main style file
@@ -570,11 +570,13 @@ class Post extends Component {
         <div className="lists-row">
           <div className="list-section">
             <h2>Industries</h2>
-            <CreateableSelect
+            <FilteredSelect
+              createable={true}
               className="select-dropdown"
               isMulti
               styles={dropdownStyles}
               name="industries"
+              placeholder="Select Industries"
               value={this.state.selectedIndustryOptions}
               options={this.state.allIndustryOptions}
               onChange={(selectedOptions) => {
@@ -599,11 +601,13 @@ class Post extends Component {
           </div>
           <div className="list-section">
             <h2>Desired Classes</h2>
-            <CreateableSelect
+            <FilteredSelect
+              createable={true}
               className="select-dropdown"
               isMulti
               styles={dropdownStyles}
               name="classes"
+              placeholder="Select Classes"
               value={this.state.selectedClassOptions}
               options={this.state.allClassOptions}
               onChange={(selectedOptions) => {
@@ -630,11 +634,13 @@ class Post extends Component {
         <div className="lists-row">
           <div className="list-section">
             <h2>Required Skills</h2>
-            <CreateableSelect
+            <FilteredSelect
+              createable={true}
               className="select-dropdown"
               isMulti
               styles={dropdownStyles}
               name="req-skills"
+              placeholder="Select Skills"
               value={this.state.selectedReqSkillOptions}
               options={this.state.allSkillOptions}
               onChange={(selectedOptions) => {
@@ -659,11 +665,13 @@ class Post extends Component {
           </div>
           <div className="list-section">
             <h2>Preferred Skills</h2>
-            <CreateableSelect
+            <FilteredSelect
+              createable={true}
               className="select-dropdown"
               isMulti
               styles={dropdownStyles}
               name="pref-skills"
+              placeholder="Select Skills"
               value={this.state.selectedPrefSkillOptions}
               options={this.state.allSkillOptions}
               onChange={(selectedOptions) => {
