@@ -20,7 +20,7 @@
   }
 
   renderAcceptTC() {
-    if (this.state.signature != '') {
+    if (this.state.signature !== '') {
       return  <button className="modal-signed-button" onClick={() => {
         this.props.acceptTC({ signature: this.state.signature, })}}>
                 Accept Terms and Conditions

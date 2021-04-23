@@ -13,6 +13,7 @@ import {
 } from '../../actions';
 import embedInstructions from '../../assets/embed-instructions.png';
 import '../../styles/startup-profile.scss';
+import StartupInstructions from './startup-modals/startup-instructions'
 
 class StartupProfile extends Component {
   constructor(props) {
@@ -449,12 +450,14 @@ class StartupProfile extends Component {
     if (typeof this.props.startup !== 'undefined') {
       if (this.state.isEditing === false) {
         return (
-          <div className="startup-body">
+           <div>
+              <StartupInstructions />
+              <div className="startup-body">
             <div className="startup-body-text">
               <div className="startup-header">
                 {this.logoCompanyName()}
               </div>
-            
+
               <div className="startup-profile-info">
                 {/* <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div> */}
                 {this.renderLocation()}
@@ -484,6 +487,7 @@ class StartupProfile extends Component {
 
             </div>
           </div>
+           </div>
         );
       } else {
         return (
