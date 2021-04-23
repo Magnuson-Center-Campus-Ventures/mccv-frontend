@@ -6,3 +6,4 @@ yarn-error.log
 src/services/dartmouthAPI.js
 package-lock.json
 package.json
+.eslintrc.json
