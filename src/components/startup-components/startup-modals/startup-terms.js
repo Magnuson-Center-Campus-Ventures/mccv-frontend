@@ -39,6 +39,7 @@
      }
      return (
        <div className="terms-container">
+         {console.log(this.props)}
          <div className="terms-title">
            <img className="terms-close-modal"
            src={close}

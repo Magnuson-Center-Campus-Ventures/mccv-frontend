@@ -445,13 +445,16 @@ class StartupProfile extends Component {
       );
     }
   }
+  
+  
 
   renderStartup() {
     if (typeof this.props.startup !== 'undefined') {
       if (this.state.isEditing === false) {
         return (
            <div>
-              <StartupInstructions />
+            {localStorage.getItem("new_startup") ? <StartupInstructions /> : null}
+            
               <div className="startup-body">
             <div className="startup-body-text">
               <div className="startup-header">
