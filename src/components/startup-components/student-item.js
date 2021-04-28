@@ -182,6 +182,7 @@ const StudentListItem = (props) => {
            <div className="majorWrapper">
             {majors}
            </div>
+           <hr></hr>
            {renderBio}
            <div className="pillsList">
              {skills}
