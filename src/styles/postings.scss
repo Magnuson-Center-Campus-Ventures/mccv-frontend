@@ -55,6 +55,8 @@ body{
   text-align: left;
   height: 100%;
   color: black;
+  overflow:hidden;
+  //overflow temporary
 }
 
 .postHeader{
@@ -520,7 +522,7 @@ height: 3em;
 
 .activeStatus {
   position:absolute;
-  top:.1em;
-  font-size:.7em;
+  top:.25em;
+  font-size:.75em;
   color:green
 }
