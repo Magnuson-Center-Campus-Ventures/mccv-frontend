@@ -9,26 +9,25 @@ export default class StartupInstructions extends React.Component {
         super(props);
     }
 
+
     componentDidMount() {
-        console.log("visible")
         let close = $("#close");
-        let holder = $("#ModalHolder");
         let done = $("#done")
 
         close.on("click", (e) => {
-            holder.css({ "display": "none" })
+            this.props.handler()
             localStorage.removeItem("new_startup")
         })
 
         done.on("click", (e) => {
-            holder.css({ "display": "none" })
+            this.props.handler()
             localStorage.removeItem("new_startup")
         })
     }
 
     render() {
         return (
-            <div id = "ModalHolder" >
+            <div id = "ModalHolder">
                 <div id = "modal" className = "container rounded-lg" >
                     <button id = "close" >X </button>
                     <br/>
