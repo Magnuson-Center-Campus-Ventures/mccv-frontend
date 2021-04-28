@@ -6,17 +6,42 @@ import { Link } from 'react-router-dom';
 import '../../styles/postings.scss';
 
 const StudentListItem = (props) => {
-  const affiliationGradYear = (props.student.affiliation && props.student.grad_year) ? (
-    <h2 className="gradYear">{`Class of ${props.student.grad_year} (${props.student.affiliation.charAt(0).toUpperCase() + 
-      props.student.affiliation.slice(1)})`} </h2>
+ 
+  
+  const affiliationShortener = (aff) =>{
+    let shortened="";
+    switch (aff) {
+      case "Undergrad":
+        shortened="UG";
+        break;
+      case "Tuck":
+        shortened="TU";
+        break;
+      case "Thayer":
+        shortened="TH";
+        break;
+      case "Geisel":
+        shortened="GE";
+        break;
+      case "Guarini":
+        shortened="GU";
+        break;
+      default:
+        shortened="";
+        break;
+    }
+    console.log(aff+"  "+shortened)
+    return shortened;
+  }
+  const affiliationGradYear = (<h1 className="gradYear" >{(props.student.affiliation && props.student.grad_year) ? (
+      `${affiliationShortener(props.student.affiliation)}'${props.student.grad_year.substring(2)}`
   ) : (
     (props.student.grad_year) ? (
-      <h2 className="gradYear">{`Class of ${props.student.grad_year}`} </h2>
+      `'${props.student.grad_year.substring(2)}`
     ) : (
       <div/>
     )
-  );
-
+  )}</h1>)
   const majors = props.student.majors.length > 0
     ? (
       props.student.majors.map((major, index) => {
@@ -88,9 +113,9 @@ const StudentListItem = (props) => {
     }
   });
 
-  const renderBio = (props.student.bio?.length > 100) ? (
+  const renderBio = (props.student.bio?.length > 120) ? (
     <div className="postInfo">
-      <p className="bioText">{`${props.student.bio.substring(0, 99)}...`}</p>
+      <p className="bioText">{`${props.student.bio.substring(0, 119)}...`}</p>
     </div>
   ) : (
     (props.student.bio) ? (
@@ -115,29 +140,60 @@ const StudentListItem = (props) => {
       )
     )
   );
-
+  // const activeClass = (props?.job_search_status=="active") ? "activelySearching" : ""
+  const activeClass="activelySearching"
   const route = `/students/${props.student._id}`;
-
+  
+  const activeTimeFrame = "Mar - May 2021"
+  const activeStatus = (props?.job_search_status=="active") ? "" : (
+  <div className="activeStatus">
+      Actively Searching for <strong> {activeTimeFrame} </strong>
+  </div>
+  )
+  // return (
+  //   <Link to={route} key={props.student.id} className="listItem link">
+  //     <div className="postBody">
+  //       <div className="postText">
+  //         {renderStudentName}
+  //         {affiliationGradYear}
+  //         <div className="majorWrapper">
+  //           {majors}
+  //         </div>
+  //         {renderBio}
+  //         <div className="pillsList">
+  //           {skills}
+  //         </div>
+  //         <div className="pillsList">
+  //           {industries}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </Link>
+  //  );
   return (
     <Link to={route} key={props.student.id} className="listItem link">
-      <div className="postBody">
+      <div className={"postBody "+activeClass} >
         <div className="postText">
-          {renderStudentName}
-          {affiliationGradYear}
-          <div className="majorWrapper">
+          {activeStatus}
+           <div className="postHeader">
+              <div className="studentNameWrapper">{renderStudentName}</div>
+              <div className="gradYearWrapper">{affiliationGradYear}</div>
+           </div>
+           <div className="majorWrapper">
             {majors}
-          </div>
-          {renderBio}
-          <div className="pillsList">
-            {skills}
-          </div>
-          <div className="pillsList">
+           </div>
+           {renderBio}
+           <div className="pillsList">
+             {skills}
+           </div>
+           <div className="pillsList">
             {industries}
-          </div>
+           </div>
         </div>
       </div>
     </Link>
-  );
+  )
+  
 };
 
 

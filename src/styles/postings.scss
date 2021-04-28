@@ -57,19 +57,35 @@ body{
   color: black;
 }
 
+.postHeader{
+  display:inline-flex;
+  justify-content: space-between;
+  width:100%;
+  margin:.5em 0 .25em
+}
+
+
 .postTitle{ 
   font-weight: 600;
   font-size: 110%;
   margin: .25em;
 }
 
-.studentName{ 
+.studentName, .gradYear{ 
   font-weight: 600;
   font-size: 120%;
-  margin: .25em;
+  margin:0
 }
 
-.startupName, .gradYear{ 
+.studentNameWrapper {
+  max-width: 72%
+}
+
+.gradYearWrapper {
+  max-width:28%
+}
+
+.startupName{ 
   font-weight: 500;
   font-size: 110%;
   margin: .25em;
@@ -77,12 +93,13 @@ body{
 }
 
 .major{
-  font-style: italic;
+  //font-style: italic;
 }
 
 .majorWrapper {
-  margin-left: .25em;
+  margin-bottom:.5em
 }
+
 
 .postLocation{
   font-size: .8em;
@@ -101,12 +118,11 @@ body{
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin-top: .5em;
-  margin-bottom: .5em;
-  border: .5px solid #C2C8CB;
-  border-radius: 5px;
-  padding: .25em;
-  background-color: #EFEFF0;
+  margin-bottom: .75em;
+  border-radius: 2px;
+  //background-color: #EFEFF0;
+  width:100%;
+  box-sizing: border-box;
 }
 
 .companyInfo{
@@ -483,6 +499,7 @@ height: 3em;
 
 .filter{
   margin-top: 1em;
+  cursor:pointer;
 }
 
 // #pendingToggle{
@@ -492,6 +509,18 @@ height: 3em;
 // }
 
 .descriptionText, .bioText {
-  font-size: .8em;
+  font-size: .7em;
   margin: 0;
+}
+
+.activelySearching {
+  border-top: 4px solid green;
+  position:relative
+}
+
+.activeStatus {
+  position:absolute;
+  top:.1em;
+  font-size:.7em;
+  color:green
 }
