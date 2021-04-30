@@ -198,7 +198,8 @@ body{
 .pillsList{
   display: flex;
   flex-wrap: wrap;
-  margin: 0;
+  margin: .5em 0
+
 }
 
 .greenPill{
@@ -209,7 +210,7 @@ body{
   padding-left: .5vw;
   margin-left: .25vw;
   margin-bottom: .5vh;
-  font-size: .9em;
+  font-size: .8em;
 }
 
 .yellowPill{
@@ -220,7 +221,7 @@ body{
   padding-left: .5vw;
   margin-left: .25vw;
   margin-bottom: .5vh;
-  font-size: .9em;
+  font-size: .8em;
 }
 
 .redPill{
@@ -231,7 +232,7 @@ body{
   padding-left: .5vw;
   margin-left: .25vw;
   margin-bottom: .5vh;
-  font-size: .9em;
+  font-size: .8em;
 }
 
 .postSpace{
@@ -511,7 +512,7 @@ height: 3em;
 // }
 
 .descriptionText, .bioText {
-  font-size: .7em;
+  font-size: .75em;
   margin: 0;
 }
 

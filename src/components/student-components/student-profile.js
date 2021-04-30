@@ -20,6 +20,7 @@ import WorkExperience from './work-experience';
 import OtherExperience from './other-experience';
 import NewWorkExp from './student-modals/new-work-exp';
 import NewOtherExp from './student-modals/new-other-exp';
+import Switch from 'react-switch'
 import '../../styles/student-profile.scss';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -551,7 +552,19 @@ class StudentProfile extends Component {
       );
     }
   }
-
+  renderStudentActivity = () =>{
+    // need to add timeframe as well
+    return (
+    <div className="activeStatus">
+    {(this.props.student.job_search_status=="Active") ? `Actively Searching for <strong></strong>` : ""}
+    
+    </div>
+  )
+  }
+  toggleActivity = (checked) => {
+    // link to activity edit redux action here
+      console.log(checked)
+  }
   renderBody = () => {
     if (this.state.isEditing) {
       const dropdownStyles = {
@@ -593,6 +606,12 @@ class StudentProfile extends Component {
               {this.renderDateRange()}
               <p className="question-fields-title">Hours/Week</p>
               <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('time_commitment', event)} defaultValue={this.props.student?.time_commitment} />
+            </div>
+
+            <div className="input-activity">
+              <div className="input-title">Actively Searching?</div>
+              <div>Shows startups you are actively looking at this platform.</div>
+              < Switch onChange={this.toggleActivity} checked={this.props.student?.job_search_status=="Active"}/>
             </div>
           </div>
 
@@ -764,6 +783,7 @@ class StudentProfile extends Component {
         <div className="profile-fixed">
           <div id="profile-header">
             {this.renderStudentName()}
+            {this.renderStudentActivity()}
             {this.renderClassYearAffiliation()}
             {this.renderMajors()}
             {this.renderMinors()}

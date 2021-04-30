@@ -30,7 +30,6 @@ const StudentListItem = (props) => {
         shortened="";
         break;
     }
-    console.log(aff+"  "+shortened)
     return shortened;
   }
   const affiliationGradYear = (<h1 className="gradYear" >{(props.student.affiliation && props.student.grad_year) ? (
@@ -68,21 +67,24 @@ const StudentListItem = (props) => {
       </div>
     );
   });
-
+  // maybe combine all these pill methods into one function
+  let skillChars =0
+  const skillCharLimit = 36
   const skills = props.student.skills?.map((skill, index) => {
+    skillChars+=skill.name.length;
     if (index === 0) {
       return (
         <div id="pillsTitle" key={skill.id}>
-          Skills: <div className="greenPill" key={skill.id}> {skill.name} </div>
+          <div className="greenPill" key={skill.id}> {skill.name} </div>
         </div>
       );
-    } else if (index < 5){
+    } else if (skillChars<=skillCharLimit){
       return (
         <div className="greenPill" key={skill.id}>
           {skill.name}
         </div>
       );
-    } else if (index === 5) {
+    } else if (skillChars>skillCharLimit && skillChars-skill.name.length <=skillCharLimit) {
       return (
         <div className="greenPill" key={skill.id}>
           ...
@@ -90,21 +92,23 @@ const StudentListItem = (props) => {
       );
     }
   });
-
+  let industryChars =0
+  const industryCharLimit = 36
   const industries = props.student.interested_industries?.map((industry, index) => {
+    industryChars+=industry.name.length;
     if (index === 0) {
       return (
         <div id="pillsTitle" key={industry.id}>
-          Industries: <div className="yellowPill" key={industry.id}> {industry.name} </div>
+          <div className="yellowPill" key={industry.id}> {industry.name} </div>
         </div>
       );
-    } else if (index < 5) {
+    } else if (industryChars<=industryCharLimit) {
       return (
         <div className="yellowPill" key={industry.id}>
           {industry.name}
         </div>
       );
-    } else if (index === 5) {
+    } else if (industryChars>industryCharLimit && industryChars-industry.name.length <=industryCharLimit) {
       return (
         <div className="yellowPill" key={industry.id}>
           ...
@@ -123,7 +127,7 @@ const StudentListItem = (props) => {
         <p className="bioText">{props.student.bio}</p>
       </div>
     ) : (
-      <div className="postSpace"/>
+      ""
     )
   );
 
@@ -145,7 +149,7 @@ const StudentListItem = (props) => {
   const route = `/students/${props.student._id}`;
   
   const activeTimeFrame = "Mar - May 2021"
-  const activeStatus = (props?.job_search_status=="active") ? "" : (
+  const activeStatus = (props?.job_search_status=="Active") ? "" : (
   <div className="activeStatus">
       Actively Searching for <strong> {activeTimeFrame} </strong>
   </div>
