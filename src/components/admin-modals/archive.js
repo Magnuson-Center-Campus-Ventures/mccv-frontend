@@ -1,8 +1,8 @@
-/* eslint-disable array-callback-return */
+/* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import CreateableSelect from 'react-select/creatable';
+import FilteredSelect from '../select'
 import {
   updatePost, updateStartup, updateStudent, fetchSubmittedApplications, fetchStudentByID,
 } from '../../actions';
@@ -107,10 +107,12 @@ class Archive extends Component {
         <div className="selectStudents">
           <p>Select the student(s) who filled the position</p>
 
-          <CreateableSelect
+          <FilteredSelect
+            createable={true}
             className="select-dropdown"
             styles={customStyles}
             name="classes"
+            placeholder="Select Students"
             options={this.state.applicantOptions}
             onChange={(selectedOption) => {
               this.addFilled(selectedOption);

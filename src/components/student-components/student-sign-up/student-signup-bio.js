@@ -62,12 +62,14 @@ class StudentBio extends Component {
           <p className="question-fields-title">Bio </p>
           <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('bio', event)} defaultValue={this.props.student.bio} />
           <p className="question-fields-title">Gender <span className="imptMessage"> *</span></p>
-          <select value={this.props.selected} onChange={(event) => {
-            this.changeStudentField('gender', event);
-            this.setState({selected: event.target.value}); 
-            // this.props.ifFilled(); 
-            }}>
-              <option value="select">Select...</option>
+          <select value={this.props.selected}
+            onChange={(event) => {
+              this.changeStudentField('gender', event);
+              this.setState({ selected: event.target.value });
+              // this.props.ifFilled();
+            }}
+          >
+            <option value="select">Select...</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other</option>

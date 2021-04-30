@@ -4,13 +4,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Select from 'react-select';
 import Switch from 'react-switch';
 import SearchBar from '../student-components/search-bar';
 import { fetchStudents, fetchStartupByUserID, fetchUser } from '../../actions';
 import { fetchSkillsFromID, fetchClassesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
 import StudentListItem from './student-item';
+import FilteredSelect from '../select';
 
 class Students extends Component {
   constructor(props) {
@@ -361,7 +361,7 @@ class Students extends Component {
             <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
-                <Select
+                <FilteredSelect
                   isMulti
                   className="filter"
                   styles={dropdownStyles}
@@ -380,7 +380,7 @@ class Students extends Component {
                     this.onFilter(industries, skills);
                   }}
                 />
-                <Select
+                <FilteredSelect
                   isMulti
                   className="filter"
                   styles={dropdownStyles}

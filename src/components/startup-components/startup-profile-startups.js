@@ -1,8 +1,11 @@
 /* eslint-disable react/button-has-type */
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/sort-comp */
+/* eslint-disable react/no-access-state-in-setstate */
+/* eslint-disable camelcase */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import CreateableSelect from 'react-select/creatable';
 import Switch from 'react-switch';
 import TextareaAutosize from 'react-textarea-autosize';
 import {
@@ -14,8 +17,8 @@ import {
 import embedInstructions from '../../assets/embed-instructions.png';
 import '../../styles/startup-profile.scss';
 import StartupInstructions from './startup-modals/startup-instructions';
-import note_question_mark from "../../assets/note_question_mark.png";
-import $ from 'jquery';
+import note_question_mark from '../../assets/note_question_mark.png';
+import FilteredSelect from '../select';
 
 class StartupProfile extends Component {
   constructor(props) {
@@ -90,9 +93,9 @@ class StartupProfile extends Component {
     if (file) {
       this.state.preview = window.URL.createObjectURL(file);
       if (file) {
-        uploadImage(this.props.startup.id, file).then(url => {
+        uploadImage(this.props.startup.id, file).then((url) => {
           this.state.startup.logo = url;
-        }).catch(error => {
+        }).catch((error) => {
           this.state.error = 'error';
         });
       }
@@ -126,9 +129,8 @@ class StartupProfile extends Component {
       };
     });
   }
-  
-  
-  
+
+
   handleInstructions = () => {
     this.setState({ showInstructions: !this.state.showInstructions });
   }
@@ -158,7 +160,7 @@ class StartupProfile extends Component {
     };
     if (this.props.startup?._id) {
       this.props.createPost(newPost, this.props.startup, this.props.history);
-    } 
+    }
   }
 
   handleApprovedToggle(checked) {
@@ -217,11 +219,13 @@ class StartupProfile extends Component {
       return (
         <div className="startup-header">
           <p>Add Industries:</p>
-          <CreateableSelect
+          <FilteredSelect
+            createable
             className="select-dropdown"
             styles={customStyles}
             name="industries"
             value={this.state.industry}
+            placeholder="Select Industries"
             options={this.state.displayIndustries}
             onChange={(selectedOption) => {
               this.state.industry = selectedOption.label;
@@ -234,21 +238,23 @@ class StartupProfile extends Component {
           />
         </div>
       );
-    } 
+    }
   }
 
   renderEditAffiliation() {
-    if (this.props.startup.affiliation){
-      return(
+    if (this.props.startup.affiliation) {
+      return (
         <div className="startup-header">
-        <p>Affiliation</p>
-          <select value={this.state.affiliation} onChange={(event) => {
-            this.props.startup.affiliation = event.target.value;
-            this.changeStartupField('affiliation', event);
-            this.setState({
-              affiliation: event.target.value, 
-            });
-          }}>
+          <p>Affiliation</p>
+          <select value={this.state.affiliation}
+            onChange={(event) => {
+              this.props.startup.affiliation = event.target.value;
+              this.changeStartupField('affiliation', event);
+              this.setState({
+                affiliation: event.target.value,
+              });
+            }}
+          >
             <option value={this.state.affiliation}>{this.props.startup.affiliation}</option>
             <option value="Undergrad">Dartmouth College</option>
             <option value="Geisel">Geisel School of Medicine </option>
@@ -258,19 +264,21 @@ class StartupProfile extends Component {
             <option value="Other">Other</option>
           </select>
         </div>
-        
-      )
-    } else{
-      return(
+
+      );
+    } else {
+      return (
         <div className="startup-header">
-        <p>Affiliation</p>
-          <select value={this.state.affiliation} onChange={(event) => {
-            this.props.startup.affiliation = event.target.value;
-            this.changeStartupField('affiliation', event);
-            this.setState({
-              affiliation: event.target.value, 
-            });
-          }}>
+          <p>Affiliation</p>
+          <select value={this.state.affiliation}
+            onChange={(event) => {
+              this.props.startup.affiliation = event.target.value;
+              this.changeStartupField('affiliation', event);
+              this.setState({
+                affiliation: event.target.value,
+              });
+            }}
+          >
             <option value="Undergrad">Dartmouth College</option>
             <option value="Geisel">Geisel School of Medicine </option>
             <option value="Tuck">Tuck School of Business</option>
@@ -279,21 +287,22 @@ class StartupProfile extends Component {
             <option value="Other">Other</option>
           </select>
         </div>
-      )
+      );
     }
   }
 
   renderEditStartupFounderGender() {
-    if (this.props.startup.founder_gender){
-      return(
+    if (this.props.startup.founder_gender) {
+      return (
         <div className="startup-header">
-        <p>Startup Founder Gender</p>
-          <select value={this.state.founder_gender} onChange={(event) => {
-            this.props.startup.founder_gender = event.target.value;
-            this.changeStartupField('founder_gender', event);
-            this.setState({
-              founder_gender: event.target.value});
-            }}>
+          <p>Startup Founder Gender</p>
+          <select value={this.state.founder_gender}
+            onChange={(event) => {
+              this.props.startup.founder_gender = event.target.value;
+              this.changeStartupField('founder_gender', event);
+              this.setState({ founder_gender: event.target.value });
+            }}
+          >
             <option value={this.state.founder_gender}>{this.props.startup.founder_gender}</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
@@ -301,17 +310,18 @@ class StartupProfile extends Component {
             <option value="prefer not to say">Prefer Not to Say</option>
           </select>
         </div>
-      )
+      );
     } else {
-      return(
+      return (
         <div className="startup-header">
-        <p>Startup Founder Gender</p>
-          <select value={this.state.founder_gender} onChange={(event) => {
-            this.props.startup.founder_gender = event.target.value;
-            this.changeStartupField('founder_gender', event);
-            this.setState({
-              founder_gender: event.target.value});
-            }}>
+          <p>Startup Founder Gender</p>
+          <select value={this.state.founder_gender}
+            onChange={(event) => {
+              this.props.startup.founder_gender = event.target.value;
+              this.changeStartupField('founder_gender', event);
+              this.setState({ founder_gender: event.target.value });
+            }}
+          >
             <option value="status">Select...</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
@@ -319,7 +329,7 @@ class StartupProfile extends Component {
             <option value="prefer not to say">Prefer Not to Say</option>
           </select>
         </div>
-      )
+      );
     }
   }
 
@@ -329,8 +339,8 @@ class StartupProfile extends Component {
         return (
           this.props.startup.industries.map((industry) => {
             return (
-              <div className="yellowPill" key={industry.id}> 
-                {industry.name} 
+              <div className="yellowPill" key={industry.id}>
+                {industry.name}
                 <button type="submit" className="delete-btn-startup-industries" style={{ cursor: 'pointer' }} onClick={() => { this.deleteIndustry({ industry }); }}>
                   <i className="far fa-trash-alt" id="icon" />
                 </button>
@@ -348,8 +358,8 @@ class StartupProfile extends Component {
         return (
           this.props.startup.industries.map((industry) => {
             return (
-              <div className="yellowPill" key={industry.id}> 
-                {industry.name} 
+              <div className="yellowPill" key={industry.id}>
+                {industry.name}
               </div>
               // <div className="startup-industry" key={industry.name}>{industry.name}</div>
             );
@@ -368,11 +378,11 @@ class StartupProfile extends Component {
       return (
         <div className="profileCompanyInfo">
           <div className="profileCompanyLeft">
-            <img src={this.props.startup.logo} alt="no logo" className="profileCompanyLogo"/>
+            <img src={this.props.startup.logo} alt="no logo" className="profileCompanyLogo" />
           </div>
           <div className="profileCompanyRight">
             <div className="profileCompanyTitle"> { this.props.startup.name} </div>
-          </div>  
+          </div>
         </div>
       );
     } else {
@@ -390,19 +400,19 @@ class StartupProfile extends Component {
         <div>{this.props.startup.description}</div>
       );
     } else {
-      return (<div/>);
+      return (<div />);
     }
   }
 
-  renderVideo(){
+  renderVideo() {
     if (this.props.startup?.video) {
       return (
         <div className="startup-video">
-          <iframe 
-            title="videoLarge" 
-            className="embed-responsive-item" 
+          <iframe
+            title="videoLarge"
+            className="embed-responsive-item"
             allow="fullscreen"
-            src={this.props.startup.video} 
+            src={this.props.startup.video}
           />
         </div>
       );
@@ -413,7 +423,7 @@ class StartupProfile extends Component {
     }
   }
 
-  renderEmail(){
+  renderEmail() {
     if (this.props.startup.contact_email) {
       return (
         <div className="startup-header">Email: {this.props.startup.contact_email}</div>
@@ -431,7 +441,7 @@ class StartupProfile extends Component {
         <div className="startup-header">
           <span className="locationIcon" />
           <span className="position-location"> {`${this.props.startup.city}, ${this.props.startup.state}`} </span>
-        </div> 
+        </div>
       );
     } else {
       return (
@@ -441,11 +451,11 @@ class StartupProfile extends Component {
   }
 
   renderStatusPill = () => {
-    if (this.props.startup.status === "Approved") {
+    if (this.props.startup.status === 'Approved') {
       return (
         <div id="app-status-green-pill">Approved</div>
       );
-    } else if (this.props.startup.status === "Pending") {
+    } else if (this.props.startup.status === 'Pending') {
       return (
         <div id="app-status-yellow-pill">Pending</div>
       );
@@ -455,52 +465,51 @@ class StartupProfile extends Component {
       );
     }
   }
-  
-  
+
 
   renderStartup() {
     if (typeof this.props.startup !== 'undefined') {
       if (this.state.isEditing === false) {
         return (
-           <div>
-            {localStorage.getItem("new_startup") || this.state.showInstructions ? <StartupInstructions handler={this.handleInstructions}/> : null}
-            
-              <div className="startup-body">
-            <div className="startup-body-text">
-              <div className="startup-header">
-                {this.logoCompanyName()}
+          <div>
+            {localStorage.getItem('new_startup') || this.state.showInstructions ? <StartupInstructions handler={this.handleInstructions} /> : null}
+
+            <div className="startup-body">
+              <div className="startup-body-text">
+                <div className="startup-header">
+                  {this.logoCompanyName()}
+                </div>
+
+                <div className="startup-profile-info">
+                  {/* <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div> */}
+                  {this.renderLocation()}
+                  {this.renderEmail()}
+                  <div className="startup-industries">Industries: {this.renderIndustries()}</div>
+                </div>
+
+                <div className="startup-description">
+                  <h3>About {`${this.props.startup.name}`}:</h3>
+                  {this.renderStartupProfileDescription()}
+                </div>
+
+                {this.renderVideo()}
+
+                <div className="startup-app-status-row">
+                  <div id="app-status-title">Status: </div>
+                  {this.renderStatusPill()}
+                </div>
+
+                <div className="startup-header">
+                  <button className="startup-edit-button"
+                    onClick={this.submit}
+                  >
+                    {this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
+                  </button>
+                </div>
+
               </div>
-
-              <div className="startup-profile-info">
-                {/* <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div> */}
-                {this.renderLocation()}
-                {this.renderEmail()}
-                <div className="startup-industries">Industries: {this.renderIndustries()}</div>
-              </div>
-
-              <div className="startup-description">
-                <h3>About {`${this.props.startup.name}`}:</h3>
-                {this.renderStartupProfileDescription()}
-              </div>
-
-              {this.renderVideo()}
-
-              <div className="startup-app-status-row">
-                <div id="app-status-title">Status: </div>
-                {this.renderStatusPill()}
-              </div>
-
-              <div className="startup-header">
-                <button className="startup-edit-button"
-                  onClick={this.submit}
-                >
-                  {this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
-                </button>
-              </div>
-
             </div>
           </div>
-           </div>
         );
       } else {
         return (
@@ -515,7 +524,7 @@ class StartupProfile extends Component {
               <input type="file" name="coverImage" onChange={this.onImageUpload} />
               <img className="startup-logo" id="preview" alt="preview" src={this.state.preview} />
             </div>
-            
+
             <div className="startup-header">
               <p>City</p>
               <TextareaAutosize onBlur={(event) => this.changeStartupField('city', event)} defaultValue={this.props.startup.city} />
@@ -544,9 +553,9 @@ class StartupProfile extends Component {
             <div className="startup-video">
               <p>Link to your startup's pitch video! (use the embed link for the video)</p>
               <img
-                  alt="Embed Link Example"
-                  src={embedInstructions}
-                  className="embed-instructions-image"
+                alt="Embed Link Example"
+                src={embedInstructions}
+                className="embed-instructions-image"
               />
               <TextareaAutosize onBlur={(event) => this.changeStartupField('video', event)} defaultValue={this.props.startup.video} />
               {this.renderVideo()}
@@ -607,44 +616,43 @@ class StartupProfile extends Component {
   renderPostings = (e) => {
     if (this.props.startup.posts && this.props.startup.posts.length && typeof this.props.startup !== 'undefined') {
       const mappingPostings = this.state.posts.map((post) => {
-
-        const virtual = (post.virtual==true) ? (
+        const virtual = (post.virtual === true) ? (
           <div className="location">
             <span className="virtualIcon" />
             <span className="postLocation">Virtual</span>
-          </div>  
+          </div>
         ) : (
           <div />
         );
-      
+
         const inperson = (post.city && post.state) ? (
           <div className="location">
             <span className="locationIcon" />
             <span className="postLocation"> {`${post.city}, ${post.state}`} </span>
-          </div>  
+          </div>
         ) : (
           <div />
         );
-      
+
         const start = new Date(post.desired_start_date);
         const end = new Date(post.desired_end_date);
-      
+
         const startDate = (start) ? (
-          <span className="dateText">Starts {`${start.getMonth()+1}/${start.getDate()}/${start.getFullYear()}`}</span>
+          <span className="dateText">Starts {`${start.getMonth() + 1}/${start.getDate()}/${start.getFullYear()}`}</span>
         ) : (
           <div />
         );
-      
+
         const endDate = (end) ? (
-          <span className="dateText">Ends {`${end.getMonth()+1}/${end.getDate()}/${end.getFullYear()}`}</span>
+          <span className="dateText">Ends {`${end.getMonth() + 1}/${end.getDate()}/${end.getFullYear()}`}</span>
         ) : (
           <div />
         );
-        
-        const statusPill = (post.status === "Approved") ? (
+
+        const statusPill = (post.status === 'Approved') ? (
           <div className="greenPill">Approved</div>
         ) : (
-          (post.status === "Archived") ? (
+          (post.status === 'Archived') ? (
             <div className="redPill">Archived</div>
           ) : (
             <div className="yellowPill">Pending Review</div>
@@ -677,7 +685,7 @@ class StartupProfile extends Component {
                 {/* <div className="startup-posting-status">Status: {post.status}</div> */}
                 <div className="applicationStatusRow">
                   <div id="pillsTitle">Status: </div>
-                    {statusPill}
+                  {statusPill}
                 </div>
               </div>
             </Link>
@@ -690,7 +698,7 @@ class StartupProfile extends Component {
             <div className="startup-postings">
               <div className="startup-add-posting-box">
                 <span className="startup-postings-h1">
-                  <img id={"NoteQuestionMark"} src={note_question_mark} alt="Show Instructions" onClick={this.handleInstructions}/>
+                  <img id="NoteQuestionMark" src={note_question_mark} alt="Show Instructions" onClick={this.handleInstructions} />
                   Add Volunteer Positions:
                 </span>
                 <button type="button"

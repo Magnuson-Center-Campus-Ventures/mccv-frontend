@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import CreateableSelect from 'react-select/creatable';
+import FilteredSelect from '../../select';
 import {
   fetchStudentByUserID, fetchUser,
   fetchAllIndustries, fetchCertainIndustries, createIndustryForStudent,
@@ -84,10 +84,12 @@ class StudentIndustries extends Component {
     return (
       <div className="question-fields-items-header">
         <p className="question-fields-title">Industries</p>
-        <CreateableSelect
+        <FilteredSelect
+          createable
           className="select-dropdown"
           styles={customStyles}
           name="industries"
+          placeholder="Select Industries"
           value={this.state.industry}
           options={this.state.displayIndustries}
           onChange={(selectedOption) => {
@@ -147,7 +149,7 @@ class StudentIndustries extends Component {
       );
     }
   }
-} 
+}
 
 const mapStateToProps = (reduxState) => ({
   userID: reduxState.user.userID,
