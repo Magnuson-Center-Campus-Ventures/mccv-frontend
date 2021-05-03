@@ -19,7 +19,7 @@ class FilteredSelect extends Component {
     render() {
         let newProps = {
             ...this.props,
-            placeholder:(this.state.active&&this.props.instructions) ? "Type here to filter" : (this.props.placeholder),
+            placeholder:(this.state.active&&this.props.instructions) ? ((this.props.createable) ? "Type to filter or add" : "Type here to filter") : (this.props.placeholder),
             onMenuOpen:()=>{this.toggleActive(true)},
             onMenuClose:()=>{this.toggleActive(false)}
         }

@@ -576,7 +576,7 @@ class Post extends Component {
               isMulti
               styles={dropdownStyles}
               name="industries"
-              placeholder="Select Industries"
+              placeholder="Add Relevant Industries"
               value={this.state.selectedIndustryOptions}
               options={this.state.allIndustryOptions}
               onChange={(selectedOptions) => {
@@ -607,7 +607,7 @@ class Post extends Component {
               isMulti
               styles={dropdownStyles}
               name="classes"
-              placeholder="Select Classes"
+              placeholder="Add Desired Classes"
               value={this.state.selectedClassOptions}
               options={this.state.allClassOptions}
               onChange={(selectedOptions) => {
@@ -640,7 +640,7 @@ class Post extends Component {
               isMulti
               styles={dropdownStyles}
               name="req-skills"
-              placeholder="Select Skills"
+              placeholder="Add Required Skills"
               value={this.state.selectedReqSkillOptions}
               options={this.state.allSkillOptions}
               onChange={(selectedOptions) => {
@@ -671,7 +671,7 @@ class Post extends Component {
               isMulti
               styles={dropdownStyles}
               name="pref-skills"
-              placeholder="Select Skills"
+              placeholder="Add Preferred Skills"
               value={this.state.selectedPrefSkillOptions}
               options={this.state.allSkillOptions}
               onChange={(selectedOptions) => {
