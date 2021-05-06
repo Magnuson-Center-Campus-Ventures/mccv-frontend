@@ -62,7 +62,6 @@ class StudentProfile extends Component {
     };
 
     this.studentStatusChange = this.studentStatusChange.bind(this);
-    this.status = this.status.bind(this);
   }
 
   componentDidMount() {
@@ -518,13 +517,11 @@ class StudentProfile extends Component {
     } else return <div>None</div>;
   }
 
-  status = () => {
-    if (this.state.student?.desired_start_date != null) {
-      return (
-        <span className="student-job-search-status">Job Search Status: {this.state.student.job_search_status}</span>
-      );
+  renderStudentActivity = () => {
+    if (this.state.student?.desired_start_date != null && this.state.student.job_search_status=="Active") {
+      return (<span className="student-job-search-status"> Actively Searching </span>)
     }
-    return (<></>);
+    return ""
   }
 
   startDate = () => {
@@ -571,21 +568,6 @@ class StudentProfile extends Component {
         <h1 id="student-profile-name">No Name</h1>
       );
     }
-  }
-
-  renderStudentActivity = () => {
-    // need to add timeframe as well
-    return (
-      <div className="activeStatus">
-        {(this.state.student.job_search_status === 'Active') ? 'Actively Searching for <strong></strong>' : ''}
-        this.props.student.
-      </div>
-    );
-  }
-
-  toggleActivity = (checked) => {
-    // link to activity edit redux action here
-    console.log(checked);
   }
 
   studentStatusChange = (event) => {
@@ -819,7 +801,7 @@ class StudentProfile extends Component {
         <div className="profile-fixed">
           <div id="profile-header">
             {this.renderStudentName()}
-            {this.renderStudentActivity()}
+
             {this.renderClassYearAffiliation()}
             {this.renderMajors()}
             {this.renderMinors()}
@@ -827,8 +809,8 @@ class StudentProfile extends Component {
             <div className="student-contact">{this.props.email}</div>
             <div className="student-contact">{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
             <div className="space" />
-            <div className="student-start-date">
-              {this.status()}
+            <div>
+              {this.renderStudentActivity()}
             </div>
             <div className="student-start-date">
               {this.startDate()}

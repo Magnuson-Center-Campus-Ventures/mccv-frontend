@@ -7,28 +7,20 @@ import '../../styles/postings.scss';
 
 const StudentListItem = (props) => {
   const affiliationShortener = (aff) => {
-    let shortened = '';
     switch (aff) {
       case 'Undergrad':
-        shortened = 'UG';
-        break;
+        return 'UG';
       case 'Tuck':
-        shortened = 'TU';
-        break;
+        return'Tu';
       case 'Thayer':
-        shortened = 'TH';
-        break;
+        return 'Th';
       case 'Geisel':
-        shortened = 'GE';
-        break;
+        return 'Ge';
       case 'Guarini':
-        shortened = 'GU';
-        break;
+        return 'Gu';
       default:
-        shortened = '';
-        break;
+        return '';
     }
-    return shortened;
   };
   const affiliationGradYear = (
     <h1 className="gradYear">{(props.student.affiliation && props.student.grad_year) ? (
@@ -145,16 +137,36 @@ const StudentListItem = (props) => {
       )
     )
   );
-  // const activeClass = (props?.job_search_status=="active") ? "activelySearching" : ""
-  const activeClass = 'activelySearching';
-  const route = `/students/${props.student._id}`;
 
-  const activeTimeFrame = 'Mar - May 2021';
-  const activeStatus = (props?.job_search_status === 'Active') ? '' : (
-    <div className="activeStatus">
-      Actively Searching for <strong> {activeTimeFrame} </strong>
-    </div>
-  );
+  const activelySearching= (props.student?.job_search_status === 'Active')
+  const activeClass = (activelySearching) ? 'activelySearching' : "";
+
+  // all other variables aren't functions, so maybe this shouldn't be a func either. thought this was most efficient tho.
+  const getTimeFrame = () =>{
+    if (activelySearching) {
+      const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+      const activeTimeFrame = [
+        monthNames[new Date(props.student?.desired_start_date).getMonth()], 
+        monthNames[new Date(props.student?.desired_end_date).getMonth()]
+      ]
+      return (activelySearching) ? ( 
+        (activeTimeFrame[0]!=activeTimeFrame[1]) ? (
+          activeTimeFrame[0] +" - " + activeTimeFrame[1]
+        ) : (activeTimeFrame[0])
+        ) : "";
+    }
+  }
+
+  
+  
+
+  const activeStatus = (activelySearching) ? (
+  <div className="activeStatus">
+    Actively Searching for <strong> {getTimeFrame()} </strong>
+  </div>
+  ) : "";
+
+  const route = `/students/${props.student._id}`;
   // return (
   //   <Link to={route} key={props.student.id} className="listItem link">
   //     <div className="postBody">

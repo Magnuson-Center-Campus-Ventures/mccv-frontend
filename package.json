@@ -6,7 +6,7 @@
     "author": "doniatung <donia.tung@dali.dartmouth.edu>",
     "license": "MIT",
     "scripts": {
-        "start": "NODE_ENV=development webpack-dev-server --config webpack.config.js",
+        "start":"cross-env NODE_ENV=development webpack-dev-server --config webpack.config.js",
         "test": "eslint src/**.js --fix",
         "build": "yarn clean && set NODE_ENV=production webpack --colors",
         "clean": "rimraf dist",

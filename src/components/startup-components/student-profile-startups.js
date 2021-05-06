@@ -184,6 +184,14 @@ class StudentProfileStartup extends Component {
     } else return <div>None</div>;
   }
 
+  renderStudentActivity = () => {
+    console.log(this.props.student?.job_search_status)
+    if (this.props.student?.desired_start_date != null && this.props.student?.job_search_status=="Active") {
+      return (<span className="student-job-search-status"> Actively Searching </span>)
+    }
+    return ""
+  }
+
   renderStudentName = () => {
     if (this.props.student?.first_name && this.props.student?.last_name) {
       return (
@@ -232,6 +240,9 @@ class StudentProfileStartup extends Component {
           <div className="student-contact">{this.props.email}</div>
           <div className="student-contact">{this.props.student?.phone_number ? this.props.student?.phone_number : null}</div>
           <div className="space" />
+          <div>
+              {this.renderStudentActivity()}
+          </div>
           <div className="student-start-date">
             {this.startDate()}
           </div>
