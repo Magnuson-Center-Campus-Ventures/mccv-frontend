@@ -657,7 +657,7 @@ class StudentProfile extends Component {
               <div className="majmin-section">
                 <div className="majmin-header">
                   <div className="input-title">Majors </div>
-                  <TextareaAutosize className="question-fields-text" onBlur={function (event) { this.state.newMajor = event.target.value; }} />
+                  <TextareaAutosize className="question-fields-text" onBlur={function (event) {this.setState({newMajor:event.target.value})}.bind(this)} />
                   <button className="add-button"
                     onClick={() => {
                       this.setState((prevState) => {
@@ -676,7 +676,7 @@ class StudentProfile extends Component {
               <div className="majmin-section">
                 <div className="majmin-header">
                   <div className="input-title">Minors </div>
-                  <TextareaAutosize className="question-fields-text" onBlur={function (event) { this.state.newMinor = event.target.value; }} />
+                  <TextareaAutosize className="question-fields-text" onBlur={function (event) { this.state.newMinor = event.target.value; }.bind(this)} />
                   <button className="add-button"
                     onClick={() => {
                       const nm = this.state.newMajor;
@@ -698,10 +698,12 @@ class StudentProfile extends Component {
           <hr className="profile-divider" />
           <div>
             <h2>Bio</h2>
+            <div>The first 100 characters will be displayed when startups browse</div>
             <TextareaAutosize className="question-fields-text"
               onBlur={(event) => this.changeStudentField('bio', event)}
               defaultValue={this.props.student?.bio}
             />
+            <div className="character-count">{this.state.student.bio.length} characters typed</div>
           </div>
 
           <hr className="profile-divider" />

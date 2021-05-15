@@ -62,7 +62,8 @@ const StudentListItem = (props) => {
   });
   // maybe combine all these pill methods into one function
   let skillChars = 0;
-  const skillCharLimit = 36;
+  const skillCharLimit = 24;
+  const skillPillLimit = 3;
   const skills = props.student.skills?.map((skill, index) => {
     skillChars += skill.name.length;
     if (index === 0) {
@@ -71,13 +72,15 @@ const StudentListItem = (props) => {
           <div className="greenPill" key={skill.id}> {skill.name} </div>
         </div>
       );
-    } else if (skillChars <= skillCharLimit) {
+    } else if (skillChars <= skillCharLimit && index < skillPillLimit) {
       return (
         <div className="greenPill" key={skill.id}>
           {skill.name}
         </div>
       );
-    } else if (skillChars > skillCharLimit && skillChars - skill.name.length <= skillCharLimit) {
+    } else if ((skillChars > skillCharLimit && skillChars - skill.name.length <= skillCharLimit) 
+                || (index == skillPillLimit && skillChars < skillCharLimit)) {
+      index = skillPillLimit+1;
       return (
         <div className="greenPill" key={skill.id}>
           ...
@@ -86,7 +89,8 @@ const StudentListItem = (props) => {
     }
   });
   let industryChars = 0;
-  const industryCharLimit = 36;
+  const industryCharLimit = 24;
+  const industryPillLimit = 3;
   const industries = props.student.interested_industries?.map((industry, index) => {
     industryChars += industry.name.length;
     if (index === 0) {
@@ -95,13 +99,15 @@ const StudentListItem = (props) => {
           <div className="yellowPill" key={industry.id}> {industry.name} </div>
         </div>
       );
-    } else if (industryChars <= industryCharLimit) {
+    } else if (industryChars <= industryCharLimit && index < industryPillLimit) {
       return (
         <div className="yellowPill" key={industry.id}>
           {industry.name}
         </div>
       );
-    } else if (industryChars > industryCharLimit && industryChars - industry.name.length <= industryCharLimit) {
+    } else if ((industryChars > industryCharLimit && industryChars - industry.name.length <= industryCharLimit) 
+                || (index == industryPillLimit && industryChars < industryCharLimit)) {
+      index = industryPillLimit+1;
       return (
         <div className="yellowPill" key={industry.id}>
           ...
@@ -110,9 +116,9 @@ const StudentListItem = (props) => {
     }
   });
 
-  const renderBio = (props.student.bio?.length > 120) ? (
+  const renderBio = (props.student.bio?.length > 100) ? (
     <div className="postInfo">
-      <p className="bioText">{`${props.student.bio.substring(0, 119)}...`}</p>
+      <p className="bioText">{`${props.student.bio.substring(0, 99)}...`}</p>
     </div>
   ) : (
     (props.student.bio) ? (
@@ -199,7 +205,6 @@ const StudentListItem = (props) => {
           <div className="majorWrapper">
             {majors}
           </div>
-          <hr />
           {renderBio}
           <div className="pillsList">
             {skills}

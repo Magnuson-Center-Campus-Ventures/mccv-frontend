@@ -354,7 +354,21 @@ class Students extends Component {
       control: (base) => ({
         ...base,
         width: 200,
+        cursor:"pointer"
       }),
+      multiValue : (base, state) =>{
+        let bgColor;
+        //TODO: link bgColor automatically to css of .greenPill and .yellowPill
+        if (state.selectProps.name == "industry-filter") bgColor = "rgba(69, 185, 144, 0.5)"
+        else if (state.selectProps.name == "skill-filter") bgColor = "rgba(221, 192, 88, 0.514)"
+  
+        return {
+          ...base,
+          borderRadius: "10px",
+          backgroundColor: bgColor
+        }
+        
+      },
     };
     return (
       (this.props.students !== undefined || null) && (this.state.results !== null || undefined)
