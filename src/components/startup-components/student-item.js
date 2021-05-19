@@ -62,8 +62,8 @@ const StudentListItem = (props) => {
   });
   // maybe combine all these pill methods into one function
   let skillChars = 0;
-  const skillCharLimit = 24;
-  const skillPillLimit = 3;
+  const skillCharLimit = (!props.student.bio || props.student.bio.length < 40) ? 60 : 24;
+  const skillPillLimit = (!props.student.bio || props.student.bio.length < 40) ? 6 : 3;
   const skills = props.student.skills?.map((skill, index) => {
     skillChars += skill.name.length;
     if (index === 0) {
@@ -89,8 +89,8 @@ const StudentListItem = (props) => {
     }
   });
   let industryChars = 0;
-  const industryCharLimit = 24;
-  const industryPillLimit = 3;
+  const industryCharLimit = (!props.student.bio || props.student.bio.length < 40) ? 60 : 24;
+  const industryPillLimit = (!props.student.bio || props.student.bio.length < 40) ? 6 : 3;
   const industries = props.student.interested_industries?.map((industry, index) => {
     industryChars += industry.name.length;
     if (index === 0) {

@@ -17,6 +17,7 @@ class Students extends Component {
     super(props);
     this.state = {
       sortedStudents: [],
+      searchingStudents:[],
       industryOptions: [],
       selectedIndustryOptions: [],
       skillOptions: [],
@@ -89,9 +90,15 @@ class Students extends Component {
       && (prevProps.students !== this.props.students || prevProps.startup !== this.props.startup)) {
       // Score students
       this.scoreStudents();
+      // Loads actively searching students
+      this.findActivelySearching(this.props.students);
+
+
     }
   }
-
+  findActivelySearching = (students) =>{
+    this.setState({searchingStudents:students.filter(student => student?.job_search_status=="Active")})
+  }
   scoreStudents = () => {
     const startupIndustries = [];
     const postsReqSkills = [];
@@ -296,9 +303,15 @@ class Students extends Component {
     else students = this.state.live;
 
     // add filters here to narrow down displayed students
-    if (this.state.activeSearching) students = students.filter(student=> student?.job_search_status=="Active")
-    // using includes may be overly slow so maybe change this
-    if (this.state.recommend) students=students.filter(student=> this.state.sortedStudents.includes(student))
+    if (this.state.activeSearching) {
+      students=this.state.searchingStudents
+      // with more filters this conditional chain may be very complex, maybe better function to address it
+      if (this.state.recommend) {
+        // using includes may be overly slow so maybe change this
+        students=students.filter(student => this.state.sortedStudents.map((s)=>{return s._id}).includes(student._id));
+      }
+    }
+    else if (this.state.recommend) students=this.state.sortedStudents
 
     if (students.length > 0 ){
       return students.map((student) => {
@@ -359,8 +372,9 @@ class Students extends Component {
       multiValue : (base, state) =>{
         let bgColor;
         //TODO: link bgColor automatically to css of .greenPill and .yellowPill
-        if (state.selectProps.name == "industry-filter") bgColor = "rgba(69, 185, 144, 0.5)"
-        else if (state.selectProps.name == "skill-filter") bgColor = "rgba(221, 192, 88, 0.514)"
+        if (state.selectProps.name == "industry-filter") bgColor = "rgba(221, 192, 88, 0.514)"
+        else if (state.selectProps.name == "skill-filter") bgColor = "rgba(69, 185, 144, 0.5)"
+        
   
         return {
           ...base,
