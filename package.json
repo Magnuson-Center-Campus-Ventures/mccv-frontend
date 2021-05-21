@@ -6,7 +6,7 @@
   "author": "doniatung <donia.tung@dali.dartmouth.edu>",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_ENV=development webpack-dev-server",
+    "start": "cross-env NODE_ENV=development webpack-dev-server",
     "test": "eslint src/**.js",
     "build": "yarn clean; NODE_ENV=production webpack --colors",
     "clean": "rimraf dist",
@@ -52,6 +52,7 @@
     "@stardust-ui/docs-components": "latest",
     "aws-sdk": "^2.748.0",
     "axios": "0.21.1",
+    "cross-env": "^7.0.3",
     "date-fns": "^2.16.0",
     "dotenv": "^8.2.0",
     "faker": "latest",
