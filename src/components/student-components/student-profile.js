@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import CreateableSelect from 'react-select/creatable';
 import { DateRange } from 'react-date-range';
 import {
   fetchStudentByUserID, updateStudent, fetchUser,
@@ -20,6 +19,7 @@ import WorkExperience from './work-experience';
 import OtherExperience from './other-experience';
 import NewWorkExp from './student-modals/new-work-exp';
 import NewOtherExp from './student-modals/new-other-exp';
+import FilteredSelect from '../select'
 import '../../styles/student-profile.scss';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -671,11 +671,13 @@ class StudentProfile extends Component {
           <div className="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
-              <CreateableSelect
+              <FilteredSelect
+                createable={true}
                 className="select-dropdown"
                 isMulti
                 styles={dropdownStyles}
                 name="industries"
+                placeholder="Add Your Industries"
                 value={this.state.selectedIndustryOptions}
                 options={this.state.allIndustryOptions}
                 onChange={(selectedOptions) => {
@@ -700,11 +702,13 @@ class StudentProfile extends Component {
             </div>
             <div className="list-section">
               <h2>Classes</h2>
-              <CreateableSelect
+              <FilteredSelect
+                createable={true}
                 className="select-dropdown"
                 isMulti
                 styles={dropdownStyles}
                 name="classes"
+                placeholder="Add Your Classes"
                 value={this.state.selectedClassOptions}
                 options={this.state.allClassOptions}
                 onChange={(selectedOptions) => {
@@ -729,11 +733,13 @@ class StudentProfile extends Component {
             </div>
             <div className="list-section">
               <h2>Skills</h2>
-              <CreateableSelect
+              <FilteredSelect
+                createable={true}
                 className="select-dropdown"
                 isMulti
                 styles={dropdownStyles}
                 name="skills"
+                placeholder="Add Your Skills"
                 value={this.state.selectedSkillOptions}
                 options={this.state.allSkillOptions}
                 onChange={(selectedOptions) => {
