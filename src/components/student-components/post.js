@@ -314,6 +314,24 @@ class Post extends Component {
               </button>
             )
             : null}
+            {(!this.state.isEditing)
+            ? (
+              <button className="post-btn"
+                type="submit"
+                onClick={this.submit}
+              >
+                Edit
+              </button>
+            )
+            : (
+              <button id="save-changes-btn"
+              className="post-btn"
+              type="submit"
+              onClick={this.submit}
+              >
+                Save Changes
+              </button>
+            )}
         </div>
       );
     } else if (this.props.user.role === 'startup') {
