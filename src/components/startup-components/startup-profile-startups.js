@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import CreateableSelect from 'react-select/creatable';
 import Switch from 'react-switch';
 import TextareaAutosize from 'react-textarea-autosize';
+import filteredSelect from '../select'
 import {
   createPost, fetchPosts, fetchPost, updatePost,
   fetchStartupByUserID, updateStartup,
@@ -13,6 +13,7 @@ import {
 } from '../../actions';
 import embedInstructions from '../../assets/embed-instructions.png';
 import '../../styles/startup-profile.scss';
+import FilteredSelect from '../select';
 
 class StartupProfile extends Component {
   constructor(props) {
@@ -206,11 +207,13 @@ class StartupProfile extends Component {
       return (
         <div className="startup-header">
           <p>Add Industries:</p>
-          <CreateableSelect
+          <FilteredSelect
+            createable={true}
             className="select-dropdown"
             styles={customStyles}
             name="industries"
             value={this.state.industry}
+            placeholder="Select Industries"
             options={this.state.displayIndustries}
             onChange={(selectedOption) => {
               this.state.industry = selectedOption.label;
