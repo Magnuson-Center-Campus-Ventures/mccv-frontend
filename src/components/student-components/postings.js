@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Select from 'react-select';
 import Switch from 'react-switch';
 import moment from 'moment';
 import PostListItem from './posting-item';
@@ -12,6 +11,7 @@ import {
 } from '../../actions';
 import { fetchIndustriesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
+import FilteredSelect from '../select'
 
 class Posts extends Component {
   constructor(props) {
@@ -496,7 +496,7 @@ class Posts extends Component {
             <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
-                <Select
+                <FilteredSelect
                   isMulti
                   className="filter"
                   styles={dropdownStyles}
@@ -521,7 +521,7 @@ class Posts extends Component {
                     this.onFilter(industries, skills, locations, dates);
                   }}
                 />
-                <Select
+                <FilteredSelect
                   isMulti
                   className="filter"
                   styles={dropdownStyles}
@@ -546,7 +546,7 @@ class Posts extends Component {
                     this.onFilter(industries, skills, locations, dates);
                   }}
                 />
-                <Select
+                <FilteredSelect
                   isMulti
                   className="filter"
                   styles={dropdownStyles}
@@ -571,7 +571,7 @@ class Posts extends Component {
                     this.onFilter(industries, skills, locations, dates);
                   }}
                 />
-                <Select
+                <FilteredSelect
                   isMulti
                   className="filter"
                   styles={dropdownStyles}
