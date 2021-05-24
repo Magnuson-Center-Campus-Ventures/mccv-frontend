@@ -5,7 +5,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import {
   fetchStudentByID, fetchUserByStudentID, fetchWorkExperiences, fetchOtherExperiences,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills, fetchUser,
@@ -13,6 +13,7 @@ import {
 import WorkExperience from '../student-components/work-experience';
 import OtherExperience from '../student-components/other-experience';
 import Archive from '../admin-modals/archive';
+
 
 import '../../styles/student-profile.scss';
 
@@ -58,15 +59,27 @@ class StudentProfileStartup extends Component {
   renderButtons() {
     if (this.props.user?.role === 'admin' && this.props.student?.status === 'Approved') {
       return (
-        <button
+        <div>
+          {(this.props.student?.status === 'Approved') ? (<button
           className="edit-button"
+          id="archive-button"
           type="submit"
           onClick={(e) => {
             this.showArchiveModal();
           }}
         >
           Archive
-        </button>
+        </button>) : null}
+        <Link to={'/profile/'+this.props.student._id+"/revise"} key={this.props.student._id} style={{color:"white"}}>
+            <button
+              className="edit-button"
+              id="revise-button"
+              type="submit"
+            >
+              Revise
+            </button>
+          </Link>
+        </div>
       );
     }
   }

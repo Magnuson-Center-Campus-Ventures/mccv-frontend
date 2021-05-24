@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://mccv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+//const ROOT_URL = 'http://mccv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {

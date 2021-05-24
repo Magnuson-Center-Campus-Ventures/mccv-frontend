@@ -12,6 +12,7 @@ import '../../styles/startup-profile.scss';
 
 class Startup extends Component {
   _isMounted = false;
+  
 
   constructor(props) {
     super(props);
@@ -19,6 +20,7 @@ class Startup extends Component {
       archiveShow: false,
       approveShow: false,
       denyShow: false,
+      reviseShow:false
     };
     this.renderPostings = this.renderPostings.bind(this);
     this.showArchiveModal = this.showArchiveModal.bind(this);
@@ -185,6 +187,13 @@ class Startup extends Component {
             >
               Archive
             </button>
+            <Link to={'/startupprofile/'+this.props.startup._id+"/revise"} key={this.props.startup._id} style={{color:"white"}}>
+              <button className="post-btn"
+                type="submit"
+              >
+                  Revise
+              </button>
+            </Link>
           </div>
         );
       } else if (this.props.startup?.status === 'Pending') {

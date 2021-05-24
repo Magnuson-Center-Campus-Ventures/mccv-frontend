@@ -19,7 +19,8 @@ import {
 } from '../../actions';
 import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
-import FilteredSelect from '../select'
+import Revise from '../admin-modals/revise';
+import FilteredSelect from '../select';
 import pin from '../../../static/img/pin.png';
 import '../../styles/post.scss';
 import 'react-date-range/dist/styles.css'; // main style file
@@ -32,6 +33,7 @@ class Post extends Component {
       post: {},
       applyShow: false,
       archiveShow: false,
+      reviseShow:false,
       isEditing: false,
       ownIndustries: [],
       ownReqSkills: [],
@@ -55,8 +57,10 @@ class Post extends Component {
     this.hideApplyModal = this.hideApplyModal.bind(this);
     this.showArchiveModal = this.showArchiveModal.bind(this);
     this.hideArchiveModal = this.hideArchiveModal.bind(this);
+    this.showReviseModal = this.showReviseModal.bind(this);
+    this.hideReviseModal = this.hideReviseModal.bind(this);
     this.approvePost = this.approvePost.bind(this);
-  }
+  } 
 
   componentDidMount() {
     if (window.location.search == '?edit') {
@@ -152,6 +156,13 @@ class Post extends Component {
     window.scrollTo(0, 0);
   }
 
+  showReviseModal = (e) => {
+    this.setState({
+      reviseShow:true,
+    });
+    window.scrollTo(0,0)
+  }
+
   hideApplyModal = (e) => {
     this.setState({
       applyShow: false,
@@ -161,6 +172,12 @@ class Post extends Component {
   hideArchiveModal = (e) => {
     this.setState({
       archiveShow: false,
+    });
+  }
+
+  hideReviseModal = (e) => {
+    this.setState({
+      reviseShow: false,
     });
   }
 
@@ -189,17 +206,23 @@ class Post extends Component {
 
   submit = () => {
     if (this.state.isEditing) {
+      console.log("R")
       this.checkDateRange();
       if (this.state.validDate == true) {
         // this.props.post = this.state.post;
-        this.props.updatePost(this.state.post.id, this.state.post);
-        this.setState({ isEditing: false });
+        if (this.props.user.role === "admin") this.showReviseModal()
+        else this.props.updatePost(this.state.post.id, this.state.post);
       }
     } else {
       this.setState({ isEditing: true });
     }
     window.scrollTo(0, 0);
     this.forceUpdate();
+  }
+
+  discard = () => {
+    this.setState({isEditing:false})
+    this.props.fetchPost(this.props.match.params.postID);
   }
 
   /*requiredSkillsHelper= () => {
@@ -292,7 +315,7 @@ class Post extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div className="post-startup-buttons">
-          {this.props.post.status != "Archived" 
+          {!this.state.isEditing && this.props.post.status != "Archived" 
             ? (
               <button className="post-btn"
                 type="submit"
@@ -320,17 +343,25 @@ class Post extends Component {
                 type="submit"
                 onClick={this.submit}
               >
-                Edit
+                Revise
               </button>
             )
             : (
-              <button id="save-changes-btn"
-              className="post-btn"
-              type="submit"
-              onClick={this.submit}
-              >
-                Save Changes
-              </button>
+              <div>
+                <button id="save-changes-btn"
+                className="post-btn"
+                type="submit"
+                onClick={this.submit}
+                >
+                  Save Changes
+                </button>
+                <button id="discard-changes-btn"
+                className="post-btn"
+                onClick={this.discard}
+                >
+                  Discard Changes
+                </button>
+              </div>
             )}
         </div>
       );
@@ -998,6 +1029,7 @@ class Post extends Component {
       if (this.state.isEditing) {
         return (
           <div>
+            <Revise type = "post" data={this.props.post} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({ isEditing: false })}} />
             <div>{this.renderEdit()}</div>
             <div>{this.renderButtons()}</div>
           </div>
@@ -1005,6 +1037,7 @@ class Post extends Component {
       } else {
         return (
           <div>
+            <Revise type = "post" data={this.props.post} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({ isEditing: false })}} />
             <div>{this.renderNoEdit()}</div>
             <div>{this.renderButtons()}</div>
           </div>

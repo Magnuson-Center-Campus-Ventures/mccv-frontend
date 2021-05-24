@@ -160,7 +160,6 @@
 
 .edit-button {
   position: absolute;
-  top: 70px;
   right: 20px;
   background-color: #45B990;
   color: white;
@@ -173,6 +172,12 @@
   height: 2.5em;
   font-family: Avenir Next;
   cursor:pointer;
+}
+#revise-button {
+  top:80px;
+}
+#archive-button {
+  top:140px;
 }
 
 .edit-button:hover, .add-button:hover, .del-button:hover {

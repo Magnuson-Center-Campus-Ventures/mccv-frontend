@@ -1,19 +1,19 @@
 /* eslint-disable react/button-has-type */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, Redirect } from 'react-router-dom';
 import Switch from 'react-switch';
 import TextareaAutosize from 'react-textarea-autosize';
-import filteredSelect from '../select'
 import {
-  createPost, fetchPosts, fetchPost, updatePost,
-  fetchStartupByUserID, updateStartup,
+  createPost, fetchPosts, fetchPost, updatePost, fetchStartup,
+  fetchStartupByUserID, fetchUser, updateStartup,
   fetchAllIndustries, createIndustryForStartup,
   uploadImage,
 } from '../../actions';
 import embedInstructions from '../../assets/embed-instructions.png';
 import '../../styles/startup-profile.scss';
 import FilteredSelect from '../select';
+import Revise from '../admin-modals/revise'
 
 class StartupProfile extends Component {
   constructor(props) {
@@ -32,8 +32,10 @@ class StartupProfile extends Component {
       isEditing: false,
       preview: '',
       error: '',
+      reviseShow:false,
+      redirect:false,
     };
-    // this.renderPostings = this.renderPostings.bind(this);
+    this.renderPostings = this.renderPostings.bind(this);
     this.onImageUpload = this.onImageUpload.bind(this);
     this.handleApprovedToggle = this.handleApprovedToggle.bind(this);
     this.handleArchivedToggle = this.handleArchivedToggle.bind(this);
@@ -41,8 +43,14 @@ class StartupProfile extends Component {
   }
 
   componentDidMount() {
+    this.props.fetchUser(localStorage.getItem('userID'));
     this.props.fetchAllIndustries();
-    this.props.fetchStartupByUserID(localStorage.getItem('userID'));
+    if (this.props.match.params.startupID) {
+      this.props.fetchStartup(this.props.match.params.startupID);
+      if (this.props.match.params?.revise === "revise") this.setState({isEditing:true})
+    }
+    else this.props.fetchStartupByUserID(localStorage.getItem('userID'))
+    
     // this.props.fetchPosts();
   }
 
@@ -55,6 +63,18 @@ class StartupProfile extends Component {
     }
   }
 
+  showReviseModal = (e) => {
+    this.setState({
+      reviseShow:true,
+    });
+    window.scrollTo(0,0)
+  }
+
+  hideReviseModal = (e) => {
+    this.setState({
+      reviseShow: false,
+    });
+  }
   getIndustry(name) {
     const industryObject = this.props.industries.find((industry) => {
       return (industry.name === name);
@@ -100,15 +120,24 @@ class StartupProfile extends Component {
 
   submit = () => {
     if (this.state.isEditing) {
-      this.props.updateStartup(this.state.startup.id, this.state.startup);
-      this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
+      if (this.props.user?.role==="admin") this.showReviseModal()
+      else {
+        this.props.updateStartup(this.state.startup.id, this.state.startup);
+        this.setState({ isEditing: false });
+      }
     } else {
-      this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
+      this.setState({ isEditing: true });
     }
     this.state.preview = this.state.startup.logo;
     this.forceUpdate();
   }
 
+  discard = () => {
+    this.setState({ redirect: true });
+    // if the user is an admin they should be redirected after this
+    this.setState({ isEditing:false })
+    if (!this.props.match.params.startupID) this.props.fetchStartupByUserID(localStorage.getItem('userID'))
+  }
   changeStartupField = (field, event) => {
     // eslint-disable-next-line prefer-destructuring
     const value = event.target.value;
@@ -481,8 +510,10 @@ class StartupProfile extends Component {
                 <button className="startup-edit-button"
                   onClick={this.submit}
                 >
-                  {this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
+                  Edit Profile
                 </button>
+                
+                
               </div>
 
             </div>
@@ -542,8 +573,14 @@ class StartupProfile extends Component {
               <button className="startup-edit-button"
                 onClick={this.submit}
               >
-                {this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
+                Save Changes
               </button>
+              {this.state.isEditing ? (<button
+                className="startup-edit-button"
+                onClick={this.discard}
+                >
+                  Discard Changes
+                </button>) : null}
             </div>
           </div>
         );
@@ -714,8 +751,10 @@ class StartupProfile extends Component {
   }
 
   render() {
+    if (this.state.redirect) return <Redirect push to={"/startups/"+this.props.startup._id} />;
     return (
       <div className="startup">
+        <Revise type = "startup" data={this.props.startup} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({redirect:true})}} />
         { this.renderPostings() }
         { this.renderStartup() }
       </div>
@@ -740,9 +779,10 @@ function mapStateToProps(reduxState) {
     startup: reduxState.startups.current,
     industries: reduxState.industries.all,
     post: reduxState.posts.current,
+    user: reduxState.user.current,
   };
 }
 
 export default withRouter(connect(mapStateToProps, {
-  createPost, fetchStartupByUserID, fetchPosts, fetchPost, updatePost, updateStartup, fetchAllIndustries, createIndustryForStartup,
+  createPost, fetchStartup, fetchStartupByUserID, fetchPosts, fetchPost, fetchUser, updatePost, updateStartup, fetchAllIndustries, createIndustryForStartup,
 })(StartupProfile));

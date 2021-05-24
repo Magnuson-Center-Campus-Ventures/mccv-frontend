@@ -5,11 +5,11 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import { DateRange } from 'react-date-range';
 import {
-  fetchStudentByUserID, updateStudent, fetchUser,
+  fetchStudentByUserID, fetchStudentByID,  updateStudent, fetchUser,
   fetchWorkExperiences, updateWorkExperience, deleteWorkExperience,
   fetchOtherExperiences, updateOtherExperience, deleteOtherExperience,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills,
@@ -19,7 +19,8 @@ import WorkExperience from './work-experience';
 import OtherExperience from './other-experience';
 import NewWorkExp from './student-modals/new-work-exp';
 import NewOtherExp from './student-modals/new-other-exp';
-import FilteredSelect from '../select'
+import Revise from '../admin-modals/revise';
+import FilteredSelect from '../select';
 import '../../styles/student-profile.scss';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -32,6 +33,7 @@ class StudentProfile extends Component {
       isEditing: false,
       showWorkExpModal: false,
       showOtherExpModal: false,
+      reviseShow:false,
       student: {},
       gender: '',
       bio: '',
@@ -53,15 +55,20 @@ class StudentProfile extends Component {
       start: new Date(),
       end: new Date(),
       validDate: true,
+      redirect:false
     };
   }
 
   componentDidMount() {
-    this.props.fetchStudentByUserID(localStorage.getItem('userID'));
     this.props.fetchUser(localStorage.getItem('userID'));
     this.props.fetchAllIndustries();
     this.props.fetchAllSkills();
     this.props.fetchAllClasses();
+    if (this.props.match.params.studentID) {
+      this.props.fetchStudentByID(this.props.match.params.studentID);
+      if (this.props.match.params?.revise === "revise") this.setState({isEditing:true})
+    }
+    else this.props.fetchStudentByUserID(localStorage.getItem('userID'));
   }
 
   // Get student fields into state (for editing),
@@ -154,7 +161,6 @@ class StudentProfile extends Component {
   
   changeStudentField = (field, event) => {
     const value = event.target.value;
-
     this.setState((prevState) => {
       const student = { ...prevState.student };
       student[field] = value;
@@ -203,6 +209,15 @@ class StudentProfile extends Component {
     this.setState({ showOtherExpModal: false });
   };
 
+  showReviseModal = (e) => {
+    this.setState({ reviseShow:true });
+    window.scrollTo(0,0)
+  }
+
+  hideReviseModal = (e) => {
+    this.setState({ reviseShow: false });
+  }
+
   submit = () => {
     if (this.state.isEditing) {
       this.checkDateRange();
@@ -210,14 +225,17 @@ class StudentProfile extends Component {
         const student = { ...this.state.student };
         student.majors = this.state.majors;
         student.minors = this.state.minors;
-        this.props.updateStudent(this.state.student.id, student);
-        this.state.workExps.forEach((workExp) => {
-          this.props.updateWorkExperience(workExp._id, workExp);
-        });
-        this.state.otherExps.forEach((otherExp) => {
-          this.props.updateOtherExperience(otherExp._id, otherExp);
-        });
-        this.setState({ isEditing: false });
+        if (this.props.user.role=="admin") this.showReviseModal()
+        else {
+          this.props.updateStudent(this.state.student.id, student);
+          this.state.workExps.forEach((workExp) => {
+            this.props.updateWorkExperience(workExp._id, workExp);
+          });
+          this.state.otherExps.forEach((otherExp) => {
+            this.props.updateOtherExperience(otherExp._id, otherExp);
+          });
+          this.setState({ isEditing: false });
+        }
       }
     } else {
       this.setState({ isEditing: true });
@@ -225,6 +243,12 @@ class StudentProfile extends Component {
     this.forceUpdate();
   }
 
+  discard = () => {
+    this.setState({ redirect: true });
+    // if the user is an admin they should be redirected after this
+    this.setState({isEditing:false})
+    if (!this.props.match.params.studentID) this.props.fetchStudentByUserID(localStorage.getItem('userID'));
+  }
   checkDateRange = () => {
     if (this.state.student.desired_start_date == null){
       this.state.student.desired_start_date = new Date();
@@ -441,45 +465,51 @@ class StudentProfile extends Component {
   }
 
   renderEditMajors = () => {
-    return this.state.student.majors.map((major, index) => {
-      return (
-        <div key={major}>
-          <li id="responsibility" key={index}>{major}</li>
-          <button className="del-button"
-            onClick={() => {
-              this.setState((prevState) => {
-                prevState.student.majors.splice(index, 1);
-                return {
-                  ...prevState,
-                };
-              });
-            }}
-          ><i className="far fa-trash-alt delete-icon" />
-          </button>
-        </div>
-      );
-    });
+    if (this.state.student.majors) {
+      return this.state.student.majors.map((major, index) => {
+        return (
+          <div key={major}>
+            <li id="responsibility" key={index}>{major}</li>
+            <button className="del-button"
+              onClick={() => {
+                this.setState((prevState) => {
+                  prevState.student.majors.splice(index, 1);
+                  return {
+                    ...prevState,
+                  };
+                });
+              }}
+            ><i className="far fa-trash-alt delete-icon" />
+            </button>
+          </div>
+        );
+      });
+     }
+     return null;
   }
 
   renderEditMinors = () => {
-    return this.state.student.minors.map((minor, index) => {
-      return (
-        <div key={minor}>
-          <li id="responsibility" key={index}>{minor}</li>
-          <button className="del-button"
-            onClick={() => {
-              this.setState((prevState) => {
-                prevState.student.minors.splice(index, 1);
-                return {
-                  ...prevState,
-                };
-              });
-            }}
-          ><i className="far fa-trash-alt delete-icon" />
-          </button>
-        </div>
-      );
-    });
+    if (this.state.student.minors) {
+      return this.state.student.minors.map((minor, index) => {
+        return (
+          <div key={minor}>
+            <li id="responsibility" key={index}>{minor}</li>
+            <button className="del-button"
+              onClick={() => {
+                this.setState((prevState) => {
+                  prevState.student.minors.splice(index, 1);
+                  return {
+                    ...prevState,
+                  };
+                });
+              }}
+            ><i className="far fa-trash-alt delete-icon" />
+            </button>
+          </div>
+        );
+      });
+    }
+    return null;
   }
 
   renderGreenPills = (pillsArray) => {
@@ -849,8 +879,19 @@ class StudentProfile extends Component {
   }
 
   render() {
+    if (this.state.redirect) return <Redirect push to={"/students/"+this.props.student._id} />;
     return (
       <div className="student-profile">
+        <Revise type = "student" data={this.props.student} onClose={this.hideReviseModal} show={this.state.reviseShow} 
+        onSuccess={()=>{
+          this.state.workExps.forEach((workExp) => {
+            this.props.updateWorkExperience(workExp._id, workExp);
+          });
+          this.state.otherExps.forEach((otherExp) => {
+            this.props.updateOtherExperience(otherExp._id, otherExp);
+          });
+          this.setState({redirect:true})
+        }} />
         <NewWorkExp
           onClose={this.hideWorkExpModal}
           show={this.state.showWorkExpModal}
@@ -903,9 +944,16 @@ class StudentProfile extends Component {
           </div>
         )}
         <button className="edit-button"
+        id="revise-button"
           onClick={this.submit}
         >{this.state.isEditing ? 'Save Changes' : 'Edit Profile'}
         </button>
+        {this.state.isEditing ? 
+        (<button className="edit-button"
+        id="archive-button"
+          onClick={this.discard}
+        >Discard Changes
+        </button>) : null }
       </div>
     );
   }
@@ -914,6 +962,7 @@ class StudentProfile extends Component {
 const mapStateToProps = (reduxState) => ({
   student: reduxState.students.current_student,
   email: reduxState.user.email,
+  user: reduxState.user.current,
   workExps: reduxState.students.current_work_exps,
   otherExps: reduxState.students.current_other_exps,
   allIndustries: reduxState.industries.all,
@@ -923,6 +972,7 @@ const mapStateToProps = (reduxState) => ({
 
 export default withRouter(connect(mapStateToProps, {
   fetchStudentByUserID,
+  fetchStudentByID,
   fetchWorkExperiences,
   updateStudent,
   fetchUser,

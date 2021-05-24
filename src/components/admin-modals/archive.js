@@ -130,11 +130,11 @@ class Archive extends Component {
     if (this.props.post) {
       return (
         <div className="archiveQuestions">
-          <p> Has this position been filled by a student on this platform?</p>
+          <h3> Has this position been filled by a student on this platform?</h3>
           <div className="archiveOptions">
             <button type="submit"
-              id="noarchive"
-              style={{ cursor: 'pointer' }}
+              className="modal-button"
+              id="modal-no"
               onClick={(e) => {
                 this.notFilled(); 
                 // this.setState({answeredSelected: true})
@@ -143,8 +143,8 @@ class Archive extends Component {
               No
             </button>
             <button type="submit"
-              id="archive"
-              style={{ cursor: 'pointer' }}
+              className="modal-button"
+              id="modal-yes"
               onClick={(e) => {
                 // this.filled();
                 this.filled(); 
@@ -166,8 +166,8 @@ class Archive extends Component {
       return null;
     } else {
       return (
-        <div className="archiveContainer">
-          <div className="archiveModal" id="archiveModal">
+        <div className="modal-container">
+          <div className="modal-inner" id="archiveModal">
             <i className="fas fa-times"
               aria-label="close modal"
               role="button"
@@ -179,7 +179,7 @@ class Archive extends Component {
             />
             {this.postArchive()}
             {this.state.answeredSelected ? (
-              <div className="modalContent">
+              <div className="modal-content">
               <p> Are you sure you want to archive this?</p>
               <div className="archiveOptions">
                 <button type="submit"

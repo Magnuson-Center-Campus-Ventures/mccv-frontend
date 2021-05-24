@@ -1,39 +1,77 @@
 /* eslint-disable array-callback-return */
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize'
-import { updateStartup, updatePost, sendNotificationEmail } from '../../actions';
+
+import ReviseConfirm from './revise-confirm'
+import { updateStartup, updatePost, updateStudent, sendNotificationEmail } from '../../actions';
 // import close from '../../../static/img/close.png';
 import '../../styles/modal.scss';
 
 const Revise = (props) => {
+  const [confirmShow, toggleConfirm] = useState(false)
+  const [emailMessage, changeEmailMessage] = useState("")
   if (!props.show) {
     return null;
   }
+  const showConfirmModal = () => { toggleConfirm(true) }
+  const hideConfirmModal = () => { toggleConfirm(false) }
 
-  const onRevise = (e) => {
-    if (props.startup) {
-      const { startup } = props;
-      startup.status = 'Approved';
-      props.sendNotificationEmail({
-        user_id: startup.user_id, 
-        type: 'startup approved',
-        info: '',
-      });
-      props.updateStartup(startup.id, startup);
-      startup.posts.map((post) => {
-        const postCopy = post;
-        postCopy.status = 'Approved';
-        props.updatePost(post.id, postCopy);
-      });
+  const onSubmit = (e) => { showConfirmModal() }
+  const updateMessage = (e) => {
+    console.log(e.target.value)
+    changeEmailMessage(e.target.value)
+  }
+
+  const emailBody = (
+    "<h2> An MCCV admin has revised your " + props.type + " " + ((props.type=="post") ? "- "+props.data.title:"profile") + "</h2>" +
+    ((emailMessage.length!=0) ? "Here is a message from them explaining why: <br/><p><i>" + emailMessage+"</i></p>" : "") + "<br/>" +
+    "Feel free to check your "+props.type+" and re-edit it if needed, and please get in touch with us at magnuson.student.leadership.board@dartmouth.edu with any questions."
+  );
+
+  const onConfirm = (e) => {
+    console.log("confirm")
+    let data = props.data
+    let id;
+    switch (props.type) {
+      case "post":
+        id = data.startup_id.user_id
+        props.sendNotificationEmail({
+          user_id: id, 
+          type: 'post revise',
+          info: emailBody,
+        });
+        props.updatePost(data._id,data)
+        break;
+      case "startup":
+        id = data.user_id
+        props.sendNotificationEmail({
+          user_id: id, 
+          type: 'startup revise',
+          info: emailBody,
+        });
+        props.updateStartup(data._id, data)
+        break;
+      case "student":
+        id = data.user_id
+        props.sendNotificationEmail({
+          user_id: id, 
+          type: 'student revise',
+          info: emailBody,
+        });
+        props.updateStudent(data._id,data)
+        break;
     }
+    props.onClose();
+    props.onSuccess();
   };
 
 
   return (
-    <div className="archiveContainer">
-      <div className="archiveModal" id="archiveModal">
+    <div className="modal-container">
+      <ReviseConfirm onClose={hideConfirmModal} show={confirmShow} onConfirm={onConfirm} />
+      <div className="modal-inner" id="reviseModal">
         {/* <img id="close-app"
           src={close}
           alt="close"
@@ -51,29 +89,29 @@ const Revise = (props) => {
             props.onClose(e);
           }}
         />
-        <div className="modalContent">
-          <p> 
-            Are you sure you want to approve this startup? <br />
-            All of their posts will also go live when you approve them.
-          </p>
-          <div className="archiveOptions">
+        <div className="modal-content">
+          <h3> Your revisions will be saved and the user will be notified of the edits through email. </h3>
+          <h3> Write a short message explaining your revisions to be included in the email. </h3>
+          
+          <TextareaAutosize minRows={6} className="revision-message-text" onBlur={updateMessage}/>
+          <div className="modal-options">
             <button type="submit"
-              id="noarchive"
-              style={{ cursor: 'pointer' }}
+              className="modal-button"
+              id="modal-no"
               onClick={(e) => {
                 props.onClose(e);
               }}
             >
-              No
+              Cancel
             </button>
             <button type="submit"
-              id="archive"
-              style={{ cursor: 'pointer' }}
+              className="modal-button"
+              id="modal-yes"
               onClick={(e) => {
-                onApprove(e);
+                onSubmit(e);
               }}
             >
-              Yes
+              Confirm
             </button>
           </div>
         </div>
@@ -82,4 +120,4 @@ const Revise = (props) => {
   );
 };
 
-export default withRouter(connect(null, { updateStartup, updatePost, sendNotificationEmail })(Approve));
+export default withRouter(connect(null, { updateStartup, updatePost, updateStudent, sendNotificationEmail })(Revise));
