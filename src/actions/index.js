@@ -209,6 +209,7 @@ export function fetchStudents() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/students`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
+        console.log(response.data)
         dispatch({ type: ActionTypes.FETCH_STUDENTS, payload: response.data });
       }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
@@ -220,6 +221,7 @@ export function fetchStudents() {
 export function fetchStudentByID(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/students/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      console.log(response.data)
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, error });
@@ -816,6 +818,21 @@ export function sendConfirmationEmail({
       history.push('/emailconfirmation');
     });
   };
+}
+
+// Send mass emails
+export function sendMassEmail({ email_heading, email_body, file_attachments, target_users, success_dispatch, failuer_dispatch }) {
+  
+}
+
+// archive users en-mass
+export function massUserArchive({target_users, success_dispatch, failuer_dispatch}) {
+  
+}
+
+// send banner to back-end
+export function sendBanner({banner_body, target_users, success_dispatch, failuer_dispatch}) {
+  
 }
 
 export function confirmedSignup({ token, } , history) {

@@ -49,6 +49,11 @@ class AdminDashboard extends Component {
                         </div>
                     )
                 )}
+                <div>
+                    <button onClick={(e) => {
+                        this.props.history.push('/action-dashboard')
+                    } }>Action Dashboard</button>
+                </div>
             </div>
         )
     }
