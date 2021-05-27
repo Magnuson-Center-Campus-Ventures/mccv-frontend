@@ -78,9 +78,9 @@ const StudentListItem = (props) => {
           {skill.name}
         </div>
       );
-    } else if ((skillChars > skillCharLimit && skillChars - skill.name.length <= skillCharLimit) 
-                || (index == skillPillLimit && skillChars < skillCharLimit)) {
-      index = skillPillLimit+1;
+    } else if (index <= skillPillLimit && ((skillChars > skillCharLimit && skillChars - skill.name.length <= skillCharLimit) 
+                || (index == skillPillLimit && skillChars <= skillCharLimit))) {
+      console.log(skillChars+"/"+skillCharLimit+" index: "+index)
       return (
         <div className="greenPill" key={skill.id}>
           ...
@@ -105,9 +105,8 @@ const StudentListItem = (props) => {
           {industry.name}
         </div>
       );
-    } else if ((industryChars > industryCharLimit && industryChars - industry.name.length <= industryCharLimit) 
-                || (index == industryPillLimit && industryChars < industryCharLimit)) {
-      index = industryPillLimit+1;
+    } else if ( index <= industryPillLimit && ((industryChars > industryCharLimit && industryChars - industry.name.length <= industryCharLimit) 
+                || (index == industryPillLimit && industryChars <= industryCharLimit))) {
       return (
         <div className="yellowPill" key={industry.id}>
           ...
