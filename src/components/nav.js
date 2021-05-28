@@ -28,11 +28,11 @@ class Nav extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.show == true && (window.location.href.indexOf("startup-signup") > -1 || window.location.href.indexOf("student-signup") > -1)) {
+    if (this.state.show === true && (window.location.href.indexOf('startup-signup') > -1 || window.location.href.indexOf('student-signup') > -1)) {
       this.setState({ show: false });
-    } else if (this.state.show == false && !(window.location.href.indexOf("startup-signup") > -1 || window.location.href.indexOf("student-signup") > -1)){
+    } else if (this.state.show === false && !(window.location.href.indexOf('startup-signup') > -1 || window.location.href.indexOf('student-signup') > -1)) {
       this.setState({ show: true });
-    } 
+    }
   }
 
   signout = (event) => {
@@ -45,7 +45,7 @@ class Nav extends Component {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
     let firstName = '';
-    if (localStorage.getItem('firstName') !== 'undefined'){
+    if (localStorage.getItem('firstName') !== 'undefined') {
       firstName = localStorage.getItem('firstName');
     }
     if (token && role && role === 'admin') { // if logged in user is an admin

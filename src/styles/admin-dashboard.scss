@@ -1,0 +1,111 @@
+#PageTop {
+    margin-left: 10px;
+    margin-top: 50px
+}
+#AddFilterBtn, #AddFileBtn{
+    margin-right: 10px;
+    margin-top: 5px;
+}
+#ActionComponentHolder {
+    background-color: #e9e9e9;
+    margin-top: 20px
+}
+#ActionComponentPlaceHolder{
+    min-height: 500px;
+    margin-top: 20px;
+}
+#EmailPreview, #MessageBodyPreview {
+    min-height: 200px;
+    background-color: #e3e3e3
+}
+#EmailHeading, #EmailBody, #EmailPreview, #SendEmailBtnHolder, #FileBox
+#MessageBody, #MessageBodyPreview, #SendMessageBtnHolder, #ExpandNoExpand {
+    width: 50%;
+}
+#ExpandNoExpand:hover a {
+    transform: scale(1.1);
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+#EmailComponent label, #BannerMakerComponent label {
+    margin-top: 10px;
+}
+#EmailComponent button, #BannerMakerComponent button {
+    margin-top: 20px;
+}
+#MessageBodyPreview {
+    overflow: scroll;
+}
+#FileBox {
+    min-height: 300px;
+}
+#ArchiveComponent {
+    min-height: 80px;
+}
+#ArchiveComponent .filtered-display {
+    margin-top: 20px;
+    width: 100%
+}
+#ArchiveComponent button {
+    margin-top: 20px;
+    margin-left: 100px;
+    position: relative;
+    top: 25%;
+}
+#DownloadEmailsComponent {
+    min-height: 80px;
+}
+#DownloadEmailsComponent select, #DownloadEmailsComponent button{
+    margin-top: 24px;
+}
+#DownloadEmailsComponent select{
+    width: 40%;
+    left: 40%
+}
+#FilterBox {
+    padding-top: 20px;
+}
+.filter-item-icon, .file-item-icon {
+    height: 25px;
+    width: 25px;
+}
+.filter-item-dark, .file-item-dark {
+    background-color: #ababab;
+    width: 100%;
+}
+.filter-item-light, .file-item-light {
+    background-color: #d7d7d7;
+    width: 100%;
+}
+.fa-trash-alt {
+    color: #c83c3c;
+}
+.fa-trash-alt:hover {
+    transform: scale(1.2)
+}
+.filter-field-select, .filter-value, select {
+    width: 90%;
+    height: 15px;
+}
+#Action, #Recepient {
+    width: 100%;
+}
+.tooltip, .tooltip-inner {
+    opacity: 0.7 !important;
+}
+.guideline {
+    padding-top: 10px;
+}
+.expand {
+    position: absolute;
+}
+.checkbox {
+    width: 30px;
+}
+.filtered-display {
+    position: relative;
+    left: 11px;
+    padding-top: 13px;
+    word-wrap: break-word
+}

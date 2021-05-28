@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Archive from '../admin-modals/archive';
@@ -8,7 +10,7 @@ const PostListItem = (props) => {
   const route = `/posts/${props.post._id}`;
 
   const logo = props.post.startup_id.logo ? (
-    <img src={props.post.startup_id.logo} alt=" " className="companyLogo"/>
+    <img src={props.post.startup_id.logo} alt=" " className="companyLogo" />
   ) : (
     <div />
   );
@@ -18,7 +20,7 @@ const PostListItem = (props) => {
       if (industry.name.length > 18) {
         return (
           <div id="pillsTitle" key={industry.id}>
-            Industries: <div className="yellowPill" key={industry.id}> {industry.name.substring(0,17)}... </div>
+            Industries: <div className="yellowPill" key={industry.id}> {industry.name.substring(0, 17)}... </div>
           </div>
         );
       } else {
@@ -31,7 +33,7 @@ const PostListItem = (props) => {
     } else if (index < 3) {
       if (industry.name.length > 18) {
         return (
-          <div className="yellowPill" key={industry.id}>{industry.name.substring(0,17)}...</div>
+          <div className="yellowPill" key={industry.id}>{industry.name.substring(0, 17)}...</div>
         );
       } else {
         return (
@@ -42,7 +44,7 @@ const PostListItem = (props) => {
       return (
         <div className="yellowPill" key={industry.id}>...</div>
       );
-    } 
+    }
   });
 
   const skills = props.post.required_skills.map((skill, index) => {
@@ -64,14 +66,14 @@ const PostListItem = (props) => {
           ...
         </div>
       );
-    } 
+    }
   });
 
-  const virtual = (props.post.virtual==true) ? (
+  const virtual = (props.post.virtual === true) ? (
     <div className="location">
       <span className="virtualIcon" />
       <span className="postLocation">Virtual</span>
-    </div>  
+    </div>
   ) : (
     <div />
   );
@@ -80,7 +82,7 @@ const PostListItem = (props) => {
     <div className="location">
       <span className="locationIcon" />
       <span className="postLocation"> {`${props.post.city}, ${props.post.state}`} </span>
-    </div>  
+    </div>
   ) : (
     <div />
   );
@@ -89,19 +91,19 @@ const PostListItem = (props) => {
   const end = new Date(props.post.desired_end_date);
 
   const startDate = (start) ? (
-    <span className="dateText">Starts {`${start.getMonth()+1}/${start.getDate()}/${start.getFullYear()}`}</span>
+    <span className="dateText">Starts {`${start.getMonth() + 1}/${start.getDate()}/${start.getFullYear()}`}</span>
   ) : (
     <div />
   );
 
   const endDate = (end) ? (
-    <span className="dateText">Ends {`${end.getMonth()+1}/${end.getDate()}/${end.getFullYear()}`}</span>
+    <span className="dateText">Ends {`${end.getMonth() + 1}/${end.getDate()}/${end.getFullYear()}`}</span>
   ) : (
     <div />
   );
 
   const title = (props.post.title.length > 50) ? (
-    <h1 className="postTitle">{ props.post.title.substring(0,49) }...</h1>
+    <h1 className="postTitle">{ props.post.title.substring(0, 49) }...</h1>
   ) : (
     <h1 className="postTitle">{ props.post.title }</h1>
   );
@@ -137,10 +139,10 @@ const PostListItem = (props) => {
           <div className="pillsList">
             {industries}
           </div>
-          
+
         </div>
       </div>
-      {/*<div className="companyInfo">
+      {/* <div className="companyInfo">
         <div className="companyText">
           <h1 id="startupName"> { props.post.startup_id.name} </h1>
           <div className="location">

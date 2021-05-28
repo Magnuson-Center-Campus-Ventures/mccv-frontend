@@ -1,7 +1,8 @@
+/* eslint-disable */
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://mccv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://mccv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -219,6 +220,7 @@ export function fetchStudents() {
 export function fetchStudentByID(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/students/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      console.log(response.data)
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, error });
@@ -817,12 +819,28 @@ export function sendConfirmationEmail({
   };
 }
 
+// Send mass emails
+export function sendMassEmail({ email_heading, email_body, file_attachments, target_users, success_dispatch, failuer_dispatch }) {
+  
+}
+
+// archive users en-mass
+export function massUserArchive({target_users, success_dispatch, failuer_dispatch}) {
+  
+}
+
+// send banner to back-end
+export function sendBanner({banner_body, target_users, success_dispatch, failuer_dispatch}) {
+  
+}
+
 export function confirmedSignup({ token, } , history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/confirmemail`, { token, }).then((response) => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userID', response.data.user.id);
       localStorage.setItem('role', response.data.user.role);
+      localStorage.setItem('new_startup', true);
       // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
       if (response.data.user.role === 'student') {

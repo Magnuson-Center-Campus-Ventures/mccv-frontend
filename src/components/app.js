@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React from 'react';
 import {
   BrowserRouter as Router, Route, Switch,
@@ -33,6 +34,7 @@ import ApplicationListItem from './student-components/application-list-item';
 import StartupSubmittedApplications from './startup-components/startup-submitted-applications';
 import AdminDashboard from './admin-components/dashboard';
 import EmailConfirmation from './email-confirmation';
+import ActionDashBoard from './action-dashboard-components/action-dashboard';
 
 const App = (props) => {
   return (
@@ -56,6 +58,7 @@ const App = (props) => {
           <PrivateRoute path="/posts" component={Postings} />
           {/* Admin route */}
           <AdminRoute path="/dashboard" component={AdminDashboard} />
+          <AdminRoute path="/action-dashboard" component={ActionDashBoard} />
           {/* Student routes */}
           <StudentRoute path="/student-signup" component={StudentSignUp} />
           <StudentRoute path="/startups/:startupID" component={StartupProfile} />

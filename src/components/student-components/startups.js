@@ -6,7 +6,7 @@ import StartupListItem from './startup-item';
 import SearchBar from './search-bar';
 import { fetchStartups, fetchUser } from '../../actions';
 import '../../styles/postings.scss';
-import FilteredSelect from '../select'
+import FilteredSelect from '../select';
 
 
 class Startups extends Component {

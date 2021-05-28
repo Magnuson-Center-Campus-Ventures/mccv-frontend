@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ActionTypes } from '../actions';
 
 const initialState = {
