@@ -521,9 +521,16 @@ height: 3em;
   position:relative
 }
 
-.activeStatus {
+.status {
   position:absolute;
   top:.25em;
   font-size:.75em;
+}
+
+.activeStatus {
   color:green
+}
+
+.inActiveStatus {
+  color:red
 }

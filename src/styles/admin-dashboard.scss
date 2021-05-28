@@ -41,23 +41,30 @@
     min-height: 300px;
 }
 #ArchiveComponent {
-    height: 80px;
-    margin-left: 100px;
+    min-height: 80px;
+}
+#ArchiveComponent .filtered-display {
+    margin-top: 20px;
+    width: 100%
 }
 #ArchiveComponent button {
+    margin-top: 20px;
+    margin-left: 100px;
     position: relative;
     top: 25%;
 }
 #DownloadEmailsComponent {
-    height: 80px;
+    min-height: 80px;
 }
-#DownloadEmailsComponent select, #DownloadEmailsComponent button {
-    position: relative;
-    top: 50%;
+#DownloadEmailsComponent select, #DownloadEmailsComponent button{
+    margin-top: 24px;
 }
-#DownloadEmailsComponent select {
+#DownloadEmailsComponent select{
     width: 40%;
     left: 40%
+}
+#FilterBox {
+    padding-top: 20px;
 }
 .filter-item-icon, .file-item-icon {
     height: 25px;
@@ -77,16 +84,28 @@
 .fa-trash-alt:hover {
     transform: scale(1.2)
 }
-.filter-field-select {
-    height: 30px;
+.filter-field-select, .filter-value, select {
     width: 90%;
+    height: 15px;
 }
-.select {
-    width: 80%;
+#Action, #Recepient {
+    width: 100%;
 }
 .tooltip, .tooltip-inner {
     opacity: 0.7 !important;
 }
 .guideline {
     padding-top: 10px;
+}
+.expand {
+    position: absolute;
+}
+.checkbox {
+    width: 30px;
+}
+.filtered-display {
+    position: relative;
+    left: 11px;
+    padding-top: 13px;
+    word-wrap: break-word
 }

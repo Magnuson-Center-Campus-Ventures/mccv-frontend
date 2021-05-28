@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-array-index-key */
+/* eslint-disable*/
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -149,37 +148,30 @@ const StudentListItem = (props) => {
   const activeClass = 'activelySearching';
   const route = `/students/${props.student._id}`;
 
-  const activeTimeFrame = 'Mar - May 2021';
-  const activeStatus = (props?.job_search_status === 'Active') ? '' : (
-    <div className="activeStatus">
-      Actively Searching for <strong> {activeTimeFrame} </strong>
-    </div>
-  );
-  // return (
-  //   <Link to={route} key={props.student.id} className="listItem link">
-  //     <div className="postBody">
-  //       <div className="postText">
-  //         {renderStudentName}
-  //         {affiliationGradYear}
-  //         <div className="majorWrapper">
-  //           {majors}
-  //         </div>
-  //         {renderBio}
-  //         <div className="pillsList">
-  //           {skills}
-  //         </div>
-  //         <div className="pillsList">
-  //           {industries}
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </Link>
-  //  );
+  const activeTimeFrame = (date) => {
+    const months = ['', 'Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Noc', 'Dec']
+    const dayTimeStart = props.student.desired_start_date.split("T")
+    const dayDataStart = dayTimeStart[0].split("-")
+    const dayTimeEnd = props.student.desired_end_date.split("T")
+    const dayDataEnd = dayTimeEnd[0].split("-")
+    return <p>Actively Searching: <b>{dayDataStart[1]}/{dayDataStart[0]}</b> - <b>{dayDataEnd[1]}/{dayDataEnd[0]}</b></p>
+  };
+  const activeStatus = () => {
+  return (
+      <div className={`status ${props.student.job_search_status === 'Active' ? 'activeStatus' : 'inActiveStatus'}`}>
+        {props.student.job_search_status === 'Active'
+          ? activeTimeFrame()
+          :
+          'Not currently searching'
+        }
+      </div>
+    )
+  }
   return (
     <Link to={route} key={props.student.id} className="listItem link">
       <div className={`postBody ${activeClass}`}>
         <div className="postText">
-          {activeStatus}
+          {activeStatus()}
           <div className="postHeader">
             <div className="studentNameWrapper">{renderStudentName}</div>
             <div className="gradYearWrapper">{affiliationGradYear}</div>

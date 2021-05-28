@@ -209,7 +209,6 @@ export function fetchStudents() {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/students`, { headers: { authorization: localStorage.getItem('token') } })
       .then((response) => {
-        console.log(response.data)
         dispatch({ type: ActionTypes.FETCH_STUDENTS, payload: response.data });
       }).catch((error) => {
         dispatch({ type: ActionTypes.ERROR_SET, error });
