@@ -13,13 +13,12 @@ export default class MassEmailComponent extends Component {
             EmailPreview: "",
             files: {},
             file_light_dark: 0,
-            sendEmail: props.sendEmail,
         }
         
         this.handleUpload = this.handleUpload.bind(this)
         this.cascadeFileColors = this.cascadeFileColors.bind(this)
         this.removeFile = this.removeFile.bind(this)
-        this.add_file = this.add_file.bind(this)
+        this.addFile = this.addFile.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.makeFileRows = this.makeFileRows.bind(this)
         this.send = this.send.bind(this)
@@ -52,12 +51,12 @@ export default class MassEmailComponent extends Component {
         this.cascadeFileColors(file_num)
     }
     
-    add_file = (file) => {
+    addFile = (file) => {
         const parts = file.name.split('.')
         let name = parts.slice(0, parts.length - 1).join(".")
         const file_ext = parts[parts.length - 1]
         if (this.state.files.hasOwnProperty(name)) {
-            name = name + Math.floor(Math.random() * 1000000)
+            name = name + " - Copy"
         }
         
         this.setState((prevState) => {
@@ -94,33 +93,40 @@ export default class MassEmailComponent extends Component {
     }
     
     handleUpload = (e) => {
-        const input_element = $('<input>').attr({
-            type: 'file',
-            multiple: "multiple"
-        })
-        input_element.on('change', (e) => {
-            const file_list = e.target.files
-            for(let file of file_list) {
-                this.add_file(file)
-            }
-        })
-        input_element.click()
+        const file = e.target.files[0];
+        if (file) {
+            this.addFile(file)
+        }
     }
     
     handleChange = (e) => {
         const id = e.target.id
-        this.setState({ [id]: e.target.value })
-        
+        let value = e.target.value
+
         if (id === 'EmailBody') {
             const converter = new showdown.Converter({underline: true, emoji: true})
+            value = converter.makeHtml(value)
             const preview = $("#EmailPreview")
             preview.empty()
-            preview.append(converter.makeHtml(e.target.value))
+            preview.append(value)
         }
+
+        this.setState({ [id]: value })
     }
     
     send = () => {
-        this.state.sendEmail("", "", "")
+        // file_attachments=Object.entries(file_attachments).map(key_pair => 
+        //     key_pair[1][0].text().then((text)=>{
+        //         resolve({filename:key_pair[0]+"."+key_pair[1][2], content:text})
+        //     })
+        //   );
+
+        // Promise.all(file_attachments).then((attachments)=>{
+        //     this.props.massEmail(this.state.EmailHeading, this.state.EmailBody, attachments)
+        // })
+        this.props.massEmail(this.state.EmailHeading, this.state.EmailBody, this.state.files)
+        
+        
     }
 
     
@@ -142,7 +148,7 @@ export default class MassEmailComponent extends Component {
                                 </i> 
                             </small> 
                         </label><br/> 
-                        <textarea id="EmailBody" placeholder="Type Email Content" className="form-input col-8" rows="15" value={this.state.EmailBody} onChange={this.handleChange}/>
+                        <textarea id="EmailBody" placeholder="Type Email Content" className="form-input col-8" rows="15" onChange={this.handleChange}/>
                         <div className="col-4"> 
                             <h4 className="">Formatting Guidelines</h4> 
                             <b>Click <a target="_blank" href="https://www.markdownguide.org/basic-syntax/">here</a> for a more extensive guide</b> 
@@ -222,7 +228,7 @@ export default class MassEmailComponent extends Component {
                         {this.makeFileRows()}
                     </div> 
                     <div className="d-flex flex-row-reverse"> 
-                        <button id="AddFileBtn" className="btn btn-success rounded" onClick={this.handleUpload}>Add File</button> 
+                        <input type="file" name="fileUpload" onChange={this.handleUpload} />
                     </div>                                 
                 </div> 
                 <div id="SendEmailBtnHolder" className="d-flex flex-row-reverse"> 

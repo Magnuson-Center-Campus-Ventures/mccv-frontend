@@ -820,18 +820,48 @@ export function sendConfirmationEmail({
 }
 
 // Send mass emails
-export function sendMassEmail({ email_heading, email_body, file_attachments, target_users, success_dispatch, failuer_dispatch }) {
-  
+export function massEmail( email_heading, email_body, file_attachments, target_users, success_dispatch, failure_dispatch ) {
+  target_users=target_users.map(user => user.user_data.email);
+  file_attachments=Object.entries(file_attachments).map(key_pair => {
+    console.log(key_pair[1][0].text())
+    return {filename:key_pair[0]+"."+key_pair[1][2], content:key_pair[1][0].text()}
+  });
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/massemail`, {  email_heading, email_body, file_attachments, target_users }).then((response) => {
+      dispatch(authError(`Emails successfully sent!`));
+      history.push('/massemail');
+    }).catch((error)=>{
+      dispatch(authError(`Error: ${error.response.data}`));
+      history.push('/massemail');
+    })
+  }
 }
 
 // archive users en-mass
-export function massUserArchive({target_users, success_dispatch, failuer_dispatch}) {
-  
+export function massArchive(target_users, success_dispatch, failure_dispatch) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/massarchive`,{target_users:target_users}).then((response)=>{
+      console.log(target_users)
+      dispatch(authError(`Users successfully archived!`));
+      history.push('/massarchive');
+    }).catch((error)=>{
+      dispatch(authError(`Error: ${error.response.data}`));
+      history.push('massarchive');
+    })
+  }
 }
 
 // send banner to back-end
-export function sendBanner({banner_body, target_users, success_dispatch, failuer_dispatch}) {
-  
+export function broadcastBanner(banner_body, target_users, success_dispatch, failure_dispatch) {
+  return(dispatch) => {
+    axios.post(`${ROOT_URL}/broadcastbanner`, {body:banner_body, target_users:target_users}).then((response)=>{
+      dispatch(authError('Banner successfully broadcast!'));
+      history.push('/broadcastbanner');
+    }).catch((error)=>{
+      dispatch(authError(`Error: ${error.response.data}`));
+      history.push('/broadcastbanner')
+    })
+  }
 }
 
 export function confirmedSignup({ token, } , history) {

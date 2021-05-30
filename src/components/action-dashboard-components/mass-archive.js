@@ -7,11 +7,11 @@ export default class ArchiveComponent extends Component {
         this.state = {
             target_rows: []
         }
-        this.filtersUpdated = this.filtersUpdated.bind(this)
+        this.filtersUpdated = this.filtersUpdated.bind(this);
     }
 
     componentDidMount() {
-        this.filtersUpdated()
+        this.filtersUpdated();
     }
     
     filtersUpdated = () => {
@@ -31,7 +31,6 @@ export default class ArchiveComponent extends Component {
             this.setState({target_rows: data})
         })
     }
-    
     render() {
         const makeRows = () => {
             const light_dark = ['file-item-light', 'file-item-dark']
@@ -68,7 +67,7 @@ export default class ArchiveComponent extends Component {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+                                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={this.props.massArchive}>Ok</button>
                             </div>
                         </div>
                     </div>

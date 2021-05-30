@@ -1,7 +1,7 @@
 /*eslint-disable*/
 import React, { Component } from 'react'
 import MassEmailComponent from './mass-emails'
-import ArchiveComponent from './archive'
+import ArchiveComponent from './mass-archive'
 import EmailDownloadComponent from './email-download'
 import BannerMaker from './banner-maker'
 import { connect } from 'react-redux';
@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom';
 import $ from 'jquery'
 import FilterRow from './filter-row'
 import Tooltip from 'bootstrap/js/dist/tooltip'
-import { fetchStartups, fetchStudents, fetchUsers, fetchAllIndustries} from '../../actions/index';
+import { fetchStartups, fetchStudents, fetchUsers, fetchAllIndustries, massEmail, broadcastBanner, massArchive} from '../../actions/index';
 import { getFieldName } from './filters'
 import { saveAs } from 'file-saver';
 import Select from 'react-select'
@@ -33,9 +33,9 @@ class ActionDashBoard extends Component {
         this.cascadeFilterColors = this.cascadeFilterColors.bind(this)
         this.removeFilter = this.removeFilter.bind(this)
         this.addFilter = this.addFilter.bind(this)
-        this.sendEmail = this.sendEmail.bind(this)
-        this.createBanner = this.createBanner.bind(this)
-        this.archiveUsers = this.archiveUsers.bind(this)
+        this.massEmail = this.massEmail.bind(this)
+        this.broadcastBanner = this.broadcastBanner.bind(this)
+        this.massArchive = this.massArchive.bind(this)
         this.downloadEmails = this.downloadEmails.bind(this)
         this.getTargetUsers = this.getTargetUsers.bind(this)
         this.applyFilters = this.applyFilters.bind(this)
@@ -65,24 +65,24 @@ class ActionDashBoard extends Component {
         })
     }
     
-    sendEmail = (email_heading, email_body, file_attachments) => {
+    massEmail = (email_heading, email_body, file_attachments) => {
         this.getTargetUsers()
-        .then(res => {
-            
+        .then(users => {
+            this.props.massEmail(email_heading, email_body, file_attachments, users)
         })
     }
     
-    createBanner = (banner_body) => {
+    broadcastBanner = (banner_body) => {
         this.getTargetUsers()
-        .then(res => {
-            
+        .then(users => {
+            this.props.broadcastBanner(banner_body, users)
         })
     }
     
-    archiveUsers = () => {
+    massArchive = () => {
         this.getTargetUsers()
-        .then(res => {
-            
+        .then(users => {
+            this.props.massArchive(users)
         })
     }
     
@@ -192,7 +192,7 @@ class ActionDashBoard extends Component {
     
     actionChange = (e) => {
         const aref = React.createRef()
-        this.setState({ Action: e, aref: aref })
+        this.setState({ Action: e, aref: aref, filters:{} })
         
     }
     
@@ -230,6 +230,7 @@ class ActionDashBoard extends Component {
         this.setState((prevState) => {
             const cref = React.createRef()
             const child = <FilterRow
+                action={this.state.Action}
                 ref={cref}
                 props={this.props}
                 key = {prevState.filter_light_dark}
@@ -261,21 +262,21 @@ class ActionDashBoard extends Component {
     }
     
     makeActionElement = () => {
-        const comp =  this.state.Action.value === "Send Email"
+        const comp =  this.state.Action.value === "Mass Email"
                 ?
-                <MassEmailComponent ref={this.state.aref} sendEmail={this.sendEmail} />
+                <MassEmailComponent ref={this.state.aref} massEmail={this.massEmail} />
                 :
                 this.state.Action.value === "Archive Users"
                 ?
-                <ArchiveComponent ref={this.state.aref} getTargetUsers={this.getTargetUsers}/>
+                <ArchiveComponent ref={this.state.aref} massArchive={this.massArchive} getTargetUsers={this.getTargetUsers}/>
                 :
                 this.state.Action.value === "Download Emails"
                 ?
                 <EmailDownloadComponent ref={this.state.aref} download={this.downloadEmails} getTargetUsers={this.getTargetUsers}/>
                 :
-                this.state.Action.value === "Make Banner"
+                this.state.Action.value === "Broadcast Banner"
                 ?
-                <BannerMaker ref={this.state.aref} />
+                <BannerMaker ref={this.state.aref} broadcastBanner={this.broadcastBanner} />
                 :
                 null
         return comp
@@ -295,7 +296,7 @@ class ActionDashBoard extends Component {
                         <Select
                             options={[
                                 { value: '', label:'Action Type' },
-                                { value: 'Send Email', label: 'Send Email' },
+                                { value: 'Mass Email', label: 'Mass Email' },
                                 { value: 'Archive Users', label: 'Archive Users' },
                                 { value: 'Make Banner', label: 'Make Banner' },
                                 { value: 'Download Emails', label: 'Download Emails'}
@@ -364,4 +365,4 @@ const mapStateToProps = (reduxState) => ({
     industries: reduxState.industries.all.map(industry => industry.name)
   });
 
-export default withRouter(connect(mapStateToProps, {fetchStudents, fetchStartups, fetchUsers, fetchAllIndustries})(ActionDashBoard));
+export default withRouter(connect(mapStateToProps, {fetchStudents, fetchStartups, fetchUsers, fetchAllIndustries, massEmail, broadcastBanner, massArchive})(ActionDashBoard));

@@ -58,6 +58,10 @@ export default class BannerMaker extends Component {
         preview.css({ "height": 200 })
         this.setState({ expanded: false })
     }
+
+    send = (e) => {
+        this.props.broadcastBanner(this.state.message)
+    }
     
     render() {
         return (
@@ -117,7 +121,7 @@ export default class BannerMaker extends Component {
                         null
                 }
                 <div id="SendMessageBtnHolder" className="d-flex flex-row-reverse">
-                    <button id="SendMessageBtn" className="btn btn-success">Send Message</button>
+                    <button id="SendMessageBtn" className="btn btn-success" onClick={this.send}>Send Message</button>
                 </div> 
             </div>
         )

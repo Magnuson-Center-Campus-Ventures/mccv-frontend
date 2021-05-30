@@ -55,16 +55,26 @@ export default class FilterRow extends Component {
         this.setState({ exclude: e.target.checked })
         this.major_props.updateChildWithFilters()
     }
+
+    // planned so fields can change based on action
+    // fieldFilters = (fields) => {
+    //     if (this.props.Action){
+    //         if (this.props.Action?.value==="Archive Users") delete fields.status
+    //     }
+    //     return fields
+    // }
     
     render() {
         let fields = ["Add Field"]
+        
+        let map = this.state.recepient === "Students" ? {...StudentInputMap, ...UserInputMap} : this.state.recepient === "Startups" ? {...StartUpInputMap, ...UserInputMap} : UserInputMap      
         Object.entries(UserFields).forEach(field => fields.push(field[1]))
-        let map = this.state.recepient === "Students" ? {...StudentInputMap, ...UserInputMap} : this.state.recepient === "Startups" ? {...StartUpInputMap, ...UserInputMap} : UserInputMap                
         if (this.state.recepient === "Students") {
             Object.entries(StudentFields).forEach(field => fields.push(field[1]))
         } else if (this.state.recepient === "Startups") {
             Object.entries(StartUpFields).forEach(field => fields.push(field[1]))
         }
+        //fields = this.fieldFilters(fields)
         return (
             <div id={"Filter"+this.state.row_num} className={"row "+this.state.color_code}>
                 <div className="col-4">
