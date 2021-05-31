@@ -1,7 +1,8 @@
+/* eslint-disable */
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
-const ROOT_URL = 'http://mccv.herokuapp.com/api';
+const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://mccv.herokuapp.com/api';
 
 // keys for actiontypes
 export const ActionTypes = {
@@ -219,6 +220,7 @@ export function fetchStudents() {
 export function fetchStudentByID(id) {
   return (dispatch) => {
     axios.get(`${ROOT_URL}/students/${id}`, { headers: { authorization: localStorage.getItem('token') } }).then((response) => {
+      console.log(response.data)
       dispatch({ type: ActionTypes.FETCH_STUDENT, payload: response.data });
     }).catch((error) => {
       dispatch({ type: ActionTypes.ERROR_SET, error });
@@ -817,12 +819,58 @@ export function sendConfirmationEmail({
   };
 }
 
+// Send mass emails
+export function massEmail( email_heading, email_body, file_attachments, target_users, success_dispatch, failure_dispatch ) {
+  target_users=target_users.map(user => user.user_data.email);
+  file_attachments=Object.entries(file_attachments).map(key_pair => {
+    console.log(key_pair[1][0].text())
+    return {filename:key_pair[0]+"."+key_pair[1][2], content:key_pair[1][0].text()}
+  });
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/massemail`, {  email_heading, email_body, file_attachments, target_users }).then((response) => {
+      dispatch(authError(`Emails successfully sent!`));
+      history.push('/massemail');
+    }).catch((error)=>{
+      dispatch(authError(`Error: ${error.response.data}`));
+      history.push('/massemail');
+    })
+  }
+}
+
+// archive users en-mass
+export function massArchive(target_users, success_dispatch, failure_dispatch) {
+  return (dispatch) => {
+    axios.post(`${ROOT_URL}/massarchive`,{target_users:target_users}).then((response)=>{
+      console.log(target_users)
+      dispatch(authError(`Users successfully archived!`));
+      history.push('/massarchive');
+    }).catch((error)=>{
+      dispatch(authError(`Error: ${error.response.data}`));
+      history.push('massarchive');
+    })
+  }
+}
+
+// send banner to back-end
+export function broadcastBanner(banner_body, target_users, success_dispatch, failure_dispatch) {
+  return(dispatch) => {
+    axios.post(`${ROOT_URL}/broadcastbanner`, {body:banner_body, target_users:target_users}).then((response)=>{
+      dispatch(authError('Banner successfully broadcast!'));
+      history.push('/broadcastbanner');
+    }).catch((error)=>{
+      dispatch(authError(`Error: ${error.response.data}`));
+      history.push('/broadcastbanner')
+    })
+  }
+}
+
 export function confirmedSignup({ token, } , history) {
   return (dispatch) => {
     axios.post(`${ROOT_URL}/confirmemail`, { token, }).then((response) => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userID', response.data.user.id);
       localStorage.setItem('role', response.data.user.role);
+      localStorage.setItem('new_startup', true);
       // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
       if (response.data.user.role === 'student') {

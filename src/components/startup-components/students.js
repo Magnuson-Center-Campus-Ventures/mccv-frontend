@@ -10,7 +10,7 @@ import { fetchStudents, fetchStartupByUserID, fetchUser } from '../../actions';
 import { fetchSkillsFromID, fetchClassesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
 import StudentListItem from './student-item';
-import FilteredSelect from "../select"
+import FilteredSelect from '../select';
 
 class Students extends Component {
   constructor(props) {

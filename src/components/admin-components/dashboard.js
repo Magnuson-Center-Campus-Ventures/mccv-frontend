@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { connect } from 'react-redux';
@@ -48,6 +49,11 @@ class AdminDashboard extends Component {
                         </div>
                     )
                 )}
+                <div>
+                    <button onClick={(e) => {
+                        this.props.history.push('/action-dashboard')
+                    } }>Action Dashboard</button>
+                </div>
             </div>
         )
     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import FilteredSelect from '../../select'
+import FilteredSelect from '../../select';
 import {
   fetchStartupByUserID, fetchUser,
   fetchAllIndustries, fetchCertainIndustries, createIndustryForStartup,
@@ -82,7 +82,7 @@ class StartupIndustries extends Component {
       <div className="question-fields-items-header">
         <p className="question-fields-title">Industries</p>
         <FilteredSelect
-          createable={true}
+          createable
           className="select-dropdown"
           styles={customStyles}
           name="industries"
