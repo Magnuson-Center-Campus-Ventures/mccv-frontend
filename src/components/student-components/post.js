@@ -304,16 +304,6 @@ class Post extends Component {
               </button>
             )
             : null}
-            {(!this.state.isEditing && this.props.post.status != "Approved")
-            ? (
-              <button className="post-btn"
-                type="submit"
-                onClick={this.approvePost}
-              >
-                Approve
-              </button>
-            )
-            : null}
         </div>
       );
     } else if (this.props.user.role === 'startup') {
@@ -328,6 +318,16 @@ class Post extends Component {
                 }}
               >
                 Archive
+              </button>
+            )
+            : null}
+          {(!this.state.isEditing && this.props.post.status != "Approved")
+            ? (
+              <button className="post-btn"
+                type="submit"
+                onClick={this.approvePost}
+              >
+                Approve
               </button>
             )
             : null}
