@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import FilteredSelect from '../select'
+import CreateableSelect from 'react-select/creatable';
 import {
   updatePost, updateStartup, updateStudent, fetchSubmittedApplications, fetchStudentByID,
 } from '../../actions';
@@ -107,12 +107,10 @@ class Archive extends Component {
         <div className="selectStudents">
           <p>Select the student(s) who filled the position</p>
 
-          <FilteredSelect
-            createable={true}
+          <CreateableSelect
             className="select-dropdown"
             styles={customStyles}
             name="classes"
-            placeholder="Select Students"
             options={this.state.applicantOptions}
             onChange={(selectedOption) => {
               this.addFilled(selectedOption);

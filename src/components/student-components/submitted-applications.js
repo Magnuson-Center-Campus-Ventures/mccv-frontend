@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
+import Select from 'react-select';
 import SearchBar from './search-bar';
 import ApplicationTileItem from './application-tile-item';
 import {
@@ -18,7 +19,6 @@ import {
 } from '../../actions';
 //import '../../styles/applications.scss';
 import '../../styles/postings.scss';
-import FilteredSelect from "../select"
 
 class SubmittedApplications extends Component {
   constructor(props) {
@@ -257,7 +257,7 @@ class SubmittedApplications extends Component {
             <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
-                <FilteredSelect
+                <Select
                   isMulti
                   styles={dropdownStyles}
                   name="status-filter"
@@ -276,7 +276,7 @@ class SubmittedApplications extends Component {
                     this.onFilter(statuses, titles);
                   }}
                 />
-                <FilteredSelect
+                <Select
                   isMulti
                   styles={dropdownStyles}
                   name="title-filter"

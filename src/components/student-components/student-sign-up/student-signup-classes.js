@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import FilteredSelect from '../../select';
+import CreateableSelect from 'react-select/creatable';
 import {
   fetchStudentByUserID, fetchUser,
   fetchAllClasses, fetchCertainClasses, createClassForStudent,
@@ -84,12 +84,10 @@ class StudentClasses extends Component {
     return (
       <div className="question-fields-items-header">
         <p className="question-fields-title">Classes</p>
-        <FilteredSelect
-          createable={true}
+        <CreateableSelect
           className="select-dropdown"
           styles={customStyles}
           name="classes"
-          placeholder="Select Classes"
           value={this.state.class}
           options={this.state.displayClasses}
           onChange={(selectedOption) => {
