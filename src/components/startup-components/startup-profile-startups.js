@@ -13,6 +13,9 @@ import {
 } from '../../actions';
 import embedInstructions from '../../assets/embed-instructions.png';
 import '../../styles/startup-profile.scss';
+import StartupInstructions from './startup-modals/startup-instructions';
+import note_question_mark from "../../assets/note_question_mark.png";
+import $ from 'jquery';
 
 class StartupProfile extends Component {
   constructor(props) {
@@ -31,12 +34,14 @@ class StartupProfile extends Component {
       isEditing: false,
       preview: '',
       error: '',
+      showInstructions: false,
     };
     // this.renderPostings = this.renderPostings.bind(this);
     this.onImageUpload = this.onImageUpload.bind(this);
     this.handleApprovedToggle = this.handleApprovedToggle.bind(this);
     this.handleArchivedToggle = this.handleArchivedToggle.bind(this);
     this.handlePendingToggle = this.handlePendingToggle.bind(this);
+    this.handleInstructions = this.handleInstructions.bind(this);
   }
 
   componentDidMount() {
@@ -120,6 +125,12 @@ class StartupProfile extends Component {
         startup,
       };
     });
+  }
+  
+  
+  
+  handleInstructions = () => {
+    this.setState({ showInstructions: !this.state.showInstructions });
   }
 
   addPosting = () => {
@@ -444,17 +455,22 @@ class StartupProfile extends Component {
       );
     }
   }
+  
+  
 
   renderStartup() {
     if (typeof this.props.startup !== 'undefined') {
       if (this.state.isEditing === false) {
         return (
-          <div className="startup-body">
+           <div>
+            {localStorage.getItem("new_startup") || this.state.showInstructions ? <StartupInstructions handler={this.handleInstructions}/> : null}
+            
+              <div className="startup-body">
             <div className="startup-body-text">
               <div className="startup-header">
                 {this.logoCompanyName()}
               </div>
-            
+
               <div className="startup-profile-info">
                 {/* <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div> */}
                 {this.renderLocation()}
@@ -484,6 +500,7 @@ class StartupProfile extends Component {
 
             </div>
           </div>
+           </div>
         );
       } else {
         return (
@@ -672,7 +689,10 @@ class StartupProfile extends Component {
           ? (
             <div className="startup-postings">
               <div className="startup-add-posting-box">
-                <span className="startup-postings-h1">Add Volunteer Positions:</span>
+                <span className="startup-postings-h1">
+                  <img id={"NoteQuestionMark"} src={note_question_mark} alt="Show Instructions" onClick={this.handleInstructions}/>
+                  Add Volunteer Positions:
+                </span>
                 <button type="button"
                   className="startup-add-posting-btn"
                   onClick={() => {
