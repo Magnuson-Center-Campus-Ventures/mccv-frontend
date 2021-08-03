@@ -20,7 +20,6 @@ const Revise = (props) => {
 
   const onSubmit = (e) => { showConfirmModal() }
   const updateMessage = (e) => {
-    console.log(e.target.value)
     changeEmailMessage(e.target.value)
   }
 
@@ -31,7 +30,6 @@ const Revise = (props) => {
   );
 
   const onConfirm = (e) => {
-    console.log("confirm")
     let data = props.data
     let id;
     switch (props.type) {

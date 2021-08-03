@@ -754,7 +754,7 @@ class StartupProfile extends Component {
     if (this.state.redirect) return <Redirect push to={"/startups/"+this.props.startup._id} />;
     return (
       <div className="startup">
-        <Revise type = "startup" data={this.props.startup} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({redirect:true})}} />
+        <Revise type = "startup" data={this.state.startup} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({redirect:true})}} />
         { this.renderPostings() }
         { this.renderStartup() }
       </div>

@@ -1029,7 +1029,7 @@ class Post extends Component {
       if (this.state.isEditing) {
         return (
           <div>
-            <Revise type = "post" data={this.props.post} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({ isEditing: false })}} />
+            <Revise type = "post" data={this.state.post} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({ isEditing: false })}} />
             <div>{this.renderEdit()}</div>
             <div>{this.renderButtons()}</div>
           </div>
@@ -1037,7 +1037,7 @@ class Post extends Component {
       } else {
         return (
           <div>
-            <Revise type = "post" data={this.props.post} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({ isEditing: false })}} />
+            <Revise type = "post" data={this.state.post} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({ isEditing: false })}} />
             <div>{this.renderNoEdit()}</div>
             <div>{this.renderButtons()}</div>
           </div>

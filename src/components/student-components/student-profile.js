@@ -882,7 +882,7 @@ class StudentProfile extends Component {
     if (this.state.redirect) return <Redirect push to={"/students/"+this.props.student._id} />;
     return (
       <div className="student-profile">
-        <Revise type = "student" data={this.props.student} onClose={this.hideReviseModal} show={this.state.reviseShow} 
+        <Revise type = "student" data={this.state.student} onClose={this.hideReviseModal} show={this.state.reviseShow} 
         onSuccess={()=>{
           this.state.workExps.forEach((workExp) => {
             this.props.updateWorkExperience(workExp._id, workExp);
