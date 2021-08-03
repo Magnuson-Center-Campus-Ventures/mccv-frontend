@@ -274,7 +274,7 @@ class ActionDashBoard extends Component {
                 ?
                 <EmailDownloadComponent ref={this.state.aref} download={this.downloadEmails} getTargetUsers={this.getTargetUsers}/>
                 :
-                this.state.Action.value === "Broadcast Banner"
+                this.state.Action.value === "Make Banner"
                 ?
                 <BannerMaker ref={this.state.aref} broadcastBanner={this.broadcastBanner} />
                 :

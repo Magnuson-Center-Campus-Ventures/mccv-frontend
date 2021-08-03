@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import $ from 'jquery'
 import showdown from 'showdown'
+import { Calendar } from 'react-date-range';
 
 export default class BannerMaker extends Component {
     constructor(props) {
@@ -68,13 +69,19 @@ export default class BannerMaker extends Component {
             <div id="BannerMakerComponent">
                 <form>
                     <div className="row">
-                        <label htmlFor="MessageBody">Banner Body
+                    <label htmlFor="MessageBody">Banner Body
                             <small className="light-grey-text">
                                 <i className="far fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="Type Message Content Here">
                                 </i>
                             </small>
-                        </label><br />
-                        <textarea id="MessageBody" placeholder="Type Message Content" className="form-input col-8" rows="15" value={this.state.message} onChange={ this.messageHandler }/>
+                        </label>
+                        
+                        <br />
+                        <textarea id="MessageBody" placeholder="Type Message Content" className="form-input col-7" rows="15" value={this.state.message} onChange={ this.messageHandler }/>
+    
+                        <div className="d-flex flex-reverse-row">
+                            <p id="character-counter">{this.state.character_length} characters</p>
+                        </div>
                         <div className="col-4">
                             <h4 className="">Formatting Guidelines</h4>
                             <b>Click <a target="_blank" href="https://www.markdownguide.org/basic-syntax/">here</a> for a more extensive guide</b>
@@ -99,11 +106,18 @@ export default class BannerMaker extends Component {
                                 </div> 
                             </div>
                         </div>
+                        <label htmlFor="ExpirationDate"> Banner Expiration Date
+                            <small className="light-grey-text">
+                                <i className="far fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="The Banner Will Disappear on this Date">
+                                </i>
+                            </small>
+                        </label>
+                        <Calendar className="col-3" id="ExpirationDate"
+                            date={new Date()}
+                            minDate={new Date()}
+                         />
                     </div>
                 </form>
-                <div className="d-flex flex-reverse-row">
-                    <p id="character-counter">{this.state.character_length} characters</p>
-                </div>
                 <label htmlFor="MessageBodyPreview">Banner Preview
                     <small className="light-grey-text">
                         <i className="far fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="right" title="See A Preview of Email Content">
