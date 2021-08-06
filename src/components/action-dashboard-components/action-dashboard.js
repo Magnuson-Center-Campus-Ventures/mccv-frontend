@@ -13,6 +13,7 @@ import { fetchStartups, fetchStudents, fetchUsers, fetchAllIndustries, massEmail
 import { getFieldName } from './filters'
 import { saveAs } from 'file-saver';
 import Select from 'react-select'
+import ViewTargets from './view-targets'
 import '../../styles/admin-dashboard.scss'
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -193,7 +194,6 @@ class ActionDashBoard extends Component {
     actionChange = (e) => {
         const aref = React.createRef()
         this.setState({ Action: e, aref: aref, filters:{} })
-        
     }
     
     cascadeFilterColors = (number) => {
@@ -274,10 +274,14 @@ class ActionDashBoard extends Component {
                 ?
                 <EmailDownloadComponent ref={this.state.aref} download={this.downloadEmails} getTargetUsers={this.getTargetUsers}/>
                 :
-                /*this.state.Action.value === "Broadcast Banner"
+                this.state.Action.value === "Make Banner"
                 ?
                 <BannerMaker ref={this.state.aref} broadcastBanner={this.broadcastBanner} />
-                :*/
+                :
+                this.state.Action.value === "View Targets"
+                ?
+                <ViewTargets ref={this.state.aref} getTargetUsers={this.getTargetUsers}/>
+                :
                 null
         return comp
     }
@@ -296,10 +300,11 @@ class ActionDashBoard extends Component {
                         <Select
                             options={[
                                 { value: '', label:'Action Type' },
-                                { value: 'Mass Email', label: 'Mass Email' },
                                 { value: 'Archive Users', label: 'Archive Users' },
+                                { value: 'Download Emails', label: 'Download Emails'},
                                 { value: 'Make Banner', label: 'Make Banner' },
-                                { value: 'Download Emails', label: 'Download Emails'}
+                                { value: 'Mass Email', label: 'Mass Email' },
+                                { value: 'View Targets', label: 'View Targets'}
                             ]}
                             id="Action" className="select" value={this.state.Action} onChange={this.actionChange}
                             />
