@@ -3,10 +3,9 @@
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable react/sort-comp */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import {
   fetchStudentByID, fetchUserByStudentID, fetchWorkExperiences, fetchOtherExperiences,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills, fetchUser,
@@ -14,6 +13,7 @@ import {
 import WorkExperience from '../student-components/work-experience';
 import OtherExperience from '../student-components/other-experience';
 import Archive from '../admin-modals/archive';
+
 
 import '../../styles/student-profile.scss';
 
@@ -59,15 +59,27 @@ class StudentProfileStartup extends Component {
   renderButtons() {
     if (this.props.user?.role === 'admin' && this.props.student?.status === 'Approved') {
       return (
-        <button
+        <div>
+          {(this.props.student?.status === 'Approved') ? (<button
           className="edit-button"
+          id="archive-button"
           type="submit"
           onClick={(e) => {
             this.showArchiveModal();
           }}
         >
           Archive
-        </button>
+        </button>) : null}
+        <Link to={'/profile/'+this.props.student._id+"/revise"} key={this.props.student._id} style={{color:"white"}}>
+            <button
+              className="edit-button"
+              id="revise-button"
+              type="submit"
+            >
+              Revise
+            </button>
+          </Link>
+        </div>
       );
     }
   }
@@ -77,7 +89,8 @@ class StudentProfileStartup extends Component {
       return (
         <div />
       );
-    } else if (this.props.student?.affiliation) {
+    }
+    else if (this.props.student?.affiliation) {
       return (
         <div id="class-year">{`Class of ${this.props.student?.grad_year}`} ({this.props.student?.affiliation})</div>
       );
@@ -87,7 +100,7 @@ class StudentProfileStartup extends Component {
       );
     }
   }
-
+  
   renderMajMin = (array) => {
     if (array) {
       return array.map((elem, index) => {
@@ -103,9 +116,9 @@ class StudentProfileStartup extends Component {
       });
     } else return null;
   }
-
+  
   renderMajors = () => {
-    if (this.props.student?.majors?.length > 0 && this.props.student?.majors[0] !== '') {
+    if (this.props.student?.majors?.length > 0 && this.props.student?.majors[0] != "") {
       return (
         <div id="major-row">
           <div className="student-major-title">Major in </div>
@@ -122,7 +135,7 @@ class StudentProfileStartup extends Component {
   }
 
   renderMinors = () => {
-    if (this.props.student?.minors?.length > 0 && this.props.student?.minors[0] !== '') {
+    if (this.props.student?.minors?.length > 0 && this.props.student?.minors[0] != "") {
       return (
         <div id="minor-row">
           <div className="student-minor-title">Minor in </div>
@@ -130,7 +143,7 @@ class StudentProfileStartup extends Component {
         </div>
       );
     } else {
-      return (<div />);
+      return (<div/>);
     }
   }
 
@@ -138,7 +151,7 @@ class StudentProfileStartup extends Component {
     if (this.props.student?.desired_start_date != null) {
       const start = new Date(this.props.student.desired_start_date);
       return (
-        <span className="student-start-date">Desired Start Date: {`${start.getMonth() + 1}/${start.getDate()}/${start.getFullYear()}`}</span>
+        <span className="student-start-date">Desired Start Date: {`${start.getMonth()+1}/${start.getDate()}/${start.getFullYear()}`}</span>
       );
     } else {
       return (
@@ -151,7 +164,7 @@ class StudentProfileStartup extends Component {
     if (this.props.student?.desired_end_date != null) {
       const end = new Date(this.props.student.desired_end_date);
       return (
-        <span className="student-end-date">Desired End Date: {`${end.getMonth() + 1}/${end.getDate()}/${end.getFullYear()}`}</span>
+        <span className="student-end-date">Desired End Date: {`${end.getMonth()+1}/${end.getDate()}/${end.getFullYear()}`}</span>
       );
     } else {
       return (
@@ -184,14 +197,6 @@ class StudentProfileStartup extends Component {
     } else return <div>None</div>;
   }
 
-  renderStudentActivity = () => {
-    console.log(this.props.student?.job_search_status)
-    if (this.props.student?.desired_start_date != null && this.props.student?.job_search_status=="Active") {
-      return (<span className="student-job-search-status"> Actively Searching </span>)
-    }
-    return ""
-  }
-
   renderStudentName = () => {
     if (this.props.student?.first_name && this.props.student?.last_name) {
       return (
@@ -200,7 +205,7 @@ class StudentProfileStartup extends Component {
     } else if (this.props.student?.first_name) {
       return (
         <h1 id="student-profile-name">{`${this.props.student?.first_name}`}</h1>
-      );
+      )
     } else if (this.props.student?.last_name) {
       return (
         <h1 id="student-profile-name">{`${this.props.student?.last_name}`}</h1>
@@ -211,7 +216,7 @@ class StudentProfileStartup extends Component {
       );
     }
   }
-
+  
   renderBio = () => {
     if (this.props.student?.bio) {
       return (
@@ -222,7 +227,7 @@ class StudentProfileStartup extends Component {
             <div className="work-exp">
               <div className="exp-text">{this.props.student?.bio}</div>
             </div>
-          </div>
+          </div>  
         </div>
       );
     } else return <div />;
@@ -236,29 +241,26 @@ class StudentProfileStartup extends Component {
           {this.renderClassYearAffiliation()}
           {this.renderMajors()}
           {this.renderMinors()}
-          <div className="space" />
+          <div className="space"/>
           <div className="student-contact">{this.props.email}</div>
           <div className="student-contact">{this.props.student?.phone_number ? this.props.student?.phone_number : null}</div>
-          <div className="space" />
-          <div>
-              {this.renderStudentActivity()}
-          </div>
+          <div className="space"/>
           <div className="student-start-date">
-            {this.startDate()}
+              {this.startDate()}
           </div>
           <div className="student-end-date">
             {this.endDate()}
           </div>
           <div className="post-time-commitment">
             {this.props.student.time_commitment ? 'Time Commitment'.concat(': ', this.props.student.time_commitment.toString()).concat(' ', 'hrs/week') : null}
-          </div>
+            </div>
           <hr className="profile-divider" />
           <div className="lists-row">
             <div className="list-section">
               <h2>Industries</h2>
               {this.renderYellowPills(this.props.student?.interested_industries)}
             </div>
-            <div className="list-section">
+            <div className="list-section" >
               <h2>Classes</h2>
               {this.renderRedPills(this.props.student?.relevant_classes)}
             </div>
@@ -270,7 +272,7 @@ class StudentProfileStartup extends Component {
           {this.renderBio()}
         </div>
       </div>
-      /* <div className="profile-fixed">
+      /*<div className="profile-fixed">
         <div id="profile-header">
           <h1>{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
           <div id="class-year">{`Class of ${this.props.student?.grad_year}`}  ({this.props.student?.affiliation})</div>
@@ -309,7 +311,7 @@ class StudentProfileStartup extends Component {
             </div>
           </div>
         </div>
-    </div> */
+    </div>*/
     );
   }
 
@@ -326,7 +328,7 @@ class StudentProfileStartup extends Component {
         );
       });
     } else return null;
-    /* if (this.props.workExps !== []) {
+    /*if (this.props.workExps !== []) {
       return this.props.workExps.map((workExp, index) => {
         return (
           <div key={index} className="work-exp">
@@ -341,7 +343,7 @@ class StudentProfileStartup extends Component {
           </div>
         );
       });
-    } else return null; */
+    } else return null;*/
   }
 
   renderOtherExperiences = () => {
@@ -357,7 +359,7 @@ class StudentProfileStartup extends Component {
         );
       });
     } else return null;
-    /* if (this.props.otherExps !== []) {
+    /*if (this.props.otherExps !== []) {
       return this.props.otherExps.map((otherExp, index) => {
         return (
           <div key={index} className="work-exp">
@@ -366,7 +368,7 @@ class StudentProfileStartup extends Component {
           </div>
         );
       });
-    } else return null; */
+    } else return null;*/
   }
 
   render() {

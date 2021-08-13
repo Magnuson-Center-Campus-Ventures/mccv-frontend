@@ -26,8 +26,8 @@ const Deny = (props) => {
   //   };
 
   return (
-    <div className="archiveContainer">
-      <div className="archiveModal" id="archiveModal">
+    <div className="modal-container">
+      <div className="modal-inner" id="archiveModal">
         <i className="fas fa-times"
           aria-label="close modal"
           role="button"
@@ -37,7 +37,7 @@ const Deny = (props) => {
             props.onClose(e);
           }}
         />
-        <div className="modalContent">
+        <div className="modal-content">
           <p> Are you sure you want to deny this startup? <br />
             Note: this will just leave the startup as pending. If there are specific changes you would like to see on their profile, please email them!
           </p>
