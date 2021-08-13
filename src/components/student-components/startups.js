@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import Select from 'react-select';
 import Switch from 'react-switch';
 import StartupListItem from './startup-item';
 import SearchBar from './search-bar';
 import { fetchStartups, fetchUser } from '../../actions';
 import '../../styles/postings.scss';
+import FilteredSelect from '../select';
 
 
 class Startups extends Component {
@@ -259,6 +259,18 @@ class Startups extends Component {
         ...base,
         width: 200,
       }),
+      multiValue : (base, state) =>{
+        let bgColor;
+        //TODO: link bgColor automatically to css of .greenPill and .yellowPill
+        if (state.selectProps.name == "industry-filter") bgColor = "rgba(221, 192, 88, 0.514)"
+  
+        return {
+          ...base,
+          borderRadius: "10px",
+          backgroundColor: bgColor
+        }
+        
+      },
     };
     return (
       this.props.startups && this.state.results
@@ -268,7 +280,7 @@ class Startups extends Component {
             <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
-                <Select
+                <FilteredSelect
                   isMulti
                   className="filter"
                   styles={dropdownStyles}
@@ -287,7 +299,7 @@ class Startups extends Component {
                     this.onFilter(industries, locations);
                   }}
                 />
-                <Select
+                <FilteredSelect
                   isMulti
                   className="filter"
                   styles={dropdownStyles}
