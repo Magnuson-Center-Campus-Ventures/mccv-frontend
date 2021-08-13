@@ -39,6 +39,7 @@ class Startup extends Component {
   }
 
   showArchiveModal = (e) => {
+    this.hideApproveModal()
     this.setState({ archiveShow: true });
   }
 
@@ -47,6 +48,7 @@ class Startup extends Component {
   }
 
   showApproveModal = (e) => {
+    this.hideDenyModal()
     this.setState({ approveShow: true });
   }
 
@@ -55,6 +57,7 @@ class Startup extends Component {
   }
 
   showDenyModal = (e) => {
+    this.hideApproveModal()
     this.setState({ denyShow: true });
   }
 

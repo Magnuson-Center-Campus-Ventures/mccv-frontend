@@ -26,8 +26,8 @@ const Deny = (props) => {
   //   };
 
   return (
-    <div className="modal-ontainer">
-      <div className="inner-modal" id="archiveModal">
+    <div className="modal-container">
+      <div className="modal-inner" id="archiveModal">
         <i className="fas fa-times"
           aria-label="close modal"
           role="button"
