@@ -7,6 +7,10 @@
         "es6": true
     },
     "rules": {
+        "no-plusplus": "off",
+        "no-mixed-spaces-and-tabs": 0,
+        "no-tabs": 0,
+        "no-nested-ternary": 0,
         "strict": 0,
         "linebreak-style": ["error", "windows"],
         "quotes": [2, "single"],
@@ -26,6 +30,9 @@
           "DebuggerStatement"
         ],
         "no-debugger": "warn",
+        "consistent-return": 0,
+        "array-callback-return": 0,
+        "linebreak-style": ["error", "windows"],
         "react/jsx-uses-react": 2,
         "react/jsx-uses-vars": 2,
         "react/react-in-jsx-scope": 2,

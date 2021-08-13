@@ -11,7 +11,7 @@ import {
 } from '../../actions';
 import { fetchIndustriesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
-import FilteredSelect from '../select'
+import FilteredSelect from '../select';
 
 class Posts extends Component {
   constructor(props) {
@@ -193,7 +193,8 @@ class Posts extends Component {
   sortedVirtualPosts = () => {
     this.setState({ sortedVirtualPosts: [] });
     if (this.state.recommend && this.state.virtualChecked) {
-      this.props.sortedPosts.forEach((post) => {
+      console.log("e")
+      this.state.sortedPosts.forEach((post) => {
         if (post.virtual === true && post.status === 'Approved') {
           this.setState((prevState) => ({
             sortedVirtualPosts: [...prevState.sortedVirtualPosts, post],
@@ -233,16 +234,14 @@ class Posts extends Component {
       } else {
         posts = this.state.live;
       }
+    } else if (this.state.virtualChecked && recommend) {
+      posts = this.state.sortedVirtualPosts;
+    } else if (this.state.virtualChecked) {
+      posts = this.state.virtualPosts;
+    } else if (recommend) {
+      posts = this.state.sortedPosts;
     } else {
-      if (this.state.virtualChecked && recommend) {
-        posts = this.state.sortedVirtualPosts;
-      } else if (this.state.virtualChecked) {
-        posts = this.state.virtualPosts;
-      } else if (recommend) {
-        posts = this.state.sortedPosts;
-      } else {
-        posts = this.state.live;
-      }
+      posts = this.state.live;
     }
     posts.forEach((post) => {
       const skills = post.required_skills?.map((skill) => skill.name.toLowerCase());
@@ -267,8 +266,7 @@ class Posts extends Component {
       || selectedSkills.some((skill) => skills.includes(skill))
       || selectedLocations.includes(postLoc)
       || selectedLocations.includes(startupLoc)
-      || selectedDates.some((date) => date.month() === startDate.month() && date.year() === startDate.year())) 
-      {
+      || selectedDates.some((date) => date.month() === startDate.month() && date.year() === startDate.year())) {
         this.setState((prevState) => ({
           results: [...prevState.results, post],
         }));
@@ -341,7 +339,7 @@ class Posts extends Component {
     this.setState({ virtualPosts: [] });
     if (checked) {
       this.props.posts.forEach((post) => {
-        if (post.virtual === true && post.status === 'Approved' ) {
+        if (post.virtual === true && post.status === 'Approved') {
           this.setState((prevState) => ({
             virtualPosts: [...prevState.virtualPosts, post],
           }));
@@ -408,7 +406,7 @@ class Posts extends Component {
   }
 
   renderPosts() {
-    var posts;
+    let posts;
     if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {
         return this.state.results.map((post) => {
@@ -449,7 +447,7 @@ class Posts extends Component {
               <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
             </div>
           </div>
-          
+
           <div className="toggleGroup">
             <span>View Virtual Positions: </span>
             <div id="toggle">
@@ -487,6 +485,19 @@ class Posts extends Component {
         ...base,
         width: 200,
       }),
+      multiValue : (base, state) =>{
+        let bgColor;
+        //TODO: link bgColor automatically to css of .greenPill and .yellowPill
+        if (state.selectProps.name == "industry-filter") bgColor = "rgba(221, 192, 88, 0.514)"
+        else if (state.selectProps.name == "skill-filter") bgColor = "rgba(69, 185, 144, 0.5)"
+  
+        return {
+          ...base,
+          borderRadius: "10px",
+          backgroundColor: bgColor
+        }
+        
+      },
     };
     return (
       this.props.posts && this.state.results

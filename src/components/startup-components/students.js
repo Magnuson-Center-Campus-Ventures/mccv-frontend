@@ -10,19 +10,21 @@ import { fetchStudents, fetchStartupByUserID, fetchUser } from '../../actions';
 import { fetchSkillsFromID, fetchClassesFromID } from '../../services/datastore';
 import '../../styles/postings.scss';
 import StudentListItem from './student-item';
-import FilteredSelect from "../select"
+import FilteredSelect from '../select';
 
 class Students extends Component {
   constructor(props) {
     super(props);
     this.state = {
       sortedStudents: [],
+      searchingStudents:[],
       industryOptions: [],
       selectedIndustryOptions: [],
       skillOptions: [],
       selectedSkillOptions: [],
       searchterm: 'emptytext',
       recommend: false,
+      activeSearching: false,
       search: false,
       filter: false,
       archive: false,
@@ -32,6 +34,7 @@ class Students extends Component {
     };
     this.handleArchiveChange = this.handleArchiveChange.bind(this);
     this.handleRecommendChange = this.handleRecommendChange.bind(this);
+    this.handleActiveSearchingChange = this.handleActiveSearchingChange.bind(this);
   }
 
   componentDidMount() {
@@ -87,9 +90,15 @@ class Students extends Component {
       && (prevProps.students !== this.props.students || prevProps.startup !== this.props.startup)) {
       // Score students
       this.scoreStudents();
+      // Loads actively searching students
+      this.findActivelySearching(this.props.students);
+
+
     }
   }
-
+  findActivelySearching = (students) =>{
+    this.setState({searchingStudents:students.filter(student => student?.job_search_status=="Active")})
+  }
   scoreStudents = () => {
     const startupIndustries = [];
     const postsReqSkills = [];
@@ -280,69 +289,76 @@ class Students extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills, this.state.recommend);
   }
 
+  handleActiveSearchingChange(checked) {
+    this.setState({activeSearching:checked});
+  }
   handleRecommendChange(checked) {
     this.setState({ recommend: checked });
-    const industries = (this.state.selectedIndustryOptions && this.state.selectedIndustryOptions.length > 0)
-      ? this.state.selectedIndustryOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    const skills = (this.state.selectedSkillOptions && this.state.selectedSkillOptions.length > 0)
-      ? this.state.selectedSkillOptions.map((option) => option.value.toLowerCase())
-      : ['emptytext'];
-    this.searchAndFilter(this.state.searchterm, industries, skills, !this.state.recommend);
   }
 
   renderStudents() {
-    if (this.state.search || this.state.filter) {
-      if (this.state.results.length > 0) {
-        return this.state.results.map((student) => {
-          return <StudentListItem student={student} key={student.id} />;
-        });
-      } else {
-        return (
-          <div> Sorry, no students match that query</div>
-        );
+    let students;
+    if (this.state.search || this.state.filter) students = this.state.results
+    else if (this.state.archive) students = this.state.archived;
+    else students = this.state.live;
+
+    // add filters here to narrow down displayed students
+    if (this.state.activeSearching) {
+      students=this.state.searchingStudents
+      // with more filters this conditional chain may be very complex, maybe better function to address it
+      if (this.state.recommend) {
+        // using includes may be overly slow so maybe change this
+        students=students.filter(student => this.state.sortedStudents.map((s)=>{return s._id}).includes(student._id));
       }
-    } else if (this.state.archive) {
-      const students = this.state.archived;
+    }
+    else if (this.state.recommend) students=this.state.sortedStudents
+
+    if (students.length > 0 ){
       return students.map((student) => {
-        return (
-          <StudentListItem student={student} key={student.id} />
-        );
+        return <StudentListItem student={student} key={student.id} />;
       });
-    } else {
-      const students = this.state.recommend ? this.state.sortedStudents : this.state.live;
-      return students.map((student) => {
-        return (
-          <StudentListItem student={student} key={student.id} />
-        );
-      });
+    }
+    else {
+      return (
+        <div> Sorry, no students match that query</div>
+      );
     }
   }
 
-  renderRecButton() {
+  renderFilters() {
+    let filterComponents = [];
+    filterComponents.push(
+      <div className="toggleGroup" key="activeSearching">
+        <span>View Actively Searching: </span>
+        <div id="toggle">
+          <Switch onChange={this.handleActiveSearchingChange} checked={this.state.activeSearching} />
+        </div>
+      </div>
+    )
     if (this.props.user.role === 'startup') {
-      return (
-        <div id="filters">
-          <div className="toggleGroup">
+      filterComponents.push(  
+          <div className="toggleGroup" key = "recommend">
             <span>View Recommended Students: </span>
             <div id="toggle">
               <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
             </div>
           </div>
-        </div>
       );
     } else if (this.props.user.role === 'admin') {
-      return (
-        <div id="filters">
-          <div className="toggleGroup">
+      filterComponents.push(
+          <div className="toggleGroup" key = "archive">
             <span>View Archived Students: </span>
             <div id="toggle">
               <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
             </div>
           </div>
-        </div>
       );
     }
+    return (
+      <div id="filters">
+          {filterComponents}
+      </div>
+    )
   }
 
   render() {
@@ -351,7 +367,22 @@ class Students extends Component {
       control: (base) => ({
         ...base,
         width: 200,
+        cursor:"pointer"
       }),
+      multiValue : (base, state) =>{
+        let bgColor;
+        //TODO: link bgColor automatically to css of .greenPill and .yellowPill
+        if (state.selectProps.name == "industry-filter") bgColor = "rgba(221, 192, 88, 0.514)"
+        else if (state.selectProps.name == "skill-filter") bgColor = "rgba(69, 185, 144, 0.5)"
+        
+  
+        return {
+          ...base,
+          borderRadius: "10px",
+          backgroundColor: bgColor
+        }
+        
+      },
     };
     return (
       (this.props.students !== undefined || null) && (this.state.results !== null || undefined)
@@ -401,7 +432,7 @@ class Students extends Component {
                 />
               </div>
               <div className="rightSide">
-                {this.renderRecButton()}
+                {this.renderFilters()}
                 <div className="list">
                   {this.renderStudents()}
                 </div>

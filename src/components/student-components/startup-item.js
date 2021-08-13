@@ -1,5 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable react/no-array-index-key */
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/postings.scss';
@@ -8,7 +10,7 @@ const StartupListItem = (props) => {
   const route = `/startups/${props.startup._id}`;
 
   const logo = props.startup.logo ? (
-    <img src={props.startup.logo} alt=" " className="companyLogo"/>
+    <img src={props.startup.logo} alt=" " className="companyLogo" />
   ) : (
     <div />
   );
@@ -36,28 +38,29 @@ const StartupListItem = (props) => {
   });
 
   let liveCount = 0;
+  let maxPostLength = 40
   const posts = props.startup.posts.map((post, index) => {
     if (post.status === 'Approved') {
-      if (liveCount == 0) {
+      if (liveCount === 0) {
         liveCount += 1;
-        if (post.title.length > 40) {
+        if (post.title.length > maxPostLength) {
           return (
             <div id="pillsTitle" key={post.id}>
-              Positions: <div className="greenPill" key={post.id}>{post.title.substring(0,39)}...</div>
+              Positions: <div className="greenPill" key={post.id}>{post.title.substring(0, maxPostLength-1)}...</div>
             </div>
-          )
+          );
         } else {
           return (
             <div id="pillsTitle" key={post.id}>
               Positions: <div className="greenPill" key={post.id}>{post.title}</div>
             </div>
-          )
+          );
         }
-      } else if (liveCount == 1) {
+      } else if (liveCount === 1) {
         liveCount += 1;
         if (post.title.length > 40) {
           return (
-            <div className="greenPill" key={post.id}>{post.title.substring(0,39)}...</div>
+            <div className="greenPill" key={post.id}>{post.title.substring(0, 39)}...</div>
           );
         } else {
           return (
@@ -79,7 +82,7 @@ const StartupListItem = (props) => {
     <div className="location">
       <span className="locationIcon" />
       <span className="postLocation"> {`${props.startup.city}, ${props.startup.state}`} </span>
-    </div>  
+    </div>
   ) : (
     <div />
   );
@@ -95,9 +98,9 @@ const StartupListItem = (props) => {
       </div>
     )
   ) : (
-    <div className="postSpace"/>
+    <div className="postSpace" />
   );
-  
+
   return (
     <Link to={route} key={props.startup.id} className="listItem link">
       <div className="postBody">
@@ -122,11 +125,11 @@ const StartupListItem = (props) => {
           <div className="pillsList">
             {industries}
           </div>
-          
+
         </div>
       </div>
 
-      {/*<div className="companyInfo">
+      {/* <div className="companyInfo">
         <div className="companyText">
           <h1 id="startupName"> {props.startup.name} </h1>
           <div className="location">
@@ -141,7 +144,7 @@ const StartupListItem = (props) => {
           {industries}
         </div>
         {posts}
-      </div>*/}
+      </div> */}
     </Link>
   );
 };

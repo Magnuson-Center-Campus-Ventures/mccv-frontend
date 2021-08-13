@@ -6,7 +6,7 @@ import StartupListItem from './startup-item';
 import SearchBar from './search-bar';
 import { fetchStartups, fetchUser } from '../../actions';
 import '../../styles/postings.scss';
-import FilteredSelect from '../select'
+import FilteredSelect from '../select';
 
 
 class Startups extends Component {
@@ -259,6 +259,18 @@ class Startups extends Component {
         ...base,
         width: 200,
       }),
+      multiValue : (base, state) =>{
+        let bgColor;
+        //TODO: link bgColor automatically to css of .greenPill and .yellowPill
+        if (state.selectProps.name == "industry-filter") bgColor = "rgba(221, 192, 88, 0.514)"
+  
+        return {
+          ...base,
+          borderRadius: "10px",
+          backgroundColor: bgColor
+        }
+        
+      },
     };
     return (
       this.props.startups && this.state.results

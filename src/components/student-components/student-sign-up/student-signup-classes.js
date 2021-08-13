@@ -16,7 +16,7 @@ class StudentClasses extends Component {
       class: '',
       selectedClasses: [],
       displayClasses: [],
-    }; 
+    };
   }
 
   // Get profile info
@@ -85,7 +85,7 @@ class StudentClasses extends Component {
       <div className="question-fields-items-header">
         <p className="question-fields-title">Classes</p>
         <FilteredSelect
-          createable={true}
+          createable
           className="select-dropdown"
           styles={customStyles}
           name="classes"
