@@ -38,7 +38,7 @@ class StartupApplicationListItem extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchSubmittedApplication(this.props.match.params.applicationID);
+    this.props.fetchSubmittedApplication(this.props.match.params.applicationID); 
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -194,7 +194,7 @@ class StartupApplicationListItem extends Component {
   } */
 
   // old styling
-  /* renderWorkExperiences = () => {
+  /*renderWorkExperiences = () => {
     if (this.props.workExps !== []) {
       return this.props.workExps.map((workExp, index) => {
         return (
@@ -229,28 +229,30 @@ class StartupApplicationListItem extends Component {
   } */
 
 
+
+
   renderQuestions = () => {
     const items = [];
     if (this.props.current.questions && this.props.current.questions.length > 0) {
-      this.props.current.questions.map((question) => {
+      this.props.current.questions.map((question) => { 
         items.push(
           <div key={question} className="work-exp">
             <div className="exp-title">{question}</div>
             <div className="exp-text">
               {this.props.current.answers[this.props.current.questions.findIndex((temp) => {
-                return temp === question;
+                return temp == question
               })]}
             </div>
           </div>,
         );
-        // }
+        //}
       });
       return items;
     } else {
       return <div />;
     }
   }
-
+  
 
   handleApprove = () => {
     const newSubmittedApp = this.props.current;
@@ -313,11 +315,11 @@ class StartupApplicationListItem extends Component {
   }
 
   renderStatusPill = () => {
-    if (this.props.current.status === 'approved') {
+    if (this.props.current.status === "approved") {
       return (
         <div id="app-status-green-pill">Approved</div>
       );
-    } else if (this.props.current.status === 'declined') {
+    } else if (this.props.current.status === "declined") {
       return (
         <div id="app-status-red-pill">Declined</div>
       );
@@ -354,30 +356,30 @@ class StartupApplicationListItem extends Component {
         </div>
       );
     } else {
-      return (
+      return ( 
         <div className="startup-app-status-row">
           <div id="app-status-title">Status: </div>
           {this.renderStatusPill()}
         </div>
 
-      // <div id="action-btns">
-      //   <div id="static-status">{this.props.current.status[0].toUpperCase() + this.props.current.status.slice(1)}</div>
-      // </div>
+        // <div id="action-btns">
+        //   <div id="static-status">{this.props.current.status[0].toUpperCase() + this.props.current.status.slice(1)}</div>
+        // </div>
       );
     }
   }
-
+  
   renderBody = () => {
     return (
-      <StudentProfileStartup
-        student={this.props.student}
-        email={this.props.email}
-        workExps={this.props.workExps}
+      <StudentProfileStartup 
+        student={this.props.student} 
+        email={this.props.email} 
+        workExps={this.props.workExps} 
         otherExps={this.props.otherExps}
         user={this.props.user}
       />
       // styling before deciding to use student-profile-startups component
-      /* <div className="profile-fixed">
+      /*<div className="profile-fixed">
         <div id="profile-header">
           <h1 id="student-profile-name">{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
           {this.renderClassYearAffiliation()}
@@ -412,10 +414,10 @@ class StartupApplicationListItem extends Component {
             </div>
           </div>
         </div>
-      </div> */
+      </div>*/
 
-    // old styling
-    /* <div className="profile-fixed">
+      // old styling
+      /*<div className="profile-fixed">
         <div id="profile-header">
           <h1>{`${this.props.student?.first_name} ${this.props.student?.last_name}`}</h1>
           <div>{`Class of ${this.props.student?.grad_year}`}</div>
@@ -442,7 +444,7 @@ class StartupApplicationListItem extends Component {
             </div>
           </div>
         </div>
-      </div> */
+      </div>*/
     );
   }
 
@@ -451,8 +453,8 @@ class StartupApplicationListItem extends Component {
       return (
         <div className="student-profile">
           {this.renderBody()}
-
-          {/* <hr className="profile-divider" />
+          
+          {/*<hr className="profile-divider" />
           <div className="exps-fixed">
             <h2>Work Experience</h2>
             {this.renderWorkExperiences()}
@@ -461,8 +463,8 @@ class StartupApplicationListItem extends Component {
           <div className="exps-fixed">
             <h2>Other Experience</h2>
             {this.renderOtherExperiences()}
-          </div> */}
-
+          </div>*/}
+          
           <hr className="profile-divider" />
           <div className="exps-fixed">
             <h2>Questions</h2>
@@ -471,8 +473,8 @@ class StartupApplicationListItem extends Component {
           </div>
         </div>
 
-      // old styling
-      /* <div>
+        // old styling
+        /*<div>
           <div id="page-wrap">
             {this.renderBody()}
             <div id="work-exps">
@@ -487,7 +489,7 @@ class StartupApplicationListItem extends Component {
             </div>
           </div>
           {this.renderActionBtns()}
-        </div> */
+        </div>*/
       );
     } else {
       return <div />;

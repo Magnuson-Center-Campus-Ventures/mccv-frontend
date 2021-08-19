@@ -17,9 +17,9 @@ import {
 import close from '../../../../static/img/close.png';
 import '../../../styles/application.scss';
 
-// function isEmpty(obj) {
-//   return Object.keys(obj).length === 0;
-// }
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
 
 class Application extends React.Component {
   constructor(props) {
@@ -58,11 +58,11 @@ class Application extends React.Component {
 
   onAnswerChange(event) {
     const { target: { name, value } } = event;
-    const { answers } = this.state;
+    let answers = this.state.answers;
     answers[this.props.post.questions.findIndex((temp) => {
-      return temp === name;
+      return temp == name
     })] = value;
-    this.setState({ answers });
+    this.setState({ answers: answers });
   }
 
   renderHelper= () => {
@@ -71,15 +71,15 @@ class Application extends React.Component {
       this.props.post.questions.map((question) => {
         items.push(
           <div key={question}>
-            <h3 id="question-title">{question}</h3>
-            <textarea
-              name={question}
-              onChange={this.onAnswerChange}
-              value={this.state.answers[this.props.post.questions.findIndex(
-                (temp) => {
-                  return temp === question;
-                },
-              )]}
+            <h3 id="question-title" >{question}</h3> 
+            <textarea 
+            name={question} 
+            onChange={this.onAnswerChange} 
+            value={this.state.answers[this.props.post.questions.findIndex(
+              (temp) => {
+                return temp == question
+              }
+            )]} 
             />
           </div>,
         );

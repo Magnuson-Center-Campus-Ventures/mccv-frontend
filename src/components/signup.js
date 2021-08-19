@@ -1,15 +1,14 @@
 /* eslint-disable react/no-did-update-set-state */
-/* eslint-disable react/sort-comp */
 import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-  authError, signupUser, createStudent, updateUser,
+  authError, signupUser, createStudent, updateUser, 
   emailExists, sendConfirmationEmail,
 } from '../actions';
 import '../styles/signup.scss';
-import StudentTerms from './student-components/student-modals/student-terms';
-import StartupTerms from './startup-components/startup-modals/startup-terms';
+import StudentTerms from './student-components/student-modals/student-terms'
+import StartupTerms from './startup-components/startup-modals/startup-terms'
 
 class Signup extends Component {
   constructor(props) {
@@ -30,7 +29,7 @@ class Signup extends Component {
 
   onEmailChange = (event) => {
     this.setState({ email: event.target.value });
-    this.props.emailExists({ email: event.target.value.toLowerCase() });
+    this.props.emailExists({ email: event.target.value.toLowerCase()});
   }
 
   onPasswordChange = (event) => {
@@ -50,7 +49,7 @@ class Signup extends Component {
   signupNow() {
     // create new user
     // const newUser = { ...this.state };
-    // newUser.email = this.state.email.toLowerCase();
+    // newUser.email = this.state.email.toLowerCase(); 
     // newUser.password = this.state.password;
     // newUser.role = this.state.role;
     // newUser.student_profile_id = this.state.student_profile_id;
@@ -63,12 +62,12 @@ class Signup extends Component {
       role: this.state.role,
       student_profile_id: this.state.student_profile_id,
       startup_id: this.state.startup_id,
-    };
+    }
     this.props.sendConfirmationEmail(confirmation, this.props.history);
   }
 
   showModal = (event) => {
-    if (this.state.error !== '') {
+    if (this.state.error != ''){
       this.state.show_error = true;
       this.state.displayed_error = this.state.error;
     } else {
@@ -76,13 +75,13 @@ class Signup extends Component {
     }
     this.forceUpdate();
   };
-
+  
   hideModal = (event) => {
     this.setState({ show: false });
   }
 
   signModal = (event) => {
-    if (event.signature !== '') {
+    if (event.signature != ''){
       this.state.signed = new Date().getTime();
       this.signupNow();
     }
@@ -108,11 +107,11 @@ class Signup extends Component {
   }
 
   renderError() {
-    if (this.state.password === '') {
+    if (this.state.password == ''){
       this.state.error = 'Sign Up Failed: Password is blank';
-    } else if (this.state.email === '') {
+    } else if (this.state.email == ''){
       this.state.error = 'Sign Up Failed: Username is blank';
-    } else if (this.props.error === 'Email found') {
+    } else if (this.props.error == 'Email found') {
       this.state.error = 'Sign Up Failed: User with this email already exists';
     } else {
       this.state.error = '';
@@ -135,16 +134,16 @@ class Signup extends Component {
   render() {
     return (
       <div className="signupPage">
-        <div className="student-profile">
+      <div className="student-profile">
           <StudentTerms
             onClose={this.hideModal}
             acceptTC={this.signModal}
-            show={this.state.show && this.state.role === 'student'}
+            show={this.state.show && this.state.role=='student'}
           />
           <StartupTerms
             onClose={this.hideModal}
             acceptTC={this.signModal}
-            show={this.state.show && this.state.role === 'startup'}
+            show={this.state.show && this.state.role=='startup'}
           />
         </div>
         <div className="signupBoard">

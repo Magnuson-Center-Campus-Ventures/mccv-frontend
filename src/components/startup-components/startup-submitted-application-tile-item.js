@@ -7,14 +7,13 @@ import '../../styles/postings.scss';
 
 const StartupSubmittedApplicationTileItem = (props) => {
   const affiliationGradYear = (props.student.affiliation && props.student.grad_year) ? (
-    <h2 className="gradYear">{`Class of ${props.student.grad_year} (${props.student.affiliation.charAt(0).toUpperCase()
-      + props.student.affiliation.slice(1)})`}
-    </h2>
+    <h2 className="gradYear">{`Class of ${props.student.grad_year} (${props.student.affiliation.charAt(0).toUpperCase() + 
+      props.student.affiliation.slice(1)})`} </h2>
   ) : (
     (props.student.grad_year) ? (
       <h2 className="gradYear">{`Class of ${props.student.grad_year}`} </h2>
     ) : (
-      <div />
+      <div/>
     )
   );
 
@@ -27,9 +26,9 @@ const StartupSubmittedApplicationTileItem = (props) => {
               {`Major in ${major}`}
             </span>
           );
-        } else if (index === 1) {
+        } else if (index === 1){
           return (
-            <span key={index} className="major">, ...</span>
+            <span key={index} className="major">{`, ...`}</span>
           );
         }
       })
@@ -43,13 +42,13 @@ const StartupSubmittedApplicationTileItem = (props) => {
       <p className="postTitle">{props.post.title}</p>
     </div>
   ) : (
-    <div className="postSpace" />
+    <div className="postSpace"/>
   );
 
-  const statusPill = (props.status === 'approved') ? (
+  const statusPill = (props.status === "approved") ? (
     <div id="statusGreenPill">Approved</div>
   ) : (
-    (props.status === 'declined') ? (
+    (props.status === "declined") ? (
       <div id="statusRedPill">Declined</div>
     ) : (
       <div id="statusYellowPill">Pending Review</div>
@@ -79,7 +78,7 @@ const StartupSubmittedApplicationTileItem = (props) => {
           {majors}
         </div>
         {renderPosition}
-
+        
         <div className="applicationStatusRow">
           <div id="pillsTitle">Status: </div>
           {statusPill}
