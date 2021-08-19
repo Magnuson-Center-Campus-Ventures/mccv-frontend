@@ -626,7 +626,7 @@ class StudentProfile extends Component {
 
             <div className="input-activity">
               <div className="input-title">Actively Searching?</div>
-              <div>Shows startups you are actively looking at this platform.</div>
+              <div> Shows startups you are actively looking at this platform. </div>
               <Switch onChange={this.studentStatusChange} checked={this.state.student.job_search_status === 'Active'} />
             </div>
           </div>
