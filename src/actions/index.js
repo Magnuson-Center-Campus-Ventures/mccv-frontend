@@ -1,6 +1,7 @@
+/* eslint-disable */
 import axios from 'axios';
 
-// const ROOT_URL = 'http://localhost:9090/api';
+//const ROOT_URL = 'http://localhost:9090/api';
 const ROOT_URL = 'http://mccv.herokuapp.com/api';
 
 // keys for actiontypes
@@ -823,6 +824,7 @@ export function confirmedSignup({ token, } , history) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('userID', response.data.user.id);
       localStorage.setItem('role', response.data.user.role);
+      localStorage.setItem('new_startup', true);
       // dispatch({ type: ActionTypes.AUTH_USER, userID: response.data.id });
       dispatch({ type: ActionTypes.FETCH_USER, payload: response.data.user });
       if (response.data.user.role === 'student') {

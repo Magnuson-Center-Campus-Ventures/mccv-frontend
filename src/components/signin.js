@@ -22,13 +22,13 @@ class Signin extends Component {
   }
 
   signinNow = (event) => {
-    let fields = { ...this.state }; 
+    const fields = { ...this.state };
     fields.email = this.state.email.toLowerCase();
     this.props.signinUser(fields, this.props.history);
   }
-  
+
   renderError = () => {
-    if (this.props.error && this.props.error != 'Email found') {
+    if (this.props.error && this.props.error !== 'Email found') {
       return <div className="signinError">{this.props.error}</div>;
     }
     return null;

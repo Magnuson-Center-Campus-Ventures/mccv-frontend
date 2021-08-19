@@ -1,5 +1,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/no-array-index-key */
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable func-names */
+
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -36,18 +41,19 @@ class StudentMajorMinors extends Component {
   onAffiliationChange = (event) => {
     this.props.student.affiliation = event.target.value;
     this.setState({
-      affiliation: event.target.value, 
+      affiliation: event.target.value,
     });
-    this.props.ifFilled(); 
-    this.forceUpdate(); 
-}
+    this.props.ifFilled();
+    this.forceUpdate();
+  }
 
   renderMajors() {
     return this.props.student.majors.map((major, index) => {
       return (
         <div key={major} className="resp-input">
           <li id="responsibility" key={index}>{major}</li>
-          <button className="del-button"
+          <button type="button"
+            className="del-button"
             onClick={() => {
               this.setState((prevState) => {
                 prevState.student.majors.splice(index, 1);
@@ -69,7 +75,8 @@ class StudentMajorMinors extends Component {
       return (
         <div key={minor} className="resp-input">
           <li id="responsibility" key={index}>{minor}</li>
-          <button className="del-button"
+          <button type="button"
+            className="del-button"
             onClick={() => {
               this.setState((prevState) => {
                 prevState.student.minors.splice(index, 1);
@@ -95,7 +102,7 @@ class StudentMajorMinors extends Component {
               <h1>Education Information</h1>
               <p> Dartmouth Affiliation <span className="imptMessage">*</span> </p>
               <select value={this.state.affiliation} onChange={this.onAffiliationChange}>
-              {/* Dartmouth, geisel, tuck, thayer, guarini */}
+                {/* Dartmouth, geisel, tuck, thayer, guarini */}
                 <option value="select">Select...</option>
                 <option value="Undergrad">Dartmouth College</option>
                 <option value="Geisel">Geisel School of Medicine </option>
@@ -108,38 +115,42 @@ class StudentMajorMinors extends Component {
             <i className="fas fa-user-graduate question-header-icon" id="icon" />
           </div>
           <div className="question-fields">
-            <p className="question-fields-title">Majors <span></span></p>
+            <p className="question-fields-title">Majors <span /></p>
             <p className="imptMessage">Please write the full name of your major (e.x. "Computer Science" instead of "CS")</p>
-            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newMajor = event.target.value} />
-                  <button className="add-button"
-                    onClick={() => {
-                      this.setState((prevState) => {
-                        prevState.student.majors.push(this.state.newMajor);
-                        this.props.student.majors = prevState.student.majors;
-                        return {
-                          ...prevState,
-                        };
-                      });
-                    }}
-                  ><i className="fa fa-plus add-icon" aria-hidden="true" />
-                  </button>
+            <TextareaAutosize className="question-fields-text" onBlur={function (event) { this.state.newMajor = event.target.value; }} />
+            <button type="button"
+              className="add-button"
+              onClick={() => {
+                const nm = this.state.newMajor;
+                this.setState((prevState) => {
+                  prevState.student.majors.push(nm);
+                  this.props.student.majors = prevState.student.majors;
+                  return {
+                    ...prevState,
+                  };
+                });
+              }}
+            ><i className="fa fa-plus add-icon" aria-hidden="true" />
+            </button>
             <ul className="question-fields-list-mm">
               {this.renderMajors()}
-              </ul>
+            </ul>
             <p className="question-fields-title">Minors</p>
-            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newMinor = event.target.value} />
-              <button className="add-button"
-                onClick={() => {
-                  this.setState((prevState) => {
-                    prevState.student.minors.push(this.state.newMinor);
-                    this.props.student.minors = prevState.student.minors;
-                    return {
-                      ...prevState,
-                    };
-                  });
-                }}
-              ><i className="fa fa-plus add-icon" aria-hidden="true" />
-              </button>
+            <TextareaAutosize className="question-fields-text" onBlur={function (event) { this.state.newMinor = event.target.value; }} />
+            <button type="button"
+              className="add-button"
+              onClick={() => {
+                const nm = this.state.newMinor;
+                this.setState((prevState) => {
+                  prevState.student.minors.push(nm);
+                  this.props.student.minors = prevState.student.minors;
+                  return {
+                    ...prevState,
+                  };
+                });
+              }}
+            ><i className="fa fa-plus add-icon" aria-hidden="true" />
+            </button>
             <ul className="question-fields-list-mm">
               {this.renderMinors()}
             </ul>

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-update-set-state */
 import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -13,11 +14,11 @@ class Footer extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.show == true && (window.location.href.indexOf("startup-signup") > -1 || window.location.href.indexOf("student-signup") > -1)) {
+    if (this.state.show === true && (window.location.href.indexOf('startup-signup') > -1 || window.location.href.indexOf('student-signup') > -1)) {
       this.setState({ show: false });
-    } else if (this.state.show == false && !(window.location.href.indexOf("startup-signup") > -1 || window.location.href.indexOf("student-signup") > -1)){
+    } else if (this.state.show === false && !(window.location.href.indexOf('startup-signup') > -1 || window.location.href.indexOf('student-signup') > -1)) {
       this.setState({ show: true });
-    } 
+    }
   }
 
   render() {
@@ -36,9 +37,9 @@ class Footer extends Component {
         <li><a href="mailto:magnuson.center.campus.ventures@dartmouth.edu">Contact</a></li>
       </ul>
     )
-    : (<nav />);
+      : (<nav />);
   }
-};
+}
 
 const mapStateToProps = (reduxState) => ({
   user: reduxState.user.current,

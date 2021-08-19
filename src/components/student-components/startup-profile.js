@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+/* eslint-disable react/sort-comp */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
@@ -77,41 +78,41 @@ class Startup extends Component {
 
   renderPostings() {
     if (this.props.startup.posts && this.props.startup.posts.length && typeof this.props.startup !== 'undefined') {
-      const mappingPostings = this.props.startup.posts.map((post) => {
-        const virtual = (post.virtual==true) ? (
+      const mappingPostings = this.props.startup.posts.forEach((post) => {
+        const virtual = (post.virtual === true) ? (
           <div className="location">
             <span className="virtualIcon" />
             <span className="postLocation">Virtual</span>
-          </div>  
-        ) : (
-          <div />
-        );
-      
-        const inperson = (post.city && post.state) ? (
-          <div className="location">
-            <span className="locationIcon" />
-            <span className="postLocation"> {`${post.city}, ${post.state}`} </span>
-          </div>  
-        ) : (
-          <div />
-        );
-      
-        const start = new Date(post.desired_start_date);
-        const end = new Date(post.desired_end_date);
-      
-        const startDate = (start) ? (
-          <span className="dateText">Starts {`${start.getMonth()+1}/${start.getDate()}/${start.getFullYear()}`}</span>
-        ) : (
-          <div />
-        );
-      
-        const endDate = (end) ? (
-          <span className="dateText">Ends {`${end.getMonth()+1}/${end.getDate()}/${end.getFullYear()}`}</span>
+          </div>
         ) : (
           <div />
         );
 
-        if (post.status === "Approved") {
+        const inperson = (post.city && post.state) ? (
+          <div className="location">
+            <span className="locationIcon" />
+            <span className="postLocation"> {`${post.city}, ${post.state}`} </span>
+          </div>
+        ) : (
+          <div />
+        );
+
+        const start = new Date(post.desired_start_date);
+        const end = new Date(post.desired_end_date);
+
+        const startDate = (start) ? (
+          <span className="dateText">Starts {`${start.getMonth() + 1}/${start.getDate()}/${start.getFullYear()}`}</span>
+        ) : (
+          <div />
+        );
+
+        const endDate = (end) ? (
+          <span className="dateText">Ends {`${end.getMonth() + 1}/${end.getDate()}/${end.getFullYear()}`}</span>
+        ) : (
+          <div />
+        );
+
+        if (post.status === 'Approved') {
           return (
             <li className="startup-posting" key={post._id}>
               <Link to={`/posts/${post._id}`} key={post.id} className="postLink">
@@ -134,7 +135,6 @@ class Startup extends Component {
             </li>
           );
         }
-        
       });
       return (
         this.props.startup.posts !== undefined
@@ -162,10 +162,10 @@ class Startup extends Component {
       return (
         this.props.startup.industries.map((industry) => {
           return (
-            <div className="yellowPill" key={industry.id}> 
-              {industry.name} 
+            <div className="yellowPill" key={industry.id}>
+              {industry.name}
             </div>
-            //<div className="startup-industry" key={industry.name}>{industry.name}</div>
+            // <div className="startup-industry" key={industry.name}>{industry.name}</div>
           );
         })
       );
@@ -215,21 +215,21 @@ class Startup extends Component {
     }
   }
 
-  renderLogo(){
+  renderLogo() {
     if (this.props.startup?.logo) {
       return (<img className="startup-logo" id="logo" alt="" src={this.props.startup.logo} />);
     }
   }
 
-  renderVideo(){
+  renderVideo() {
     if (this.props.startup?.video) {
       return (
         <div className="startup-video">
-          <iframe 
-            title="videoLarge" 
-            className="embed-responsive-item" 
+          <iframe
+            title="videoLarge"
+            className="embed-responsive-item"
             allow="fullscreen"
-            src={this.props.startup.video} 
+            src={this.props.startup.video}
           />
         </div>
       );
@@ -245,11 +245,11 @@ class Startup extends Component {
       return (
         <div className="profileCompanyInfo">
           <div className="profileCompanyLeft">
-            <img src={this.props.startup.logo} alt="no logo" className="profileCompanyLogo"/>
+            <img src={this.props.startup.logo} alt="no logo" className="profileCompanyLogo" />
           </div>
           <div className="profileCompanyRight">
             <div className="profileCompanyTitle"> { this.props.startup.name} </div>
-          </div>  
+          </div>
         </div>
       );
     } else {
@@ -267,11 +267,11 @@ class Startup extends Component {
         <div>{this.props.startup.description}</div>
       );
     } else {
-      return (<div/>);
+      return (<div />);
     }
   }
 
-  renderEmail(){
+  renderEmail() {
     if (this.props.startup.contact_email) {
       return (
         <div className="startup-header">Email: {this.props.startup.contact_email}</div>
@@ -289,7 +289,7 @@ class Startup extends Component {
         <div className="startup-header">
           <span className="locationIcon" />
           <span className="position-location"> {`${this.props.startup.city}, ${this.props.startup.state}`} </span>
-        </div> 
+        </div>
       );
     } else {
       return (
@@ -306,7 +306,7 @@ class Startup extends Component {
             <div className="startup-header">
               {this.logoCompanyName()}
             </div>
-          
+
             <div className="startup-profile-info">
               {/* <div className="startup-location startup-header">Location: {`${this.props.startup.city}`}, {`${this.props.startup.state}`}</div> */}
               {this.renderLocation()}
@@ -320,7 +320,7 @@ class Startup extends Component {
             </div>
 
             {this.renderVideo()}
-            
+
             {/* <div className="startup-header">
               {this.renderLogo()}
               <h1>{`${this.props.startup.name}`}</h1>

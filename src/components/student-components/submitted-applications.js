@@ -5,7 +5,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
-import Select from 'react-select';
 import SearchBar from './search-bar';
 import ApplicationTileItem from './application-tile-item';
 import {
@@ -17,8 +16,9 @@ import {
   clearPost,
   clearStudent,
 } from '../../actions';
-//import '../../styles/applications.scss';
+// import '../../styles/applications.scss';
 import '../../styles/postings.scss';
+import FilteredSelect from '../select';
 
 class SubmittedApplications extends Component {
   constructor(props) {
@@ -147,46 +147,46 @@ class SubmittedApplications extends Component {
         return this.state.results.map((application) => {
           const route = `/applications/${application._id}`;
           return this.props.posts.map((post) => {
-            if (post.id === application.post_id){
+            if (post.id === application.post_id) {
               return (
                 <Link to={route} key={application.id} className="listItem">
-                  <ApplicationTileItem key={post.id} post={post} status={application.status}/>
+                  <ApplicationTileItem key={post.id} post={post} status={application.status} />
                 </Link>
               );
             }
           });
-          {/*let post = '';
-          for (const i in this.props.posts) {
-            if (this.props.posts[i].id === application.post_id) {
-              post = this.props.posts[i];
-              break;
-            }
-          }
-          return (
-            <Link to={route} key={application.id} className="listItem">
-              <ApplicationListItem key={application.id} post={post}/>
-              <div className="companyInfo">
-                <img src={post.startup_id.logo} alt="no logo" />
-                <div className="companyText">
-                  <h1 id="startupName"> { post.startup_id.name} </h1>
-                  <div className="location">
-                    <span className="locationIcon" />
-                    <h2> {`${post.city}, ${post.state}`} </h2>
-                  </div>
-                </div>
-              </div>
-              <div className="postInfo">
-                <div id="info-title">
-                  <h1>Applied to: </h1>
-                  <div id="pill title">{post.title}</div>
-                </div>
-                <div id="info-status">
-                  <h1>Status: </h1>
-                  <div id="pill status">{application.status}</div>
-                </div>
-              </div>
-            </Link>
-          );*/}
+          // { /* let post = '';
+          // for (const i in this.props.posts) {
+          //   if (this.props.posts[i].id === application.post_id) {
+          //     post = this.props.posts[i];
+          //     break;
+          //   }
+          // }
+          // return (
+          //   <Link to={route} key={application.id} className="listItem">
+          //     <ApplicationListItem key={application.id} post={post}/>
+          //     <div className="companyInfo">
+          //       <img src={post.startup_id.logo} alt="no logo" />
+          //       <div className="companyText">
+          //         <h1 id="startupName"> { post.startup_id.name} </h1>
+          //         <div className="location">
+          //           <span className="locationIcon" />
+          //           <h2> {`${post.city}, ${post.state}`} </h2>
+          //         </div>
+          //       </div>
+          //     </div>
+          //     <div className="postInfo">
+          //       <div id="info-title">
+          //         <h1>Applied to: </h1>
+          //         <div id="pill title">{post.title}</div>
+          //       </div>
+          //       <div id="info-status">
+          //         <h1>Status: </h1>
+          //         <div id="pill status">{application.status}</div>
+          //       </div>
+          //     </div>
+          //   </Link>
+          // ); */ }
         });
       } else {
         return (
@@ -198,45 +198,45 @@ class SubmittedApplications extends Component {
       return studentApplications.map((application) => {
         const route = `/applications/${application._id}`;
         return this.props.posts.map((post) => {
-          if (post.id === application.post_id){
+          if (post.id === application.post_id) {
             return (
               <Link to={route} key={application.id} className="listItem">
-                <ApplicationTileItem key={post.id} post={post} status={application.status}/>
+                <ApplicationTileItem key={post.id} post={post} status={application.status} />
               </Link>
             );
           }
         });
-        {/*let post = '';
-        for (const i in this.props.posts) {
-          if (this.props.posts[i].id === application.post_id) {
-            post = this.props.posts[i];
-            break;
-          }
-        }
-        const logo = post.startup_id.logo ? (
-          <img src={post.startup_id.logo} alt='' />
-        ) : (
-          <div />
-        );
-        return (
-          <Link to={route} key={application.id} className="listItem">
-            <ApplicationListItem key={application.id} post={post}/>
-            <div className="companyInfo">
-              <div className="companyText">
-                <h1 id="startupName"> { post.startup_id.name} </h1>
-                <div className="location">
-                  <span className="locationIcon" />
-                  <h2> {`${post.city}, ${post.state}`} </h2>
-                </div>
-              </div>
-              {logo}
-            </div>
-            <div className="postInfo">
-              <h1 id="postTitle">{post.title}</h1>
-              <h2 id="status">status: {application.status}</h2>
-            </div>
-          </Link>
-        );*/}
+        // { /* let post = '';
+        // for (const i in this.props.posts) {
+        //   if (this.props.posts[i].id === application.post_id) {
+        //     post = this.props.posts[i];
+        //     break;
+        //   }
+        // }
+        // const logo = post.startup_id.logo ? (
+        //   <img src={post.startup_id.logo} alt='' />
+        // ) : (
+        //   <div />
+        // );
+        // return (
+        //   <Link to={route} key={application.id} className="listItem">
+        //     <ApplicationListItem key={application.id} post={post}/>
+        //     <div className="companyInfo">
+        //       <div className="companyText">
+        //         <h1 id="startupName"> { post.startup_id.name} </h1>
+        //         <div className="location">
+        //           <span className="locationIcon" />
+        //           <h2> {`${post.city}, ${post.state}`} </h2>
+        //         </div>
+        //       </div>
+        //       {logo}
+        //     </div>
+        //     <div className="postInfo">
+        //       <h1 id="postTitle">{post.title}</h1>
+        //       <h2 id="status">status: {application.status}</h2>
+        //     </div>
+        //   </Link>
+        // ); */ }
       });
     }
   }
@@ -257,7 +257,7 @@ class SubmittedApplications extends Component {
             <div className="listContent">
               <div className="sideFilterBar">
                 <SearchBar onSearchChange={this.onSearch} onNoSearch={this.clear} />
-                <Select
+                <FilteredSelect
                   isMulti
                   styles={dropdownStyles}
                   name="status-filter"
@@ -276,7 +276,7 @@ class SubmittedApplications extends Component {
                     this.onFilter(statuses, titles);
                   }}
                 />
-                <Select
+                <FilteredSelect
                   isMulti
                   styles={dropdownStyles}
                   name="title-filter"

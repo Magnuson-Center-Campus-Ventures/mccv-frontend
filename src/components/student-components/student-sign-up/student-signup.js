@@ -20,7 +20,7 @@ class StudentSignUp extends Component {
     super(props);
     this.state = {
       index: 0,
-      filled: false, 
+      filled: false,
     };
   }
 
@@ -34,24 +34,24 @@ class StudentSignUp extends Component {
 
   handlePageClick = (data) => {
     this.props.updateStudent(this.props.student.id, this.props.student);
-    if (data.selected === 2){
-      this.setState({ 
+    if (data.selected === 2) {
+      this.setState({
         index: data.selected,
-        filled: false, 
+        filled: false,
       });
-    } else{
-      this.setState({ 
+    } else {
+      this.setState({
         index: data.selected,
-        filled: true, 
+        filled: true,
       });
     }
   };
 
   ifFilled = () => {
     this.setState({
-      filled: true, 
-    }); 
-    this.forceUpdate(); 
+      filled: true,
+    });
+    this.forceUpdate();
   }
 
   onSubmit = () => {
@@ -104,25 +104,25 @@ class StudentSignUp extends Component {
     console.log('phone: ', this.props.student.phone_number);
     console.log('gender: ', this.props.student.gender);
 
-    console.log((this.props.student.first_name !== '' || this.props.student.first_name !== undefined )  && 
-    (this.props.student.last_name != '' || this.props.student.last_name !== undefined)  && 
-    (this.props.student.grad_year != '' || this.props.student.grad_year !== undefined) && 
-    (this.props.student.phone_number != '' || this.props.student.phone_number !== undefined) && 
-    (this.props.student.gender != '' || this.props.student.gender !== undefined)); 
+    console.log((this.props.student.first_name !== '' || this.props.student.first_name !== undefined)
+    && (this.props.student.last_name !== '' || this.props.student.last_name !== undefined)
+    && (this.props.student.grad_year !== '' || this.props.student.grad_year !== undefined)
+    && (this.props.student.phone_number !== '' || this.props.student.phone_number !== undefined)
+    && (this.props.student.gender !== '' || this.props.student.gender !== undefined));
 
     switch (this.state.index) {
       case 0:
         return (
-          <div className="paginator"> 
+          <div className="paginator">
             {this.renderComponent()}
             {this.renderSubmit()}
-            { (this.props.student.first_name === '' || this.props.student.first_name === undefined )  || 
-              (this.props.student.last_name === '' || this.props.student.last_name === undefined)  || 
-              (this.props.student.grad_year === '' || this.props.student.grad_year === undefined) ||
-              (this.props.student.phone_number === '' || this.props.student.phone_number === undefined) || 
-              (this.props.student.gender === '' || this.props.student.gender === undefined)
-            ? (
-              <div />
+            { (this.props.student.first_name === '' || this.props.student.first_name === undefined)
+              || (this.props.student.last_name === '' || this.props.student.last_name === undefined)
+              || (this.props.student.grad_year === '' || this.props.student.grad_year === undefined)
+              || (this.props.student.phone_number === '' || this.props.student.phone_number === undefined)
+              || (this.props.student.gender === '' || this.props.student.gender === undefined)
+              ? (
+                <div />
             //   <ReactPaginate
             //   previousClassName="previous-hide"
             //   previousLinkClassName="previous-link-hide"
@@ -134,47 +134,47 @@ class StudentSignUp extends Component {
             //   pageRangeDisplayed={8}
             //   onPageChange={this.handlePageClick}
             // />
-            ) : (
+              ) : (
                 <ReactPaginate
+                  breakLabel="..."
+                  pageCount={8}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={8}
+                  onPageChange={this.handlePageClick}
+                />
+              )}
+
+          </div>
+        );
+      case 2:
+        return (
+          <div className="paginator">
+            {this.renderComponent()}
+            {this.renderSubmit()}
+            {this.state.filled ? (
+              <ReactPaginate
                 breakLabel="..."
                 pageCount={8}
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={8}
                 onPageChange={this.handlePageClick}
               />
-            )}
-            
-          </div>
-        );
-        case 2: 
-        return(
-          <div className="paginator"> 
-            {this.renderComponent()}
-            {this.renderSubmit()}
-            {this.state.filled ? (
-              <ReactPaginate
-              breakLabel="..."
-              pageCount={8}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={8}
-              onPageChange={this.handlePageClick}
-            />
             ) : (
               <ReactPaginate
-              nextClassName="next-hide"
-              nextLinkClassName="next-link-hide"
-              breakLabel="..."
-              pageCount={8}
-              marginPagesDisplayed={2}
-              pageRangeDisplayed={8}
-              onPageChange={this.handlePageClick}
-            />
+                nextClassName="next-hide"
+                nextLinkClassName="next-link-hide"
+                breakLabel="..."
+                pageCount={8}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={8}
+                onPageChange={this.handlePageClick}
+              />
             ) }
           </div>
-        )
+        );
       case 7:
         return (
-          <div className="paginator"> 
+          <div className="paginator">
             {this.renderComponent()}
             {this.renderSubmit()}
             <ReactPaginate
@@ -190,7 +190,7 @@ class StudentSignUp extends Component {
         );
       default:
         return (
-          <div className="paginator"> 
+          <div className="paginator">
             {this.renderComponent()}
             {this.renderSubmit()}
             <ReactPaginate
