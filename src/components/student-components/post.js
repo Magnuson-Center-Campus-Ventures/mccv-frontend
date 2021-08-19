@@ -6,20 +6,24 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/prefer-stateless-function */
+/* eslint-disable react/sort-comp */
+/* eslint-disable no-return-assign */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-param-reassign */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import { DateRange } from 'react-date-range';
 import {
-  fetchPost, updatePost, 
+  fetchPost, updatePost,
   fetchUser, fetchStartup,
   fetchAllIndustries, fetchAllClasses, fetchAllSkills,
   createIndustryForPost, createReqSkillForPost, createPrefSkillForPost, createClassForPost,
 } from '../../actions';
 import Application from './student-modals/application';
 import Archive from '../admin-modals/archive';
-import Revise from '../admin-modals/revise';
 import FilteredSelect from '../select';
 import pin from '../../../static/img/pin.png';
 import '../../styles/post.scss';
@@ -33,7 +37,6 @@ class Post extends Component {
       post: {},
       applyShow: false,
       archiveShow: false,
-      reviseShow:false,
       isEditing: false,
       ownIndustries: [],
       ownReqSkills: [],
@@ -51,19 +54,17 @@ class Post extends Component {
       validDate: true,
       newResponsibility: '',
       newQuestion: '',
-      showApproveError: false, 
+      showApproveError: false,
     };
     this.showApplyModal = this.showApplyModal.bind(this);
     this.hideApplyModal = this.hideApplyModal.bind(this);
     this.showArchiveModal = this.showArchiveModal.bind(this);
     this.hideArchiveModal = this.hideArchiveModal.bind(this);
-    this.showReviseModal = this.showReviseModal.bind(this);
-    this.hideReviseModal = this.hideReviseModal.bind(this);
     this.approvePost = this.approvePost.bind(this);
-  } 
+  }
 
   componentDidMount() {
-    if (window.location.search == '?edit') {
+    if (window.location.search === '?edit') {
       this.state.isEditing = true;
     }
     this.props.fetchPost(this.props.match.params.postID);
@@ -81,7 +82,7 @@ class Post extends Component {
       if (this.props.post.industries) {
         selectedIndustryOptions = this.props.post.industries.map((industry) => {
           return { value: industry.name, label: industry.name, industry };
-        }); 
+        });
       }
       let selectedClassOptions = [];
       if (this.props.post.desired_classes) {
@@ -156,13 +157,6 @@ class Post extends Component {
     window.scrollTo(0, 0);
   }
 
-  showReviseModal = (e) => {
-    this.setState({
-      reviseShow:true,
-    });
-    window.scrollTo(0,0)
-  }
-
   hideApplyModal = (e) => {
     this.setState({
       applyShow: false,
@@ -172,12 +166,6 @@ class Post extends Component {
   hideArchiveModal = (e) => {
     this.setState({
       archiveShow: false,
-    });
-  }
-
-  hideReviseModal = (e) => {
-    this.setState({
-      reviseShow: false,
     });
   }
 
@@ -206,12 +194,11 @@ class Post extends Component {
 
   submit = () => {
     if (this.state.isEditing) {
-      console.log("R")
       this.checkDateRange();
-      if (this.state.validDate == true) {
+      if (this.state.validDate === true) {
         // this.props.post = this.state.post;
-        if (this.props.user.role === "admin") this.showReviseModal()
-        else this.props.updatePost(this.state.post.id, this.state.post);
+        this.props.updatePost(this.state.post.id, this.state.post);
+        this.setState({ isEditing: false });
       }
     } else {
       this.setState({ isEditing: true });
@@ -220,12 +207,7 @@ class Post extends Component {
     this.forceUpdate();
   }
 
-  discard = () => {
-    this.setState({isEditing:false})
-    this.props.fetchPost(this.props.match.params.postID);
-  }
-
-  /*requiredSkillsHelper= () => {
+  /* requiredSkillsHelper= () => {
     const requiredSkills = [];
     if (this.props.post?.required_skills) {
       for (const [index, value] of this.props.post.required_skills.entries()) {
@@ -253,24 +235,24 @@ class Post extends Component {
     } else {
       return <div />;
     }
-  }*/
+  } */
 
   approvePost() {
     this.props.post.status = this.props.status;
-    if (this.props.post.status === "Pending"){
-      this.setState({showApproveError : true})
+    if (this.props.post.status === 'Pending') {
+      this.setState({ showApproveError: true });
     }
     this.props.updatePost(this.props.post.id, this.props.post);
     this.forceUpdate();
   }
 
   checkDateRange = () => {
-    if (this.props.post.desired_start_date == null){
+    if (this.props.post.desired_start_date === null) {
       this.props.post.desired_start_date = new Date();
     }
     const start = new Date(this.props.post.desired_start_date);
     const end = new Date(this.props.post.desired_end_date);
-    const diff = (end.getTime() - start.getTime())/(1000 * 3600 * 24 * 7);
+    const diff = (end.getTime() - start.getTime()) / (1000 * 3600 * 24 * 7);
     if (diff > 3.5 && diff <= 10) {
       this.state.validDate = true;
     } else {
@@ -280,21 +262,21 @@ class Post extends Component {
   }
 
   renderDateError = () => {
-    if (this.state.validDate == false) {
-      return <div className="date-error">Please make the date range 4-10 weeks long before saving</div>
+    if (this.state.validDate === false) {
+      return <div className="date-error">Please make the date range 4-10 weeks long before saving</div>;
     } else return null;
   }
 
   renderDateRange = () => {
-    if (this.props.post.desired_start_date != null){
+    if (this.props.post.desired_start_date !== null) {
       this.state.start = new Date(this.props.post.desired_start_date);
-    } 
-    if (this.props.post.desired_end_date != null){
+    }
+    if (this.props.post.desired_end_date !== null) {
       this.state.end = new Date(this.props.post.desired_end_date);
     }
     return (
       <DateRange
-        editableDateInputs={true}
+        editableDateInputs
         onChange={(ranges) => {
           this.props.post.desired_start_date = ranges.selection.startDate.toISOString();
           this.props.post.desired_end_date = ranges.selection.endDate.toISOString();
@@ -307,7 +289,7 @@ class Post extends Component {
           key: 'selection',
         }]}
       />
-    )
+    );
   }
 
   // eslint-disable-next-line consistent-return
@@ -315,7 +297,7 @@ class Post extends Component {
     if (this.props.user.role === 'admin') {
       return (
         <div className="post-startup-buttons">
-          {!this.state.isEditing && this.props.post.status != "Archived" 
+          {this.props.post.status !== 'Archived'
             ? (
               <button className="post-btn"
                 type="submit"
@@ -327,56 +309,30 @@ class Post extends Component {
               </button>
             )
             : null}
-            {(!this.state.isEditing && this.props.post.status != "Approved")
+        </div>
+      );
+    } else if (this.props.user.role === 'startup') {
+      return (
+        <div className="post-startup-buttons">
+          {(!this.state.isEditing && this.props.post.status !== 'Archived')
+            ? (
+              <button className="post-btn"
+                type="submit"
+                onClick={(e) => {
+                  this.showArchiveModal();
+                }}
+              >
+                Archive
+              </button>
+            )
+            : null}
+          {(!this.state.isEditing && this.props.post.status !== 'Approved')
             ? (
               <button className="post-btn"
                 type="submit"
                 onClick={this.approvePost}
               >
                 Approve
-              </button>
-            )
-            : null}
-            {(!this.state.isEditing)
-            ? (
-              <button className="post-btn"
-                type="submit"
-                onClick={this.submit}
-              >
-                Revise
-              </button>
-            )
-            : (
-              <div>
-                <button id="save-changes-btn"
-                className="post-btn"
-                type="submit"
-                onClick={this.submit}
-                >
-                  Save Changes
-                </button>
-                <button id="discard-changes-btn"
-                className="post-btn"
-                onClick={this.discard}
-                >
-                  Discard Changes
-                </button>
-              </div>
-            )}
-        </div>
-      );
-    } else if (this.props.user.role === 'startup') {
-      return (
-        <div className="post-startup-buttons">
-          {(!this.state.isEditing && this.props.post.status != "Archived")
-            ? (
-              <button className="post-btn"
-                type="submit"
-                onClick={(e) => {
-                  this.showArchiveModal();
-                }}
-              >
-                Archive
               </button>
             )
             : null}
@@ -391,19 +347,19 @@ class Post extends Component {
             )
             : (
               <button id="save-changes-btn"
-              className="post-btn"
-              type="submit"
-              onClick={this.submit}
+                className="post-btn"
+                type="submit"
+                onClick={this.submit}
               >
                 Save Changes
               </button>
             )}
-          {/*<button id="edit-post-btn"
+          {/* <button id="edit-post-btn"
             className="post-btn"
             type="submit"
             onClick={this.submit}
           >{this.state.isEditing ? 'Save Changes' : 'Edit Position'}
-            </button>*/}
+            </button> */}
         </div>
       );
     } else if (this.props.user.role === 'student') {
@@ -425,15 +381,15 @@ class Post extends Component {
         <div className="input-title" id="location-type">How will volunteering be conducted? (Check all that apply)</div>
         <div className="post-input-row">
           <div className="post-checkbox">
-            <input type="checkbox" id="virtual" onChange={(event) => this.changeCheckboxField('virtual', event)} checked={this.state.post?.virtual}/>
+            <input type="checkbox" id="virtual" onChange={(event) => this.changeCheckboxField('virtual', event)} checked={this.state.post?.virtual} />
             <label htmlFor="virtual">Virtually</label>
           </div>
           <div className="post-checkbox">
-            <input type="checkbox" id="inperson" onChange={(event) => this.renderEditCityState(event)} checked={this.state.post?.inperson}/>
+            <input type="checkbox" id="inperson" onChange={(event) => this.renderEditCityState(event)} checked={this.state.post?.inperson} />
             <label htmlFor="inperson">In-Person</label>
           </div>
         </div>
-      
+
         <div className="post-input-row" id="city-state-row">
           <div className="input-row-elem">
             <div className="input-title">City</div>
@@ -450,17 +406,17 @@ class Post extends Component {
 
   renderEditCityState = (event) => {
     this.changeCheckboxField('inperson', event);
-    var inPersonCheckbox = document.getElementById("inperson");
-    var cityStateRow = document.getElementById("city-state-row");
+    const inPersonCheckbox = document.getElementById('inperson');
+    const cityStateRow = document.getElementById('city-state-row');
 
-    if (inPersonCheckbox.checked == true) {
-      cityStateRow.style.display = "flex";
+    if (inPersonCheckbox.checked === true) {
+      cityStateRow.style.display = 'flex';
     } else {
-      cityStateRow.style.display = "none";
+      cityStateRow.style.display = 'none';
     }
   }
 
-  renderResponsibilitiesNoEdit = () => { 
+  renderResponsibilitiesNoEdit = () => {
     const responsibilities = [];
     if (this.props.post?.responsibilities) {
       for (let i = 0; i < this.props.post.responsibilities.length; i++) {
@@ -473,9 +429,9 @@ class Post extends Component {
       return <div />;
     }
   }
-  
-  renderEditResponsibilities = () => { 
-    if (this.state.post.responsibilities){
+
+  renderEditResponsibilities = () => {
+    if (this.state.post.responsibilities) {
       return this.state.post.responsibilities.map((resp, index) => {
         return (
           <div key={resp} className="resp-input">
@@ -502,15 +458,15 @@ class Post extends Component {
     if (this.props.post.questions) {
       this.props.post.questions.map((question) => {
         questions.push(
-          <li id="responsibility" key={question}>{question}</li>
+          <li id="responsibility" key={question}>{question}</li>,
         );
       });
       return questions;
     }
   }
-        
+
   renderQuestionsEdit = (event) => {
-    if (this.state.post.questions){
+    if (this.state.post.questions) {
       return this.state.post.questions.map((resp, index) => {
         return (
           <div key={index} className="resp-input">
@@ -524,14 +480,15 @@ class Post extends Component {
                   };
                 });
                 this.forceUpdate();
-              }}>
-            <i className="far fa-trash-alt delete-icon" />
+              }}
+            >
+              <i className="far fa-trash-alt delete-icon" />
             </button>
           </div>
         );
       });
     } else {
-      return <div></div>
+      return <div />;
     }
   }
 
@@ -563,33 +520,34 @@ class Post extends Component {
           </div>
 
           <hr className="post-edit-divider" />
-          
+
           <h2>Position Details</h2>
           <div className="resps-header">
             <div className="input-title">Description</div>
             <TextareaAutosize className="tall-input" defaultValue={this.props.post?.description} onBlur={(event) => this.changePostField('description', event)} />
           </div>
           <div className="edits-resps">
-          <div className="resps-header">
-            <div className="input-title">Responsibilities</div>
-            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newResponsibility = event.target.value} />
-            <button className="add-button"
-              onClick={() => {
-                  if (!this.state.post.responsibilities.includes(this.state.newResponsibility)){
-                  this.setState((prevState) => {
-                    prevState.post.responsibilities.push(this.state.newResponsibility);
-                    this.state.newResponsibility = '';
-                    return {
-                      ...prevState,
-                    };
-                  });
-                }
-              }}>
-            <i className="fa fa-plus add-icon" aria-hidden="true" />
-            </button>
+            <div className="resps-header">
+              <div className="input-title">Responsibilities</div>
+              <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newResponsibility = event.target.value} />
+              <button className="add-button"
+                onClick={() => {
+                  if (!this.state.post.responsibilities.includes(this.state.newResponsibility)) {
+                    this.setState((prevState) => {
+                      prevState.post.responsibilities.push(this.state.newResponsibility);
+                      this.state.newResponsibility = '';
+                      return {
+                        ...prevState,
+                      };
+                    });
+                  }
+                }}
+              >
+                <i className="fa fa-plus add-icon" aria-hidden="true" />
+              </button>
+            </div>
+            {this.renderEditResponsibilities()}
           </div>
-          {this.renderEditResponsibilities()}
-        </div>
 
           <hr className="post-edit-divider" />
           <div className="edits-resps">
@@ -598,7 +556,7 @@ class Post extends Component {
               <TextareaAutosize className="question-fields-text" onBlur={(event) => this.state.newQuestion = event.target.value} />
               <button className="add-button"
                 onClick={() => {
-                  if (!this.state.post.questions.includes(this.state.newQuestion)){
+                  if (!this.state.post.questions.includes(this.state.newQuestion)) {
                     this.setState((prevState) => {
                       prevState.post.questions.push(this.state.newQuestion);
                       this.state.newQuestion = '';
@@ -609,7 +567,7 @@ class Post extends Component {
                   }
                 }}
               >
-              <i className="fa fa-plus add-icon" aria-hidden="true" />
+                <i className="fa fa-plus add-icon" aria-hidden="true" />
               </button>
             </div>
             {this.renderQuestionsEdit()}
@@ -620,12 +578,12 @@ class Post extends Component {
           <div className="list-section">
             <h2>Industries</h2>
             <FilteredSelect
-              createable={true}
+              createable
               className="select-dropdown"
               isMulti
               styles={dropdownStyles}
               name="industries"
-              placeholder="Add Relevant Industries"
+              placeholder="Select Industries"
               value={this.state.selectedIndustryOptions}
               options={this.state.allIndustryOptions}
               onChange={(selectedOptions) => {
@@ -651,12 +609,12 @@ class Post extends Component {
           <div className="list-section">
             <h2>Desired Classes</h2>
             <FilteredSelect
-              createable={true}
+              createable
               className="select-dropdown"
               isMulti
               styles={dropdownStyles}
               name="classes"
-              placeholder="Add Desired Classes"
+              placeholder="Select Classes"
               value={this.state.selectedClassOptions}
               options={this.state.allClassOptions}
               onChange={(selectedOptions) => {
@@ -684,12 +642,12 @@ class Post extends Component {
           <div className="list-section">
             <h2>Required Skills</h2>
             <FilteredSelect
-              createable={true}
+              createable
               className="select-dropdown"
               isMulti
               styles={dropdownStyles}
               name="req-skills"
-              placeholder="Add Required Skills"
+              placeholder="Select Skills"
               value={this.state.selectedReqSkillOptions}
               options={this.state.allSkillOptions}
               onChange={(selectedOptions) => {
@@ -715,12 +673,12 @@ class Post extends Component {
           <div className="list-section">
             <h2>Preferred Skills</h2>
             <FilteredSelect
-              createable={true}
+              createable
               className="select-dropdown"
               isMulti
               styles={dropdownStyles}
               name="pref-skills"
-              placeholder="Add Preferred Skills"
+              placeholder="Select Skills"
               value={this.state.selectedPrefSkillOptions}
               options={this.state.allSkillOptions}
               onChange={(selectedOptions) => {
@@ -755,11 +713,11 @@ class Post extends Component {
       return (
         <div className="profileCompanyInfo">
           <div className="profileCompanyLeft">
-            <img src={this.props.post.startup_id.logo} alt="no logo" className="profileCompanyLogo"/>
+            <img src={this.props.post.startup_id.logo} alt="no logo" className="profileCompanyLogo" />
           </div>
           <div className="profileCompanyRight">
             <div className="profileCompanyTitle"> { this.props.post.startup_id.name} </div>
-          </div>  
+          </div>
         </div>
       );
     } else {
@@ -777,7 +735,8 @@ class Post extends Component {
     if (start) {
       return (
         <span className="dateText">Starts {`${start.getMonth() + 1}/${start.getDate()}/${start.getFullYear()}, 
-        Ends ${end.getMonth() + 1}/${end.getDate()}/${end.getFullYear()}`}</span>
+        Ends ${end.getMonth() + 1}/${end.getDate()}/${end.getFullYear()}`}
+        </span>
       );
     } else {
       return (
@@ -787,12 +746,12 @@ class Post extends Component {
   }
 
   renderVirtual = () => {
-    if (this.props.post.virtual==true) {
+    if (this.props.post.virtual === true) {
       return (
         <div className="position-location-row">
           <span className="virtualIcon" />
           <span className="position-location">Virtual</span>
-        </div>  
+        </div>
       );
     } else {
       return (
@@ -807,7 +766,7 @@ class Post extends Component {
         <div className="position-location-row">
           <span className="locationIcon" />
           <span className="position-location"> {`${this.props.post.city}, ${this.props.post.state}`} </span>
-        </div> 
+        </div>
       );
     } else {
       return (
@@ -849,11 +808,11 @@ class Post extends Component {
   }
 
   renderStatusPill = () => {
-    if (this.props.post.status === "Approved") {
+    if (this.props.post.status === 'Approved') {
       return (
         <div id="app-status-green-pill">Live</div>
       );
-    } else if (this.props.post.status === "Archived") {
+    } else if (this.props.post.status === 'Archived') {
       return (
         <div id="app-status-red-pill">Archived</div>
       );
@@ -866,7 +825,7 @@ class Post extends Component {
 
   renderNoEdit = () => {
     return (
-      //<div id="wrap-content">
+      // <div id="wrap-content">
       <div>
         <Application onClose={this.hideApplyModal} show={this.state.applyShow} />
         {(this.state.applyShow) && (
@@ -891,21 +850,21 @@ class Post extends Component {
                 </div>
               </div>
             </div>
-            
+
             <hr className="profile-divider" />
             <div className="lists-row">
               <div className="list-section">
                 <h2>Required Skills</h2>
                 {this.renderGreenPills(this.props.post?.required_skills)}
               </div>
-              <div className="list-section" >
+              <div className="list-section">
                 <h2>Preferred Skills</h2>
                 {this.renderGrayPills(this.props.post?.preferred_skills)}
               </div>
               <div className="list-section">
                 <h2>Desired Classes</h2>
                 {this.renderRedPills(this.props.post?.desired_classes)}
-              </div> 
+              </div>
               <div className="list-section">
                 <h2>Industries</h2>
                 {this.renderYellowPills(this.props.post?.industries)}
@@ -931,7 +890,7 @@ class Post extends Component {
                   <ul className="list-no-margin">{this.renderQuestionsNoEdit()}</ul>
                 </div>
               </div>
-            </div> 
+            </div>
 
             <div className="app-status-row">
               <div id="app-status-title">Status: </div>
@@ -956,7 +915,7 @@ class Post extends Component {
               <div className="post-time-commitment">
                 {this.props.post.time_commitment ? 'Time Commitment'.concat(': ', this.props.post.time_commitment.toString()).concat(' ', 'hrs/week') : null}
                 </div>
-            </div> 
+            </div>
 
             <div className="top">
               <div id="project">
@@ -970,13 +929,13 @@ class Post extends Component {
                 <ul id="skills">{this.preferredSkillsHelper()}</ul>
               </div>
             </div>
-            
+
             <div className="bottom">
               <h3>Application Questions</h3>
               <ul id="skills">{this.renderQuestionsNoEdit()}</ul>
               <h3>Responsibilities</h3>
               <ul id="skills">{this.renderResponsibilitiesNoEdit()}</ul>
-            </div> 
+            </div>
             */}
           </div>
         </div>
@@ -1029,7 +988,6 @@ class Post extends Component {
       if (this.state.isEditing) {
         return (
           <div>
-            <Revise type = "post" data={this.state.post} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({ isEditing: false })}} />
             <div>{this.renderEdit()}</div>
             <div>{this.renderButtons()}</div>
           </div>
@@ -1037,7 +995,6 @@ class Post extends Component {
       } else {
         return (
           <div>
-            <Revise type = "post" data={this.state.post} onClose={this.hideReviseModal} show={this.state.reviseShow} onSuccess={()=>{this.setState({ isEditing: false })}} />
             <div>{this.renderNoEdit()}</div>
             <div>{this.renderButtons()}</div>
           </div>

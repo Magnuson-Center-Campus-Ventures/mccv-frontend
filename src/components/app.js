@@ -54,10 +54,8 @@ const App = (props) => {
           {/* Private route */}
           <PrivateRoute path="/posts/:postID" component={Post} />
           <PrivateRoute path="/posts" component={Postings} />
-          {/* Admin routes */}
+          {/* Admin route */}
           <AdminRoute path="/dashboard" component={AdminDashboard} />
-          <AdminRoute path="/startupprofile/:startupID/:revise" component={StartupProfileStartups} />
-          <AdminRoute path="/profile/:studentID/:revise" component={StudentProfile} />
           {/* Student routes */}
           <StudentRoute path="/student-signup" component={StudentSignUp} />
           <StudentRoute path="/startups/:startupID" component={StartupProfile} />
