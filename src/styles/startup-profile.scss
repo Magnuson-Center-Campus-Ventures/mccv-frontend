@@ -281,20 +281,21 @@ br {
 }
 
 .startup-profile-admin-button {
-    background-color: #45B990;
-    width: 120px;
-    height: 45px;
-    color: white;
-    border: none;
-    font-size: 1em;
-    font-family: Avenir Next;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 12px;
-    padding-right: 12px;
-    border-radius: 20px;
-    margin-top: 1em;
-    margin-bottom: 2em;
+  background-color: #45B990;
+  width: 120px;
+  height: 45px;
+  color: white;
+  border: none;
+  font-size: 1em;
+  font-family: Avenir Next;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 20px;
+  margin-top: 1em;
+  margin-bottom: 2em;
+  margin-right:2em;
 }
 
 .startup-profile-admin-button:hover {
@@ -310,17 +311,18 @@ br {
 }
 
 .startup-edit-button {
-    background-color: #45B990;
-    color: white;
-    border: none;
-    margin-top: 1em;
-    margin-bottom: 2em;
-    text-decoration: none;
-    font-size: 1em;
-    border-radius: .85em;
-    width: 8em;
-    height: 2.5em;
-    font-family: Avenir Next;
+  background-color: #45B990;
+  color: white;
+  border: none;
+  margin-top: 1em;
+  margin-bottom: 2em;
+  margin-right: 2em;
+  text-decoration: none;
+  font-size: 1em;
+  border-radius: .85em;
+  width: 8em;
+  height: 2.5em;
+  font-family: Avenir Next;
 }
 
 .startup-video {

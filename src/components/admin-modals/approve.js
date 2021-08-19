@@ -31,8 +31,8 @@ const Approve = (props) => {
 
 
   return (
-    <div className="archiveContainer">
-      <div className="archiveModal" id="archiveModal">
+    <div className="modal-container">
+      <div className="modal-inner" id="archiveModal">
         {/* <img id="close-app"
           src={close}
           alt="close"
@@ -50,7 +50,7 @@ const Approve = (props) => {
             props.onClose(e);
           }}
         />
-        <div className="modalContent">
+        <div className="modal-content">
           <p> Are you sure you want to approve this startup? <br />
             All of their posts will also go live when you approve them.
           </p>
