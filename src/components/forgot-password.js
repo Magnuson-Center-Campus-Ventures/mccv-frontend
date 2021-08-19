@@ -17,19 +17,19 @@ class ForgotPassword extends Component {
   }
 
   sendEmail = (event) => {
-    const fields = { ...this.state };
+    let fields = { ...this.state }; 
     fields.email = this.state.email.toLowerCase();
-    this.props.createResetToken(fields, this.props.history);
+    this.props.createResetToken(fields, this.props.history); 
   }
 
   renderError = () => {
-    if (this.props.error && this.props.error !== 'Email found') {
+    if (this.props.error && this.props.error != 'Email found') {
       return <div className="signinError">{this.props.error}</div>;
     }
     return null;
   }
 
-  render() {
+  render() { 
     return (
       <div className="signinPage">
         <div className="signinBoard">

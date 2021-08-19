@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -16,7 +15,7 @@ class StartupSignUp extends Component {
     super(props);
     this.state = {
       index: 0,
-      filled: false,
+      filled: false, 
     };
   }
 
@@ -28,18 +27,18 @@ class StartupSignUp extends Component {
 
   handlePageClick = (data) => {
     this.props.updateStartup(this.props.startup.id, this.props.startup);
-    this.setState({
-      index: data.selected,
-      filled: true,
-    });
+    this.setState({ 
+      index: data.selected, 
+      filled: true, 
+     });
     this.forceUpdate();
   };
 
   ifFilled = () => {
     this.setState({
-      filled: true,
-    });
-    this.forceUpdate();
+      filled: true, 
+    }); 
+    this.forceUpdate(); 
   }
 
   onSubmit = () => {
@@ -79,17 +78,17 @@ class StartupSignUp extends Component {
     switch (this.state.index) {
       case 0:
         return (
-          <div className="paginator">
+          <div className="paginator"> 
             {this.renderComponent()}
             {this.renderSubmit()}
-            {(this.props.startup.name === '' || this.props.startup.name === undefined)
-              || (this.props.startup.city === '' || this.props.startup.city === undefined)
-              || (this.props.startup.state === '' || this.props.startup.state === undefined)
-              || (this.props.startup.contact_email === '' || this.props.startup.contact_email === undefined)
-              || (this.props.startup.founder_gender === '' || this.props.startup.founder_gender === undefined)
-              || (this.props.startup.affiliation === '' || this.props.startup.affiliation === undefined)
-              ? (
-                <div />
+            {(this.props.startup.name === ''|| this.props.startup.name === undefined) ||
+              (this.props.startup.city === '' || this.props.startup.city === undefined ) ||
+              (this.props.startup.state === '' || this.props.startup.state === undefined ) ||
+              (this.props.startup.contact_email === '' || this.props.startup.contact_email === undefined ) ||
+              (this.props.startup.founder_gender === '' || this.props.startup.founder_gender === undefined ) ||
+              (this.props.startup.affiliation === '' || this.props.startup.affiliation === undefined ) 
+            ? (
+              <div />
             //   <ReactPaginate
             //   previousClassName="previous-hide"
             //   previousLinkClassName="previous-link-hide"
@@ -99,25 +98,25 @@ class StartupSignUp extends Component {
             //   pageRangeDisplayed={3}
             //   onPageChange={this.handlePageClick}
             // />
-              ) : (
-                <ReactPaginate
+            ) : (
+              <ReactPaginate
               // nextClassName="next-hide"
               // nextLinkClassName="next-link-hide"
               // previousClassName="previous-hide"
               // previousLinkClassName="previous-link-hide"
-                  breakLabel="..."
-                  pageCount={3}
-                  marginPagesDisplayed={2}
-                  pageRangeDisplayed={3}
-                  onPageChange={this.handlePageClick}
-                />
-              )}
-
+              breakLabel="..."
+              pageCount={3}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={3}
+              onPageChange={this.handlePageClick}
+            />
+            )}
+            
           </div>
         );
       case 7:
         return (
-          <div className="paginator">
+          <div className="paginator"> 
             {this.renderComponent()}
             {this.renderSubmit()}
             <ReactPaginate
@@ -133,7 +132,7 @@ class StartupSignUp extends Component {
         );
       default:
         return (
-          <div className="paginator">
+          <div className="paginator"> 
             {this.renderComponent()}
             {this.renderSubmit()}
             <ReactPaginate

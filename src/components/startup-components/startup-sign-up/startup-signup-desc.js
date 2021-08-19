@@ -1,11 +1,9 @@
-/* eslint-disable react/sort-comp */
-/* eslint-disable react/no-unescaped-entities */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import {
-  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup, uploadImage,
+  fetchStartupByUserID, fetchUser, updateStartup, fetchStartup, uploadImage
 } from '../../../actions';
 import embedInstructions from '../../../assets/embed-instructions.png';
 
@@ -31,11 +29,11 @@ class StartupDesc extends Component {
     if (file) {
       this.state.preview = window.URL.createObjectURL(file);
       if (file) {
-        uploadImage(file).then((url) => {
+        uploadImage(file).then(url => {
           this.props.startup.logo = url;
           this.state.startup.logo = url;
           this.state.preview = url;
-        }).catch((error) => {
+        }).catch(error => {
           this.state.error = error;
         });
       }
@@ -45,13 +43,12 @@ class StartupDesc extends Component {
     this.forceUpdate();
   }
 
-  renderLogo() {
-    if (this.state.preview === '') {
+  renderLogo(){
+    if (this.state.preview === ''){
       this.state.preview = this.props.startup.logo;
     }
-    return (<img className="startup-logo" id="preview" alt="preview" src={this.state.preview} />);
+    return(<img className="startup-logo" id="preview" alt="preview" src={this.state.preview} />);
   }
-
   // update startup field
   changeStartupField = (field, event) => {
     // eslint-disable-next-line prefer-destructuring
@@ -103,11 +100,11 @@ class StartupDesc extends Component {
             src={embedInstructions}
             className="embed-instructions-image-signup"
           />
-          <iframe
-            title="videoLarge"
-            className="embed-responsive-item"
+          <iframe 
+            title="videoLarge" 
+            className="embed-responsive-item" 
             allow="fullscreen"
-            src={this.state.startup.video}
+            src={this.state.startup.video} 
           />
         </div>
       </div>

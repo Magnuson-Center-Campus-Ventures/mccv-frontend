@@ -48,7 +48,7 @@ class StudentTiming extends Component {
   checkDateRange = () => {
     const start = new Date(this.state.student.desired_start_date);
     const end = new Date(this.state.student.desired_end_date);
-    const diff = (end.getTime() - start.getTime()) / (1000 * 3600 * 24 * 7);
+    const diff = (end.getTime() - start.getTime())/(1000 * 3600 * 24 * 7);
     if (diff > 3.5 && diff <= 10) {
       this.state.validDate = true;
       this.props.updateStudent(this.props.student.id, this.state.student);
@@ -60,20 +60,20 @@ class StudentTiming extends Component {
 
 
   renderDateError = () => {
-    if (this.state.validDate === false) {
-      return <div className="date-error">Please make the date range 4-10 weeks long</div>;
+    if (this.state.validDate == false) {
+      return <div className="date-error">Please make the date range 4-10 weeks long</div>
     } else return null;
   }
 
   renderDateRange = () => {
     return (
       <DateRange
-        editableDateInputs
+        editableDateInputs={true}
         onChange={(ranges) => {
           this.state.secondClick = !this.state.secondClick;
           this.state.student.desired_start_date = ranges.selection.startDate.toISOString();
           this.state.student.desired_end_date = ranges.selection.endDate.toISOString();
-          if (this.state.secondClick) {
+          if (this.state.secondClick){
             this.checkDateRange();
           }
           this.forceUpdate();
@@ -85,35 +85,35 @@ class StudentTiming extends Component {
           key: 'selection',
         }]}
       />
-    );
+    )
   }
 
-  renderTimingQuestions() {
-    return (
-      <div className="question">
-        <div className="question-header">
-          <div className="question-header-prompt">
-            <h1>Timing</h1>
-            <p>(Optional) Add your desired start date, end date, and time commitment!</p>
+    renderTimingQuestions() {
+      return (
+        <div className="question">
+          <div className="question-header">
+            <div className="question-header-prompt">
+              <h1>Timing</h1>
+              <p>(Optional) Add your desired start date, end date, and time commitment!</p>
+            </div>
+            <i className="far fa-clock question-header-icon" id="icon" />
           </div>
-          <i className="far fa-clock question-header-icon" id="icon" />
-        </div>
-        <div className="question-horizontal">
-          <div className="student-edit-dates">
-            <div>Desired Start and End Date</div>
-            {this.renderDateError()}
-            {this.renderDateRange()}
+          <div className="question-horizontal">
+            <div className="student-edit-dates">
+              <div>Desired Start and End Date</div>
+              {this.renderDateError()}
+              {this.renderDateRange()}
+            </div>
+            <p className="question-fields-title">Hours/Week</p>
+            <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('time_commitment', event)} defaultValue={this.props.student.time_commitment} />
           </div>
-          <p className="question-fields-title">Hours/Week</p>
-          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('time_commitment', event)} defaultValue={this.props.student.time_commitment} />
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  render() {
-    return this.renderTimingQuestions();
-  }
+    render() {
+      return this.renderTimingQuestions();
+    }
 }
 
 const mapStateToProps = (reduxState) => ({
