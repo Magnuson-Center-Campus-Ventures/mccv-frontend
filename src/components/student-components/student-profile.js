@@ -519,10 +519,11 @@ class StudentProfile extends Component {
   }
 
   renderStudentActivity = () => {
-    if (this.state.student?.desired_start_date != null && this.state.student.job_search_status=="Active") {
+    if (this.state.student?.desired_start_date != null && this.state.student?.job_search_status.toLocaleLowerCase() 
+    == "active") {
       return (<span className="student-job-search-status"> Actively Searching </span>)
     }
-    return ""
+    return (<span className="student-job-search-status" style={{color: "red"}}> Not Actively Searching </span>)
   }
 
   startDate = () => {
@@ -572,12 +573,16 @@ class StudentProfile extends Component {
   }
 
   studentStatusChange = (event) => {
-    const status = this.state.student.job_search_status === 'Active' ? 'Inactive' : 'Active';
+    var status = 'inactive'
+    if (this.state.student?.job_search_status) {
+      status = this.state.student.job_search_status.toLocaleLowerCase() == 
+      'active' ? 'inactive': 'active';
+    } 
     this.setState((prevState) => {
-      const ns = { ...prevState.student, job_search_status: status };
+      const new_student = {...prevState.student, job_search_status: status}
       return {
         ...prevState,
-        student: ns,
+       student: new_student,
       };
     });
   }
@@ -628,7 +633,8 @@ class StudentProfile extends Component {
             <div className="input-activity">
               <div className="input-title">Actively Searching?</div>
               <div>Shows startups you are actively looking at this platform.</div>
-              <Switch onChange={this.studentStatusChange} checked={this.state.student.job_search_status === 'Active'} />
+              <Switch onChange={this.studentStatusChange} checked={this.state.student?.job_search_status.toLocaleLowerCase() 
+                == 'active'} />
             </div>
           </div>
 
