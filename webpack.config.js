@@ -26,7 +26,7 @@ module.exports = {
         exclude: /node_modules/,
         use: [ // here's the part you want
           { loader: 'babel-loader' },
-          // { loader: 'eslint-loader' },
+          { loader: 'eslint-loader' },
         ],
       },
       {

@@ -821,10 +821,22 @@ class StudentProfile extends Component {
               {this.renderStudentActivity()}
             </div>
             <div className="student-start-date">
-              {this.startDate()}
+              {
+                this.state.student.hasOwnProperty("job_search_status") && this.state.student.job_search_status.toLocaleLowerCase() === "active"
+                ?
+                this.startDate()
+                :
+                null
+              }
             </div>
             <div className="student-end-date">
-              {this.endDate()}
+              {
+                this.state.student.hasOwnProperty("job_search_status") && this.state.student.job_search_status.toLocaleLowerCase() === "active"
+                ?
+                this.endDate()
+                :
+                null
+              }
             </div>
             <div className="post-time-commitment">
               {this.state.student.time_commitment ? 'Time Commitment'.concat(': ', this.state.student.time_commitment.toString()).concat(' ', 'hrs/week') : null}
