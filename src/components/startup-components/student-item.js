@@ -80,7 +80,7 @@ const StudentListItem = (props) => {
       );
     } else if (index <= skillPillLimit && ((skillChars > skillCharLimit && skillChars - skill.name.length <= skillCharLimit) 
                 || (index == skillPillLimit && skillChars <= skillCharLimit))) {
-      console.log(skillChars+"/"+skillCharLimit+" index: "+index)
+      //console.log(skillChars+"/"+skillCharLimit+" index: "+index)
       return (
         <div className="greenPill" key={skill.id}>
           ...
