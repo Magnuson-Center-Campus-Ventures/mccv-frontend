@@ -264,6 +264,10 @@ class Students extends Component {
     this.searchAndFilter('emptytext', industries, skills, this.state.recommend);
   }
 
+  findActivelySearching = (students) => {
+    this.setState({ searchingStudents: students.filter((student) => student?.job_search_status === 'Active') });
+  }
+
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
     this.setState({ archived: [] });
@@ -291,10 +295,6 @@ class Students extends Component {
 
   handleRecommendChange(checked) {
     this.setState({ recommend: checked });
-  }
-
-  findActivelySearching = (students) => {
-    this.setState({ searchingStudents: students.filter((student) => student?.job_search_status === 'Active') });
   }
 
   renderStudents() {

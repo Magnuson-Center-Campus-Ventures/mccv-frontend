@@ -186,7 +186,7 @@ class StudentProfileStartup extends Component {
 
   renderStudentActivity = () => {
     console.log(this.props.student?.job_search_status);
-    if (this.props.student?.desired_start_date != null && this.props.student?.job_search_status == 'Active') {
+    if (this.props.student?.desired_start_date != null && this.props.student?.job_search_status === 'Active') {
       return (<span className="student-job-search-status"> Actively Searching </span>);
     }
     return '';

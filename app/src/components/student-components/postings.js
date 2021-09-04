@@ -487,8 +487,8 @@ class Posts extends Component {
       multiValue: (base, state) => {
         let bgColor;
         // TODO: link bgColor automatically to css of .greenPill and .yellowPill
-        if (state.selectProps.name == 'industry-filter') bgColor = 'rgba(221, 192, 88, 0.514)';
-        else if (state.selectProps.name == 'skill-filter') bgColor = 'rgba(69, 185, 144, 0.5)';
+        if (state.selectProps.name === 'industry-filter') bgColor = 'rgba(221, 192, 88, 0.514)';
+        else if (state.selectProps.name === 'skill-filter') bgColor = 'rgba(69, 185, 144, 0.5)';
 
         return {
           ...base,
