@@ -11,7 +11,7 @@ const StudentListItem = (props) => {
       case 'Undergrad':
         return 'UG';
       case 'Tuck':
-        return'Tu';
+        return 'Tu';
       case 'Thayer':
         return 'Th';
       case 'Geisel':
@@ -78,9 +78,9 @@ const StudentListItem = (props) => {
           {skill.name}
         </div>
       );
-    } else if (index <= skillPillLimit && ((skillChars > skillCharLimit && skillChars - skill.name.length <= skillCharLimit) 
-                || (index == skillPillLimit && skillChars <= skillCharLimit))) {
-      //console.log(skillChars+"/"+skillCharLimit+" index: "+index)
+    } else if (index <= skillPillLimit && ((skillChars > skillCharLimit && skillChars - skill.name.length <= skillCharLimit)
+                || (index === skillPillLimit && skillChars <= skillCharLimit))) {
+      // console.log(skillChars+"/"+skillCharLimit+" index: "+index)
       return (
         <div className="greenPill" key={skill.id}>
           ...
@@ -105,8 +105,8 @@ const StudentListItem = (props) => {
           {industry.name}
         </div>
       );
-    } else if ( index <= industryPillLimit && ((industryChars > industryCharLimit && industryChars - industry.name.length <= industryCharLimit) 
-                || (index == industryPillLimit && industryChars <= industryCharLimit))) {
+    } else if (index <= industryPillLimit && ((industryChars > industryCharLimit && industryChars - industry.name.length <= industryCharLimit)
+                || (index === industryPillLimit && industryChars <= industryCharLimit))) {
       return (
         <div className="yellowPill" key={industry.id}>
           ...
@@ -143,33 +143,30 @@ const StudentListItem = (props) => {
     )
   );
 
-  const activelySearching= (props.student?.job_search_status === 'Active')
-  const activeClass = (activelySearching) ? 'activelySearching' : "";
+  const activelySearching = (props.student?.job_search_status === 'Active');
+  const activeClass = (activelySearching) ? 'activelySearching' : '';
 
   // all other variables aren't functions, so maybe this shouldn't be a func either. thought this was most efficient tho.
-  const getTimeFrame = () =>{
+  const getTimeFrame = () => {
     if (activelySearching) {
-      const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const activeTimeFrame = [
-        monthNames[new Date(props.student?.desired_start_date).getMonth()], 
-        monthNames[new Date(props.student?.desired_end_date).getMonth()]
-      ]
-      return (activelySearching) ? ( 
-        (activeTimeFrame[0]!=activeTimeFrame[1]) ? (
-          activeTimeFrame[0] +" - " + activeTimeFrame[1]
+        monthNames[new Date(props.student?.desired_start_date).getMonth()],
+        monthNames[new Date(props.student?.desired_end_date).getMonth()],
+      ];
+      return (activelySearching) ? (
+        (activeTimeFrame[0] !== activeTimeFrame[1]) ? (
+          `${activeTimeFrame[0]} - ${activeTimeFrame[1]}`
         ) : (activeTimeFrame[0])
-        ) : "";
+      ) : '';
     }
-  }
-
-  
-  
+  };
 
   const activeStatus = (activelySearching) ? (
-  <div className="activeStatus">
-    Actively Searching for <strong> {getTimeFrame()} </strong>
-  </div>
-  ) : "";
+    <div className="activeStatus">
+      Actively Searching for <strong> {getTimeFrame()} </strong>
+    </div>
+  ) : '';
 
   const route = `/students/${props.student._id}`;
   // return (
@@ -216,6 +213,5 @@ const StudentListItem = (props) => {
     </Link>
   );
 };
-
 
 export default StudentListItem;

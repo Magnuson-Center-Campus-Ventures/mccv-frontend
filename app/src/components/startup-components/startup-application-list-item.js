@@ -228,7 +228,6 @@ class StartupApplicationListItem extends Component {
     } else return null;
   } */
 
-
   renderQuestions = () => {
     const items = [];
     if (this.props.current.questions && this.props.current.questions.length > 0) {
@@ -250,7 +249,6 @@ class StartupApplicationListItem extends Component {
       return <div />;
     }
   }
-
 
   handleApprove = () => {
     const newSubmittedApp = this.props.current;
@@ -278,7 +276,6 @@ class StartupApplicationListItem extends Component {
     const newClassName = oldClassName === 'dialogIsOpen' ? 'dialogIsClosed' : 'dialogIsOpen';
     document.getElementById('page-wrap').className = newClassName;
   }
-
 
   showConfirmApprove = () => {
     this.setState({ openConfirmApprove: true });

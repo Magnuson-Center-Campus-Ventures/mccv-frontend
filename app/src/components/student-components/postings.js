@@ -193,7 +193,7 @@ class Posts extends Component {
   sortedVirtualPosts = () => {
     this.setState({ sortedVirtualPosts: [] });
     if (this.state.recommend && this.state.virtualChecked) {
-      console.log("e")
+      console.log('e');
       this.state.sortedPosts.forEach((post) => {
         if (post.virtual === true && post.status === 'Approved') {
           this.setState((prevState) => ({
@@ -477,7 +477,6 @@ class Posts extends Component {
     }
   }
 
-
   render() {
     // Styles for filter dropdowns
     const dropdownStyles = {
@@ -485,18 +484,17 @@ class Posts extends Component {
         ...base,
         width: 200,
       }),
-      multiValue : (base, state) =>{
+      multiValue: (base, state) => {
         let bgColor;
-        //TODO: link bgColor automatically to css of .greenPill and .yellowPill
-        if (state.selectProps.name == "industry-filter") bgColor = "rgba(221, 192, 88, 0.514)"
-        else if (state.selectProps.name == "skill-filter") bgColor = "rgba(69, 185, 144, 0.5)"
-  
+        // TODO: link bgColor automatically to css of .greenPill and .yellowPill
+        if (state.selectProps.name == 'industry-filter') bgColor = 'rgba(221, 192, 88, 0.514)';
+        else if (state.selectProps.name == 'skill-filter') bgColor = 'rgba(69, 185, 144, 0.5)';
+
         return {
           ...base,
-          borderRadius: "10px",
-          backgroundColor: bgColor
-        }
-        
+          borderRadius: '10px',
+          backgroundColor: bgColor,
+        };
       },
     };
     return (
@@ -623,7 +621,6 @@ class Posts extends Component {
     );
   }
 }
-
 
 const mapStateToProps = (reduxState) => ({
   posts: reduxState.posts.all,

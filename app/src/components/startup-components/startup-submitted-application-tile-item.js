@@ -89,5 +89,4 @@ const StartupSubmittedApplicationTileItem = (props) => {
   );
 };
 
-
 export default StartupSubmittedApplicationTileItem;

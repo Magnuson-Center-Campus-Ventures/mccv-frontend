@@ -159,7 +159,6 @@ class StudentProfile extends Component {
       this.setState({ otherExps: this.props.otherExps });
     }
   }
-  
 
   changeStudentField = (field, event) => {
     const value = event.target.value;
@@ -235,7 +234,7 @@ class StudentProfile extends Component {
   }
 
   checkDateRange = () => {
-    if (this.state.student.desired_start_date == null) {
+    if (this.state.student.desired_start_date === null) {
       this.state.student.desired_start_date = new Date();
     }
     const start = new Date(this.state.student.desired_start_date);
@@ -519,10 +518,10 @@ class StudentProfile extends Component {
   }
 
   renderStudentActivity = () => {
-    if (this.state.student?.desired_start_date != null && this.state.student.job_search_status=="Active") {
-      return (<span className="student-job-search-status"> Actively Searching </span>)
+    if (this.state.student?.desired_start_date != null && this.state.student.job_search_status === 'Active') {
+      return (<span className="student-job-search-status"> Actively Searching </span>);
     }
-    return ""
+    return '';
   }
 
   startDate = () => {
@@ -657,7 +656,7 @@ class StudentProfile extends Component {
               <div className="majmin-section">
                 <div className="majmin-header">
                   <div className="input-title">Majors </div>
-                  <TextareaAutosize className="question-fields-text" onBlur={function (event) {this.setState({newMajor:event.target.value})}.bind(this)} />
+                  <TextareaAutosize className="question-fields-text" onBlur={function (event) { this.setState({ newMajor: event.target.value }); }.bind(this)} />
                   <button className="add-button"
                     onClick={() => {
                       this.setState((prevState) => {

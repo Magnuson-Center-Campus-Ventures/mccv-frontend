@@ -130,7 +130,6 @@ class StartupProfile extends Component {
     });
   }
 
-
   handleInstructions = () => {
     this.setState({ showInstructions: !this.state.showInstructions });
   }
@@ -465,7 +464,6 @@ class StartupProfile extends Component {
       );
     }
   }
-
 
   renderStartup() {
     if (typeof this.props.startup !== 'undefined') {

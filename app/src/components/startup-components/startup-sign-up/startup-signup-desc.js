@@ -25,7 +25,6 @@ class StartupDesc extends Component {
     this.props.fetchUser(this.props.userID);
   }
 
-
   onImageUpload(event) {
     const file = event.target.files[0];
     if (file) {
@@ -74,7 +73,6 @@ class StartupDesc extends Component {
   onSubmit = (e) => {
     this.props.updateStartup(this.props.startup.id, this.state.startup);
   };
-
 
   renderDescQuestions() {
     return (

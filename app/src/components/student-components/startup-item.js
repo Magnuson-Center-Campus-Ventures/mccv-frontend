@@ -38,7 +38,7 @@ const StartupListItem = (props) => {
   });
 
   let liveCount = 0;
-  let maxPostLength = 40
+  const maxPostLength = 40;
   const posts = props.startup.posts.map((post, index) => {
     if (post.status === 'Approved') {
       if (liveCount === 0) {
@@ -46,7 +46,7 @@ const StartupListItem = (props) => {
         if (post.title.length > maxPostLength) {
           return (
             <div id="pillsTitle" key={post.id}>
-              Positions: <div className="greenPill" key={post.id}>{post.title.substring(0, maxPostLength-1)}...</div>
+              Positions: <div className="greenPill" key={post.id}>{post.title.substring(0, maxPostLength - 1)}...</div>
             </div>
           );
         } else {

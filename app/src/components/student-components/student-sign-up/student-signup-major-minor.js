@@ -4,7 +4,6 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable func-names */
 
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -36,7 +35,6 @@ class StudentMajorMinors extends Component {
       this.setState({ student: this.props.student });
     }
   }
-
 
   onAffiliationChange = (event) => {
     this.props.student.affiliation = event.target.value;

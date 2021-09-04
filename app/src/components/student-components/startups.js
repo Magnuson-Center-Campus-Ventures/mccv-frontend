@@ -8,7 +8,6 @@ import { fetchStartups, fetchUser } from '../../actions';
 import '../../styles/postings.scss';
 import FilteredSelect from '../select';
 
-
 class Startups extends Component {
   constructor(props) {
     super(props);
@@ -259,17 +258,16 @@ class Startups extends Component {
         ...base,
         width: 200,
       }),
-      multiValue : (base, state) =>{
+      multiValue: (base, state) => {
         let bgColor;
-        //TODO: link bgColor automatically to css of .greenPill and .yellowPill
-        if (state.selectProps.name == "industry-filter") bgColor = "rgba(221, 192, 88, 0.514)"
-  
+        // TODO: link bgColor automatically to css of .greenPill and .yellowPill
+        if (state.selectProps.name === 'industry-filter') bgColor = 'rgba(221, 192, 88, 0.514)';
+
         return {
           ...base,
-          borderRadius: "10px",
-          backgroundColor: bgColor
-        }
-        
+          borderRadius: '10px',
+          backgroundColor: bgColor,
+        };
       },
     };
     return (
