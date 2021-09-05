@@ -45,10 +45,8 @@ We are using the ESLint Airbnb style guide for this project. See the style guide
 For more detailed documentation on our file structure and specific functions in the code, feel free to check the project files themselves.
 
 ## Setup
-To set up this repo on your local environment, clone the repo using the git url,
-install Docker from the appropriate link [here](https://docs.docker.com/get-docker/),
-and run `docker-compose build` in the terminal.
 
+To set up this repo on your local environment, clone the repo using the git url, install Docker for the appropriate OS from [here](https://docs.docker.com/get-docker/), and run `docker-compose up` in the terminal.
 
 ## Deployment
 
@@ -64,6 +62,8 @@ Live project can be found [here](http://dartmouth-mccv.surge.sh/)
 * Juliette Pouchol '20
 * Donia Tung '22
 * Dylan Whang '21
+* Rehoboth Okorie '23
+* Julian George '24
 
 ## Acknowledgments ❤️
 
