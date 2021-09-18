@@ -7,11 +7,11 @@ FROM node:14
 ENV PATH ./node_modules/.bin:$PATH
 
 # Create and set working directory
-RUN mkdir /app
-WORKDIR /app
+RUN mkdir /web
+WORKDIR /web
 
 # Add app
-COPY ./app ./
+COPY ./web ./
 
 # Install dependencies
 RUN yarn install
