@@ -140,7 +140,6 @@ class SubmittedApplications extends Component {
     }
   }
 
-
   renderApplications() {
     if (this.state.search || this.state.filter) {
       if (this.state.results.length > 0) {

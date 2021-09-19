@@ -11,7 +11,6 @@ export default class StartupInstructions extends React.Component {
     super(props);
   }
 
-
   componentDidMount() {
     const close = $('#close');
     const done = $('#done');

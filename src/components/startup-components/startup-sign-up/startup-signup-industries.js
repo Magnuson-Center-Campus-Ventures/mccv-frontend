@@ -70,7 +70,6 @@ class StartupIndustries extends Component {
     }
   }
 
-
   renderAddIndustry() {
     const customStyles = {
       control: (base) => ({

@@ -46,7 +46,6 @@ class StartupBio extends Component {
        this.props.updateStartup(this.props.startup.id, this.state.startup);
      };
 
-
      renderBioQuestions() {
        return (
          <div className="question">

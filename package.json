@@ -14,8 +14,8 @@
         "clean": "rimraf dist",
         "deploy": "yarn build && surge -p dist -d dartmouth-mccv.surge.sh && yarn clean"
     },
-    "engines":{
-        "node":"14.15.4"
+    "engines": {
+        "node": "14.15.4"
     },
     "devDependencies": {
         "@babel/core": "^7.9.0",
@@ -26,7 +26,7 @@
         "babel-eslint": "^10.1.0",
         "babel-loader": "^8.1.0",
         "css-loader": "^3.5.2",
-        "eslint": "^7.2.0",
+        "eslint": "^7.32.0",
         "eslint-config-airbnb": "^18.1.0",
         "eslint-loader": "^4.0.2",
         "eslint-plugin-import": "^2.21.0",
@@ -42,14 +42,14 @@
         "imagemin-webpack": "^5.1.1",
         "mini-css-extract-plugin": "latest",
         "node-sass": "^6.0.1",
-        "prettier":"^1.18.2",
         "postcss-loader": "^3.0.0",
+        "prettier": "^1.18.2",
         "sass-loader": "^12.1.0",
         "style-loader": "^1.1.4",
         "surg": "^0.1.0",
         "surge": "^0.21.7",
         "webpack": "^5.45.1",
-        "webpack-cli": "latest",
+        "webpack-cli": "^4.8.0",
         "webpack-dev-server": "^3.11.1"
     },
     "dependencies": {

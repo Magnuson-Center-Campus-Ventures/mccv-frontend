@@ -707,7 +707,6 @@ class Post extends Component {
     );
   }
 
-
   logoCompanyName = () => {
     if (this.props.post.startup_id.logo) {
       return (
@@ -1005,7 +1004,6 @@ class Post extends Component {
     }
   }
 }
-
 
 const mapStateToProps = (reduxState) => ({
   status: reduxState.startups.current.status,

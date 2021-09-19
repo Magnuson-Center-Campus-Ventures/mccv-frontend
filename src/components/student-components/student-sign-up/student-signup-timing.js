@@ -58,7 +58,6 @@ class StudentTiming extends Component {
     }
   }
 
-
   renderDateError = () => {
     if (this.state.validDate === false) {
       return <div className="date-error">Please make the date range 4-10 weeks long</div>;

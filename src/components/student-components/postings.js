@@ -141,59 +141,10 @@ class Posts extends Component {
     }
   }
 
-  scorePosts = () => {
-    const studentIndustries = [];
-    const studentSkills = [];
-    const studentClasses = [];
-    if (this.props.user.role === 'student') {
-      if (this.props.student?.interested_industries) {
-        this.props.student.interested_industries.forEach((industry) => {
-          studentIndustries.push(industry.name);
-        });
-      }
-      if (this.props.student?.skills) {
-        this.props.student.skills.forEach((skill) => {
-          studentSkills.push(skill.name);
-        });
-      }
-      if (this.props.student?.relevant_classes) {
-        this.props.student.relevant_classes.forEach((_class) => {
-          studentClasses.push(_class.name);
-        });
-      }
-      // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
-      const postScores = {};
-      this.state.live.forEach((post) => {
-        const numMatches = post.industries?.filter((industry) => studentIndustries.includes(industry.name)).length
-        + post.startup_id.industries?.filter((industry) => studentIndustries.includes(industry.name)).length
-        + post.desired_classes?.filter((_class) => studentClasses.includes(_class.name)).length
-        + post.required_skills?.filter((skill) => studentSkills.includes(skill.name)).length
-        // Preferred skills get half the weight of required skills
-        + 0.5 * (post.preferred_skills?.filter((skill) => studentSkills.includes(skill.name)).length);
-        postScores[post._id] = numMatches;
-      });
-
-      // Sort the posts in descending order of score
-      this.setState((prevState) => {
-        const tempPosts = [...prevState.live];
-        tempPosts.sort((post1, post2) => {
-          return postScores[post2._id] - postScores[post1._id];
-        });
-        // tempPosts.forEach((post) => {
-        //   console.log(post.title, postScores[post._id]);
-        // });
-        return {
-          ...prevState,
-          sortedPosts: tempPosts.slice(0, 6),
-        };
-      });
-    }
-  }
-
   sortedVirtualPosts = () => {
     this.setState({ sortedVirtualPosts: [] });
     if (this.state.recommend && this.state.virtualChecked) {
-      console.log("e")
+      console.log('e');
       this.state.sortedPosts.forEach((post) => {
         if (post.virtual === true && post.status === 'Approved') {
           this.setState((prevState) => ({
@@ -405,6 +356,55 @@ class Posts extends Component {
     this.searchAndFilter(this.state.searchterm, industries, skills, locations, dates, !this.state.recommend);
   }
 
+  scorePosts = () => {
+    const studentIndustries = [];
+    const studentSkills = [];
+    const studentClasses = [];
+    if (this.props.user.role === 'student') {
+      if (this.props.student?.interested_industries) {
+        this.props.student.interested_industries.forEach((industry) => {
+          studentIndustries.push(industry.name);
+        });
+      }
+      if (this.props.student?.skills) {
+        this.props.student.skills.forEach((skill) => {
+          studentSkills.push(skill.name);
+        });
+      }
+      if (this.props.student?.relevant_classes) {
+        this.props.student.relevant_classes.forEach((_class) => {
+          studentClasses.push(_class.name);
+        });
+      }
+      // Score each post by the number of common elements between the student's and post's industry, skill, and class arrays
+      const postScores = {};
+      this.state.live.forEach((post) => {
+        const numMatches = post.industries?.filter((industry) => studentIndustries.includes(industry.name)).length
+        + post.startup_id.industries?.filter((industry) => studentIndustries.includes(industry.name)).length
+        + post.desired_classes?.filter((_class) => studentClasses.includes(_class.name)).length
+        + post.required_skills?.filter((skill) => studentSkills.includes(skill.name)).length
+        // Preferred skills get half the weight of required skills
+        + 0.5 * (post.preferred_skills?.filter((skill) => studentSkills.includes(skill.name)).length);
+        postScores[post._id] = numMatches;
+      });
+
+      // Sort the posts in descending order of score
+      this.setState((prevState) => {
+        const tempPosts = [...prevState.live];
+        tempPosts.sort((post1, post2) => {
+          return postScores[post2._id] - postScores[post1._id];
+        });
+        // tempPosts.forEach((post) => {
+        //   console.log(post.title, postScores[post._id]);
+        // });
+        return {
+          ...prevState,
+          sortedPosts: tempPosts.slice(0, 6),
+        };
+      });
+    }
+  }
+
   renderPosts() {
     let posts;
     if (this.state.search || this.state.filter) {
@@ -477,7 +477,6 @@ class Posts extends Component {
     }
   }
 
-
   render() {
     // Styles for filter dropdowns
     const dropdownStyles = {
@@ -485,18 +484,17 @@ class Posts extends Component {
         ...base,
         width: 200,
       }),
-      multiValue : (base, state) =>{
+      multiValue: (base, state) => {
         let bgColor;
-        //TODO: link bgColor automatically to css of .greenPill and .yellowPill
-        if (state.selectProps.name == "industry-filter") bgColor = "rgba(221, 192, 88, 0.514)"
-        else if (state.selectProps.name == "skill-filter") bgColor = "rgba(69, 185, 144, 0.5)"
-  
+        // TODO: link bgColor automatically to css of .greenPill and .yellowPill
+        if (state.selectProps.name === 'industry-filter') bgColor = 'rgba(221, 192, 88, 0.514)';
+        else if (state.selectProps.name === 'skill-filter') bgColor = 'rgba(69, 185, 144, 0.5)';
+
         return {
           ...base,
-          borderRadius: "10px",
-          backgroundColor: bgColor
-        }
-        
+          borderRadius: '10px',
+          backgroundColor: bgColor,
+        };
       },
     };
     return (
@@ -623,7 +621,6 @@ class Posts extends Component {
     );
   }
 }
-
 
 const mapStateToProps = (reduxState) => ({
   posts: reduxState.posts.all,

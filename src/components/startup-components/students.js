@@ -17,7 +17,7 @@ class Students extends Component {
     super(props);
     this.state = {
       sortedStudents: [],
-      searchingStudents:[],
+      searchingStudents: [],
       industryOptions: [],
       selectedIndustryOptions: [],
       skillOptions: [],
@@ -92,13 +92,9 @@ class Students extends Component {
       this.scoreStudents();
       // Loads actively searching students
       this.findActivelySearching(this.props.students);
-
-
     }
   }
-  findActivelySearching = (students) =>{
-    this.setState({searchingStudents:students.filter(student => student?.job_search_status=="Active")})
-  }
+
   scoreStudents = () => {
     const startupIndustries = [];
     const postsReqSkills = [];
@@ -290,35 +286,38 @@ class Students extends Component {
   }
 
   handleActiveSearchingChange(checked) {
-    this.setState({activeSearching:checked});
+    this.setState({ activeSearching: checked });
   }
+
   handleRecommendChange(checked) {
     this.setState({ recommend: checked });
   }
 
+  findActivelySearching = (students) => {
+    this.setState({ searchingStudents: students.filter((student) => student?.job_search_status === 'Active') });
+  }
+
   renderStudents() {
     let students;
-    if (this.state.search || this.state.filter) students = this.state.results
+    if (this.state.search || this.state.filter) students = this.state.results;
     else if (this.state.archive) students = this.state.archived;
     else students = this.state.live;
 
     // add filters here to narrow down displayed students
     if (this.state.activeSearching) {
-      students=this.state.searchingStudents
+      students = this.state.searchingStudents;
       // with more filters this conditional chain may be very complex, maybe better function to address it
       if (this.state.recommend) {
         // using includes may be overly slow so maybe change this
-        students=students.filter(student => this.state.sortedStudents.map((s)=>{return s._id}).includes(student._id));
+        students = students.filter((student) => this.state.sortedStudents.map((s) => { return s._id; }).includes(student._id));
       }
-    }
-    else if (this.state.recommend) students=this.state.sortedStudents
+    } else if (this.state.recommend) students = this.state.sortedStudents;
 
-    if (students.length > 0 ){
+    if (students.length > 0) {
       return students.map((student) => {
         return <StudentListItem student={student} key={student.id} />;
       });
-    }
-    else {
+    } else {
       return (
         <div> Sorry, no students match that query</div>
       );
@@ -326,39 +325,39 @@ class Students extends Component {
   }
 
   renderFilters() {
-    let filterComponents = [];
+    const filterComponents = [];
     filterComponents.push(
       <div className="toggleGroup" key="activeSearching">
         <span>View Actively Searching: </span>
         <div id="toggle">
           <Switch onChange={this.handleActiveSearchingChange} checked={this.state.activeSearching} />
         </div>
-      </div>
-    )
+      </div>,
+    );
     if (this.props.user.role === 'startup') {
-      filterComponents.push(  
-          <div className="toggleGroup" key = "recommend">
-            <span>View Recommended Students: </span>
-            <div id="toggle">
-              <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
-            </div>
+      filterComponents.push(
+        <div className="toggleGroup" key="recommend">
+          <span>View Recommended Students: </span>
+          <div id="toggle">
+            <Switch onChange={this.handleRecommendChange} checked={this.state.recommend} />
           </div>
+        </div>,
       );
     } else if (this.props.user.role === 'admin') {
       filterComponents.push(
-          <div className="toggleGroup" key = "archive">
-            <span>View Archived Students: </span>
-            <div id="toggle">
-              <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
-            </div>
+        <div className="toggleGroup" key="archive">
+          <span>View Archived Students: </span>
+          <div id="toggle">
+            <Switch onChange={this.handleArchiveChange} checked={this.state.archive} />
           </div>
+        </div>,
       );
     }
     return (
       <div id="filters">
-          {filterComponents}
+        {filterComponents}
       </div>
-    )
+    );
   }
 
   render() {
@@ -367,21 +366,19 @@ class Students extends Component {
       control: (base) => ({
         ...base,
         width: 200,
-        cursor:"pointer"
+        cursor: 'pointer',
       }),
-      multiValue : (base, state) =>{
+      multiValue: (base, state) => {
         let bgColor;
-        //TODO: link bgColor automatically to css of .greenPill and .yellowPill
-        if (state.selectProps.name == "industry-filter") bgColor = "rgba(221, 192, 88, 0.514)"
-        else if (state.selectProps.name == "skill-filter") bgColor = "rgba(69, 185, 144, 0.5)"
-        
-  
+        // TODO: link bgColor automatically to css of .greenPill and .yellowPill
+        if (state.selectProps.name === 'industry-filter') bgColor = 'rgba(221, 192, 88, 0.514)';
+        else if (state.selectProps.name === 'skill-filter') bgColor = 'rgba(69, 185, 144, 0.5)';
+
         return {
           ...base,
-          borderRadius: "10px",
-          backgroundColor: bgColor
-        }
-        
+          borderRadius: '10px',
+          backgroundColor: bgColor,
+        };
       },
     };
     return (

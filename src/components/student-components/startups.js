@@ -8,7 +8,6 @@ import { fetchStartups, fetchUser } from '../../actions';
 import '../../styles/postings.scss';
 import FilteredSelect from '../select';
 
-
 class Startups extends Component {
   constructor(props) {
     super(props);
@@ -143,16 +142,6 @@ class Startups extends Component {
     this.searchAndFilter('emptytext', industries, locations);
   }
 
-  loadApproved() {
-    this.props.startups.forEach((startup) => {
-      if (startup.status === 'Approved') {
-        this.setState((prevState) => ({
-          approved: [...prevState.approved, startup],
-        }));
-      }
-    });
-  }
-
   handleArchiveChange(checked) {
     this.setState({ archive: checked });
     this.setState({ archived: [] });
@@ -172,6 +161,16 @@ class Startups extends Component {
       ? this.state.selectedLocationOptions.map((option) => option.value.toLowerCase())
       : ['emptytext'];
     this.searchAndFilter(this.state.searchterm, industries, locations);
+  }
+
+  loadApproved() {
+    this.props.startups.forEach((startup) => {
+      if (startup.status === 'Approved') {
+        this.setState((prevState) => ({
+          approved: [...prevState.approved, startup],
+        }));
+      }
+    });
   }
 
   handlePendingChange(checked) {
@@ -259,17 +258,16 @@ class Startups extends Component {
         ...base,
         width: 200,
       }),
-      multiValue : (base, state) =>{
+      multiValue: (base, state) => {
         let bgColor;
-        //TODO: link bgColor automatically to css of .greenPill and .yellowPill
-        if (state.selectProps.name == "industry-filter") bgColor = "rgba(221, 192, 88, 0.514)"
-  
+        // TODO: link bgColor automatically to css of .greenPill and .yellowPill
+        if (state.selectProps.name === 'industry-filter') bgColor = 'rgba(221, 192, 88, 0.514)';
+
         return {
           ...base,
-          borderRadius: "10px",
-          backgroundColor: bgColor
-        }
-        
+          borderRadius: '10px',
+          backgroundColor: bgColor,
+        };
       },
     };
     return (

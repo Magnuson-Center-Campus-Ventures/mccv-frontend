@@ -135,5 +135,4 @@ const mapStateToProps = (reduxState) => ({
   student: reduxState.students.current_student,
 });
 
-
 export default withRouter(connect(mapStateToProps, { signoutUser, fetchUser, fetchStudentByID })(Nav));
