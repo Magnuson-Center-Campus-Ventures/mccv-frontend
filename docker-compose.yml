@@ -1,7 +1,7 @@
 web:
     build: ./mccv-frontend/
     ports:
-      - '8080:8080'
+      - '8080:$PATH'
     volumes:
       - ./mccv-frontend/web
       - /app/node_modules/
