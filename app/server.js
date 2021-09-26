@@ -3,8 +3,9 @@ const { spawn } = require('child_process');
 const express = require('express');
 
 const app = express();
-
+console.log(process.env.PRODUCTION)
 if (process.env.PRODUCTION === "True") {
+  console.log("PROD")
   app.use(express.static(path.join(__dirname, 'dist')));
 
   app.set('PORT', process.env.PORT);
