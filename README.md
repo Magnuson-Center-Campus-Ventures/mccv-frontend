@@ -65,6 +65,8 @@ Live project can be found [here](http://dartmouth-mccv.surge.sh/)
 * Juliette Pouchol '20
 * Donia Tung '22
 * Dylan Whang '21
+* Rehoboth Okorie '23
+* Julian George '24
 
 ## Acknowledgments ❤️
 
