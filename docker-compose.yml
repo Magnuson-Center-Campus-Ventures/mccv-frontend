@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  web:
+    container_name: web
+    build: .
+    ports:
+      - '8080:8080'
+      - '3000:3000'
+    volumes:
+      - ./app/:/app/
+      - /app/node_modules/
+    stdin_open: true
+    environment:
+      - PORT=3000
+    command: "yarn start"
+

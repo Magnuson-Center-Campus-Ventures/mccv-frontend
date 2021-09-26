@@ -45,13 +45,11 @@ We are using the ESLint Airbnb style guide for this project. See the style guide
 For more detailed documentation on our file structure and specific functions in the code, feel free to check the project files themselves.
 
 ## Setup
-To set up this repo on your local environment, clone the repo using the git url
-install dependencies using yarn and run
-```
-git clone REPOURL
-yarn install
-yarn start 
-```
+To set up this repo on your local environment, follow these steps:
+1. Install Docker for your OS
+2. In the command line, run `docker-compose build` to build the repo
+3. Run `docker-compose up` to initialize the repo and its dev server
+
 
 ## Deployment
 
