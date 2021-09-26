@@ -11,8 +11,7 @@
         "test": "eslint src/**.js --fix",
         "heroku-postbuild": "webpack",
         "build": "yarn clean && set NODE_ENV=production webpack --colors",
-        "clean": "rimraf dist",
-        "deploy": "yarn build && surge -p dist -d dartmouth-mccv.surge.sh && yarn clean"
+        "clean": "rimraf dist"
     },
     "engines": {
         "node": "^14.15.4"
