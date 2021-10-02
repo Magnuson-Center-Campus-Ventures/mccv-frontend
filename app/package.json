@@ -7,10 +7,10 @@
     "license": "MIT",
     "scripts": {
         "start": "node server",
-        "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.js",
+        "dev": "webpack-dev-server --config webpack.config.js",
         "test": "eslint src/**.js --fix",
         "heroku-postbuild": "webpack",
-        "build": "yarn clean && set NODE_ENV=production webpack --colors",
+        "build": "webpack",
         "clean": "rimraf dist"
     },
     "engines": {
