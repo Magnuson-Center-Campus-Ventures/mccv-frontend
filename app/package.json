@@ -9,7 +9,7 @@
         "start": "node server",
         "dev": "webpack-dev-server --config webpack.config.js",
         "test": "eslint src/**.js --fix",
-        "build": "webpack",
+        "heroku-postbuild": "webpack",
         "clean": "rimraf dist"
     },
     "engines": {

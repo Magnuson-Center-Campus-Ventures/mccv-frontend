@@ -4,17 +4,17 @@ const express = require('express');
 
 const app = express();
 if (process.env.PRODUCTION === "True") {
-  const child = spawn('yarn',['build']);
-  child.stdout.setEncoding('utf8');
-  child.stdout.on('data', (chunk) => {
-    console.log(chunk);
-  });
-  child.on('error', (err)=>{
-    console.log("Error while initiating production server: \n",err);
-  });
-  child.on('close', (code) => {
-    console.log(`Production server process exited with code ${code}`);
-  });
+  // const child = spawn('yarn',['build']);
+  // child.stdout.setEncoding('utf8');
+  // child.stdout.on('data', (chunk) => {
+  //   console.log(chunk);
+  // });
+  // child.on('error', (err)=>{
+  //   console.log("Error while initiating production server: \n",err);
+  // });
+  // child.on('close', (code) => {
+  //   console.log(`Production server process exited with code ${code}`);
+  // });
   app.use(express.static(path.join(__dirname, 'dist')));
 
   let port = process.env.PORT || 3000;
