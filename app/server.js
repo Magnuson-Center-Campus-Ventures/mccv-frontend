@@ -5,17 +5,19 @@ const express = require('express');
 
 const app = express();
 if (process.env.PRODUCTION === "True") {
-  const child = spawn('yarn',['heroku-postbuild']);
-  child.stdout.setEncoding('utf8');
-  child.stdout.on('data', (chunk) => {
-    console.log(chunk);
-  });
-  child.on('error', (err)=>{
-    console.log("Error while initiating production server: \n",err);
-  });
-  child.on('close', (code) => {
-    console.log(`Production server process exited with code ${code}`);
-    let port = process.env.PORT || 3000;
+  // const child = spawn('yarn',['heroku-postbuild']);
+  // child.stdout.setEncoding('utf8');
+  // child.stdout.on('data', (chunk) => {
+  //   console.log(chunk);
+  // });
+  // child.on('error', (err)=>{
+  //   console.log("Error while initiating production server: \n",err);
+  // });
+  // child.on('close', (code) => {
+  //   console.log(`Production server process exited with code ${code}`);
+    
+  // });
+  let port = process.env.PORT || 3000;
     let host = '0.0.0.0'
     app.use(express.static(path.join(__dirname, 'dist')));
     console.log(__dirname)
@@ -33,8 +35,6 @@ if (process.env.PRODUCTION === "True") {
     const server = app.listen(port,host, function() {
       console.log('Production server listening on port', port);
     });
-  });
-  
   
 }
 else {
