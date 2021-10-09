@@ -4,7 +4,8 @@ const { spawn } = require('child_process');
 const express = require('express');
 
 const app = express();
-if (process.env.PRODUCTION === "True") {
+console.log(process.env)
+if (process.env.NODE_ENV === "production") {
   const child = spawn('yarn',['heroku-postbuild']);
   child.stdout.setEncoding('utf8');
   child.stdout.on('data', (chunk) => {
