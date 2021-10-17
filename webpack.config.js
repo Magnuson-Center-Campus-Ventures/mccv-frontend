@@ -25,8 +25,21 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [ // here's the part you want
-          { loader: 'babel-loader' },
-          { loader: 'eslint-loader' },
+          { 
+            loader: 'babel-loader', 
+            options: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/react',
+                {
+                  plugins: ['@babel/plugin-proposal-class-properties'
+                  , '@babel/plugin-transform-runtime'
+                ],
+                },
+              ],
+            },
+          },
+          // { loader: 'eslint-loader' },
         ],
       },
       {
