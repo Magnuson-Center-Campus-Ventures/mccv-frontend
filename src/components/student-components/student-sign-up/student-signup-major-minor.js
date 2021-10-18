@@ -31,6 +31,12 @@ function StudentMajorMinors(props) {
   })
 
   useEffect(() => {
+    if (props.student && props.student.affiliation) {
+      setaffiliation(props.student.affiliation)
+      if (props.student.affiliation !== '') {
+        props.ifFilled();
+      }
+    }
     setstudent(props.student)
   }, [props.student])
 

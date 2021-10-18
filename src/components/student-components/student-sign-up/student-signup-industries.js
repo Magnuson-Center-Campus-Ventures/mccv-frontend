@@ -9,7 +9,7 @@ import {
 } from '../../../actions';
 
 function StudentIndustries(props) {
-  const [student, setStudent]  = useState({})
+  const [student, setStudent]  = useState(props.student|{})
   const [industry, setIndustry] = useState('')
   const [selectedIndustries, setSelectedIndustries] = useState([])
   const [displayIndustries, setDisplayIndustries] = useState([])
@@ -24,6 +24,9 @@ function StudentIndustries(props) {
   })
 
   useEffect(() => {
+    if (props.student && props.student.interested_industries) {
+      setSelectedIndustries(props.student.interested_industries)
+    }
     setStudent(props.student)
     populateCurrentIndustries();
   }, [props.student])
@@ -35,21 +38,22 @@ function StudentIndustries(props) {
     return industryObject;
   }
 
-  const addIndustry = () => {
-    if (!props.student.interested_industries.includes(getIndustry(industry))) {
-      props.student.interested_industries.push(getIndustry(industry));
+  const addIndustry = (industry_) => {
+    const ids = getIndustry(industry_)
+    if (!props.student.interested_industries.includes(ids)) {
+      props.student.interested_industries.push(ids);
     }
     setDisplayIndustries(displayIndustries.filter((value) => {
-      return (value.label !== industry);
+      return (value.label !== industry_);
     }))
-    setIndustry('');
+    setIndustry('')
   }
 
   const deleteIndustry = (industry_) => {
     props.student.interested_industries = props.student.interested_industries.filter((value) => {
-      return (value !== industry_.industry);
+      return (value !== industry_);
     });
-    displayIndustries.push({ label: industry.industry.name });
+    displayIndustries.push({ label: industry_.name });
     setDisplayIndustries(displayIndustries);
   }
 
@@ -86,11 +90,10 @@ function StudentIndustries(props) {
           styles={customStyles}
           name="industries"
           placeholder="Select Industries"
-          value={industry}
           options={displayIndustries}
-          onChange={(selectedOption) => {
-            setIndustry(selectedOption.label)
-            addIndustry();
+          value={industry}
+          onChange={async (selectedOption) => {
+            addIndustry(selectedOption.label);
           }}
           onCreateOption={(newOption) => {
             setIndustry(newOption)

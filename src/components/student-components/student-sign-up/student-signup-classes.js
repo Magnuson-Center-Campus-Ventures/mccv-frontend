@@ -9,7 +9,7 @@ import {
 } from '../../../actions';
 
 function StudentClasses(props) {
-  const [student, setStudent] = useState({})
+  const [student, setStudent] = useState(props.student|{})
   const [class_, setClass_] = useState('')
   const [selectedClasses, setSelectedClasses] = useState([])
   const [displayClasses, setDisplayClasses] = useState([])
@@ -24,6 +24,9 @@ function StudentClasses(props) {
   })
 
   useEffect(() => {
+    if (props.student && props.student.relevant_classes) {
+      setSelectedClasses(props.student.relevant_classes)
+    }
     setStudent(props.student);
     populateCurrentClasses();
   }, [props.student])
@@ -35,21 +38,22 @@ function StudentClasses(props) {
     return classObject;
   }
 
-  const addClass = () => {
-    if (!props.student.relevant_classes.includes(getClass(class_))) {
-      props.student.relevant_classes.push(getClass(class_));
+  const addClass = (name) => {
+    const obj = getClass(name)
+    if (!props.student.relevant_classes.includes(obj)) {
+      props.student.relevant_classes.push(obj);
     }
     setDisplayClasses(displayClasses.filter((value) => {
-      return (value.label !== class_);
+      return (value.label !== name);
     }));
     setClass_('')
   }
 
   const deleteClass = (course) => {
     props.student.relevant_classes = props.student.relevant_classes.filter((value) => {
-      return (value !== course.course);
+      return (value !== course);
     });
-    displayClasses.push({ label: course.course.name });
+    displayClasses.push({ label: course.name });
     setDisplayClasses(displayClasses)
 
   }
@@ -71,7 +75,7 @@ function StudentClasses(props) {
     }
   }
 
-  const enderAddClass = () => {
+  const renderAddClass = () => {
     const customStyles = {
       control: (base) => ({
         ...base,
@@ -91,7 +95,7 @@ function StudentClasses(props) {
           options={displayClasses}
           onChange={(selectedOption) => {
             setClass_(selectedOption.label)
-            addClass();
+            addClass(selectedOption.label);
           }}
           onCreateOption={(newOption) => {
             setClass_(newOption)

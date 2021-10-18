@@ -27,6 +27,21 @@ function StudentTiming(props) {
     }
   })
 
+  useEffect(() => {
+    if(props.student) {
+      try {
+        student.desired_end_date = Date.parse(props.student.desired_end_date) | new Date().toISOString()
+      } catch {
+        student.desired_end_date = new Date().toISOString()
+      }
+      try {
+        student.desired_start_date = Date.parse(props.student.desired_start_date)  | new Date().toISOString()
+      } catch {
+        student.desired_start_date = new Date().toISOString()
+      }
+    }
+  }, [props.student])
+
   // update student field
   const changeStudentField = (field, event) => {
     // eslint-disable-next-line prefer-destructuring

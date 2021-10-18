@@ -9,7 +9,7 @@ import {
 } from '../../../actions';
 
 function StudentSkills(props) {
-  const [student, setstudent] = useState({})
+  const [student, setstudent] = useState(props.student|{})
   const [skill, setskill] = useState('')
   const [selectedSkills, setselectedSkills] = useState([])
   const [displaySkills, setdisplaySkills] = useState([])
@@ -23,11 +23,11 @@ function StudentSkills(props) {
     }
   })
   useEffect(() => {
-    if (props.student !== {} && prevProps.student !== props.student) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      setstudent(props.student)
-      populateCurrentSkills();
+    if (props.student && props.student.skills) {
+      setselectedSkills(props.student.skills)
     }
+    setstudent(props.student)
+      populateCurrentSkills();
   }, [props.student])
 
 
@@ -38,21 +38,22 @@ function StudentSkills(props) {
     return skillObject;
   }
 
-  const addSkill = () => {
-    if (!props.student.skills.includes(getSkill(skill))) {
-      props.student.skills.push(getSkill(skill));
+  const addSkill = (name) => {
+    const obj = getSkill(name)
+    if (!props.student.skills.includes(obj)) {
+      props.student.skills.push(obj);
     }
     setdisplaySkills(displaySkills.filter((value) => {
-      return (value.label !== skill);
+      return (value.label !== name);
     }));
     setskill('')
   }
 
-  const deleteSkill = (skill) => {
+  const deleteSkill = (skill_) => {
     props.student.skills = props.student.skills.filter((value) => {
-      return (value !== skill.skill);
+      return (value !== skill_);
     });
-    displaySkills.push({ label: skill.skill.name });
+    displaySkills.push({ label: skill_.name });
     setdisplaySkills(displaySkills)
   }
 
@@ -93,11 +94,10 @@ function StudentSkills(props) {
           options={displaySkills}
           onChange={(selectedOption) => {
             setskill(selectedOption.label)
-            addSkill();
+            addSkill(selectedOption.label);
           }}
           onCreateOption={(newOption) => {
-            skill = newOption;
-            skill = newOption;
+            setskill(newOption)
             props.createSkillForStudent({ name: newOption }, props.student);
           }}
         />

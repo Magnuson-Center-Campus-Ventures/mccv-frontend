@@ -17,8 +17,8 @@ import NewWorkExp from '../student-modals/new-work-exp';
 
 function StudentWorkExperiences(props) {
   const [isEditing, setisEditing] = useState(false)
-  const [student, setstudent] = useState({})
-  const [workExps, setworkExps] = useState([])
+  const [student, setstudent] = useState(props.student|{})
+  const [workExps, setworkExps] = useState(props.student &&  props.student.work_exp && props.workExps ? props.workExps : [])
   const [show, setshow] = useState(false)
   const[m, setM] = useState(false)
 

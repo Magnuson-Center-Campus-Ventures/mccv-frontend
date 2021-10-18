@@ -17,8 +17,8 @@ import NewOtherExp from '../student-modals/new-other-exp';
 
 function StudentOtherExperiences(props) {
   const [isEditing, setisEditing] = useState(false)
-  const [student, setstudent] = useState({})
-  const [otherExps, setotherExps] = useState([])
+  const [student, setstudent] = useState(props.student|{})
+  const [otherExps, setotherExps] = useState(props.student &&  props.student.other_exp && props.otherExps ? props.otherExps: [])
   const [show, setshow] = useState(false)
   const[m, setM] = useState(false)
 

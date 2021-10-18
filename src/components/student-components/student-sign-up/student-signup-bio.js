@@ -7,7 +7,7 @@ import {
 } from '../../../actions';
 
 function StudentBio(props) {
-  const [student, setStudent] = useState({})
+  const [student, setStudent] = useState(props.student|{})
   const [selected, setSelected] = useState('')
   const [m, setM] = useState(false)
 
