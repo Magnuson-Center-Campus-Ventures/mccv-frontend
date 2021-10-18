@@ -91,7 +91,7 @@ function  StudentInfo(props) {
             setStudentsMAtched(studentsMatched_)
             setFilled(Object.keys(studentsMatched).length)
         }
-    })
+    }, [])
 
     if (!m) {
         setM(true)

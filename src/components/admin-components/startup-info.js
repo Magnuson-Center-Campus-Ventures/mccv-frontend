@@ -77,7 +77,7 @@ function StartupInfo(props) {
             setLocations(locations_)
             setIndustries(industries_)
         }
-    })
+    }, [])
 
     const checkDate = (lastEdited) => {
         const thisYear = new Date();

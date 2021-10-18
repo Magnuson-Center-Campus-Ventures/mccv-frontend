@@ -64,7 +64,7 @@ function PositionInfo(props) {
             setIndustries(industries_)
             setLocations(locations_)
         }
-    })
+    }, [])
 
     if (!m) {
         setM(true)
