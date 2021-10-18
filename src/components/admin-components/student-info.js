@@ -1,8 +1,7 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { render } from 'react-dom';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import CanvasJSReact from '../../helpers/canvasjs.react';
 
 const CanvasJS = CanvasJSReact.CanvasJS;
@@ -12,111 +11,93 @@ import { fetchStudents, fetchPosts } from '../../actions/index';
 import '../../styles/dashboard.scss';
 
 
-class StudentInfo extends Component {
-    _isMounted = false; 
+function  StudentInfo(props) {
 
-    constructor(props) {
-        super(props);
-        // active // filled positions // total archived
-        // broken down by gender options
-        // affiliation dropdown - Dartmouth, geisel, tuck, thayer, guarini
-        this.state = {
-            active: 0, 
-            archived: 0, 
-            totalYear: 0, 
-            filled: 0, 
-            studentsMatched: new Set(), 
-            genders: {},
-            affiliation: {},
-            gradYear: {}, 
-            majors: {},  
-        };
-    }
+    const [active, setActive] = useState(0)
+    const [archived, setArchived] = useState(0) 
+    const [totalYear, setTotalYear] = useState(0)
+    const [filled, setFilled] = useState(0)
+    const [studentsMatched, setStudentsMAtched] = useState(new Set()) 
+    const [genders, setGenders] = useState({})
+    const [affiliation, setAffiliation] = useState({})
+    const [gradYear, setGradYear] = useState({})
+    const [majors, setMajors] = useState({})
+    const [m, setM] = useState(false)
 
-    componentDidMount(){
-        this.props.fetchStudents();
-        this.props.fetchPosts(); 
-        this._isMounted = true;
-    }
+    useEffect(() => {
+        props.fetchStudents();
+        props.fetchPosts();
 
-    // going through 
-    componentDidUpdate(){
-        if (this.props.students.length !== 0 && this.state.active === 0 && this.state.archived === 0 && this.props.posts.length !== 0){
-            let gradYear = {}; 
-            let majors = {};
-            let genders = {}; 
-            let affiliation = {}; 
-            this.props.students.map((student) => {
+        if (props.students.length !== 0 && active === 0 && archived === 0 && props.posts.length !== 0){
+            let gradYear_ = {}; 
+            let majors_ = {};
+            let genders_ = {}; 
+            let affiliation_ = {}; 
+            props.students.map((student) => {
                 if (student.status == 'Approved'){
-                    this.setState((prevState) => ({
-                        active: prevState.active +1,
-                    })); 
-                    
-                    if (this.checkDate(student.updatedAt)){
-                        this.setState((prevState) => ({
-                            totalYear: prevState.totalYear +1,
-                        }));  
+                    setActive(active +1)
+                    if (checkDate(student.updatedAt)){
+                        setTotalYear(totalYear +1)
                     }
                 }
                 if (student.grad_year){
                     const year = student.grad_year; 
-                    if (gradYear[year] === undefined){
-                        gradYear[year] = 1; 
+                    if (gradYear_[year] === undefined){
+                        gradYear_[year] = 1; 
                     } else{
-                        gradYear[year] = gradYear[year] + 1; 
+                        gradYear_[year] = gradYear_[year] + 1; 
                     }
                 }
                 if (student.majors){
                     student.majors.map((major) => {
-                        const maj = this.checkMajor(major); 
-                        if (majors[maj.toLowerCase()] === undefined){
-                            majors[maj.toLowerCase()] = 1; 
+                        const maj = checkMajor(major); 
+                        if (majors_[maj.toLowerCase()] === undefined){
+                            majors_[maj.toLowerCase()] = 1; 
                         } else {
-                            majors[maj.toLowerCase()] = majors[maj.toLowerCase()] + 1;
+                            majors_[maj.toLowerCase()] = majors_[maj.toLowerCase()] + 1;
                         }
                     })
                 }
                 if (student.gender){
                     const gender = student.gender; 
-                    if (genders[gender] === undefined){
-                        genders[gender] = 1; 
+                    if (genders_[gender] === undefined){
+                        genders_[gender] = 1; 
                     } else{
-                        genders[gender] = genders[gender] + 1; 
+                        genders_[gender] = genders_[gender] + 1; 
                     }
                 }
                 if (student.affiliation){
                     const school = student.affiliation; 
-                    if (affiliation[school] === undefined){
-                        affiliation[school] = 1; 
+                    if (affiliation_[school] === undefined){
+                        affiliation_[school] = 1; 
                     } else{
-                        affiliation[school] = affiliation[school] + 1; 
+                        affiliation_[school] = affiliation_[school] + 1; 
                     }
                 }
             })
-            this.setState({ gradYear, majors, genders, affiliation });
-            this.setState({
-                archived: this.props.students.length - this.state.active
-            })
-            let studentsMatched = new Set(this.state.studentsMatched); 
-            this.props.posts.map((post) => {
-                // console.log(post); 
+            setGradYear(gradYear_)
+            setMajors(majors_)
+            setGenders(genders_)
+            setAffiliation(affiliation_)
+            setArchived(props.students.length - active)
+            let studentsMatched_ = new Set(studentsMatched); 
+            props.posts.map((post) => {
                 if (post.status === 'Archived'){
-                    // console.log('here'); 
-                    // console.log(post);
                     post.students_selected?.map((student) => {
-                        console.log(student); 
-                        studentsMatched.add(student); 
+                        studentsMatched_.add(student); 
                     })
                 }
             })
-            this.setState({ studentsMatched });
-            this.setState({
-                filled: Object.keys(studentsMatched).length,
-            })
+            setStudentsMAtched(studentsMatched_)
+            setFilled(Object.keys(studentsMatched).length)
         }
+    })
+
+    if (!m) {
+        setM(true)
     }
 
-    checkMajor = (major) => {
+    const checkMajor = (major) => {
         if (major === 'cs' || major === 'CS'){
             return 'computer science';
         } else if (major === 'qss' || major === 'QSS'){
@@ -130,7 +111,7 @@ class StudentInfo extends Component {
         }
     }
 
-    checkDate = (lastEdited) => {
+    const checkDate = (lastEdited) => {
         const thisYear = new Date();
         const date = new Date(lastEdited); 
         if (thisYear.getFullYear() === date.getFullYear()){
@@ -140,11 +121,11 @@ class StudentInfo extends Component {
         }
     }
 
-    renderGradYears = () => {
+    const renderGradYears = () => {
         let graphData = [];
-        Object.keys(this.state.gradYear).forEach((year) => {
+        Object.keys(gradYear).forEach((year) => {
             const obj = {
-                y: this.state.gradYear[year], 
+                y: gradYear[year], 
                 label: year
             }
             graphData.push(obj);
@@ -169,17 +150,17 @@ class StudentInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
+				/* onRef={ref => chart = ref} */
 			/>
         </div>
         )   
     }
 
-    renderMajors = () => {
+    const renderMajors = () => {
         let graphData = [];
-        Object.keys(this.state.majors).forEach((major) => {
+        Object.keys(majors).forEach((major) => {
             const obj = {
-                y: this.state.majors[major], 
+                y: majors[major], 
                 label: major
             }
             graphData.push(obj);
@@ -204,17 +185,17 @@ class StudentInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
+				/* onRef={ref => chart = ref} */
 			/>
         </div>
         )   
     }
 
-    renderGenders = () => {
+    const renderGenders = () => {
         let graphData = [];
-        Object.keys(this.state.genders).forEach((gender) => {
+        Object.keys(genders).forEach((gender) => {
             const obj = {
-                y: this.state.genders[gender], 
+                y: genders[gender], 
                 label: gender
             }
             graphData.push(obj);
@@ -239,17 +220,17 @@ class StudentInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
+				/* onRef={ref => chart = ref} */
 			/>
         </div>
         )   
     }
 
-    renderAffiliation = () => {
+    const renderAffiliation = () => {
         let graphData = [];
-        Object.keys(this.state.affiliation).forEach((school) => {
+        Object.keys(affiliation).forEach((school) => {
             const obj = {
-                y: this.state.affiliation[school], 
+                y: affiliation[school], 
                 label: school
             }
             graphData.push(obj);
@@ -274,40 +255,36 @@ class StudentInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
+				/* onRef={ref => chart = ref} */
 			/>
         </div>
         )   
     }
 
-    render() {
         return( 
-            this._isMounted && this.state.gradYear !== {} ? 
             ( <div className="dashboardContent">
                 <div className="stats">
-                    <p> Total Active: <strong>{this.state.active}</strong> </p>
-                    <p> Total Archived: <strong>{this.state.archived} </strong> </p>  
-                    <p> Students Who Filled Positions: <strong>{this.state.filled} </strong> </p>
+                    <p> Total Active: <strong>{active}</strong> </p>
+                    <p> Total Archived: <strong>{archived} </strong> </p>  
+                    <p> Students Who Filled Positions: <strong>{filled} </strong> </p>
                 </div>
                 <div className="graphs">
                     <div className="graphRow">
-                        {this.renderGradYears()}
-                        {this.renderGenders()}
+                        {renderGradYears()}
+                        {renderGenders()}
                     </div>
                     <div className="graphRow">
-                        {this.renderAffiliation()}
-                        {this.renderMajors()}
+                        {renderAffiliation()}
+                        {renderMajors()}
                     </div>
                 </div>
-                {/* <p>Total students: {this.state.totalCount} </p> */}
-                {/* <p>Students active this year: {this.state.totalYear} </p> */}
+                {/* <p>Total students: {totalCount} </p> */}
+                {/* <p>Students active this year: {totalYear} </p> */}
                
             </div>
-            ) : <div />
+            )
             
         )
-    }
-
 }
 
 function mapStateToProps(reduxState) {

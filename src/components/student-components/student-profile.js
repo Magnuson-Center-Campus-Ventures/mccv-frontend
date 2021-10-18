@@ -62,6 +62,7 @@ class StudentProfile extends Component {
     };
 
     this.studentStatusChange = this.studentStatusChange.bind(this);
+    this.status = this.status.bind(this);
   }
 
   componentDidMount() {
@@ -159,7 +160,6 @@ class StudentProfile extends Component {
       this.setState({ otherExps: this.props.otherExps });
     }
   }
-  
 
   changeStudentField = (field, event) => {
     const value = event.target.value;
@@ -518,12 +518,13 @@ class StudentProfile extends Component {
     } else return <div>None</div>;
   }
 
-  renderStudentActivity = () => {
-    if (this.state.student?.desired_start_date != null && this.state.student?.job_search_status.toLocaleLowerCase() 
-    == "active") {
-      return (<span className="student-job-search-status"> Actively Searching </span>)
+  status = () => {
+    if (this.state.student?.desired_start_date != null) {
+      return (
+        <span className="student-job-search-status">Job Search Status: {this.state.student.job_search_status}</span>
+      );
     }
-    return (<span className="student-job-search-status" style={{color: "red"}}> Not Actively Searching </span>)
+    return (<></>);
   }
 
   startDate = () => {
@@ -572,17 +573,28 @@ class StudentProfile extends Component {
     }
   }
 
+  renderStudentActivity = () => {
+    // need to add timeframe as well
+    return (
+      <div className="activeStatus">
+        {(this.state.student.job_search_status === 'Active') ? 'Actively Searching for <strong></strong>' : ''}
+        this.props.student.
+      </div>
+    );
+  }
+
+  toggleActivity = (checked) => {
+    // link to activity edit redux action here
+    console.log(checked);
+  }
+
   studentStatusChange = (event) => {
-    var status = 'inactive'
-    if (this.state.student?.job_search_status) {
-      status = this.state.student.job_search_status.toLocaleLowerCase() == 
-      'active' ? 'inactive': 'active';
-    } 
+    const status = this.state.student.job_search_status === 'Active' ? 'Inactive' : 'Active';
     this.setState((prevState) => {
-      const new_student = {...prevState.student, job_search_status: status}
+      const ns = { ...prevState.student, job_search_status: status };
       return {
         ...prevState,
-       student: new_student,
+        student: ns,
       };
     });
   }
@@ -633,8 +645,7 @@ class StudentProfile extends Component {
             <div className="input-activity">
               <div className="input-title">Actively Searching?</div>
               <div>Shows startups you are actively looking at this platform.</div>
-              <Switch onChange={this.studentStatusChange} checked={this.state.student?.job_search_status.toLocaleLowerCase() 
-                == 'active'} />
+              <Switch onChange={this.studentStatusChange} checked={this.state.student.job_search_status === 'Active'} />
             </div>
           </div>
 
@@ -658,12 +669,13 @@ class StudentProfile extends Component {
                 </div>
               </div>
             </div>
+
             <div className="input-instruction">Please write the full name of your major or minor (e.x. "Computer Science" instead of "CS")</div>
             <div className="lists-row">
               <div className="majmin-section">
                 <div className="majmin-header">
                   <div className="input-title">Majors </div>
-                  <TextareaAutosize className="question-fields-text" onBlur={function (event) {this.setState({newMajor:event.target.value})}.bind(this)} />
+                  <TextareaAutosize className="question-fields-text" onBlur={function (event) { this.state.newMajor = event.target.value; }} />
                   <button className="add-button"
                     onClick={() => {
                       this.setState((prevState) => {
@@ -682,7 +694,7 @@ class StudentProfile extends Component {
               <div className="majmin-section">
                 <div className="majmin-header">
                   <div className="input-title">Minors </div>
-                  <TextareaAutosize className="question-fields-text" onBlur={function (event) { this.state.newMinor = event.target.value; }.bind(this)} />
+                  <TextareaAutosize className="question-fields-text" onBlur={function (event) { this.state.newMinor = event.target.value; }} />
                   <button className="add-button"
                     onClick={() => {
                       const nm = this.state.newMajor;
@@ -704,12 +716,10 @@ class StudentProfile extends Component {
           <hr className="profile-divider" />
           <div>
             <h2>Bio</h2>
-            <div>The first 100 characters will be displayed when startups browse</div>
             <TextareaAutosize className="question-fields-text"
               onBlur={(event) => this.changeStudentField('bio', event)}
               defaultValue={this.props.student?.bio}
             />
-            <div className="character-count">{this.state.student.bio.length} characters typed</div>
           </div>
 
           <hr className="profile-divider" />
@@ -809,7 +819,7 @@ class StudentProfile extends Component {
         <div className="profile-fixed">
           <div id="profile-header">
             {this.renderStudentName()}
-
+            {this.renderStudentActivity()}
             {this.renderClassYearAffiliation()}
             {this.renderMajors()}
             {this.renderMinors()}
@@ -817,26 +827,14 @@ class StudentProfile extends Component {
             <div className="student-contact">{this.props.email}</div>
             <div className="student-contact">{this.state.student.phone_number ? this.state.student.phone_number : null}</div>
             <div className="space" />
-            <div>
-              {this.renderStudentActivity()}
+            <div className="student-start-date">
+              {this.status()}
             </div>
             <div className="student-start-date">
-              {
-                this.state.student.hasOwnProperty("job_search_status") && this.state.student.job_search_status.toLocaleLowerCase() === "active"
-                ?
-                this.startDate()
-                :
-                null
-              }
+              {this.startDate()}
             </div>
             <div className="student-end-date">
-              {
-                this.state.student.hasOwnProperty("job_search_status") && this.state.student.job_search_status.toLocaleLowerCase() === "active"
-                ?
-                this.endDate()
-                :
-                null
-              }
+              {this.endDate()}
             </div>
             <div className="post-time-commitment">
               {this.state.student.time_commitment ? 'Time Commitment'.concat(': ', this.state.student.time_commitment.toString()).concat(' ', 'hrs/week') : null}

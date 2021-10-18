@@ -1,32 +1,15 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import React from 'react';
 import { withRouter, Route, Redirect } from 'react-router-dom';
-// import { fetchUser } from '../../actions';
 
-class AdminRoute extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
+function AdminRoute(props) {
 
-  /*
-  componentDidUpdate(prevProps) {
-    if (this.props.user === {} || prevProps.user !== this.props.user) {
-      console.log('startup didUpdate');
-      this.props.fetchUser(localStorage.getItem('userID'));
-    }
-  }
-  */
-
-  routeCallback = (e) => {
+  const routeCallback = (e) => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
-    // if (this.props.authenticated && (this.props.role === 'startup' || this.props.role === 'admin')) {
     if (token && role === 'admin') {
       return (
-        <Route {...this.props} />
+        <Route {...props} />
       );
     } else {
       return (
@@ -35,22 +18,10 @@ class AdminRoute extends Component {
     }
   }
 
-  render() {
-    // this.props.fetchUser(localStorage.getItem('userID'));
     return (
-      this.routeCallback()
+      routeCallback()
     );
-  }
 }
-
-/*
-function mapStateToProps(reduxState) {
-  return {
-    authenticated: reduxState.user.authenticated,
-    role: reduxState.user.current.role,
-  };
-}
-*/
 
 // export default withRouter(connect(mapStateToProps, { fetchUser })(StartupRoute));
 export default withRouter(AdminRoute);

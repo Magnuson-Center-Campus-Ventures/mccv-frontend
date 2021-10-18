@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -6,40 +6,28 @@ import {
   fetchStudentByUserID, fetchUser, updateStudent,
 } from '../../../actions';
 
-class StudentBio extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      student: {},
-      selected: '',
-    };
-  }
-
+function StudentBio(props) {
+  const [student, setStudent] = useState({})
+  const [selected, setSelected] = useState('')
   // Get profile info
-  componentDidMount() {
-    this.props.fetchStudentByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
-  }
+
+  useEffect(() => {
+    props.fetchStudentByUserID(props.userID);
+    props.fetchUser(props.userID);
+  })
 
   // update student field
-  changeStudentField = (field, event) => {
+  const changeStudentField = (field, event) => {
     // eslint-disable-next-line prefer-destructuring
     const value = event.target.value;
-
-    this.setState((prevState) => {
-      const student = { ...prevState.student };
-      student[field] = value;
-      this.props.updateStudent(this.props.student.id,
-        student);
-      return {
-        ...prevState,
-        student,
-      };
-    });
+    const student_ = { ...student };
+    student_[field] = value;
+    props.updateStudent(props.student.id,
+      student_);
+    setStudent(student_);
   }
-  // check this.props.students.req fields ...
 
-  renderBioQuestions() {
+  const renderBioQuestions = () => {
     return (
       <div className="question">
         <div className="question-header">
@@ -52,21 +40,21 @@ class StudentBio extends Component {
         </div>
         <div className="question-fields">
           <p className="question-fields-title">First Name  <span className="imptMessage">*</span></p>
-          <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('first_name', event)} defaultValue={this.props.student.first_name} />
+          <TextareaAutosize className="question-fields-text" onChange={(event) => changeStudentField('first_name', event)} defaultValue={props.student.first_name} />
           <p className="question-fields-title">Last Name  <span className="imptMessage">*</span></p>
-          <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('last_name', event)} defaultValue={this.props.student.last_name} />
+          <TextareaAutosize className="question-fields-text" onChange={(event) => changeStudentField('last_name', event)} defaultValue={props.student.last_name} />
           <p className="question-fields-title">Graduation Year <span className="imptMessage">*</span></p>
-          <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('grad_year', event)} defaultValue={this.props.student.grad_year} />
+          <TextareaAutosize className="question-fields-text" onChange={(event) => changeStudentField('grad_year', event)} defaultValue={props.student.grad_year} />
           <p className="question-fields-title">Phone Number  <span className="imptMessage">*</span></p>
-          <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('phone_number', event)} defaultValue={this.props.student.phone_number} />
+          <TextareaAutosize className="question-fields-text" onChange={(event) => changeStudentField('phone_number', event)} defaultValue={props.student.phone_number} />
           <p className="question-fields-title">Bio </p>
-          <TextareaAutosize className="question-fields-text" onChange={(event) => this.changeStudentField('bio', event)} defaultValue={this.props.student.bio} />
+          <TextareaAutosize className="question-fields-text" onChange={(event) => changeStudentField('bio', event)} defaultValue={props.student.bio} />
           <p className="question-fields-title">Gender <span className="imptMessage"> *</span></p>
-          <select value={this.props.selected}
+          <select value={props.selected}
             onChange={(event) => {
-              this.changeStudentField('gender', event);
-              this.setState({ selected: event.target.value });
-              // this.props.ifFilled();
+              changeStudentField('gender', event);
+              setSelected(event.target.value);
+              // props.ifFilled();
             }}
           >
             <option value="select">Select...</option>
@@ -75,15 +63,11 @@ class StudentBio extends Component {
             <option value="other">Other</option>
             <option value="prefer not to say">Prefer Not to Say</option>
           </select>
-          {/* <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('phone_number', event)} defaultValue={this.props.student.gender} /> */}
         </div>
       </div>
     );
   }
-
-  render() {
-    return this.renderBioQuestions();
-  }
+  return renderBioQuestions();
 }
 
 const mapStateToProps = (reduxState) => ({

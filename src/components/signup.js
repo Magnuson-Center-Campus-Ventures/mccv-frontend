@@ -1,6 +1,6 @@
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/sort-comp */
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
@@ -8,199 +8,161 @@ import {
   emailExists, sendConfirmationEmail,
 } from '../actions';
 import '../styles/signup.scss';
-import StudentTerms from './student-components/student-modals/student-terms';
-import StartupTerms from './startup-components/startup-modals/startup-terms';
+import StudentTerms from '../components/student-components/student-modals/student-terms';
+import StartupTerms from '../components/startup-components/startup-modals/startup-terms';
 
-class Signup extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      role: 'student',
-      email: '',
-      password: '',
-      student_profile_id: '',
-      startup_id: '',
-      signed: '',
-      error: '',
-      displayed_error: '',
-      show_error: false,
-      show: false,
+function Signup(props) {
+    const [role, setRole] = useState("student")
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [student_profile_id, set_student_profile_id] = useState('')
+    const [startup_id, set_startup_id] = useState('')
+    const [signed, set_signed] = useState('')
+    const [error, setError] = useState(props.error)
+    const [show, set_show] = useState(false)
+
+    const onEmailChange = (event) => {
+        setEmail(event.target.value)
+        props.emailExists({ email: event.target.value.toLowerCase() });
+    }
+
+    const onPasswordChange = (event) => {
+        setPassword(event.target.value)
+    }
+
+    // setState when student button selected
+    const roleStudent = (event) => {
+        setRole('student')
+    }
+
+    // setState when startup button selected
+    const roleStartup = (event) => {
+        setRole('startup')
+    }
+
+    const signupNow = () => {
+        const confirmation = {
+        email: email.toLowerCase(),
+        password: password,
+        role: role,
+        student_profile_id: student_profile_id,
+        startup_id: startup_id,
+        };
+        props.sendConfirmationEmail(confirmation, props.history);
+    }
+
+    const showModal = async (event) => {
+        if (password === '') {
+            setError('Sign Up Failed: Password is blank');
+        } else if (email === '') {
+            setError('Sign Up Failed: Username is blank');
+        } else if (props.error === 'Email found') {
+            setError('Sign Up Failed: User with this email already exists');
+        } else  {
+            set_show(true)
+        }
     };
-  }
 
-  onEmailChange = (event) => {
-    this.setState({ email: event.target.value });
-    this.props.emailExists({ email: event.target.value.toLowerCase() });
-  }
-
-  onPasswordChange = (event) => {
-    this.setState({ password: event.target.value });
-  }
-
-  // setState when student button selected
-  roleStudent = (event) => {
-    this.setState({ role: 'student' });
-  }
-
-  // setState when startup button selected
-  roleStartup = (event) => {
-    this.setState({ role: 'startup' });
-  }
-
-  signupNow() {
-    // create new user
-    // const newUser = { ...this.state };
-    // newUser.email = this.state.email.toLowerCase();
-    // newUser.password = this.state.password;
-    // newUser.role = this.state.role;
-    // newUser.student_profile_id = this.state.student_profile_id;
-    // newUser.startup_id = this.state.startup_id;
-    // newUser.signed = this.state.signed;
-    // this.props.signupUser(newUser, this.props.history);
-    const confirmation = {
-      email: this.state.email.toLowerCase(),
-      password: this.state.password,
-      role: this.state.role,
-      student_profile_id: this.state.student_profile_id,
-      startup_id: this.state.startup_id,
-    };
-    this.props.sendConfirmationEmail(confirmation, this.props.history);
-  }
-
-  showModal = (event) => {
-    if (this.state.error !== '') {
-      this.state.show_error = true;
-      this.state.displayed_error = this.state.error;
-    } else {
-      this.setState({ show: true });
+    const hideModal = (event) => {
+        set_show(false)
     }
-    this.forceUpdate();
-  };
 
-  hideModal = (event) => {
-    this.setState({ show: false });
-  }
-
-  signModal = (event) => {
-    if (event.signature !== '') {
-      this.state.signed = new Date().getTime();
-      this.signupNow();
+    const signModal = (event) => {
+        if (event.signature !== '') {
+        set_signed(new Date().getTime());
+        signupNow();
+        }
+        set_show(false);
     }
-    this.setState({ show: false });
-  }
 
-  // return button className if student is selected
-  studentClassname() {
-    if (this.state.role === 'student') {
-      return 'roleSelectedBtn';
-    } else {
-      return 'roleBtn';
+    // return button className if student is selected
+    const studentClassname = () => {
+        if (role === 'student') {
+        return 'roleSelectedBtn';
+        } else {
+        return 'roleBtn';
+        }
     }
-  }
 
-  // return button className if startup is selected
-  startupClassname() {
-    if (this.state.role === 'startup') {
-      return 'roleSelectedBtn';
-    } else {
-      return 'roleBtn';
+    // return button className if startup is selected
+    const startupClassname = () => {
+        if (role === 'startup') {
+        return 'roleSelectedBtn';
+        } else {
+        return 'roleBtn';
+        }
     }
-  }
 
-  renderError() {
-    if (this.state.password === '') {
-      this.state.error = 'Sign Up Failed: Password is blank';
-    } else if (this.state.email === '') {
-      this.state.error = 'Sign Up Failed: Username is blank';
-    } else if (this.props.error === 'Email found') {
-      this.state.error = 'Sign Up Failed: User with this email already exists';
-    } else {
-      this.state.error = '';
-      this.state.show_error = false;
+    const renderError = () => {
+        if (error && error.length > 0) {
+            return <div className="signupError">{error}</div>;
+        }
+        return null;
     }
-    if (this.state.show_error) {
-      return <div className="signupError">{this.state.displayed_error}</div>;
-    }
-    return null;
-  }
 
-  renderTypeEmail() {
-    if (this.state.role === 'student') {
-      return 'Dartmouth Email';
-    } else {
-      return 'Email';
+    const renderTypeEmail = () => {
+        if (role === 'student') {
+        return 'Dartmouth Email';
+        } else {
+        return 'Email';
+        }
     }
-  }
 
-  render() {
     return (
-      <div className="signupPage">
-        <div className="student-profile">
-          <StudentTerms
-            onClose={this.hideModal}
-            acceptTC={this.signModal}
-            show={this.state.show && this.state.role === 'student'}
-          />
-          <StartupTerms
-            onClose={this.hideModal}
-            acceptTC={this.signModal}
-            show={this.state.show && this.state.role === 'startup'}
-          />
+        <div className="signupPage">
+            <div className="student-profile">
+            <StudentTerms
+                onClose={hideModal}
+                acceptTC={signModal}
+                show={show && role === 'student'}
+            />
+            <StartupTerms
+                onClose={hideModal}
+                acceptTC={signModal}
+                show={show && role === 'startup'}
+            />
+            </div>
+            <div className="signupBoard">
+            <div className="signupLeft">
+                <h1>Sign up as a</h1>
+                <div className="roleButtons">
+                <button type="button" className={studentClassname()} onClick={roleStudent}>
+                    <span className="roleStudentCta">Student</span>
+                </button>
+
+                <button type="button" className={startupClassname()} onClick={roleStartup}>
+                    <span className="roleStartupCta">Startup</span>
+                </button>
+                </div>
+                {renderError()}
+            </div>
+            <div className="signupRight">
+                <div className="signupEmail">
+                <h2>{renderTypeEmail()}</h2>
+                <input type="text" onChange={onEmailChange} value={email} />
+                </div>
+
+                <div className="signupPassword">
+                <h2>Password</h2>
+                <input type="password" onChange={onPasswordChange} value={password} />
+                </div>
+
+                <div className="signupActions">
+                <button type="button" className="signupSignupBtn" onClick={showModal}>
+                    <span>Sign Up</span>
+                </button>
+                <NavLink to="/signin" className="loginLink">Already have an account? Login</NavLink>
+                </div>
+            </div>
+            </div>
         </div>
-        <div className="signupBoard">
-          <div className="signupLeft">
-            <h1>Sign up as a</h1>
-            <div className="roleButtons">
-              <button type="button" className={this.studentClassname()} onClick={this.roleStudent}>
-                <span className="roleStudentCta">Student</span>
-              </button>
+        );
+    }
 
-              <button type="button" className={this.startupClassname()} onClick={this.roleStartup}>
-                <span className="roleStartupCta">Startup</span>
-              </button>
-            </div>
-            {this.renderError()}
-          </div>
-
-          <div className="signupRight">
-            <div className="signupEmail">
-              <h2>{this.renderTypeEmail()}</h2>
-              <input type="text" onChange={this.onEmailChange} value={this.state.email} />
-            </div>
-
-            <div className="signupPassword">
-              <h2>Password</h2>
-              <input type="password" onChange={this.onPasswordChange} value={this.state.password} />
-            </div>
-
-            <div className="signupActions">
-              <button type="button" className="signupSignupBtn" onClick={this.showModal}>
-                <span>Sign Up</span>
-              </button>
-              <NavLink to="/signin" className="loginLink">Already have an account? Login</NavLink>
-            </div>
-          </div>
-        </div>
-
-        {/* <div className="signupButtons">
-          <button type="button" className="signupLoginBtn" onClick={() => this.props.history.push('/signin')}>
-            <span>Login</span>
-          </button>
-
-          <button type="button" className="signupSignupBtn" onClick={this.signupNow}>
-            <span>Sign Up</span>
-          </button>
-        </div> */}
-        {/* {this.renderError()} */}
-      </div>
-    );
-  }
-}
-
-function mapStateToProps(reduxState) {
-  return {
-    error: reduxState.user.error,
-  };
+    function mapStateToProps(reduxState) {
+    return {
+        error: reduxState.user.error,
+    };
 }
 
 export default withRouter(connect(mapStateToProps, {

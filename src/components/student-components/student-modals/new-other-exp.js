@@ -1,5 +1,5 @@
 /* eslint-disable react/button-has-type */
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -7,17 +7,11 @@ import { createOtherExperience } from '../../../actions';
 import close from '../../../../static/img/close.png';
 import '../../../styles/student-profile.scss';
 
-class NewOtherExp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      description: '',
-    };
-  }
+function NewOtherExp(props) {
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
 
-  render() {
-    if (!this.props.show) {
+    if (!props.show) {
       return null;
     }
     return (
@@ -27,18 +21,18 @@ class NewOtherExp extends React.Component {
             src={close}
             alt="close"
             style={{ cursor: 'pointer' }}
-            onClick={this.props.onClose}
+            onClick={props.onClose}
           />
           </div>
           <div className="new-work-exp-body">
             <div className="input-title">Name</div>
-            <input className="short-input" onBlur={(event) => this.setState({ name: event.target.value })} />
+            <input className="short-input" onBlur={(event) => setName(event.target.value)} />
             <div className="input-title">Description</div>
-            <TextareaAutosize className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
+            <TextareaAutosize className="tall-input" onBlur={(event) => setDescription(event.target.value)} />
             <button className="modal-add-button"
               onClick={() => {
-                this.props.createOtherExperience(this.state);
-                this.props.onClose();
+                props.createOtherExperience(state);
+                props.onClose();
               }}
             >Add Experience
             </button>
@@ -46,7 +40,6 @@ class NewOtherExp extends React.Component {
         </div>
       </div>
     );
-  }
 }
 
 export default withRouter(connect(null, { createOtherExperience })(NewOtherExp));

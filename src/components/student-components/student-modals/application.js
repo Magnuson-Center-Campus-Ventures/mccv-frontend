@@ -3,7 +3,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable react/prefer-stateless-function */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
@@ -17,65 +17,54 @@ import {
 import close from '../../../../static/img/close.png';
 import '../../../styles/application.scss';
 
-// function isEmpty(obj) {
-//   return Object.keys(obj).length === 0;
-// }
+function Application(props) {
+  const [answers, setAnswers] = useState([])
 
-class Application extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      answers: [],
-    };
-    this.onAnswerChange = this.onAnswerChange.bind(this);
-  }
+  useEffect(() => {
+    props.fetchStudentByUserID(localStorage.getItem('userID'));
+    props.fetchPost(props.match.params.postID);
+  }, [])
 
-  componentDidMount() {
-    this.props.fetchStudentByUserID(localStorage.getItem('userID'));
-    this.props.fetchPost(this.props.match.params.postID);
-  }
-
-  onSubmit = (e) => {
+  const onSubmit = (e) => {
     const newApplication = {
-      student_id: this.props.student._id,
-      post_id: this.props.post.id,
-      questions: this.props.post.questions,
-      answers: this.state.answers,
+      student_id: props.student._id,
+      post_id: props.post.id,
+      questions: props.post.questions,
+      answers: answers,
       status: 'pending',
     };
-    const newPost = this.props.post;
-    newPost.applicants.push(this.props.student);
-    console.log(newApplication);
-    this.props.submitApplication(newApplication);
-    this.props.updatePost(this.props.post._id, newPost);
-    this.setState({ answers: [] });
-    this.props.onClose && this.props.onClose(e);
+    const newPost = props.post;
+    newPost.applicants.push(props.student);
+    props.submitApplication(newApplication);
+    props.updatePost(props.post._id, newPost);
+    setAnswers([])
+    props.onClose && props.onClose(e);
   };
 
-  onClose = (e) => {
-    this.props.onClose && this.props.onClose(e);
+  const onClose = (e) => {
+    props.onClose && props.onClose(e);
   }
 
-  onAnswerChange(event) {
+  const onAnswerChange = (event) => {
     const { target: { name, value } } = event;
-    const { answers } = this.state;
-    answers[this.props.post.questions.findIndex((temp) => {
+    const answers_ = answers;
+    answers_[props.post.questions.findIndex((temp) => {
       return temp === name;
     })] = value;
-    this.setState({ answers });
+    setAnswers(answers_)
   }
 
-  renderHelper= () => {
+  const renderHelper= () => {
     const items = [];
-    if (this.props.post) {
-      this.props.post.questions.map((question) => {
+    if (props.post) {
+      props.post.questions.map((question) => {
         items.push(
           <div key={question}>
             <h3 id="question-title">{question}</h3>
             <textarea
               name={question}
-              onChange={this.onAnswerChange}
-              value={this.state.answers[this.props.post.questions.findIndex(
+              onChange={onAnswerChange}
+              value={answers[props.post.questions.findIndex(
                 (temp) => {
                   return temp === question;
                 },
@@ -90,31 +79,30 @@ class Application extends React.Component {
     }
   }
 
-  render() {
-    if (!this.props.show) {
+    if (!props.show) {
       return null;
     }
     return (
       <div className="application-container">
         <div id="application" className="application">
-          <div className="application-title">{this.props.post.title}<img id="close-app"
+          <div className="application-title">{props.post.title}<img id="close-app"
             src={close}
             alt="close"
             style={{ cursor: 'pointer' }}
             onClick={(e) => {
-              this.onClose(e);
+              onClose(e);
             }}
           />
           </div>
           <div className="questions">
-            {this.renderHelper()}
+            {renderHelper()}
           </div>
           <div className="actions">
             <button type="submit"
               className="submit-btn"
               style={{ cursor: 'pointer' }}
               onClick={(e) => {
-                this.onSubmit(e);
+                onSubmit(e);
               }}
             >
               Submit
@@ -124,7 +112,6 @@ class Application extends React.Component {
 
       </div>
     );
-  }
 }
 
 const mapStateToProps = (reduxState) => ({
@@ -135,11 +122,13 @@ const mapStateToProps = (reduxState) => ({
   application: reduxState.applications.current,
 });
 
-export default withRouter(connect(mapStateToProps, {
+const mapDispatchTOProps = {
   submitApplication,
   fetchPost,
   fetchStudentByUserID,
   fetchUserByStudentID,
   fetchUser,
   updatePost,
-})(Application));
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchTOProps)(Application));

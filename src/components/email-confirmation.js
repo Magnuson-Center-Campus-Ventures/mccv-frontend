@@ -1,31 +1,25 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { confirmedSignup } from '../actions/index';
 import '../styles/email-confirmation.scss';
 
-class EmailConfirmation extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      token: '',
-    };
-  }
+function EmailConfirmation(props) {
+  const [token, setToken] = useState();
 
-  componentDidMount() {
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    this.setState({ token: urlParams.get('token') });
-  }
+    setToken(urlParams.get('token'));
+  }, []);
 
-  renderError = () => {
-    if (this.props.error && this.props.error !== 'Email found') {
-      return <div className="signinError">{this.props.error}</div>;
+  const renderError = () => {
+    if (props.error && props.error !== 'Email found') {
+      return <div className="signinError">{props.error}</div>;
     }
     return null;
   }
 
-  render() {
-    if (!this.state.token) {
+    if (!token) {
       return (
         <div className="signinPage">
           <div className="signinBoard">
@@ -47,7 +41,7 @@ class EmailConfirmation extends Component {
                 <button type="button"
                   className="signupSignupBtn"
                   onClick={() => {
-                    this.props.confirmedSignup({ token: this.state.token }, this.props.history);
+                    props.confirmedSignup({ token: token }, props.history);
                   }}
                 >
                   <span>Sign In</span>
@@ -55,12 +49,11 @@ class EmailConfirmation extends Component {
               </div>
             </div>
           </div>
-          {this.renderError()}
+          {renderError()}
         </div>
       );
-    }
-  }
-}
+    };
+};
 
 function mapStateToProps(reduxState) {
   return {

@@ -1,8 +1,7 @@
 /* eslint-disable */
-import React, { Component } from 'react';
-import { render } from 'react-dom';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import CanvasJSReact from '../../helpers/canvasjs.react';
 
 const CanvasJS = CanvasJSReact.CanvasJS;
@@ -11,99 +10,76 @@ const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 import { fetchStartups } from '../../actions/index';
 
 
-class StartupInfo extends Component {
-    _isMounted = false; 
+function StartupInfo(props) {
 
-    constructor(props) {
-        super(props);
-        // broken down by founder gender  
-        // affiliation dropdown - Dartmouth, geisel, tuck, thayer, guarini
-        this.state = {
-            // totalCount: 0, 
-            active: 0,
-            pending: 0, 
-            archived: 0, 
-            // totalYear: 0, 
-            // multipleFounders: 0, 
-            affiliation: {},
-            genders: {},
-            industries: {}, 
-            locations: {},
-        };
-    }
+    const[active, setActive] = useState(0)
+    const [pending, setPending] = useState(0)
+    const [archived, setArchived] = useState(0)
+    const [affiliation, setAffiliation] = useState({})
+    const [genders, setGenders] = useState({})
+    const [industries, setIndustries] = useState({}) 
+    const [locations, setLocations] = useState({})
 
-    componentDidMount(){
-        this.props.fetchStartups()
-        this._isMounted = true;
-    }
-
-    // going through 
-    componentDidUpdate(){
-        if (this.props.startups.length !== 0 && this.state.archived === 0 && this.state.active === 0 && this.state.pending === 0){
-            let industries = {};
-            let locations = {};
-            let genders = {};
-            let affiliation = {};
-            this.props.startups.map((startup) => {
+    useEffect(() => {
+        props.fetchStartups()
+        if (props.startups.length !== 0 && archived === 0 && active === 0 && pending === 0){
+            let industries_ = {};
+            let locations_ = {};
+            let genders_ = {};
+            let affiliation_ = {};
+            props.startups.map((startup) => {
                 if (startup.status === 'Pending'){
-                    this.setState((prevState) => ({
-                        pending: prevState.pending +1,
-                    })); 
+                    setPending(pending +1)
                 }
                 else if (startup.status === 'Archived'){
-                    this.setState((prevState) => ({
-                        archived: prevState.archived +1,
-                    })); 
+                    setArchived(archived +1)
                 }
                 else if (startup.status === 'Approved'){
-                    this.setState((prevState) => ({
-                        active: prevState.active +1,
-                    })); 
-                    // if (this.checkDate(startup.updatedAt)){
-                    //     this.setState((prevState) => ({
-                    //         totalYear: prevState.totalYear +1,
-                    //     }));  
-                    // }
+                    setActive(active +1)
                     if ( startup.industries.length !== 0) {
                         startup.industries.map((industry) => {
-                            if (industries[industry.name] === undefined){
-                                industries[industry.name] = 1; 
+                            if (industries_[industry.name] === undefined){
+                                industries_[industry.name] = 1; 
                                 } else{
-                                    industries[industry.name] = industries[industry.name] + 1;
+                                    industries_[industry.name] = industries_[industry.name] + 1;
                             }
                         })
                     }
                     if (startup.city && startup.state){
                         const local = startup.city + ', ' + startup.state; 
-                        if (locations[local] === undefined){
-                            locations[local] = 1; 
+                        if (locations_[local] === undefined){
+                            locations_[local] = 1; 
                         } else{
-                            locations[local] = locations[local] + 1;
+                            locations_[local] = locations_[local] + 1;
                         }
                     }
                     if (startup.founder_gender){
                         const gender = startup.founder_gender; 
-                        if (genders[gender] === undefined){
-                            genders[gender] = 1; 
+                        if (genders_[gender] === undefined){
+                            genders_[gender] = 1; 
                         } else{
-                            genders[gender] = genders[gender] + 1; 
+                            genders_[gender] = genders_[gender] + 1; 
                         }
                     }
                     if (startup.affiliation){
                         const school = startup.affiliation; 
-                        if (affiliation[school] === undefined){
-                            affiliation[school] = 1; 
+                        if (affiliation_[school] === undefined){
+                            affiliation_[school] = 1; 
                         } else{
-                            affiliation[school] = affiliation[school] + 1; 
+                            affiliation_[school] = affiliation_[school] + 1; 
                         }
                     }
                 }
             })
-            this.setState({ industries, locations, genders, affiliation });
+            
+            setGenders(genders_)
+            setAffiliation(affiliation_)
+            setLocations(locations_)
+            setIndustries(industries_)
         }
-    }
+    })
 
-    checkDate = (lastEdited) => {
+    const checkDate = (lastEdited) => {
         const thisYear = new Date();
         const date = new Date(lastEdited); 
         if (thisYear.getFullYear() === date.getFullYear()){
@@ -113,11 +89,11 @@ class StartupInfo extends Component {
         }
     }
 
-    renderIndustries = () => {
+    const renderIndustries = () => {
         let graphData = [];
-        Object.keys(this.state.industries).forEach((industry) => {
+        Object.keys(industries).forEach((industry) => {
             const obj = {
-                y: this.state.industries[industry], 
+                y: industries[industry], 
                 label: industry
             }
             graphData.push(obj);
@@ -142,17 +118,16 @@ class StartupInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
 			/>
         </div>
         )   
     }
 
-    renderLocation = () => {
+    const renderLocation = () => {
         let graphData = [];
-        Object.keys(this.state.locations).forEach((location) => {
+        Object.keys(locations).forEach((location) => {
             const obj = {
-                y: this.state.locations[location], 
+                y: locations[location], 
                 label: location
             }
             graphData.push(obj);
@@ -177,17 +152,16 @@ class StartupInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
 			/>
         </div>
         )   
     }
 
-    renderGenders = () => {
+    const renderGenders = () => {
         let graphData = [];
-        Object.keys(this.state.genders).forEach((gender) => {
+        Object.keys(genders).forEach((gender) => {
             const obj = {
-                y: this.state.genders[gender], 
+                y: genders[gender], 
                 label: gender
             }
             graphData.push(obj);
@@ -212,17 +186,16 @@ class StartupInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
 			/>
         </div>
         )   
     }
 
-    renderAffiliation = () => {
+    const renderAffiliation = () => {
         let graphData = [];
-        Object.keys(this.state.affiliation).forEach((school) => {
+        Object.keys(affiliation).forEach((school) => {
             const obj = {
-                y: (this.state.affiliation[school] / Object.keys(this.state.affiliation).length) * 100, 
+                y: (affiliation[school] / Object.keys(affiliation).length) * 100, 
                 label: school
             }
             graphData.push(obj);
@@ -247,7 +220,6 @@ class StartupInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
 			/>
         </div>
         )   
@@ -255,38 +227,26 @@ class StartupInfo extends Component {
 
 
 
-    render() {
         return( 
-            this._isMounted ? 
             ( <div className="dashboardContent">
                 <div className="stats">
-                    <p>Total Active: <strong>{this.state.active}</strong></p>
-                    <p>Total Pending: <strong>{this.state.pending}</strong> </p>
-                    <p>Total Archived: <strong>{this.state.archived}</strong> </p>
+                    <p>Total Active: <strong>{active}</strong></p>
+                    <p>Total Pending: <strong>{pending}</strong> </p>
+                    <p>Total Archived: <strong>{archived}</strong> </p>
                 </div>
-                {/* <p>Total startups: {this.state.totalCount} </p> */}
-                
-                {/* <p>Startups active this year: {this.state.totalYear}</p> */}
                <div className="graphs">
                    <div className="graphRow">
-                        {this.renderIndustries()}
-                        {this.renderGenders()}
+                        {renderIndustries()}
+                        {renderGenders()}
                    </div>
                    <div className="graphRow">
-                        {this.renderLocation()}
-                        {this.renderAffiliation()}
+                        {renderLocation()}
+                        {renderAffiliation()}
                    </div>
                </div>
-           
-                {/* <p>male: {this.state.male} female: {this.state.female}</p> */}
-                {/* <p>affiliation </p>  */}
-
             </div>
-            ) : <div />
-            
+            )
         )
-    }
-
 }
 
 function mapStateToProps(reduxState) {

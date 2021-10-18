@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { render } from 'react-dom';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
@@ -11,91 +11,73 @@ const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 import { fetchPosts } from '../../actions/index';
 
 
-class PositionInfo extends Component {
-    _isMounted = false; 
+function PositionInfo(props) {
+    const [active, setActive] =  useState(0)
+    const [filled, setFilld] =  useState(0) 
+    const [archived, setArchived] =  useState(0)             
+    const [inperson, setInPerson] =  useState(0)
+    const [virtual, setVirtual] =  useState(0) 
+    const [locations, setLocations] =  useState({})
+    const [industries, setIndustries] =  useState({})
+    const [m, setM] = useState(false)
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            active: 0,
-            filled: 0, 
-            archived: 0,             
-            inperson: 0,
-            virtual: 0, 
-            locations: {},
-            industries: {}, 
-        };
-    }
-
-    componentDidMount(){
-        this.props.fetchPosts();
-        this._isMounted = true;
-    }
-
-    // going through 
-    componentDidUpdate(){
-        if (this.props.posts.length !== 0 && this.state.archived === 0 && this.state.active === 0){
-            let industries = {};
-            let locations = {};
-            this.props.posts.map((post) => {
+    useEffect(() => {
+        props.fetchPosts();
+        if (props.posts.length !== 0 && archived === 0 && active === 0){
+            let industries_ = {};
+            let locations_ = {};
+            props.posts.map((post) => {
                 if (post.status === 'Archived'){
-                    this.setState((prevState) => ({
-                        archived: prevState.archived + 1, 
-                    }));
+                    setArchived(archived + 1)
                 }
                 else if (post.status === 'Approved'){
-                    this.setState((prevState) => ({
-                        active: prevState.active + 1,
-                    })); 
+                    setActive(active + 1)
                     if (post.students_selected.length > 0){
-                        this.setState((prevState) => ({
-                            filled: prevState.filled + 1, 
-                        }));
+                        setFilld(filled + 1)
                     }
                     if (post.virtual){
-                        this.setState((prevState) => ({
-                            virtual: prevState.virtual + 1, 
-                        }));
+                        setVirtual(virtual + 1)
                     }
                     if (post.inperson){
-                        this.setState((prevState) => ({
-                            inperson: prevState.inperson + 1, 
-                        }));
+                        setInPerson(inperson + 1)
                     }
                     if (post.industries){
                         post.industries.map((industry) => {
-                            console.log(industry.name);
-                            if (industries[industry.name] === undefined){
-                                industries[industry.name] = 1;
+                            if (industries_[industry.name] === undefined){
+                                industries_[industry.name] = 1;
                             } else {
-                                industries[industry.name] = industries[industry.name] + 1;
+                                industries_[industry.name] = industries_[industry.name] + 1;
                             }
-                            console.log(industries);
                         })
                     }
                     if (post.city && post.state){
                         const local = post.city + ', ' + post.state; 
-                        if (locations[local] === undefined){
-                            locations[local] = 1; 
+                        if (locations_[local] === undefined){
+                            locations_[local] = 1; 
                         } else{
-                            locations[local] = locations[local] + 1;
+                            locations_[local] = locations_[local] + 1;
                         }
                     }
                 }
 
             })
-            this.setState({ industries, locations });
+            setIndustries(industries_)
+            setLocations(locations_)
         }
+    })
+
+    if (!m) {
+        setM(true)
     }
 
-    renderRemote = () => {
+    const renderRemote = () => {
         let graphData = [];
         graphData.push({
-            y: this.state.virtual, 
+            y: virtual, 
             label: 'Virtual'
         }); 
         graphData.push({
-            y: this.state.inperson,
+            y: inperson,
             label: 'In Person'
         });
         const options = {
@@ -118,17 +100,16 @@ class PositionInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
 			/>
         </div>
         )   
     }
 
-    renderIndustries = () => {
+    const renderIndustries = () => {
         let graphData = [];
-        Object.keys(this.state.industries).forEach((industry) => {
+        Object.keys(industries).forEach((industry) => {
             const obj = {
-                y:  Object.keys(this.state.industries).length, 
+                y:  Object.keys(industries).length, 
                 label: industry
             }
             graphData.push(obj);
@@ -153,17 +134,17 @@ class PositionInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
+				/* onRef={ref => chart = ref} */
 			/>
         </div>
         )   
     }
 
-    renderLocation = () => {
+    const renderLocation = () => {
         let graphData = [];
-        Object.keys(this.state.locations).forEach((location) => {
+        Object.keys(locations).forEach((location) => {
             const obj = {
-                y: this.state.locations[location], 
+                y: locations[location], 
                 label: location
             }
             graphData.push(obj);
@@ -188,37 +169,32 @@ class PositionInfo extends Component {
 		return (
 		<div className="pieGraph">
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
+				/* onRef={ref => chart = ref} */
 			/>
         </div>
         )   
     }
 
 
-    render() {
         return( 
-            this._isMounted ? 
             ( <div className="dashboardContent">
                 <div className="stats">
-                    <p>Active postings: <strong>{this.state.active}</strong></p>
-                    <p>Filled postings: <strong>{this.state.filled}</strong></p>
-                    <p>Archived postings:<strong>{this.state.archived}</strong> </p>
+                    <p>Active postings: <strong>{active}</strong></p>
+                    <p>Filled postings: <strong>{filled}</strong></p>
+                    <p>Archived postings:<strong>{archived}</strong> </p>
                 </div>
                 <div className="graphs">
                     <div className="graphRow">
-                        {this.renderIndustries()}
-                        {this.renderRemote()}
+                        {renderIndustries()}
+                        {renderRemote()}
                     </div>
                    <div className="graphRow">
-                        {this.renderLocation()}
+                        {renderLocation()}
                    </div>
                 </div>
             </div>
-            ) : <div />
-            
+            )
         )
-    }
-
 }
 
 function mapStateToProps(reduxState) {

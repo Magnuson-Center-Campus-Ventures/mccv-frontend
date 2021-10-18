@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-array-index-key */
+/* eslint-disable*/
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -143,60 +142,30 @@ const StudentListItem = (props) => {
     )
   );
 
-  const activelySearching= (props.student?.job_search_status === 'Active')
-  const activeClass = (activelySearching) ? 'activelySearching' : "";
-
-  // all other variables aren't functions, so maybe this shouldn't be a func either. thought this was most efficient tho.
-  const getTimeFrame = () =>{
-    if (activelySearching) {
-      const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-      const activeTimeFrame = [
-        monthNames[new Date(props.student?.desired_start_date).getMonth()], 
-        monthNames[new Date(props.student?.desired_end_date).getMonth()]
-      ]
-      return (activelySearching) ? ( 
-        (activeTimeFrame[0]!=activeTimeFrame[1]) ? (
-          activeTimeFrame[0] +" - " + activeTimeFrame[1]
-        ) : (activeTimeFrame[0])
-        ) : "";
-    }
+  const activeTimeFrame = (date) => {
+    const months = ['', 'Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Noc', 'Dec']
+    const dayTimeStart = props.student.desired_start_date.split("T")
+    const dayDataStart = dayTimeStart[0].split("-")
+    const dayTimeEnd = props.student.desired_end_date.split("T")
+    const dayDataEnd = dayTimeEnd[0].split("-")
+    return <p>Actively Searching: <b>{dayDataStart[1]}/{dayDataStart[0]}</b> - <b>{dayDataEnd[1]}/{dayDataEnd[0]}</b></p>
+  };
+  const activeStatus = () => {
+  return (
+      <div className={`status ${props.student.job_search_status === 'Active' ? 'activeStatus' : 'inActiveStatus'}`}>
+        {props.student.job_search_status === 'Active'
+          ? activeTimeFrame()
+          :
+          'Not currently searching'
+        }
+      </div>
+    )
   }
-
-  
-  
-
-  const activeStatus = (activelySearching) ? (
-  <div className="activeStatus">
-    Actively Searching for <strong> {getTimeFrame()} </strong>
-  </div>
-  ) : "";
-
-  const route = `/students/${props.student._id}`;
-  // return (
-  //   <Link to={route} key={props.student.id} className="listItem link">
-  //     <div className="postBody">
-  //       <div className="postText">
-  //         {renderStudentName}
-  //         {affiliationGradYear}
-  //         <div className="majorWrapper">
-  //           {majors}
-  //         </div>
-  //         {renderBio}
-  //         <div className="pillsList">
-  //           {skills}
-  //         </div>
-  //         <div className="pillsList">
-  //           {industries}
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </Link>
-  //  );
   return (
     <Link to={route} key={props.student.id} className="listItem link">
       <div className={`postBody ${activeClass}`}>
         <div className="postText">
-          {activeStatus}
+          {activeStatus()}
           <div className="postHeader">
             <div className="studentNameWrapper">{renderStudentName}</div>
             <div className="gradYearWrapper">{affiliationGradYear}</div>

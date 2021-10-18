@@ -4,31 +4,6 @@ import { connect } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
 import { deleteWorkExperience } from '../../actions';
 
-// class WorkExperience extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       badStartDate: false,
-//       badEndDate: false,
-//       currentlyWorking: props.workExp.currently_working,
-//     };
-//   }
-
-//   // Date validation function modified from https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
-//   isValidDate = (dateString) => {
-//     // Check for yyyy-mm pattern
-//     if (!/^\d{4}-\d{2}$/.test(dateString)) { return false; }
-
-//     // Parse the date parts to integers
-//     const parts = dateString.split('-');
-//     const year = parseInt(parts[0], 10);
-//     const month = parseInt(parts[1], 10);
-
-//     // Check the ranges of month and year
-//     return (year > 1000 && year < 3000 && month !== 0 && month <= 12);
-//   };
-
-//   render() {
 const WorkExperience = (props) => {
   return props.isEditing ? (
     <div className="work-exp">

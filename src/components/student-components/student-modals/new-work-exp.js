@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-state */
 /* eslint-disable react/button-has-type */
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -8,25 +8,20 @@ import { createWorkExperience } from '../../../actions';
 import close from '../../../../static/img/close.png';
 import '../../../styles/student-profile.scss';
 
-class NewWorkExp extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      role: '',
-      employer: '',
-      city: '',
-      state: '',
-      start_date: '',
-      end_date: null,
-      description: '',
-      currently_working: false,
-      badStartDate: false,
-      badEndDate: false,
-    };
-  }
+function NewWorkExp(props) {
+  const [role, setRole] = useState('')
+  const [employer, setEmployer] = useState('')
+  const [city, setCity] = useState('')
+  const [state, setState] = useState('')
+  const [start_date, setStartDate] = useState('')
+  const [end_date, setEndDate] = useState(null)
+  const [description, setDescription] = useState('')
+  const [currently_working, setCurrentlyWorking] = useState(false)
+  const [badStartDate, setBadStartDate] = useState(false)
+  const [badEndDate, setBadEndDate] = useState(false)
 
   // Date validation function modified from https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
-  isValidDate = (dateString) => {
+  const isValidDate = (dateString) => {
     // Check for yyyy-mm pattern
     if (!/^\d{4}-\d{2}$/.test(dateString)) { return false; }
 
@@ -39,8 +34,7 @@ class NewWorkExp extends React.Component {
     return (year > 1000 && year < 3000 && month !== 0 && month <= 12);
   };
 
-  render() {
-    if (!this.props.show) {
+    if (!props.show) {
       return null;
     }
     return (
@@ -50,32 +44,32 @@ class NewWorkExp extends React.Component {
             src={close}
             alt="close"
             style={{ cursor: 'pointer' }}
-            onClick={this.props.onClose}
+            onClick={props.onClose}
           />
           </div>
           <div className="new-work-exp-body">
             <div className="input-title">Role</div>
-            <input className="short-input" onBlur={(event) => this.setState({ role: event.target.value })} />
+            <input className="short-input" onBlur={(event) => setRole(event.target.value)} />
             <div className="input-title">Employer</div>
-            <input className="short-input" onBlur={(event) => this.setState({ employer: event.target.value })} />
+            <input className="short-input" onBlur={(event) => setEmployer(event.target.value)} />
             <div className="input-title">City</div>
-            <input className="short-input" onBlur={(event) => this.setState({ city: event.target.value })} />
+            <input className="short-input" onBlur={(event) => setCity(event.target.value)} />
             <div className="input-title">State Abbreviation</div>
-            <input className="short-input" onBlur={(event) => this.setState({ state: event.target.value })} />
+            <input className="short-input" onBlur={(event) => setState(event.target.value)} />
             <div className="input-title">Start Date (YYYY-MM)</div>
-            <div style={{ color: 'red' }}>{this.state.badStartDate ? 'Please enter a valid date with the format YYYY-MM' : null}</div>
+            <div style={{ color: 'red' }}>{badStartDate ? 'Please enter a valid date with the format YYYY-MM' : null}</div>
             <input className="short-input"
               placeholder="YYYY-MM"
-              onBlur={(event) => this.setState({ start_date: event.target.value })}
+              onBlur={(event) => setStartDate(event.target.value)}
             />
-            {!this.state.currently_working
+            {!currently_working
               ? (
                 <div>
                   <div className="input-title">End Date (YYYY-MM)</div>
-                  <div style={{ color: 'red' }}>{this.state.badEndDate ? 'Please enter a valid date with the format YYYY-MM' : null}</div>
+                  <div style={{ color: 'red' }}>{badEndDate ? 'Please enter a valid date with the format YYYY-MM' : null}</div>
                   <input className="short-input"
                     placeholder="YYYY-MM"
-                    onBlur={(event) => this.setState({ end_date: event.target.value })}
+                    onBlur={(event) => setEndDate(event.target.value)}
                   />
                 </div>
               )
@@ -86,40 +80,43 @@ class NewWorkExp extends React.Component {
                   name="currentlyWorking"
                   id="currentlyWorking"
                   type="checkbox"
-                  checked={this.state.currently_working}
-                  onChange={(event) => this.setState({ currently_working: event.target.checked, end_date: null })}
+                  checked={currently_working}
+                  onChange={(event) => {
+                    setCurrentlyWorking(event.target.checked)
+                    setEndDate(null)
+                  }}
                 />
               </label>
             </form>
             <div className="input-title">Description</div>
-            <TextareaAutosize className="tall-input" onBlur={(event) => this.setState({ description: event.target.value })} />
+            <TextareaAutosize className="tall-input" onBlur={(event) => setDescription(event.target.value)} />
             <button className="modal-add-button"
               onClick={() => {
-                if (!this.isValidDate(this.state.start_date) || (!this.state.currently_working && !this.isValidDate(this.state.end_date))) {
-                  if (!this.isValidDate(this.state.start_date)) {
-                    this.setState({ badStartDate: true });
+                if (!isValidDate(start_date) || (!currently_working && !isValidDate(end_date))) {
+                  if (!isValidDate(start_date)) {
+                    setBadStartDate(true);
                   }
-                  if (!this.state.currently_working && !this.isValidDate(this.state.end_date)) {
-                    this.setState({ badEndDate: true });
+                  if (!currently_working && !isValidDate(end_date)) {
+                    setBadEndDate(true);
                   }
                 } else {
                   // We're not displaying day, but the date needs to have a day, so just set it arbitrarily to the 15th here
                   const workExperience = {
-                    role: this.state.role,
-                    employer: this.state.employer,
-                    city: this.state.city,
-                    state: this.state.state,
-                    start_date: this.state.start_date,
-                    end_date: this.state.end_date,
-                    description: this.state.description,
-                    currently_working: this.state.currently_working,
+                    role: role,
+                    employer: employer,
+                    city: city,
+                    state: state,
+                    start_date: start_date,
+                    end_date: end_date,
+                    description: description,
+                    currently_working: currently_working,
                   };
                   workExperience.start_date += '-15';
                   if (workExperience.end_date !== null) {
                     workExperience.end_date += '-15';
                   }
-                  this.props.createWorkExperience(workExperience);
-                  this.props.onClose();
+                  props.createWorkExperience(workExperience);
+                  props.onClose();
                 }
               }}
             >Add Work Experience
@@ -128,7 +125,6 @@ class NewWorkExp extends React.Component {
         </div>
       </div>
     );
-  }
 }
 
 export default withRouter(connect(null, { createWorkExperience })(NewWorkExp));

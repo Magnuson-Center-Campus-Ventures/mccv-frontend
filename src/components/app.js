@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React from 'react';
 import {
   BrowserRouter as Router, Route, Switch,
@@ -10,13 +11,13 @@ import StudentProfile from './student-components/student-profile';
 import StudentProfileStartup from './startup-components/student-profile-startups';
 import Students from './startup-components/students';
 import Post from './student-components/post';
-import Nav from '../funct_components/nav';
-import Footer from '../funct_components/footer';
-import Signin from '../funct_components/signin';
-import Signup from '../funct_components/signup';
+import Nav from './nav';
+import Footer from './footer';
+import Signin from './signin';
+import Signup from './signup';
 import ForgotPassword from './forgot-password';
 import ResetPassword from './reset-password';
-import Credits from '../funct_components/credits';
+import Credits from './credits';
 import StudentsFAQ from './student-components/students-faq';
 import StartupsFAQ from './startup-components/startups-faq';
 import StartupsLanding from './startup-components/startups-landing';
@@ -32,7 +33,8 @@ import AdminRoute from './admin-components/admin-route';
 import ApplicationListItem from './student-components/application-list-item';
 import StartupSubmittedApplications from './startup-components/startup-submitted-applications';
 import AdminDashboard from './admin-components/dashboard';
-import EmailConfirmation from '../funct_components/email-confirmation';
+import EmailConfirmation from './email-confirmation';
+import ActionDashBoard from './action-dashboard-components/action-dashboard';
 
 const App = (props) => {
   return (
@@ -56,6 +58,7 @@ const App = (props) => {
           <PrivateRoute path="/posts" component={Postings} />
           {/* Admin route */}
           <AdminRoute path="/dashboard" component={AdminDashboard} />
+          <AdminRoute path="/action-dashboard" component={ActionDashBoard} />
           {/* Student routes */}
           <StudentRoute path="/student-signup" component={StudentSignUp} />
           <StudentRoute path="/startups/:startupID" component={StartupProfile} />
