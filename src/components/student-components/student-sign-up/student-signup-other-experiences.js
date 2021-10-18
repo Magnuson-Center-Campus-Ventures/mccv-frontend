@@ -6,7 +6,7 @@
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
@@ -15,116 +15,93 @@ import {
 import OtherExperience from '../other-experience';
 import NewOtherExp from '../student-modals/new-other-exp';
 
-class StudentOtherExperiences extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isEditing: false,
-      student: {},
-      otherExps: [],
-      show: false,
-    };
-  }
+function StudentOtherExperiences(props) {
+  const [isEditing, setisEditing] = useState(false)
+  const [student, setstudent] = useState({})
+  const [otherExps, setotherExps] = useState([])
+  const [show, setshow] = useState(false)
+  const[m, setM] = useState(false)
 
-  // Get profile info
-  componentDidMount() {
-    this.props.fetchStudentByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.student && this.props.student !== {} && prevProps.student !== this.props.student) {
-      if (this.props.student.other_exp && this.props.student.other_exp.length > 0) {
-        this.props.fetchOtherExperiences(this.props.student.other_exp);
+  useEffect(() => {
+    if (!m) {
+      props.fetchStudentByUserID(props.userID);
+      props.fetchUser(props.userID);
+      setM(true);
+    }
+  })
+  useEffect((prevProps, prevState) => {
+    if (props.student && props.student !== {} && prevProps.student !== props.student) {
+      if (props.student.other_exp && props.student.other_exp.length > 0) {
+        props.fetchOtherExperiences(props.student.other_exp);
       }
-      this.setState({
-        student: this.props.student,
-      });
+      setstudent(props.student);
     }
 
-    if (prevProps.otherExps !== this.props.otherExps) {
-      this.setState({ otherExps: this.props.otherExps });
+    if (prevProps.otherExps !== props.otherExps) {
+      setotherExps(props.otherExps);
     }
-  }
+  }, [])
 
-   showModal = (e) => {
-     this.setState({
-       show: true,
-     });
+   const showModal = (e) => {
+     setshow(true);
    };
 
-   isEditing = (e) => {
-     this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
+   const isEditing_ = (e) => {
+     setisEditing(!isEditing)
    };
 
-   hideModal = (e) => {
-     this.setState({
-       show: false,
+   const hideModal = (e) => {
+     setshow(false)
+     otherExps.forEach((otherExp) => {
+       props.updateOtherExperience(otherExp._id, otherExp);
      });
-     this.state.otherExps.forEach((otherExp) => {
-       this.props.updateOtherExperience(otherExp._id, otherExp);
-     });
-     this.props.updateStudent(this.state.student.id, this.state.student);
+     props.updateStudent(student.id, student);
    }
 
-   changeOtherExpField = (index, field, value) => {
-     this.setState((prevState) => {
-       const otherExps = [...prevState.otherExps];
-       otherExps[index][field] = value;
-       return {
-         ...prevState,
-         otherExps,
-       };
-     });
+   const changeOtherExpField = (index, field, value) => {
+    otherExps[index][field] = value;
+    setotherExps(otherExp)
    }
 
-   submit = () => {
-     if (this.state.isEditing) {
-       const student = { ...this.state.student };
-       this.props.updateStudent(this.state.student.id, student);
-       this.state.otherExps.forEach((otherExp) => {
-         this.props.updateOtherExperience(otherExp._id, otherExp);
+   const submit = () => {
+     if (isEditing) {
+       const student = { ...student };
+       props.updateStudent(student.id, student);
+       otherExps.forEach((otherExp) => {
+         props.updateOtherExperience(otherExp._id, otherExp);
        });
      }
-     this.setState((prevState) => ({ isEditing: !prevState.isEditing }));
+     setisEditing(!isEditing)
    }
 
      // update student field
-     changeStudentField = (field, event) => {
+     const changeStudentField = (field, event) => {
        // eslint-disable-next-line prefer-destructuring
        const value = event.target.value;
-
-       this.setState((prevState) => {
-         const student = { ...prevState.student };
-         student[field] = value;
-         return {
-           ...prevState,
-           student,
-         };
-       });
+       student[field] = value;
+       setstudent(student)
      }
 
-     hideOtherExpModal = () => {
-       this.setState({ show: false });
+     const hideOtherExpModal = () => {
+       setshow(false)
      };
 
-    renderOtherExperiences = () => {
-      if (this.state.otherExps !== []) {
-        return this.state.otherExps.map((otherExp, index) => {
+    const renderOtherExperiences = () => {
+      if (otherExps !== []) {
+        return otherExps.map((otherExp, index) => {
           return (
             <OtherExperience key={index}
               className="other-exp"
-              isEditing={this.state.isEditing}
+              isEditing={isEditing}
               otherExp={otherExp}
               index={index}
-              changeOtherExpField={this.changeOtherExpField}
+              changeOtherExpField={changeOtherExpField}
             />
           );
         });
       } else return null;
     }
 
-    render() {
       return (
         <div className="question">
           <div className="question-header">
@@ -137,22 +114,21 @@ class StudentOtherExperiences extends Component {
           <div className="question-fields">
             <div className="question-fields-exp-header">
               <p className="question-fields-title">Personal Projects And Other Experiences</p>
-              <i className="fas fa-plus-circle question-fields-button" id="addicon" onClick={(e) => { this.showModal(); }} />
-              <i className="far fa-edit question-fields-button" id="editicon" onClick={(e) => { this.submit(); }} />
+              <i className="fas fa-plus-circle question-fields-button" id="addicon" onClick={(e) => { showModal(); }} />
+              <i className="far fa-edit question-fields-button" id="editicon" onClick={(e) => { submit(); }} />
             </div>
             <div id="other-exps">
-              {this.renderOtherExperiences()}
+              {renderOtherExperiences()}
               <div className="student-profile">
                 <NewOtherExp
-                  onClose={this.hideOtherExpModal}
-                  show={this.state.show}
+                  onClose={hideOtherExpModal}
+                  show={show}
                 />
               </div>
             </div>
           </div>
         </div>
       );
-    }
 }
 
 const mapStateToProps = (reduxState) => ({

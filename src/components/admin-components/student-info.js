@@ -23,16 +23,13 @@ function  StudentInfo(props) {
     const [gradYear, setGradYear] = useState({})
     const [majors, setMajors] = useState({})
     const [m, setM] = useState(false)
-    const fetches = async () => {
+
+    useEffect(() => {
         if (!m) {
-            await props.fetchStudents();
-            await props.fetchPosts();
+            props.fetchPosts();
+            props.fetchStudents();
             setM(true)
         }
-        console.log(m)
-    }
-    useEffect(() => {
-
         if (props.students.length !== 0 && active === 0 && archived === 0 && props.posts.length !== 0){
             let gradYear_ = {}; 
             let majors_ = {};
@@ -96,9 +93,7 @@ function  StudentInfo(props) {
             setStudentsMAtched(studentsMatched_)
             setFilled(Object.keys(studentsMatched).length)
         }
-    }, [m,])
-
-    fetches()
+    })
 
     const checkMajor = (major) => {
         if (major === 'cs' || major === 'CS'){

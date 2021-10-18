@@ -22,7 +22,10 @@ function PositionInfo(props) {
     const [m, setM] = useState(false)
 
     useEffect(() => {
-        props.fetchPosts();
+        if (!m) {
+            props.fetchPosts();
+            setM(true)
+        }
         if (props.posts.length !== 0 && archived === 0 && active === 0){
             let industries_ = {};
             let locations_ = {};
@@ -64,11 +67,7 @@ function PositionInfo(props) {
             setIndustries(industries_)
             setLocations(locations_)
         }
-    }, [])
-
-    if (!m) {
-        setM(true)
-    }
+    })
 
     const renderRemote = () => {
         let graphData = [];

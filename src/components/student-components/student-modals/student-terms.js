@@ -19,9 +19,7 @@ function StudentTerms(props) {
     if (signature !== '') {
       return (
         <button className="modal-signed-button"
-          onClick={() => {
-            props.acceptTC({ signature: signature });
-          }}
+          onClick={acceptTC}
         >
           Accept Terms and Conditions
         </button>

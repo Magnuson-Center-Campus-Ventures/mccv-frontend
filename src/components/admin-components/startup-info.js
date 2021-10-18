@@ -19,9 +19,13 @@ function StartupInfo(props) {
     const [genders, setGenders] = useState({})
     const [industries, setIndustries] = useState({}) 
     const [locations, setLocations] = useState({})
+    const [m, setM] = useState(false)
 
     useEffect(() => {
-        props.fetchStartups()
+        if (!m) {
+            props.fetchStartups();
+            setM(true)
+        }
         if (props.startups.length !== 0 && archived === 0 && active === 0 && pending === 0){
             let industries_ = {};
             let locations_ = {};
@@ -77,7 +81,7 @@ function StartupInfo(props) {
             setLocations(locations_)
             setIndustries(industries_)
         }
-    }, [])
+    })
 
     const checkDate = (lastEdited) => {
         const thisYear = new Date();

@@ -50,7 +50,7 @@ function Nav(props) {
           <li className="navLi"><NavLink to="/startups" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
           <li className="navLi"><NavLink to="/students" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
           <div className="dropdownContainer">
-            <button type="button" className="navNameBtn" onClick={}>
+            <button type="button" className="navNameBtn">
               <i className="far fa-user" />
               <span className="navNameCta">Dashboard</span>
             </button>
@@ -92,16 +92,18 @@ function Nav(props) {
           <li className="navLi"><NavLink to="/startups" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
           <li className="navLi"><NavLink to="/applications" className="navlink" activeClassName="activeBorder">Applications</NavLink></li>
           <div className="dropdownContainer">
-            <button type="button" className="navNameBtn" onClick={this.showDropdown}>
+            <button type="button" className="navNameBtn">
               <i className="far fa-user" />
-              <span className="navNameCta">Dashboard</span>
+              <span className="navNameCta">{firstName}</span>
             </button>
             <ul className="dropdownOptions">
               <li className="dropdownLi">
-                <NavLink to="/dashboard" className="navlinkDropdown" activeClassName="activeBorder">Metrics</NavLink>
+                <NavLink to="/profile" className="navlinkDropdown" activeClassName="activeBorder">My Profile</NavLink>
               </li>
               <li className="dropdownLi">
-                <NavLink to="/action-dashboard" className="navlinkDropdown" activeClassName="activeBorder">Action</NavLink>
+                <button type="button" className="navDropdownLogoutBtn" onClick={signout}>
+                  <span className="navLogoutCta">Logout</span>
+                </button>
               </li>
             </ul>
           </div>

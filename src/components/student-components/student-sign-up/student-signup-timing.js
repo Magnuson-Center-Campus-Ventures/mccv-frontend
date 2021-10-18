@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { DateRange } from 'react-date-range';
@@ -9,86 +9,77 @@ import {
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 
-class StudentTiming extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      student: {
-        desired_start_date: new Date().toISOString(),
-        desired_end_date: new Date().toISOString(),
-      },
-      badStartDate: false,
-      badEndDate: false,
-      secondClick: true,
-    };
-  }
-
-  // Get profile info
-  componentDidMount() {
-    this.props.fetchStudentByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
-  }
+function StudentTiming(props) {
+  const [student, setstudent] = useState({
+    desired_start_date: new Date().toISOString(),
+    desired_end_date: new Date().toISOString(),
+  })
+  const [badStartDate, setbadStartDate] = useState(false)
+  const [badEndDate, setbadEndDate] = useState(false)
+  const [secondClick, setsecondClick] = useState(true)
+  const[m, setM] = useState(false)
+  useEffect(() => {
+    if (!m) {
+      props.fetchStudentByUserID(props.userID);
+      props.fetchUser(props.userID);
+      setM(true);
+    }
+  })
 
   // update student field
-  changeStudentField = (field, event) => {
+  const changeStudentField = (field, event) => {
     // eslint-disable-next-line prefer-destructuring
     const value = event.target.value;
-
-    this.setState((prevState) => {
-      const student = { ...prevState.student };
-      student[field] = value;
-      this.props.updateStudent(this.props.student.id, student);
-      return {
-        ...prevState,
-        student,
-      };
-    });
+    student[field] = value;
+    props.updateStudent(props.student.id, student);
+    setstudent(student)
   }
 
-  checkDateRange = () => {
-    const start = new Date(this.state.student.desired_start_date);
-    const end = new Date(this.state.student.desired_end_date);
+  const checkDateRange = () => {
+    const start = new Date(student.desired_start_date);
+    const end = new Date(student.desired_end_date);
     const diff = (end.getTime() - start.getTime()) / (1000 * 3600 * 24 * 7);
     if (diff > 3.5 && diff <= 10) {
-      this.state.validDate = true;
-      this.props.updateStudent(this.props.student.id, this.state.student);
+      validDate = true;
+      props.updateStudent(props.student.id, student);
     } else {
-      this.state.validDate = false;
-      this.state.student.desired_end_date = new Date(start.getTime() + (1000 * 3600 * 24 * 7 * 4));
+      validDate = false;
+      student.desired_end_date = new Date(start.getTime() + (1000 * 3600 * 24 * 7 * 4));
+      setstudent(student)
     }
   }
 
 
-  renderDateError = () => {
-    if (this.state.validDate === false) {
+  const renderDateError = () => {
+    if (validDate === false) {
       return <div className="date-error">Please make the date range 4-10 weeks long</div>;
     } else return null;
   }
 
-  renderDateRange = () => {
+  const renderDateRange = () => {
     return (
       <DateRange
         editableDateInputs
         onChange={(ranges) => {
-          this.state.secondClick = !this.state.secondClick;
-          this.state.student.desired_start_date = ranges.selection.startDate.toISOString();
-          this.state.student.desired_end_date = ranges.selection.endDate.toISOString();
-          if (this.state.secondClick) {
-            this.checkDateRange();
+          secondClick = !secondClick;
+          student.desired_start_date = ranges.selection.startDate.toISOString();
+          student.desired_end_date = ranges.selection.endDate.toISOString();
+          if (secondClick) {
+            checkDateRange();
           }
-          this.forceUpdate();
+          setstudent(student)
         }}
         moveRangeOnFirstSelection={false}
         ranges={[{
-          startDate: new Date(this.state.student.desired_start_date),
-          endDate: new Date(this.state.student.desired_end_date),
+          startDate: new Date(student.desired_start_date),
+          endDate: new Date(student.desired_end_date),
           key: 'selection',
         }]}
       />
     );
   }
 
-  renderTimingQuestions() {
+  function renderTimingQuestions() {
     return (
       <div className="question">
         <div className="question-header">
@@ -101,19 +92,17 @@ class StudentTiming extends Component {
         <div className="question-horizontal">
           <div className="student-edit-dates">
             <div>Desired Start and End Date</div>
-            {this.renderDateError()}
-            {this.renderDateRange()}
+            {renderDateError()}
+            {renderDateRange()}
           </div>
           <p className="question-fields-title">Hours/Week</p>
-          <TextareaAutosize className="question-fields-text" onBlur={(event) => this.changeStudentField('time_commitment', event)} defaultValue={this.props.student.time_commitment} />
+          <TextareaAutosize className="question-fields-text" onBlur={(event) => changeStudentField('time_commitment', event)} defaultValue={props.student.time_commitment} />
         </div>
       </div>
     );
   }
 
-  render() {
-    return this.renderTimingQuestions();
-  }
+    return renderTimingQuestions();
 }
 
 const mapStateToProps = (reduxState) => ({

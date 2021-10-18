@@ -16,7 +16,7 @@ function AdminDashboard(props) {
         return(
             <div className="dashboard">
                 <h1>Activity Summary</h1>
-                <select value={selected} onChange={handleChange}>
+                <select value={selected} onChange={handleChange} style={{minHeight: '35px'}}>
                     <option value="Students">View Student </option>
                     <option value="Startups">View Startup </option>
                     <option value="Position">View Position </option>

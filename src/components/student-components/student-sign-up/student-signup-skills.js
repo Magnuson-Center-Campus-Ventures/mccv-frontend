@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import FilteredSelect from '../../select';
@@ -8,73 +8,72 @@ import {
   fetchAllSkills, fetchCertainSkills, createSkillForStudent,
 } from '../../../actions';
 
-class StudentSkills extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      student: {},
-      skill: '',
-      selectedSkills: [],
-      displaySkills: [],
-    };
-  }
+function StudentSkills(props) {
+  const [student, setstudent] = useState({})
+  const [skill, setskill] = useState('')
+  const [selectedSkills, setselectedSkills] = useState([])
+  const [displaySkills, setdisplaySkills] = useState([])
+  const[m, setM] = useState(false)
 
-  // Get profile info
-  componentDidMount() {
-    this.props.fetchAllSkills();
-    this.props.fetchStudentByUserID(this.props.userID);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.student !== {} && prevProps.student !== this.props.student) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ student: this.props.student });
-      this.populateCurrentSkills();
+  useEffect(() => {
+    if (!m) {
+      props.fetchAllSkills();
+      props.fetchStudentByUserID(props.userID);
+      setM(true);
     }
-  }
+  })
+  useEffect((prevProps, prevState) => {
+    if (props.student !== {} && prevProps.student !== props.student) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      setstudent(props.student)
+      populateCurrentSkills();
+    }
+  }, [])
 
-  getSkill(name) {
-    const skillObject = this.props.skills.find((skill) => {
+
+  function getSkill(name) {
+    const skillObject = props.skills.find((skill) => {
       return (skill.name === name);
     });
     return skillObject;
   }
 
-  addSkill = () => {
-    if (!this.props.student.skills.includes(this.getSkill(this.state.skill))) {
-      this.props.student.skills.push(this.getSkill(this.state.skill));
+  const addSkill = () => {
+    if (!props.student.skills.includes(getSkill(skill))) {
+      props.student.skills.push(getSkill(skill));
     }
-    this.state.displaySkills = this.state.displaySkills.filter((value) => {
-      return (value.label !== this.state.skill);
+    displaySkills = displaySkills.filter((value) => {
+      return (value.label !== skill);
     });
-    this.state.skill = '';
-    this.forceUpdate();
+    setskill('')
   }
 
-  deleteSkill = (skill) => {
-    this.props.student.skills = this.props.student.skills.filter((value) => {
+  const deleteSkill = (skill) => {
+    props.student.skills = props.student.skills.filter((value) => {
       return (value !== skill.skill);
     });
-    this.state.displaySkills.push({ label: skill.skill.name });
-    this.forceUpdate();
+    displaySkills.push({ label: skill.skill.name });
+    setdisplaySkills(displaySkills)
   }
 
-  populateCurrentSkills() {
-    if (this.state.displaySkills.length === 0) {
-      this.props.student.skills.forEach((value) => {
-        if (!this.state.selectedSkills.includes(value.name)) {
-          this.state.selectedSkills.push(value.name);
+  function populateCurrentSkills() {
+    if (displaySkills.length === 0) {
+      props.student.skills.forEach((value) => {
+        if (!selectedSkills.includes(value.name)) {
+          selectedSkills.push(value.name);
+          setselectedSkills(selectedSkills)
         }
       });
-      this.props.skills.forEach((value) => {
-        if (!this.state.selectedSkills.includes(value.name)) {
-          this.state.displaySkills.push({ label: value.name });
+      props.skills.forEach((value) => {
+        if (!selectedSkills.includes(value.name)) {
+          displaySkills.push({ label: value.name });
+          setdisplaySkills(displaySkills)
         }
       });
     }
   }
 
-  renderAddSkill() {
+  function renderAddSkill() {
     const customStyles = {
       control: (base) => ({
         ...base,
@@ -90,30 +89,30 @@ class StudentSkills extends Component {
           styles={customStyles}
           name="skills"
           placeholder="Select Skills"
-          value={this.state.skill}
-          options={this.state.displaySkills}
+          value={skill}
+          options={displaySkills}
           onChange={(selectedOption) => {
-            this.state.skill = selectedOption.label;
-            this.addSkill();
+            setskill(selectedOption.label)
+            addSkill();
           }}
           onCreateOption={(newOption) => {
-            this.state.skill = newOption;
-            this.state.skill = newOption;
-            this.props.createSkillForStudent({ name: newOption }, this.props.student);
+            skill = newOption;
+            skill = newOption;
+            props.createSkillForStudent({ name: newOption }, props.student);
           }}
         />
       </div>
     );
   }
 
-  renderSkills() {
-    if (this.props.student?.skills) {
+  function renderSkills() {
+    if (props.student?.skills) {
       return (
-        this.props.student.skills.map((skill) => {
+        props.student.skills.map((skill) => {
           return (
             <div className="question-fields-item" key={skill.name}>
               {skill.name}
-              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { this.deleteSkill({ skill }); }}>
+              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { deleteSkill({ skill }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>
@@ -127,8 +126,7 @@ class StudentSkills extends Component {
     }
   }
 
-  render() {
-    if (this.state.student.skills !== undefined && this.props.skills !== []) {
+    if (student.skills !== undefined && props.skills !== []) {
       return (
         <div className="question">
           <div className="question-header">
@@ -139,8 +137,8 @@ class StudentSkills extends Component {
             <i className="fas fa-brain question-header-icon" id="icon" />
           </div>
           <div className="question-fields">
-            {this.renderAddSkill()}
-            <div className="question-fields-items">{this.renderSkills()}</div>
+            {renderAddSkill()}
+            <div className="question-fields-items">{renderSkills()}</div>
           </div>
         </div>
       );
@@ -149,7 +147,6 @@ class StudentSkills extends Component {
         <div>loading</div>
       );
     }
-  }
 }
 
 const mapStateToProps = (reduxState) => ({

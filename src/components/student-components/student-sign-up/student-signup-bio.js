@@ -9,11 +9,14 @@ import {
 function StudentBio(props) {
   const [student, setStudent] = useState({})
   const [selected, setSelected] = useState('')
-  // Get profile info
+  const [m, setM] = useState(false)
 
   useEffect(() => {
-    props.fetchStudentByUserID(props.userID);
-    props.fetchUser(props.userID);
+    if (!m) {
+      props.fetchStudentByUserID(props.userID);
+      props.fetchUser(props.userID);
+      setM(true)
+    }
   })
 
   // update student field
@@ -50,7 +53,7 @@ function StudentBio(props) {
           <p className="question-fields-title">Bio </p>
           <TextareaAutosize className="question-fields-text" onChange={(event) => changeStudentField('bio', event)} defaultValue={props.student.bio} />
           <p className="question-fields-title">Gender <span className="imptMessage"> *</span></p>
-          <select value={props.selected}
+          <select value={selected}
             onChange={(event) => {
               changeStudentField('gender', event);
               setSelected(event.target.value);

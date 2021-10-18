@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
@@ -15,54 +15,46 @@ import {
 } from '../../../actions';
 import '../../../styles/create-new-paginator.scss';
 
-class StudentSignUp extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      index: 0,
-      filled: false,
-    };
-  }
+function StudentSignUp(props) {
+  const [index, setIndex] = useState(0)
+  const [filled, setFilled] = useState(false)
+  const [m, setM] = useState(false)
 
-  componentDidMount() {
-    this.props.fetchStudentByUserID(this.props.userID);
-    this.props.fetchUser(this.props.userID);
-    this.props.fetchAllIndustries();
-    this.props.fetchAllClasses();
-    this.props.fetchAllSkills();
-  }
+  useEffect(() => {
+    if (!m) {
+      props.fetchStudentByUserID(props.userID);
+      props.fetchUser(props.userID);
+      props.fetchAllIndustries();
+      props.fetchAllClasses();
+      props.fetchAllSkills();
+      setM(true)
+    }
+  })
 
-  handlePageClick = (data) => {
-    this.props.updateStudent(this.props.student.id, this.props.student);
+  const handlePageClick = (data) => {
+    props.updateStudent(props.student.id, props.student);
     if (data.selected === 2) {
-      this.setState({
-        index: data.selected,
-        filled: false,
-      });
+      setIndex(data.selected)
+      setFilled(false)
     } else {
-      this.setState({
-        index: data.selected,
-        filled: true,
-      });
+      setIndex(data.selected)
+      setFilled(true)
     }
   };
 
-  ifFilled = () => {
-    this.setState({
-      filled: true,
-    });
-    this.forceUpdate();
+  const ifFilled = () => {
+    setFilled(true)
   }
 
-  onSubmit = () => {
-    this.props.submitStudent(this.props.student.id, this.props.student, this.props.history);
+  const onSubmit = () => {
+    props.submitStudent(props.student.id, props.student, props.history);
   }
 
-  renderSubmit() {
-    if (this.state.index === 7) {
+  const renderSubmit = () => {
+    if (index === 7) {
       return (
         <div className="question-submit">
-          <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={this.onSubmit}>
+          <button type="submit" className="submit-btn" style={{ cursor: 'pointer' }} onClick={onSubmit}>
             Submit!
           </button>
         </div>
@@ -74,14 +66,14 @@ class StudentSignUp extends Component {
     }
   }
 
-  renderComponent() {
-    switch (this.state.index) {
+  const renderComponent = () => {
+    switch (index) {
       case 0:
-        return <StudentSignUpBio ifFilled={this.ifFilled} />;
+        return <StudentSignUpBio ifFilled={ifFilled} />;
       case 1:
         return <StudentSignUpTiming />;
       case 2:
-        return <StudentSignUpMajorMinor ifFilled={this.ifFilled} />;
+        return <StudentSignUpMajorMinor ifFilled={ifFilled} />;
       case 3:
         return <StudentSignUpWorkExperiences />;
       case 4:
@@ -96,51 +88,26 @@ class StudentSignUp extends Component {
         return <div>Out of pages!</div>;
     }
   }
-
-  render() {
-    console.log('first name: ', this.props.student.first_name);
-    console.log('last name: ', this.props.student.last_name);
-    console.log('grad: ', this.props.student.grad_year);
-    console.log('phone: ', this.props.student.phone_number);
-    console.log('gender: ', this.props.student.gender);
-
-    console.log((this.props.student.first_name !== '' || this.props.student.first_name !== undefined)
-    && (this.props.student.last_name !== '' || this.props.student.last_name !== undefined)
-    && (this.props.student.grad_year !== '' || this.props.student.grad_year !== undefined)
-    && (this.props.student.phone_number !== '' || this.props.student.phone_number !== undefined)
-    && (this.props.student.gender !== '' || this.props.student.gender !== undefined));
-
-    switch (this.state.index) {
+    switch (index) {
       case 0:
         return (
           <div className="paginator">
-            {this.renderComponent()}
-            {this.renderSubmit()}
-            { (this.props.student.first_name === '' || this.props.student.first_name === undefined)
-              || (this.props.student.last_name === '' || this.props.student.last_name === undefined)
-              || (this.props.student.grad_year === '' || this.props.student.grad_year === undefined)
-              || (this.props.student.phone_number === '' || this.props.student.phone_number === undefined)
-              || (this.props.student.gender === '' || this.props.student.gender === undefined)
+            {renderComponent()}
+            {renderSubmit()}
+            { (props.student.first_name === '' || props.student.first_name === undefined)
+              || (props.student.last_name === '' || props.student.last_name === undefined)
+              || (props.student.grad_year === '' || props.student.grad_year === undefined)
+              || (props.student.phone_number === '' || props.student.phone_number === undefined)
+              || (props.student.gender === '' || props.student.gender === undefined)
               ? (
                 <div />
-            //   <ReactPaginate
-            //   previousClassName="previous-hide"
-            //   previousLinkClassName="previous-link-hide"
-            //   // nextClassName="next-hide"
-            //   // nextLinkClassName="next-link-hide"
-            //   breakLabel="..."
-            //   pageCount={8}
-            //   marginPagesDisplayed={2}
-            //   pageRangeDisplayed={8}
-            //   onPageChange={this.handlePageClick}
-            // />
               ) : (
                 <ReactPaginate
                   breakLabel="..."
                   pageCount={8}
                   marginPagesDisplayed={2}
                   pageRangeDisplayed={8}
-                  onPageChange={this.handlePageClick}
+                  onPageChange={handlePageClick}
                 />
               )}
 
@@ -149,15 +116,15 @@ class StudentSignUp extends Component {
       case 2:
         return (
           <div className="paginator">
-            {this.renderComponent()}
-            {this.renderSubmit()}
-            {this.state.filled ? (
+            {renderComponent()}
+            {renderSubmit()}
+            {filled ? (
               <ReactPaginate
                 breakLabel="..."
                 pageCount={8}
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={8}
-                onPageChange={this.handlePageClick}
+                onPageChange={handlePageClick}
               />
             ) : (
               <ReactPaginate
@@ -167,7 +134,7 @@ class StudentSignUp extends Component {
                 pageCount={8}
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={8}
-                onPageChange={this.handlePageClick}
+                onPageChange={handlePageClick}
               />
             ) }
           </div>
@@ -175,8 +142,8 @@ class StudentSignUp extends Component {
       case 7:
         return (
           <div className="paginator">
-            {this.renderComponent()}
-            {this.renderSubmit()}
+            {renderComponent()}
+            {renderSubmit()}
             <ReactPaginate
               nextClassName="next-hide"
               nextLinkClassName="next-link-hide"
@@ -184,26 +151,25 @@ class StudentSignUp extends Component {
               pageCount={8}
               marginPagesDisplayed={2}
               pageRangeDisplayed={8}
-              onPageChange={this.handlePageClick}
+              onPageChange={handlePageClick}
             />
           </div>
         );
       default:
         return (
           <div className="paginator">
-            {this.renderComponent()}
-            {this.renderSubmit()}
+            {renderComponent()}
+            {renderSubmit()}
             <ReactPaginate
               breakLabel="..."
               pageCount={8}
               marginPagesDisplayed={2}
               pageRangeDisplayed={8}
-              onPageChange={this.handlePageClick}
+              onPageChange={handlePageClick}
             />
           </div>
         );
     }
-  }
 }
 
 const mapStateToProps = (reduxState) => ({
