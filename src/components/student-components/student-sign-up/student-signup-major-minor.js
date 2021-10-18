@@ -5,7 +5,7 @@
 /* eslint-disable func-names */
 
 
-import React, { Component, useEffect, useState } from 'react';
+import React, { Component, useEffect, useReducer, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -20,6 +20,7 @@ function StudentMajorMinors(props) {
   const [newMajor, setnewMajor] = useState('')
   const [newMinor, setnewMinor] = useState('')
   const[m, setM] = useState(false)
+  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
 
   useEffect(() => {
     if (!m) {
@@ -109,6 +110,7 @@ function StudentMajorMinors(props) {
                 student.majors.push(nm);
                 props.student.majors = student.majors;
                 setstudent(student)
+                forceUpdate()
               }}
             ><i className="fa fa-plus add-icon" aria-hidden="true" />
             </button>
@@ -124,6 +126,7 @@ function StudentMajorMinors(props) {
                 student.minors.push(nm);
                 props.student.minors = student.minors;
                 setstudent(student)
+                forceUpdate()
               }}
             ><i className="fa fa-plus add-icon" aria-hidden="true" />
             </button>
