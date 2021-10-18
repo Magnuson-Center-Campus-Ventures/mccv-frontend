@@ -88,6 +88,8 @@ const StudentListItem = (props) => {
       );
     }
   });
+  const activelySearching= (props.student?.job_search_status === 'Active')
+  const activeClass = (activelySearching) ? 'activelySearching' : "";
   let industryChars = 0;
   const industryCharLimit = (!props.student.bio || props.student.bio.length < 40) ? 60 : 24;
   const industryPillLimit = (!props.student.bio || props.student.bio.length < 40) ? 6 : 3;
