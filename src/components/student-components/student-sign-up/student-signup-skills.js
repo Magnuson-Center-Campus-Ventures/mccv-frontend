@@ -22,13 +22,13 @@ function StudentSkills(props) {
       setM(true);
     }
   })
-  useEffect((prevProps, prevState) => {
+  useEffect(() => {
     if (props.student !== {} && prevProps.student !== props.student) {
       // eslint-disable-next-line react/no-did-update-set-state
       setstudent(props.student)
       populateCurrentSkills();
     }
-  }, [])
+  }, [props.student])
 
 
   function getSkill(name) {

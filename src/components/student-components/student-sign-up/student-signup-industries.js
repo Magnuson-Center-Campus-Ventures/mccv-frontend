@@ -26,7 +26,7 @@ function StudentIndustries(props) {
   useEffect((prevProps, prevState) => {
     setStudent(props.student)
     populateCurrentIndustries();
-  }, [])
+  }, [props.student])
 
   const getIndustry = (name) => {
     const industryObject = props.industries.find((industry) => {

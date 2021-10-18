@@ -35,7 +35,7 @@ function StudentWorkExperiences(props) {
     }
     setstudent(props.student)
     setworkExps(props.workExps)
-  }, [])
+  }, [props.student, props.workExps])
 
   const showModal = (e) => {
     setshow(true)

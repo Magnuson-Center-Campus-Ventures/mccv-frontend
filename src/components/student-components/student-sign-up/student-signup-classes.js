@@ -26,7 +26,7 @@ function StudentClasses(props) {
   useEffect(() => {
     setStudent(props.student);
     populateCurrentClasses();
-  }, [])
+  }, [props.student])
 
   const getClass = (name) => {
     const classObject = props.classes.find((course) => {

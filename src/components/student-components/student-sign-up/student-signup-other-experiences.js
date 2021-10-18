@@ -29,13 +29,13 @@ function StudentOtherExperiences(props) {
       setM(true);
     }
   })
-  useEffect((prevProps, prevState) => {
+  useEffect(() => {
     if (props.student.other_exp && props.student.other_exp.length > 0) {
       props.fetchOtherExperiences(props.student.other_exp);
     }
     setstudent(props.student);
     setotherExps(props.otherExps);
-  }, [])
+  }, [props.student, props.otherExps])
 
    const showModal = (e) => {
      setshow(true);

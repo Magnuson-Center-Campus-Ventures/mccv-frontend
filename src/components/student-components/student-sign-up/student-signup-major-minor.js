@@ -32,7 +32,7 @@ function StudentMajorMinors(props) {
 
   useEffect(() => {
     setstudent(props.student)
-  }, [])
+  }, [props.student])
 
 
   const onAffiliationChange = (event) => {
