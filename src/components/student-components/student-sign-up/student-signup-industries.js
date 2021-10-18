@@ -23,14 +23,14 @@ function StudentIndustries(props) {
     }
   })
 
-  useEffect((prevProps, prevState) => {
+  useEffect(() => {
     setStudent(props.student)
     populateCurrentIndustries();
   }, [props.student])
 
   const getIndustry = (name) => {
-    const industryObject = props.industries.find((industry) => {
-      return (industry.name === name);
+    const industryObject = props.industries.find((industry_) => {
+      return (industry_.name === name);
     });
     return industryObject;
   }
@@ -39,15 +39,15 @@ function StudentIndustries(props) {
     if (!props.student.interested_industries.includes(getIndustry(industry))) {
       props.student.interested_industries.push(getIndustry(industry));
     }
-    displayIndustries = displayIndustries.filter((value) => {
+    setDisplayIndustries(displayIndustries.filter((value) => {
       return (value.label !== industry);
-    });
+    }))
     setIndustry('');
   }
 
-  const deleteIndustry = (industry) => {
+  const deleteIndustry = (industry_) => {
     props.student.interested_industries = props.student.interested_industries.filter((value) => {
-      return (value !== industry.industry);
+      return (value !== industry_.industry);
     });
     displayIndustries.push({ label: industry.industry.name });
     setDisplayIndustries(displayIndustries);
@@ -104,11 +104,11 @@ function StudentIndustries(props) {
   const renderIndustries = () => {
     if (props.student?.interested_industries) {
       return (
-        props.student.interested_industries.map((industry) => {
+        props.student.interested_industries.map((industry_) => {
           return (
-            <div className="question-fields-item" key={industry.name}>
-              {industry.name}
-              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { deleteIndustry({ industry }); }}>
+            <div className="question-fields-item" key={industry_.name}>
+              {industry_.name}
+              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { deleteIndustry({ industry_ }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>

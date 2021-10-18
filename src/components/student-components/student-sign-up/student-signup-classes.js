@@ -39,9 +39,9 @@ function StudentClasses(props) {
     if (!props.student.relevant_classes.includes(getClass(class_))) {
       props.student.relevant_classes.push(getClass(class_));
     }
-    displayClasses = displayClasses.filter((value) => {
+    setDisplayClasses(displayClasses.filter((value) => {
       return (value.label !== class_);
-    });
+    }));
     setClass_('')
   }
 

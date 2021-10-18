@@ -31,7 +31,7 @@ function NewOtherExp(props) {
             <TextareaAutosize className="tall-input" onBlur={(event) => setDescription(event.target.value)} />
             <button className="modal-add-button"
               onClick={() => {
-                props.createOtherExperience(state);
+                props.createOtherExperience({name: name, description: description});
                 props.onClose();
               }}
             >Add Experience

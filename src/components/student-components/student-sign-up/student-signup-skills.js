@@ -42,9 +42,9 @@ function StudentSkills(props) {
     if (!props.student.skills.includes(getSkill(skill))) {
       props.student.skills.push(getSkill(skill));
     }
-    displaySkills = displaySkills.filter((value) => {
+    setdisplaySkills(displaySkills.filter((value) => {
       return (value.label !== skill);
-    });
+    }));
     setskill('')
   }
 
@@ -108,11 +108,11 @@ function StudentSkills(props) {
   function renderSkills() {
     if (props.student?.skills) {
       return (
-        props.student.skills.map((skill) => {
+        props.student.skills.map((skill_) => {
           return (
-            <div className="question-fields-item" key={skill.name}>
-              {skill.name}
-              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { deleteSkill({ skill }); }}>
+            <div className="question-fields-item" key={skill_.name}>
+              {skill_.name}
+              <button type="submit" className="question-fields-button" style={{ cursor: 'pointer' }} onClick={() => { deleteSkill({ skill_ }); }}>
                 <i className="far fa-trash-alt" id="icon" />
               </button>
             </div>
