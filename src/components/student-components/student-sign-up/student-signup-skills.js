@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import FilteredSelect from '../../select';

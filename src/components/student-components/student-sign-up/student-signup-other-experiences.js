@@ -6,7 +6,7 @@
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/no-array-index-key */
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {

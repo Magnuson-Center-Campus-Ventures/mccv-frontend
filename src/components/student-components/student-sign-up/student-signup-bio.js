@@ -57,8 +57,8 @@ function StudentBio(props) {
             onChange={(event) => {
               changeStudentField('gender', event);
               setSelected(event.target.value);
-              // props.ifFilled();
             }}
+            style={{minHeight: '35px'}}
           >
             <option value="select">Select...</option>
             <option value="male">Male</option>
