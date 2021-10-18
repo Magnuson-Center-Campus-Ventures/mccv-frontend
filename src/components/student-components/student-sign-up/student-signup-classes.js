@@ -23,12 +23,9 @@ function StudentClasses(props) {
     }
   })
 
-  useEffect((prevProps, prevState) => {
-    if (props.student !== {} && prevProps.student !== props.student) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      setStudent(props.student);
-      populateCurrentClasses();
-    }
+  useEffect(() => {
+    setStudent(props.student);
+    populateCurrentClasses();
   }, [])
 
   const getClass = (name) => {

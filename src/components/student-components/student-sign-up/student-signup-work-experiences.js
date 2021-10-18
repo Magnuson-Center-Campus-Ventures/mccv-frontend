@@ -29,17 +29,12 @@ function StudentWorkExperiences(props) {
       setM(true);
     }
   })
-  useEffect((prevProps, prevState) => {
-    if (props.student && props.student !== {} && prevProps.student !== props.student) {
-      if (props.student.work_exp && props.student.work_exp.length > 0) {
-        props.fetchWorkExperiences(props.student.work_exp);
-      }
-      setstudent(props.student)
+  useEffect(() => {
+    if (props.student.work_exp && props.student.work_exp.length > 0) {
+      props.fetchWorkExperiences(props.student.work_exp);
     }
-
-    if (prevProps.workExps !== props.workExps) {
-      setworkExps(props.workExps)
-    }
+    setstudent(props.student)
+    setworkExps(props.workExps)
   }, [])
 
   const showModal = (e) => {

@@ -17,6 +17,7 @@ function StudentTiming(props) {
   const [badStartDate, setbadStartDate] = useState(false)
   const [badEndDate, setbadEndDate] = useState(false)
   const [secondClick, setsecondClick] = useState(true)
+  const [validDate, setValidDate] = useState(true)
   const[m, setM] = useState(false)
   useEffect(() => {
     if (!m) {
@@ -40,10 +41,10 @@ function StudentTiming(props) {
     const end = new Date(student.desired_end_date);
     const diff = (end.getTime() - start.getTime()) / (1000 * 3600 * 24 * 7);
     if (diff > 3.5 && diff <= 10) {
-      validDate = true;
+      setValidDate(true)
       props.updateStudent(props.student.id, student);
     } else {
-      validDate = false;
+      setValidDate(false)
       student.desired_end_date = new Date(start.getTime() + (1000 * 3600 * 24 * 7 * 4));
       setstudent(student)
     }
@@ -61,12 +62,13 @@ function StudentTiming(props) {
       <DateRange
         editableDateInputs
         onChange={(ranges) => {
-          secondClick = !secondClick;
+          const secondClick_ = !secondClick
           student.desired_start_date = ranges.selection.startDate.toISOString();
           student.desired_end_date = ranges.selection.endDate.toISOString();
-          if (secondClick) {
+          if (secondClick_) {
             checkDateRange();
           }
+          setsecondClick(secondClick_)
           setstudent(student)
         }}
         moveRangeOnFirstSelection={false}

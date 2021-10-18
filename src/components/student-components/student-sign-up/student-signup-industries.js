@@ -24,11 +24,8 @@ function StudentIndustries(props) {
   })
 
   useEffect((prevProps, prevState) => {
-    if (props.student !== {} && prevProps.student !== props.student) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      setStudent(props.student)
-      populateCurrentIndustries();
-    }
+    setStudent(props.student)
+    populateCurrentIndustries();
   }, [])
 
   const getIndustry = (name) => {

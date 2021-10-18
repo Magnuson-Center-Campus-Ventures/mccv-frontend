@@ -30,16 +30,11 @@ function StudentOtherExperiences(props) {
     }
   })
   useEffect((prevProps, prevState) => {
-    if (props.student && props.student !== {} && prevProps.student !== props.student) {
-      if (props.student.other_exp && props.student.other_exp.length > 0) {
-        props.fetchOtherExperiences(props.student.other_exp);
-      }
-      setstudent(props.student);
+    if (props.student.other_exp && props.student.other_exp.length > 0) {
+      props.fetchOtherExperiences(props.student.other_exp);
     }
-
-    if (prevProps.otherExps !== props.otherExps) {
-      setotherExps(props.otherExps);
-    }
+    setstudent(props.student);
+    setotherExps(props.otherExps);
   }, [])
 
    const showModal = (e) => {

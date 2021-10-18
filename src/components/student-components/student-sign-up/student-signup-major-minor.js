@@ -12,9 +12,10 @@ import TextareaAutosize from 'react-textarea-autosize';
 import {
   fetchStudentByUserID, fetchUser, updateStudent,
 } from '../../../actions';
+import {usePrevious} from '../../utils'
 
 function StudentMajorMinors(props) {
-  const [student, setstudent] = useState({})
+  const [student, setstudent] = useState(props.student|{})
   const [affiliation, setaffiliation] = useState('')
   const [newMajor, setnewMajor] = useState('')
   const [newMinor, setnewMinor] = useState('')
@@ -28,11 +29,8 @@ function StudentMajorMinors(props) {
     }
   })
 
-  useEffect((prevProps, prevState) => {
-    if (props.student !== {} && prevProps.student !== props.student) {
-      // eslint-disable-next-line react/no-did-update-set-state
-      setstudent(props.student)
-    }
+  useEffect(() => {
+    setstudent(props.student)
   }, [])
 
 
@@ -87,7 +85,7 @@ function StudentMajorMinors(props) {
             <div className="question-header-prompt">
               <h1>Education Information</h1>
               <p> Dartmouth Affiliation <span className="imptMessage">*</span> </p>
-              <select value={affiliation} onChange={onAffiliationChange}>
+              <select value={affiliation} onChange={onAffiliationChange} style={{minHeight: '35px'}}>
                 {/* Dartmouth, geisel, tuck, thayer, guarini */}
                 <option value="select">Select...</option>
                 <option value="Undergrad">Dartmouth College</option>
