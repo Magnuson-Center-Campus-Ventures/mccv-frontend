@@ -1,65 +1,55 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
 import { updatePassword } from '../actions/index';
 import '../styles/reset-password.scss';
 
-class ResetPassword extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      token: '',
-      password: '',
-    };
+function ResetPassword() {
+  const [token, setToken] = useState()
+  const [password, setPassword] = useState()
+
+  const onPasswordChange = (event) => {
+    setPassword(event.target.value)
   }
 
-  onPasswordChange = (event) => {
-    this.setState({ password: event.target.value });
-  }
-
-  submitPassword = (event) => {
+  const submitPassword = (event) => {
     const urlParams = new URLSearchParams(window.location.search);
-    this.state.token = urlParams.get('token');
-    const fields = { ...this.state };
-    this.props.updatePassword(fields, this.props.history);
+    token = urlParams.get('token');
+    const fields = { token: token, password: password};
+    props.updatePassword(fields, props.history);
   }
 
-  renderError = () => {
-    if (this.props.error) {
-      return <div className="signinError">{this.props.error}</div>;
+  const renderError = () => {
+    if (props.error) {
+      return <div className="signinError">{props.error}</div>;
     }
     return null;
   }
 
-  render() {
-    return (
-      <div className="signinPage">
-        <div className="signinBoard">
-          <div className="signinLeft">
-            <h1>Reset your password?</h1>
-            <h2>Enter your new password</h2>
-            {this.renderError()}
-          </div>
-
-          <div className="signinRight">
-            <div className="signinPassword">
-              <h2>New Password</h2>
-              <input type="password" onChange={this.onPasswordChange} value={this.state.password} />
-            </div>
-
-            <div className="signupActions">
-              <button type="button" className="signinLoginBtn" onClick={this.submitPassword}>
-                <span className="signinLoginCta">Submit</span>
-              </button>
-              <NavLink to="/signup" className="signupLink">Don&apos;t have an account? Sign Up</NavLink>
-            </div>
-          </div>
-
+  return (
+    <div className="signinPage">
+      <div className="signinBoard">
+        <div className="signinLeft">
+          <h1>Reset your password?</h1>
+          <h2>Enter your new password</h2>
+          {renderError()}
         </div>
-        {/* {this.renderError()} */}
+        <div className="signinRight">
+          <div className="signinPassword">
+            <h2>New Password</h2>
+            <input type="password" onChange={onPasswordChange} value={password} />
+          </div>
+
+          <div className="signupActions">
+            <button type="button" className="signinLoginBtn" onClick={submitPassword}>
+              <span className="signinLoginCta">Submit</span>
+            </button>
+            <NavLink to="/signup" className="signupLink">Don&apos;t have an account? Sign Up</NavLink>
+          </div>
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 function mapStateToProps(reduxState) {

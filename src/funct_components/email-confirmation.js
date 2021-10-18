@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { confirmedSignup } from '../actions/index';
 import '../styles/email-confirmation.scss';
 
-function EmailConfirmation() {
+function EmailConfirmation(props) {
   const [token, setToken] = useState();
 
   useEffect(() => {

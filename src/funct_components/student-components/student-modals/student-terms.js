@@ -1,31 +1,26 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable max-len */
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import close from '../../../../static/img/close.png';
 import '../../../styles/terms.scss';
 
-class StudentTerms extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      signature: '',
-    };
-  }
+function StudentTerms(props) {
+  const [signature, setSignature] = useState('')
 
-  acceptTC() {
-    this.props.acceptTC({
-      signature: this.state.signature,
+  const acceptTC = () => {
+    props.acceptTC({
+      signature: signature,
     });
   }
 
-  renderAcceptTC() {
-    if (this.state.signature !== '') {
+  const renderAcceptTC = () => {
+    if (signature !== '') {
       return (
         <button className="modal-signed-button"
           onClick={() => {
-            this.props.acceptTC({ signature: this.state.signature });
+            props.acceptTC({ signature: signature });
           }}
         >
           Accept Terms and Conditions
@@ -40,8 +35,7 @@ class StudentTerms extends React.Component {
     }
   }
 
-  render() {
-    if (!this.props.show) {
+    if (!props.show) {
       return null;
     }
     return (
@@ -51,7 +45,7 @@ class StudentTerms extends React.Component {
             src={close}
             alt="close"
             style={{ cursor: 'pointer' }}
-            onClick={this.props.onClose}
+            onClick={props.onClose}
           />
           <h1 className="terms-title">Magnuson Center Campus Ventures Terms and Conditions For Students</h1>
           <p>
@@ -110,13 +104,12 @@ class StudentTerms extends React.Component {
         <div className="terms-signature-container">
           <div className="new-work-exp-body">
             <div className="input-title">Sign your name here</div>
-            <input className="terms-short-input" onInput={(event) => this.setState({ signature: event.target.value })} />
-            {this.renderAcceptTC()}
+            <input className="terms-short-input" onInput={(event) => setSignature(event.target.value)} />
+            {renderAcceptTC()}
           </div>
         </div>
       </div>
     );
-  }
 }
 
 export default withRouter(connect(null, { })(StudentTerms));

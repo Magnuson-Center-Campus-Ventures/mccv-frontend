@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import FilteredSelect from '../select'
@@ -8,101 +8,85 @@ import {
 } from '../../actions';
 import '../../styles/modal.scss';
 
-class Archive extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      filled: false,
-      applicantOptions: [],
-      studentsSelected: [],
-      answeredSelected: false,
-    };
-    this.notFilled = this.notFilled.bind(this);
-    this.filled = this.filled.bind(this);
-  }
+function Archive(props) {
+  const [filled, setFilled] = useState(false)
+  const [applicantOptions, setApplicantOptions] = useState([])
+  const [studentsSelected, setStudentsSelected] = useState([])
+  const [answeredSelected, setAnsweredSelected] = useState(false)
 
-  componentDidMount() {
-    if (this.props.post?.applicants?.length > 0) {
-      const names = this.props.post.applicants.map((applicant) => {
+  useEffect(() => {
+    if (props.post?.applicants?.length > 0) {
+        const names = props.post.applicants.map((applicant) => {
         const name = `${applicant.first_name} ${applicant.last_name}`;
         return { value: applicant, label: name };
       });
-      this.setState({ applicantOptions: names });
+      setApplicantOptions(names)
     }
-    if ( !this.props.post){
-      this.setState({answeredSelected: true}); 
+    if ( !props.post){
+      setAnsweredSelected(true)
     }
+  }, [])
+
+  const toggleFilled = (e) =>{
+    const { filled, answeredSelected } = state; 
+    setFilled(!filled)
+    setAnsweredSelected(!answeredSelected)
   }
 
-  toggleFilled = (e) =>{
-    const { filled, answeredSelected } = this.state; 
-    this.setState({ 
-      filled: !filled, 
-      answeredSelected: !answeredSelected
-    })
+  const notFilled = (e) => {
+    setFilled(false)
+    setAnsweredSelected(true)
   }
 
-  notFilled = (e) => {
-    this.setState({ 
-      filled: false, 
-      answeredSelected: true, 
-     });
-     console.log(this.state.answeredSelected)
-
+  const filled_ = (e) => {
+    setFilled(true)
+    setAnsweredSelected(true)
   }
 
-  filled = (e) => {
-    this.setState({ 
-      filled: true, 
-      answeredSelected: true, 
-    });
-    console.log(this.state.answeredSelected)
-  }
-
-  onArchive = (e) => {
-    if (this.props.post) {
-      const { post } = this.props;
+  const onArchive = (e) => {
+    if (props.post) {
+      const { post } = props;
       post.status = 'Archived';
-      post.students_selected = this.state.studentsSelected;
-      this.props.updatePost(post.id, post);
-      this.props.onClose(e);
+      post.students_selected = studentsSelected;
+      props.updatePost(post.id, post);
+      props.onClose(e);
     }
-    if (this.props.startup) {
-      const { startup } = this.props;
+    if (props.startup) {
+      const { startup } = props;
       startup.status = 'Archived';
-      this.props.updateStartup(startup.id, startup);
+      props.updateStartup(startup.id, startup);
       startup.posts.map((post) => {
         const postCopy = post;
         postCopy.status = 'Archived';
-        this.props.updatePost(post.id, postCopy);
+        props.updatePost(post.id, postCopy);
       });
-      this.props.onClose(e);
+      props.onClose(e);
     }
-    if (this.props.student) {
-      const { student } = this.props;
+    if (props.student) {
+      const { student } = props;
       student.status = 'Archived';
-      this.props.updateStudent(student.id, student);
-      this.props.onClose(e);
+      props.updateStudent(student.id, student);
+      props.onClose(e);
     }
   }
 
   // add student who filled position to selected array
-  addFilled = (student) => {
-    const selected = this.state.studentsSelected.map((selectedStudent) => {
+  const addFilled = (student) => {
+    const selected = studentsSelected.map((selectedStudent) => {
       return { selectedStudent };
     });
     selected.push(student.value);
-    this.state.studentsSelected = selected;
+    studentsSelected = selected;
   }
 
-  filledRender() {
+  const filledRender = () => {
     const customStyles = { // from student-signup-classes
       control: (base) => ({
         ...base,
         width: 200,
       }),
     };
-    if (this.state.filled) {
+    if (filled) {
       return (
         <div className="selectStudents">
           <p>Select the student(s) who filled the position</p>
@@ -113,9 +97,9 @@ class Archive extends Component {
             styles={customStyles}
             name="classes"
             placeholder="Select Students"
-            options={this.state.applicantOptions}
+            options={applicantOptions}
             onChange={(selectedOption) => {
-              this.addFilled(selectedOption);
+              addFilled(selectedOption);
             }}
           />
         </div>
@@ -126,8 +110,8 @@ class Archive extends Component {
   }
 
   // eslint-disable-next-line consistent-return
-  postArchive() {
-    if (this.props.post) {
+  const postArchive = ()=> {
+    if (props.post) {
       return (
         <div className="archiveQuestions">
           <p> Has this position been filled by a student on this platform?</p>
@@ -136,8 +120,7 @@ class Archive extends Component {
               id="noarchive"
               style={{ cursor: 'pointer' }}
               onClick={(e) => {
-                this.notFilled(); 
-                // this.setState({answeredSelected: true})
+                notFilled(); 
               }}
             >
               No
@@ -146,14 +129,13 @@ class Archive extends Component {
               id="archive"
               style={{ cursor: 'pointer' }}
               onClick={(e) => {
-                // this.filled();
-                this.filled(); 
+                filled_(); 
               }}
             >
               Yes
             </button>
           </div>
-          {this.filledRender()}
+          {filledRender()}
         </div>
       );
     } else {
@@ -161,8 +143,7 @@ class Archive extends Component {
     }
   }
 
-  render() {
-    if (!this.props.show) {
+    if (!props.show) {
       return null;
     } else {
       return (
@@ -174,11 +155,11 @@ class Archive extends Component {
               tabIndex={0}
               id="close-modal"
               onClick={(e) => {
-                this.props.onClose(e);
+                props.onClose(e);
               }}
             />
-            {this.postArchive()}
-            {this.state.answeredSelected ? (
+            {postArchive()}
+            {answeredSelected ? (
               <div className="modalContent">
               <p> Are you sure you want to archive this?</p>
               <div className="archiveOptions">
@@ -186,7 +167,7 @@ class Archive extends Component {
                   id="noarchive"
                   style={{ cursor: 'pointer' }}
                   onClick={(e) => {
-                    this.props.onClose(e);
+                    props.onClose(e);
                   }}
                 >
                   No
@@ -195,7 +176,7 @@ class Archive extends Component {
                   id="archive"
                   style={{ cursor: 'pointer' }}
                   onClick={(e) => {
-                    this.onArchive(e);
+                    onArchive(e);
                   }}
                 >
                   Yes
@@ -209,7 +190,6 @@ class Archive extends Component {
         </div>
       );
     }
-  }
 }
 
 const mapStateToProps = (reduxState) => ({

@@ -3,28 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { updateStartup, updatePost } from '../../actions';
-// import close from '../../../static/img/close.png';
 import '../../styles/modal.scss';
 
 const Deny = (props) => {
   if (!props.show) {
     return null;
   }
-
-  //   const onDeny = (e) => {
-  //     if (props.startup) {
-  //       // console.log('startup: ', props.startup);
-  //       const { startup } = props;
-  //       startup.status = 'Pending';
-  //       props.updateStartup(startup.id, startup);
-  //       startup.posts.map((post) => {
-  //         const postCopy = post;
-  //         postCopy.status = 'Pending';
-  //         props.updatePost(post.id, postCopy);
-  //       });
-  //     }
-  //   };
-
   return (
     <div className="archiveContainer">
       <div className="archiveModal" id="archiveModal">

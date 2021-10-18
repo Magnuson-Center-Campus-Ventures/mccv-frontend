@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { updateStartup, updatePost, sendNotificationEmail } from '../../actions';
-// import close from '../../../static/img/close.png';
 import '../../styles/modal.scss';
 
 const Approve = (props) => {
@@ -33,14 +32,6 @@ const Approve = (props) => {
   return (
     <div className="archiveContainer">
       <div className="archiveModal" id="archiveModal">
-        {/* <img id="close-app"
-          src={close}
-          alt="close"
-          style={{ cursor: 'pointer' }}
-          onClick={(e) => {
-            props.onClose(e);
-          }}
-        /> */}
         <i className="fas fa-times"
           aria-label="close modal"
           role="button"
