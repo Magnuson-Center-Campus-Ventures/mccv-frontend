@@ -79,18 +79,16 @@ function Nav(props) {
           <li className="navLi"><NavLink to="/startups" className="navlink" activeClassName="activeBorder">Startups</NavLink></li>
           <li className="navLi"><NavLink to="/applications" className="navlink" activeClassName="activeBorder">Applications</NavLink></li>
           <div className="dropdownContainer">
-            <button type="button" className="navNameBtn">
+            <button type="button" className="navNameBtn" onClick={this.showDropdown}>
               <i className="far fa-user" />
-              <span className="navNameCta">{firstName}</span>
+              <span className="navNameCta">Dashboard</span>
             </button>
             <ul className="dropdownOptions">
               <li className="dropdownLi">
-                <NavLink to="/profile" className="navlinkDropdown" activeClassName="activeBorder">My Profile</NavLink>
+                <NavLink to="/dashboard" className="navlinkDropdown" activeClassName="activeBorder">Metrics</NavLink>
               </li>
               <li className="dropdownLi">
-                <button type="button" className="navDropdownLogoutBtn" onClick={signout}>
-                  <span className="navLogoutCta">Logout</span>
-                </button>
+                <NavLink to="/action-dashboard" className="navlinkDropdown" activeClassName="activeBorder">Action</NavLink>
               </li>
             </ul>
           </div>

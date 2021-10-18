@@ -128,23 +128,6 @@ const StartupListItem = (props) => {
 
         </div>
       </div>
-
-      {/* <div className="companyInfo">
-        <div className="companyText">
-          <h1 id="startupName"> {props.startup.name} </h1>
-          <div className="location">
-            <span className="locationIcon" />
-            <h2> {`${props.startup.city}, ${props.startup.state}`} </h2>
-          </div>
-        </div>
-        {logo}
-      </div>
-      <div className="extraInfo">
-        <div className="industriesList postIndustries">
-          {industries}
-        </div>
-        {posts}
-      </div> */}
     </Link>
   );
 };

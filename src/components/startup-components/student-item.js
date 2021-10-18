@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import '../../styles/postings.scss';
 
 const StudentListItem = (props) => {
+  const route = `/students/${props.student._id}`
   const affiliationShortener = (aff) => {
     switch (aff) {
       case 'Undergrad':
