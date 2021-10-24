@@ -11,7 +11,7 @@
         "build": "webpack",
         "clean": "rimraf dist",
         "deploy": "aws s3 sync dist s3://dartmouthmccv.com",
-        "surgedeploy":"surge -p dist -d dartmouth-mccv.surge.sh"
+        "surgedeploy": "surge -p dist -d dartmouth-mccv.surge.sh"
     },
     "devDependencies": {
         "@babel/core": "^7.9.0",
@@ -51,7 +51,7 @@
         "@kenshooui/react-multi-select": "^1.1.6",
         "@material-ui/core": "^4.10.0",
         "@stardust-ui/docs-components": "latest",
-        "aws-sdk": "^2.748.0",
+        "aws-sdk": "^2.1013.0",
         "axios": "0.21.1",
         "cross-env": "^7.0.3",
         "date-fns": "^2.16.0",
