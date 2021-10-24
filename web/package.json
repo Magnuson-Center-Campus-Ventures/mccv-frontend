@@ -1,5 +1,5 @@
 {
-    "name": "MCCV",
+    "name": "dartmouth-mccv-frontend",
     "version": "1.1.0",
     "main": "src/index.js",
     "repository": "https://github.com/Magnuson-Center-Campus-Ventures/mccv-frontend",
