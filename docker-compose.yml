@@ -1,10 +1,10 @@
 web:
-    build: ./mccv-frontend/
+    build: .
     ports:
       - '8080:8080'
     volumes:
-      - ./mccv-frontend/web
-      - /app/node_modules/
+      - ./web
+      - /web/node_modules/
     stdin_open: true
     environment:
       - CHOKIDAR_USEPOLLING=true
