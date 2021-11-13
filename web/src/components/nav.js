@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { signoutUser, fetchUser, fetchStudentByID } from '../actions';
 import '../styles/nav.scss';
 
+const bannerMessage = "ATTENTION ALL USERS: The MCCV platform will be shutting down at the beginning of winter term (22W) in anticipation of MCCV's migration to Handshake. Please email us at magnuson.student.leadership.board@dartmouth.edu with any questions or concerns."
+
 class Nav extends Component {
   constructor(props) {
     super(props);
@@ -40,6 +42,12 @@ class Nav extends Component {
     this.props.signoutUser(this.props.history);
   }
 
+  renderBanner = (message=bannerMessage) => {
+    return (<div className="navBanner">
+      {message}
+    </div>)
+  }
+
   // eslint-disable-next-line consistent-return
   navRender() {
     const token = localStorage.getItem('token');
@@ -50,6 +58,7 @@ class Nav extends Component {
     }
     if (token && role && role === 'admin') { // if logged in user is an admin
       return (
+        <>
         <ul id="nav-bar">
           <li className="navLi"><div className="mccv">Magnuson Center Campus Ventures</div></li>
           <li className="navLi"><NavLink to="/posts" className="navlink" activeClassName="activeBorder">Positions</NavLink></li>
@@ -62,9 +71,12 @@ class Nav extends Component {
             </button>
           </li>
         </ul>
+        {this.renderBanner()}
+        </>
       );
     } else if (token && role && role === 'startup') { // if logged in user is a startup
       return (
+        <>
         <ul id="nav-bar">
           <li className="navLi"><span className="mccv">Magnuson Center Campus Ventures</span></li>
           <li className="navLi"><NavLink to="/students" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
@@ -76,9 +88,12 @@ class Nav extends Component {
             </button>
           </li>
         </ul>
+        {this.renderBanner()}
+        </>
       );
     } else if (token && role && role === 'student') { // if logged in user is a student
       return (
+        <>
         <ul id="nav-bar">
           <li className="navLi"><div className="mccv">Magnuson Center Campus Ventures</div></li>
           <li className="navLi"><NavLink to="/posts" className="navlink" activeClassName="activeBorder">Positions</NavLink></li>
@@ -101,9 +116,12 @@ class Nav extends Component {
             </ul>
           </div>
         </ul>
+        {this.renderBanner()}
+        </>
       );
     } else { // user not logged in or role undefined
       return (
+        <>
         <ul id="nav-bar">
           <li className="navLi"><div className="mccv">Magnuson Center Campus Ventures</div></li>
           <li className="navLi"><NavLink exact to="/" className="navlink" activeClassName="activeBorder">Students</NavLink></li>
@@ -116,6 +134,8 @@ class Nav extends Component {
             </NavLink>
           </li>
         </ul>
+        {this.renderBanner()}
+        </>
       );
     }
   }

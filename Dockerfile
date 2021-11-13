@@ -13,6 +13,8 @@ WORKDIR /web
 # Add app
 COPY ./web ./
 
+EXPOSE 8080
+
 # Install dependencies
 RUN yarn install
 
